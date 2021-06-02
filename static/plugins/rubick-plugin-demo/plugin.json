@@ -1,0 +1,15 @@
+{
+  "pluginName": "测试插件",
+  "description": "我的第一个 rubick 插件",
+  "main": "index.html",
+  "version": "0.0.1",
+  "logo": "logo.png",
+  "features": [
+    {
+      "code": "hello",
+      "explain": "这是一个测试的插件",
+      "cmds":["hello", "你好"]
+    }
+  ],
+  "preload": "preload.js"
+}
