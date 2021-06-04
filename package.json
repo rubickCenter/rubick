@@ -46,7 +46,7 @@
     },
     "mac": {
       "icon": "build/icons/icon.icns",
-      "target":"pkg"
+      "target": "pkg"
     },
     "win": {
       "icon": "build/icons/icon.ico"
@@ -58,9 +58,10 @@
   "dependencies": {
     "ant-design-vue": "^1.7.5",
     "anyproxy": "^4.1.3",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
+    "uuid": "^8.3.2",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -84,7 +85,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^11.0.2",
-    "electron-builder": "^20.19.2",
+    "electron-builder": "22.10.5",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
     "file-loader": "^1.1.11",

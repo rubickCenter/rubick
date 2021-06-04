@@ -14,6 +14,7 @@ function getWindowHeight(searchList) {
 }
 
 function searchKeyValues(lists, value){
+  console.log(lists);
   return lists.filter(item => item.indexOf(value) >= 0)
 }
 
@@ -83,6 +84,9 @@ const sysFile = {
     } catch (e) {
       return []
     }
+  },
+  removeAllPlugins() {
+    store.delete('user-plugins');
   }
 }
 

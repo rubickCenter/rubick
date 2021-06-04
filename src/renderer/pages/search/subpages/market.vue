@@ -21,7 +21,7 @@
     <h2>插件</h2>
     <a-list item-layout="horizontal" style="width: 100%" :grid="{ gutter: 16, column: 2 }" :data-source="pluginList">
       <a-list-item slot="renderItem" slot-scope="item, index">
-        <a-button :loading="loading[index]" type="link" slot="actions" @click="download(index, item)">
+        <a-button v-if="showButton(item)" :loading="loading[index]" type="link" slot="actions" @click="download(index, item)">
           <a-icon v-show="!loading[index]" style="font-size: 20px;" type="cloud-download" />
         </a-button>
 
@@ -42,7 +42,7 @@
 
 <script>
 import api from '../../../assets/api';
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 export default {
   data() {
@@ -60,13 +60,16 @@ export default {
     async download(index, item) {
       if (this.loading[index]) return;
       this.$set(this.loading, index, true);
-      console.log(this.loading);
       await this.downloadPlugin(item);
       this.$set(this.loading, index, false);
-      console.log(this.loading);
-
+    },
+    showButton(item) {
+      return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
     },
     ...mapActions('main', ['downloadPlugin'])
+  },
+  computed: {
+    ...mapState('main', ['devPlugins'])
   }
 }
 </script>

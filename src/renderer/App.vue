@@ -13,10 +13,12 @@
         </a-tag>
       </div>
       <a-input
+          id="search"
           placeholder="Hi, Rubick"
           class="main-input"
           @change="onSearch"
           :value="searchValue"
+          :maxLength="selected ? 0 : 1000"
       >
         <a-icon class="icon-tool" type="tool" slot="suffix" @click="() => {
           showMainUI();
@@ -24,7 +26,7 @@
         }"/>
         }
       </a-input>
-      <div class="options" v-show="options.length && !showMain">
+      <div class="options" v-show="showOptions">
         <a-list item-layout="horizontal" :data-source="options">
           <a-list-item @click="() => item.click($router)" class="op-item"  slot="renderItem" slot-scope="item, index">
             <a-list-item-meta
@@ -49,9 +51,19 @@ import {ipcRenderer} from "electron";
 import {getWindowHeight} from "./assets/common/utils";
 
 export default {
+  mounted() {
+    document.getElementById('search').addEventListener('keydown', this.checkNeedInit)
+  },
+  beforeDestroy() {
+  },
   methods: {
     ...mapActions('main', ['onSearch', 'showMainUI']),
     ...mapMutations('main', ['commonUpdate']),
+    checkNeedInit(e) {
+      if (this.searchValue === '' && e.keyCode === 8) {
+        this.closeTag();
+      }
+    },
     changePath({key}) {
       this.$router.push({path: `/home/${key}`});
       this.commonUpdate({
@@ -72,7 +84,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('main', ['showMain', 'current', 'options', 'selected', 'searchValue'])
+    ...mapState('main', ['showMain', 'current', 'options', 'selected', 'searchValue']),
+    showOptions() {
+      // 有选项值，且不在显示主页
+      if (this.options.length && !this.showMain) {
+        return true;
+      }
+    }
   }
 };
 </script>

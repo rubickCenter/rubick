@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Market from '../pages/search/subpages/market';
 import Dev from '../pages/search/subpages/dev';
+import Installed from '../pages/search/subpages/plugin';
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ export default new Router({
         {
           path: 'dev',
           component: Dev
+        },
+        {
+          path: 'plugin',
+          component: Installed
         },
       ]
     },

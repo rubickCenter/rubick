@@ -6,7 +6,7 @@
           <a-icon type="appstore"/>
           插件中心
         </a-menu-item>
-        <a-menu-item key="favo">
+        <a-menu-item key="plugin">
           <a-icon type="heart"/>
           已安装
         </a-menu-item>

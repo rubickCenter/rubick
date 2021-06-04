@@ -1,6 +1,6 @@
 import {clipboard, ipcRenderer} from "electron";
+import { v4 as uuidv4 } from 'uuid';
 import {getWindowHeight, searchKeyValues, downloadFunc, sysFile} from '../../assets/common/utils';
-
 import fs from "fs";
 import path from 'path';
 
@@ -22,6 +22,24 @@ const mutations = {
       }
     });
   },
+  deleteDevPlugin(state, payload) {
+    state.devPlugins = state.devPlugins.filter(plugin => plugin.name !== payload.name);
+    sysFile.savePlugins(state.devPlugins);
+  },
+  deleteProdPlugin(state, payload) {
+    state.devPlugins = state.devPlugins.filter(plugin => plugin.name !== payload.name);
+    sysFile.savePlugins(state.devPlugins);
+    // todo 删除 static 目录下的对应插件
+  },
+  devPluginStatusChange(state, payload) {
+    state.devPlugins.forEach(plugin => {
+      if (plugin.name === payload.name) {
+        plugin.status = !plugin.status;
+      }
+    });
+    state.devPlugins = [...state.devPlugins];
+    sysFile.savePlugins(state.devPlugins);
+  }
 }
 
 const actions = {
@@ -37,7 +55,30 @@ const actions = {
       height: getWindowHeight(),
     });
   },
+  reloadDevPlugin({ commit }, payload) {
+    const config = JSON.parse(fs.readFileSync(path.join(payload.sourceFile, '../plugin.json'), 'utf-8'));
+    const pluginConfig = {
+      ...config,
+      sourceFile: path.join(payload.sourceFile, `../${config.main}`),
+    };
+    const devPlugins = [...state.devPlugins];
+    commit('commonUpdate', {
+      devPlugins: devPlugins.map(plugin => {
+        if (plugin.name === payload.name) {
+          return {
+            ...plugin,
+            ...pluginConfig,
+          }
+        }
+        return plugin;
+      })
+    })
+  },
   onSearch ({ commit }, paylpad) {
+    if (state.selected) {
+      commit('commonUpdate', {searchValue: ''});
+      return;
+    }
     const value = paylpad.target.value;
     const fileUrl = clipboard.read('public.file-url').replace('file://', '');
     commit('commonUpdate', {searchValue: value})
@@ -46,8 +87,10 @@ const actions = {
       const config = JSON.parse(fs.readFileSync(fileUrl, 'utf-8'));
 
       const pluginConfig = {
-        ...JSON.parse(fs.readFileSync(fileUrl, 'utf-8')),
-        sourceFile: path.join(fileUrl, `../${config.main}`)
+        ...config,
+        sourceFile: path.join(fileUrl, `../${config.main}`),
+        name: uuidv4(),
+        type: 'dev'
       };
       commit('commonUpdate', {
         selected: {
@@ -98,39 +141,46 @@ const actions = {
     let options = [];
 
     // check 是否是插件
-    state.devPlugins.forEach((plugin) => {
-      const feature = plugin.features;
-      feature.forEach(fe => {
-        const cmds = searchKeyValues(fe.cmds, value);
-
-        options = [
-          ...options,
-          ...cmds.map((cmd) => ({
-            name: cmd,
-            value: 'plugin',
-            icon: 'plus-circle',
-            desc: fe.explain,
-            click: (router) => {
-              commit('commonUpdate', {
-                selected: {
-                  key: cmd,
-                  name: cmd
-                },
-                searchValue: '',
-                showMain: true,
-              });
-              ipcRenderer.send('changeWindowSize', {
-                height: getWindowHeight(),
-              });
-              router.push({
-                path: '/plugin',
-                query: plugin,
-              })
-            }
-          }))
-        ]
-      })
-    });
+    if (value) {
+      state.devPlugins.forEach((plugin) => {
+        // dev 插件未开启
+        if (plugin.type === 'dev' && !plugin.status) return;
+        const feature = plugin.features;
+        feature.forEach(fe => {
+          const cmds = searchKeyValues(fe.cmds, value);
+          console.log(plugin);
+          options = [
+            ...options,
+            ...cmds.map((cmd) => ({
+              name: cmd,
+              value: 'plugin',
+              icon: 'plus-circle',
+              desc: fe.explain,
+              click: (router) => {
+                commit('commonUpdate', {
+                  selected: {
+                    key: cmd,
+                    name: cmd
+                  },
+                  searchValue: '',
+                  showMain: true,
+                });
+                ipcRenderer.send('changeWindowSize', {
+                  height: getWindowHeight(),
+                });
+                router.push({
+                  path: '/plugin',
+                  query: {
+                    ...plugin,
+                    detail: JSON.stringify(fe)
+                  },
+                })
+              }
+            }))
+          ]
+        })
+      });
+    }
 
     commit('commonUpdate', {
       options
@@ -146,7 +196,8 @@ const actions = {
     const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
     const pluginConfig = {
       ...config,
-      sourceFile: `${fileUrl}/${config.main}`
+      sourceFile: `${fileUrl}/${config.main}`,
+      type: 'prod'
     };
     commit('commonUpdate', {
       devPlugins: [pluginConfig, ...state.devPlugins],
