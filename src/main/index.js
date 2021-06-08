@@ -1,6 +1,5 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
 import '../renderer/store'
-import eventTracker from '../common/event-tracker';
 import init from './common';
 import createTray from './tray';
 /**
@@ -27,6 +26,7 @@ function createWindow () {
     frame: false,
     title: '拉比克',
     webPreferences: {
+      webSecurity: false,
       enableRemoteModule: true,
       backgroundThrottling: false,
       webviewTag: true,
@@ -39,8 +39,15 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   });
+  protocol.interceptFileProtocol('file', (req, callback) => {
+    const url = req.url.substr(8);
+    callback(decodeURI(url));
+  }, (error) => {
+    if (error) {
+      console.error('Failed to register protocol');
+    }
+  });
   init(mainWindow);
-  eventTracker();
 }
 
 app.on('ready', () => {

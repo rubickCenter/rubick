@@ -1,4 +1,4 @@
-import {clipboard, ipcRenderer} from "electron";
+import {clipboard, ipcRenderer, remote} from "electron";
 import { v4 as uuidv4 } from 'uuid';
 import {getWindowHeight, searchKeyValues, downloadFunc, sysFile} from '../../assets/common/utils';
 import fs from "fs";
@@ -11,6 +11,7 @@ const state = {
   current: ['market'],
   searchValue: '',
   devPlugins: sysFile.getUserPlugins() || [],
+  subPlaceHolder: '',
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
         sysFile.savePlugins(payload)
       }
     });
+  },
+  setSubPlaceHolder(state, payload) {
+    state.subPlaceHolder = payload;
   },
   deleteDevPlugin(state, payload) {
     state.devPlugins = state.devPlugins.filter(plugin => plugin.name !== payload.name);
@@ -44,16 +48,18 @@ const mutations = {
 
 const actions = {
   showMainUI ({ commit, state }, paylpad) {
-    commit('commonUpdate', {
-      showMain: true,
-      selected: {
-        key: 'market',
-        name: '插件中心'
-      }
-    });
     ipcRenderer.send('changeWindowSize', {
       height: getWindowHeight(),
     });
+    setTimeout(() => {
+      commit('commonUpdate', {
+        showMain: true,
+        selected: {
+          key: 'market',
+          name: '插件中心'
+        }
+      });
+    }, 50);
   },
   reloadDevPlugin({ commit }, payload) {
     const config = JSON.parse(fs.readFileSync(path.join(payload.sourceFile, '../plugin.json'), 'utf-8'));
@@ -75,11 +81,16 @@ const actions = {
     })
   },
   onSearch ({ commit }, paylpad) {
-    if (state.selected) {
+    if (state.selected && state.selected.key !== 'plugin-container') {
       commit('commonUpdate', {searchValue: ''});
       return;
     }
     const value = paylpad.target.value;
+    // 在插件界面
+    if(state.selected && state.selected.key === 'plugin-container') {
+      commit('commonUpdate', {searchValue: value})
+      return;
+    }
     const fileUrl = clipboard.read('public.file-url').replace('file://', '');
     commit('commonUpdate', {searchValue: value})
     // 复制文件
@@ -148,33 +159,15 @@ const actions = {
         const feature = plugin.features;
         feature.forEach(fe => {
           const cmds = searchKeyValues(fe.cmds, value);
-          console.log(plugin);
           options = [
             ...options,
             ...cmds.map((cmd) => ({
               name: cmd,
               value: 'plugin',
-              icon: 'plus-circle',
+              icon: 'file://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
               desc: fe.explain,
               click: (router) => {
-                commit('commonUpdate', {
-                  selected: {
-                    key: cmd,
-                    name: cmd
-                  },
-                  searchValue: '',
-                  showMain: true,
-                });
-                ipcRenderer.send('changeWindowSize', {
-                  height: getWindowHeight(),
-                });
-                router.push({
-                  path: '/plugin',
-                  query: {
-                    ...plugin,
-                    detail: JSON.stringify(fe)
-                  },
-                })
+                actions.openPlugin({commit}, {cmd, plugin, feature: fe, router});
               }
             }))
           ]
@@ -202,6 +195,27 @@ const actions = {
     commit('commonUpdate', {
       devPlugins: [pluginConfig, ...state.devPlugins],
     });
+  },
+  openPlugin({commit}, {cmd, plugin, feature, router}) {
+    commit('commonUpdate', {
+      selected: {
+        key: 'plugin-container',
+        name: cmd,
+        icon: 'file://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
+      },
+      searchValue: '',
+      showMain: true,
+    });
+    ipcRenderer.send('changeWindowSize', {
+      height: getWindowHeight(),
+    });
+    router.push({
+      path: '/plugin',
+      query: {
+        ...plugin,
+        detail: JSON.stringify(feature)
+      },
+    })
   }
 }
 

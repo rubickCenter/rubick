@@ -46,47 +46,6 @@ export default {
 </script>
 
 <style lang="scss">
-.rubick-select {
-  display: flex;
-  padding-left: 10px;
-  background: #fff;
-  position: relative;
-
-  .tag-container {
-    display: flex;
-    align-items: center;
-    background: #fff;
-
-    .select-tag {
-      height: 36px;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .ant-input:focus {
-    border: none;
-    box-shadow: none;
-  }
-
-  .options {
-    position: absolute;
-    top: 62px;
-    left: 0;
-    width: 100%;
-    z-index: 99;
-    .op-item {
-      padding: 0 10px;
-      height: 60px;
-      line-height: 50px;
-      max-height: 500px;
-      overflow: auto;
-      background: #fafafa;
-    }
-  }
-}
-
 .main-input {
   -webkit-app-region: drag;
   height: 60px !important;

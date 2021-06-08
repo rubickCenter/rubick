@@ -1,8 +1,9 @@
 const path = require('path');
 const filePath = location.href.replace('file://', '');
-const {ipcRenderer, nativeImage, clipboard} = require('electron');
-const Store = require('electron-store');
-const store = new Store();
+const {ipcRenderer, nativeImage, clipboard, remote} = require('electron');
+
+const currentWindow = remote.getCurrentWindow();
+const winId = currentWindow.id;
 
 function convertImgToBase64(url, callback, outputFormat){
   var canvas = document.createElement('CANVAS'),
@@ -56,9 +57,19 @@ window.utools = window.rubick = {
     ipcRenderer.send('msg-trigger', {
       type: 'setExpendHeight',
       height,
+      winId
     });
   },
   setSubInput(onChange, placeHolder, isFocus) {
+    ipcRenderer.sendToHost('setSubInput', {
+      placeHolder, isFocus
+    });
+    ipcRenderer.on(`msg-back-setSubInput`, (e, result) => {
+      onChange({text: result});
+    });
+  },
+
+  setSubInputValue(text) {
 
   },
 
@@ -91,14 +102,39 @@ window.utools = window.rubick = {
     clipboard.writeText(text);
   },
   db: {
-    put(key, value) {
-      console.log(key, value);
-      store.set(key, value)
+    put(data) {
+      ipcRenderer.send('msg-trigger', {
+        type: 'db.put',
+        data,
+      });
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`msg-back-db.put`, (e, result) => {
+          result ? resolve(result) : reject();
+        });
+      })
     },
     get(key) {
-      store.get(key);
+      ipcRenderer.send('msg-trigger', {
+        type: 'db.get',
+        key,
+      });
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`msg-back-db.get`, (e, result) => {
+          result ? resolve(result) : reject();
+        });
+      })
     },
-    remove() {}
+    remove(key) {
+      ipcRenderer.send('msg-trigger', {
+        type: 'db.remove',
+        key,
+      });
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`msg-back-db.remove`, (e, result) => {
+          result ? resolve(result) : reject();
+        });
+      })
+    }
   },
   isDarkColors() {
     return false;

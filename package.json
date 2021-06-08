@@ -61,6 +61,8 @@
     "axios": "^0.18.1",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
+    "marked": "^2.0.7",
+    "query-string": "^7.0.0",
     "uuid": "^8.3.2",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

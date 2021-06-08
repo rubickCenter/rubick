@@ -27,13 +27,16 @@
         </div>
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" tab="功能关键字">
-            <div class="desc-item" v-for="item in pluginDetail.features">
-              <div>{{item.explain}}</div>
-              <a-tag v-for="cmd in item.cmds">{{cmd}}</a-tag>
+            <div class="detail-container">
+              <div class="desc-item" v-for="item in pluginDetail.features">
+                <div>{{item.explain}}</div>
+                <a-tag @click="openPlugin({cmd, plugin: pluginDetail, feature: item, router: $router})" v-for="cmd in item.cmds">{{cmd}}</a-tag>
+              </div>
             </div>
+
           </a-tab-pane>
           <a-tab-pane key="2" tab="详情介绍">
-            Content of Tab Pane 2
+            <div class="detail-container" v-html="readme"></div>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -45,7 +48,12 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex';
+import {mapState, mapMutations, mapActions} from 'vuex';
+import marked from 'marked';
+import fs from 'fs';
+import path from 'path';
+const rendererMD = new marked.Renderer();
+
 export default {
   data() {
     return {
@@ -53,7 +61,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('main', ['deleteProdPlugin'])
+    ...mapMutations('main', ['deleteProdPlugin']),
+    ...mapActions('main', ['openPlugin']),
   },
   computed: {
     ...mapState('main', ['devPlugins']),
@@ -62,6 +71,25 @@ export default {
     },
     prodPlugin() {
       return this.devPlugins.filter(plugin => plugin.type === 'prod')
+    },
+    readme() {
+      marked.setOptions({
+        renderer: rendererMD,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+      });
+      try {
+        const mdFile = path.join(this.pluginDetail.sourceFile, '../README.md');
+        return marked(fs.readFileSync(mdFile, 'utf8'));
+      } catch (e) {
+        return '暂无描述信息'
+      }
+
     }
   }
 }
@@ -70,10 +98,12 @@ export default {
 <style lang="scss">
 .dev-container {
   height: calc(100vh - 110px);
+  overflow: auto;
   .dev-detail {
     display: flex;
     align-items: flex-start;
     height: 100%;
+    overflow: auto;
   }
   .plugin-detail {
     padding: 20px;
@@ -92,6 +122,10 @@ export default {
         font-size: 13px;
         color: #999;
       }
+    }
+    .detail-container {
+      height: 340px;
+      overflow: auto;
     }
     .desc-item {
       border-bottom: 1px solid #ddd;
