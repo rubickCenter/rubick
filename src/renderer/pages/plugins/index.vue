@@ -1,6 +1,9 @@
 <template>
   <div>
-    <webview id="webview" :src="path" :preload="preload"></webview>
+    <webview v-if="!query.subType" id="webview" :src="path" :preload="preload"></webview>
+    <div v-else>
+      <webview id="webview" :src="templatePath" :preload="preload"></webview>
+    </div>
   </div>
 </template>
 
@@ -15,6 +18,9 @@ export default {
       path: `File://${this.$route.query.sourceFile}`,
       preload: `File://${path.join(__static, './preload.js')}`,
       webview: null,
+      query: this.$route.query,
+      config: {},
+      templatePath: `File://${path.join(__static, './doc-tpl.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}`,
     }
   },
   mounted() {
@@ -28,10 +34,40 @@ export default {
       if (event.channel === 'setSubInput') {
         this.setSubPlaceHolder(event.args[0].placeHolder);
       }
+      if (event.channel === 'removeSubInput') {
+        this.commonUpdate({
+          searchValue: '',
+        });
+      }
+      if (event.channel === 'setSubInputValue') {
+        this.commonUpdate({
+          searchValue: event.args[0].text,
+        });
+        this.webview.send('msg-back-setSubInput', this.searchValue);
+      }
+      if (event.channel === 'templateConfig') {
+        this.config = event.args[0].config;
+      }
+      if (event.channel === 'getFeatures') {
+        this.webview.send('msg-back-getFeatures', this.pluginDetail);
+      }
+      if (event.channel === 'setFeature') {
+        this.commonUpdate({
+          devPlugins: this.devPlugins.map(plugin => {
+            if (plugin.name === this.query.name) {
+              return {
+                ...plugin,
+                features: [...plugin.features, event.args[0].feature]
+              }
+            }
+            return plugin;
+          }),
+        });
+      }
     })
   },
   methods: {
-    ...mapMutations('main', ['setSubPlaceHolder']),
+    ...mapMutations('main', ['setSubPlaceHolder', 'commonUpdate']),
   },
   beforeRouteUpdate() {
     this.path = `File://${this.$route.query.sourceFile}`
@@ -41,7 +77,10 @@ export default {
     webview && webview.send('onPluginOut', this.$route.query)
   },
   computed: {
-    ...mapState('main', ['searchValue'])
+    ...mapState('main', ['searchValue', 'devPlugins']),
+    pluginDetail() {
+      return (this.devPlugins.filter(plugin => plugin.name === this.query.name)[0] || {}).features
+    },
   },
   watch: {
     searchValue() {

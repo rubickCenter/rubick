@@ -1,6 +1,8 @@
-import {app} from 'electron';
+import {app, BrowserWindow} from 'electron';
 import {getlocalDataFile, saveData, getData} from './common/utils';
 import path from "path";
+import marked from 'marked';
+const rendererMD = new marked.Renderer();
 
 const appPath = path.join(getlocalDataFile());
 const dbPath = path.join(appPath, './db.json');
@@ -10,7 +12,6 @@ export default {
     return app.getPath(arg.name);
   },
   hideMainWindow(arg, mainWindow) {
-    console.log(111, mainWindow)
     mainWindow.hide();
   },
   showMainWindow(arg, mainWindow) {
@@ -20,15 +21,13 @@ export default {
     return arg
   },
   setExpendHeight({height}, mainWindow) {
-    console.log(height);
-    mainWindow.setSize(788, height);
+    mainWindow.setSize(788, height || 60);
   },
   db: {
     put({data}) {
       data._rev = '';
       let dbData = getData(dbPath) || [];
       let target = [];
-      console.log(data, dbData);
       dbData.some((d, i) => {
         if (d._id === data._id) {
           target = [d, i]
@@ -101,6 +100,38 @@ export default {
       const dbData = getData(dbPath);
       const result = dbData.filter(d => d._id === key);
       return result;
+    }
+  },
+
+  ubrowser: {
+    goto: ({md, title}) => {
+      marked.setOptions({
+        renderer: rendererMD,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+      });
+      const htmlContent = marked(md);
+      const win = new BrowserWindow({
+        height: 600,
+        useContentSize: true,
+        width: 788,
+        title,
+        webPreferences: {
+          webSecurity: false,
+          enableRemoteModule: true,
+          backgroundThrottling: false,
+          webviewTag: true,
+          nodeIntegration: true // 在网页中集成Node
+        }
+      });
+      win.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(htmlContent))
+      win.once('ready-to-show', () => win.show());
+      return win.id
     }
   }
 }

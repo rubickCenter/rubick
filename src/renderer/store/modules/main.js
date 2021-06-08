@@ -99,9 +99,15 @@ const actions = {
 
       const pluginConfig = {
         ...config,
-        sourceFile: path.join(fileUrl, `../${config.main}`),
+        sourceFile: path.join(fileUrl, `../${config.main || 'index.html'}`),
         name: uuidv4(),
-        type: 'dev'
+        type: 'dev',
+        subType: (() => {
+          if (config.main) {
+            return ''
+          }
+          return 'template';
+        })()
       };
       commit('commonUpdate', {
         selected: {
@@ -164,7 +170,7 @@ const actions = {
             ...cmds.map((cmd) => ({
               name: cmd,
               value: 'plugin',
-              icon: 'file://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
+              icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
               desc: fe.explain,
               click: (router) => {
                 actions.openPlugin({commit}, {cmd, plugin, feature: fe, router});
@@ -201,7 +207,7 @@ const actions = {
       selected: {
         key: 'plugin-container',
         name: cmd,
-        icon: 'file://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
+        icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
       },
       searchValue: '',
       showMain: true,

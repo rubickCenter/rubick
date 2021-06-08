@@ -39,7 +39,7 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   });
-  protocol.interceptFileProtocol('file', (req, callback) => {
+  protocol.interceptFileProtocol('image', (req, callback) => {
     const url = req.url.substr(8);
     callback(decodeURI(url));
   }, (error) => {

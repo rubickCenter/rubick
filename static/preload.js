@@ -1,5 +1,21 @@
 const path = require('path');
-const filePath = location.href.replace('file://', '');
+
+let filePath = '';
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if(pair[0] == variable){return pair[1];}
+  }
+  return(false);
+}
+
+if (location.href.indexOf('targetFile') > -1) {
+  filePath = decodeURIComponent(getQueryVariable('targetFile'));
+} else {
+  filePath = location.href.replace('file://', '');
+}
 const {ipcRenderer, nativeImage, clipboard, remote} = require('electron');
 
 const currentWindow = remote.getCurrentWindow();
@@ -26,19 +42,20 @@ window.utools = window.rubick = {
   onPluginEnter(cb) {
     ipcRenderer.once('onPluginEnter', (e, message) => {
       const feature = JSON.parse(message.detail)
-      cb(feature)
+      console.log(feature)
+      cb({...feature, type: 'text'})
     })
   },
   onPluginReady(cb) {
     ipcRenderer.once('onPluginReady', (e, message) => {
       const feature = JSON.parse(message.detail)
-      cb(feature)
+      cb({...feature, type: 'text'})
     })
   },
   onPluginOut(cb) {
     ipcRenderer.once('onPluginOut', (e, message) => {
       const feature = JSON.parse(message.detail)
-      cb(feature)
+      cb({...feature, type: 'text'})
     })
   },
 
@@ -69,8 +86,14 @@ window.utools = window.rubick = {
     });
   },
 
-  setSubInputValue(text) {
+  removeSubInput() {
+    ipcRenderer.sendToHost('removeSubInput');
+  },
 
+  setSubInputValue(text) {
+    ipcRenderer.sendToHost('setSubInputValue', {
+      text
+    });
   },
 
   getPath(name) {
@@ -139,5 +162,30 @@ window.utools = window.rubick = {
   isDarkColors() {
     return false;
   },
+  getFeatures() {
+    ipcRenderer.sendToHost('getFeatures');
+    return new Promise(resolve => {
+      ipcRenderer.on(`msg-back-getFeatures`, (e, result) => {
+        resolve(result);
+      });
+    });
+  },
+  setFeature(feature) {
+    ipcRenderer.sendToHost('setFeature', {feature});
+  },
+  ubrowser: {
+    goto(md, title) {
+      ipcRenderer.send('msg-trigger', {
+        type: 'ubrowser.goto',
+        md, title,
+      });
+      return utools.ubrowser;
+    },
+    run() {
+
+    }
+  }
 }
 require(path.join(filePath, '../preload.js'));
+window.exports && ipcRenderer.sendToHost('templateConfig', {config: window.exports});
+
