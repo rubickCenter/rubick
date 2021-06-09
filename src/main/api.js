@@ -1,11 +1,19 @@
 import {app, BrowserWindow} from 'electron';
 import {getlocalDataFile, saveData, getData} from './common/utils';
 import path from "path";
-import marked from 'marked';
-const rendererMD = new marked.Renderer();
+
+const puppeteer = require("puppeteer-core");
+const pie = require("puppeteer-in-electron")
 
 const appPath = path.join(getlocalDataFile());
 const dbPath = path.join(appPath, './db.json');
+
+let browser
+pie.initialize(app).then(res => {
+  pie.connect(app, puppeteer).then(b => {
+    browser = b;
+  })
+})
 
 export default {
   getPath(arg) {
@@ -104,34 +112,28 @@ export default {
   },
 
   ubrowser: {
-    goto: ({md, title}) => {
-      marked.setOptions({
-        renderer: rendererMD,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false
-      });
-      const htmlContent = marked(md);
-      const win = new BrowserWindow({
-        height: 600,
-        useContentSize: true,
-        width: 788,
-        title,
-        webPreferences: {
-          webSecurity: false,
-          enableRemoteModule: true,
-          backgroundThrottling: false,
-          webviewTag: true,
-          nodeIntegration: true // 在网页中集成Node
-        }
-      });
-      win.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(htmlContent))
+    goto: async ({winId}) => {
+      const win = BrowserWindow.fromId(winId);
+      await win.loadURL(url);
+    },
+    async value({selector, value, winId}) {
+      const win = BrowserWindow.fromId(winId);
+      const page = await pie.getPage(browser, win);
+      const nd = await page.$(selector);
+      nd.type(value);
+    },
+
+    async click({selector, winId}) {
+      const win = BrowserWindow.fromId(winId);
+      const page = await pie.getPage(browser, win);
+      const nd = await page.$(selector);
+      nd.click();
+    },
+
+    async run(options) {
+      const win = BrowserWindow.fromId(options.winId);
+      win.setSize(options.width || 800, options.height || 600)
       win.once('ready-to-show', () => win.show());
-      return win.id
-    }
+    },
   }
 }

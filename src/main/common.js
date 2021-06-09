@@ -16,6 +16,17 @@ export default function init(mainWindow) {
     mainWindow.show();
   });
 
+  ipcMain.on('init-shortcut', (event) => {
+    globalShortcut.register('Esc', () => {
+      mainWindow.show();
+      event.sender.send('init-rubick');
+    });
+    globalShortcut.register('ctrl+d', () => {
+      event.sender.send('new-window');
+    });
+  })
+
+
   ipcMain.on('msg-trigger', async (event, arg) => {
     const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow
     const operators = arg.type.split('.');
@@ -23,7 +34,7 @@ export default function init(mainWindow) {
     operators.forEach((op) => {
       fn = fn[op];
     });
-    const data = fn(arg, window);
+    const data = await fn(arg, window);
     event.sender.send(`msg-back-${arg.type}`, data);
   });
 
@@ -41,6 +52,7 @@ export default function init(mainWindow) {
       width: 788,
       titleBarStyle: 'hiddenInset',
       title: '拉比克',
+      show: false,
       webPreferences: {
         webSecurity: false,
         enableRemoteModule: true,

@@ -1,3 +1,5 @@
+const marked = require("marked");
+const rendererMD = new marked.Renderer();
 const path = require('path');
 
 let filePath = '';
@@ -20,6 +22,7 @@ const {ipcRenderer, nativeImage, clipboard, remote} = require('electron');
 
 const currentWindow = remote.getCurrentWindow();
 const winId = currentWindow.id;
+const BrowserWindow = remote.BrowserWindow;
 
 function convertImgToBase64(url, callback, outputFormat){
   var canvas = document.createElement('CANVAS'),
@@ -174,16 +177,75 @@ window.utools = window.rubick = {
     ipcRenderer.sendToHost('setFeature', {feature});
   },
   ubrowser: {
-    goto(md, title) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'ubrowser.goto',
-        md, title,
+    winId: '',
+    async goto(md, opts) {
+      const objExp = new RegExp(/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/);
+      let winId;
+      let win;
+      win = new BrowserWindow({
+        show: false,
+        title: typeof opts === 'object' ? '' : opts,
+        webPreferences: {
+          webSecurity: false,
+          enableRemoteModule: true,
+          backgroundThrottling: false,
+          webviewTag: true,
+          nodeIntegration: true // 在网页中集成Node
+        }
       });
-      return utools.ubrowser;
+      if(objExp.test(md) && md.indexOf('http') === 0) {
+        await win.loadURL(md);
+        winId = win.id;
+      } else {
+        marked.setOptions({
+          renderer: rendererMD,
+          gfm: true,
+          tables: true,
+          breaks: false,
+          pedantic: false,
+          sanitize: false,
+          smartLists: true,
+          smartypants: false
+        });
+        const htmlContent = marked(md);
+        win.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(htmlContent))
+        win.once('ready-to-show', () => win.show());
+        winId = win.id;
+      }
+      return {
+        value(selector, value) {
+          ipcRenderer.send('msg-trigger', {
+            type: 'ubrowser.value',
+            winId,
+            selector, value
+          });
+          return new Promise(resolve => {
+            ipcRenderer.once(`msg-back-ubrowser.value`, (e, result) => {
+              resolve(this)
+            });
+          })
+        },
+        click(selector) {
+          ipcRenderer.send('msg-trigger', {
+            type: 'ubrowser.click',
+            winId,
+            selector,
+          });
+          return new Promise(resolve => {
+            ipcRenderer.once(`msg-back-ubrowser.click`, (e, result) => {
+              resolve(this)
+            });
+          })
+        },
+        run(options) {
+          ipcRenderer.send('msg-trigger', {
+            type: 'ubrowser.run',
+            winId,
+            ...options
+          });
+        }
+      }
     },
-    run() {
-
-    }
   }
 }
 require(path.join(filePath, '../preload.js'));

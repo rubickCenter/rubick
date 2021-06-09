@@ -77,6 +77,10 @@ export default {
     }
   },
   mounted() {
+    // 注册快捷键
+    ipcRenderer.send('init-shortcut');
+    ipcRenderer.on('init-rubick', this.closeTag);
+    ipcRenderer.on('new-window', this.newWindow);
     const searchNd = document.getElementById('search');
     searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)
   },
@@ -108,18 +112,19 @@ export default {
         path: '/home',
       });
     },
+    newWindow() {
+      ipcRenderer.send('new-window', {
+        ...this.selected,
+        ...this.$route.query,
+      });
+      this.closeTag();
+    },
     goMenu() {
       if (this.selected && this.selected.key === 'plugin-container') {
         const pluginMenu = [
           {
             label: '分离窗口',
-            click: () => {
-              ipcRenderer.send('new-window', {
-                ...this.$route.query,
-                ...this.selected
-              });
-              this.closeTag();
-            }
+            click: this.newWindow
           },
           {
             label: '开发者工具',
