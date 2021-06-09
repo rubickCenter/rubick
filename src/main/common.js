@@ -1,6 +1,7 @@
 import {globalShortcut, ipcMain, BrowserWindow} from 'electron';
 import {stringify} from 'query-string';
 import Api from './api';
+import path from 'path';
 
 export default function init(mainWindow) {
   ipcMain.on('changeWindowSize', (event, arg) => {
@@ -33,7 +34,7 @@ export default function init(mainWindow) {
     }
     const winURL = process.env.NODE_ENV === 'development'
       ? `http://localhost:9080/#/plugin?${stringify(opts)}`
-      : `file://${__dirname}/index.html/#/plugin?${stringify(opts)}`
+      : `${__dirname}/index.html`
     const win = new BrowserWindow({
       height: 600,
       useContentSize: true,
@@ -48,7 +49,9 @@ export default function init(mainWindow) {
         nodeIntegration: true // 在网页中集成Node
       }
     });
-    win.loadURL(winURL)
+    process.env.NODE_ENV === 'development' ? win.loadURL(winURL) : win.loadFile(winURL, {
+      hash: `#/plugin?${stringify(opts)}`,
+    });
     win.once('ready-to-show', () => win.show());
   })
 }
