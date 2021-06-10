@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: transparent;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+#picker {
+    width: 100px;
+    height: 100px;
+    border-radius: 120px;
+    box-sizing: border-box;
+}

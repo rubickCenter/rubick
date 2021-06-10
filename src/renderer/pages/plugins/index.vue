@@ -10,6 +10,10 @@
 <script>
 import path from 'path';
 import {mapMutations, mapState} from 'vuex';
+import {remote} from "electron";
+
+const currentWindow = remote.getCurrentWindow();
+const winId = currentWindow.id;
 
 export default {
   name: "index.vue",
@@ -20,7 +24,7 @@ export default {
       webview: null,
       query: this.$route.query,
       config: {},
-      templatePath: `File://${path.join(__static, './doc-tpl.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}`,
+      templatePath: `File://${path.join(__static, './plugins/doc/doc-tpl.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}`,
     }
   },
   mounted() {
@@ -90,9 +94,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 #webview {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(~'100vh - 60px');
 }
 </style>

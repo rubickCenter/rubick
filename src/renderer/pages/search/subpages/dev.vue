@@ -110,9 +110,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
  .dev-container {
-   height: calc(100vh - 110px);
+   height: calc(~'100vh - 110px');
    .dev-detail {
      display: flex;
      align-items: flex-start;

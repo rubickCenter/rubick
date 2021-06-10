@@ -1,6 +1,6 @@
 import { app, BrowserWindow, protocol } from 'electron'
 import '../renderer/store'
-import init from './common';
+import init from './common/common';
 import createTray from './tray';
 /**
  * Set `__static` path to static files in production

@@ -74,9 +74,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
  .market {
-   height: calc(100vh - 110px);
+   height: calc(~'100vh - 110px');
    background: #fff;
    padding: 20px;
    box-sizing: border-box;

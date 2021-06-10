@@ -1,5 +1,5 @@
 import {app, BrowserWindow} from 'electron';
-import {getlocalDataFile, saveData, getData} from './common/utils';
+import {getlocalDataFile, saveData, getData} from './utils';
 import path from "path";
 
 const puppeteer = require("puppeteer-core");

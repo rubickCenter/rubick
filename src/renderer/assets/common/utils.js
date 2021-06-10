@@ -1,4 +1,4 @@
-import {WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT} from './constans';
+import {WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS} from './constans';
 import download from 'download-git-repo';
 import path from 'path';
 import fs from 'fs';
@@ -14,7 +14,6 @@ function getWindowHeight(searchList) {
 }
 
 function searchKeyValues(lists, value){
-  console.log(lists);
   return lists.filter(item => item.indexOf(value) >= 0)
 }
 
@@ -90,9 +89,24 @@ const sysFile = {
   }
 }
 
+function mergePlugins(plugins) {
+  return [
+    ...plugins,
+    ...SYSTEM_PLUGINS.map(plugin => {
+      return {
+        ...plugin,
+        status: true,
+        sourceFile: '',
+        type: 'system',
+      }
+    }),
+  ]
+}
+
 export {
   getWindowHeight,
   searchKeyValues,
   downloadFunc,
   sysFile,
+  mergePlugins,
 }

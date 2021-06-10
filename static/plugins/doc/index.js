@@ -2,7 +2,6 @@ import doc from './doc.js';
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
-  console.log(vars);
   for (var i=0;i<vars.length;i++) {
     var pair = vars[i].split("=");
     if(pair[0] == variable){return pair[1];}
@@ -15,10 +14,10 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes // (缩写) 相当于 routes: routes
+  routes
 })
 
-const app = new Vue({
+new Vue({
   el: '#app',
   data: {
     config: window.exports,

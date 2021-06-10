@@ -16,7 +16,7 @@
           id="search"
           :placeholder="subPlaceHolder && selected && selected.key === 'plugin-container' ? subPlaceHolder : 'Hi, Rubick'"
           class="main-input"
-          @change="onSearch"
+          @change="e => onSearch({value: e.target.value})"
           :value="searchValue"
           :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
       >
@@ -49,7 +49,7 @@
         <a-input
             :placeholder="subPlaceHolder"
             class="sub-input"
-            @change="onSearch"
+            @change="(e) => onSearch({value: e.target.value, searchType: $route.query.searchType})"
             :value="searchValue"
         ></a-input>
       </div>
@@ -84,8 +84,6 @@ export default {
     const searchNd = document.getElementById('search');
     searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)
   },
-  beforeDestroy() {
-  },
   methods: {
     ...mapActions('main', ['onSearch', 'showMainUI']),
     ...mapMutations('main', ['commonUpdate']),
@@ -104,8 +102,9 @@ export default {
       this.commonUpdate({
         selected: null,
         showMain: false,
+        options: [],
       });
-      ipcRenderer.send('changeWindowSize', {
+      ipcRenderer.send('changeWindowSize-rubick', {
         height: getWindowHeight([]),
       });
       this.$router.push({
@@ -167,7 +166,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="less">
 * {
   margin: 0;
   padding: 0;

@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 .main-input {
   -webkit-app-region: drag;
   height: 60px !important;

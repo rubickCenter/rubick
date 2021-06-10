@@ -1,6 +1,13 @@
 import {clipboard, ipcRenderer, remote} from "electron";
 import { v4 as uuidv4 } from 'uuid';
-import {getWindowHeight, searchKeyValues, downloadFunc, sysFile} from '../../assets/common/utils';
+import {
+  getWindowHeight,
+  searchKeyValues,
+  downloadFunc,
+  sysFile,
+  mergePlugins,
+} from '../../assets/common/utils';
+import systemMethod from '../../assets/common/system';
 import fs from "fs";
 import path from 'path';
 
@@ -10,7 +17,7 @@ const state = {
   showMain: false,
   current: ['market'],
   searchValue: '',
-  devPlugins: sysFile.getUserPlugins() || [],
+  devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
   subPlaceHolder: '',
 }
 
@@ -48,7 +55,7 @@ const mutations = {
 
 const actions = {
   showMainUI ({ commit, state }, paylpad) {
-    ipcRenderer.send('changeWindowSize', {
+    ipcRenderer.send('changeWindowSize-rubick', {
       height: getWindowHeight(),
     });
     setTimeout(() => {
@@ -85,9 +92,9 @@ const actions = {
       commit('commonUpdate', {searchValue: ''});
       return;
     }
-    const value = paylpad.target.value;
+    const value = paylpad.value;
     // 在插件界面
-    if(state.selected && state.selected.key === 'plugin-container') {
+    if((state.selected && state.selected.key === 'plugin-container') || paylpad.searchType === 'subWindow') {
       commit('commonUpdate', {searchValue: value})
       return;
     }
@@ -131,7 +138,7 @@ const actions = {
                 },
                 current: ['dev'],
               });
-              ipcRenderer.send('changeWindowSize', {
+              ipcRenderer.send('changeWindowSize-rubick', {
                 height: getWindowHeight(),
               });
               router.push('/home/dev')
@@ -149,7 +156,7 @@ const actions = {
         ]
       });
       // 调整窗口大小
-      ipcRenderer.send('changeWindowSize', {
+      ipcRenderer.send('changeWindowSize-rubick', {
         height: getWindowHeight(state.options),
       });
       return
@@ -184,7 +191,7 @@ const actions = {
     commit('commonUpdate', {
       options
     });
-    ipcRenderer.send('changeWindowSize', {
+    ipcRenderer.send('changeWindowSize-rubick', {
       height: getWindowHeight(state.options),
     });
   },
@@ -212,9 +219,24 @@ const actions = {
       searchValue: '',
       showMain: true,
     });
-    ipcRenderer.send('changeWindowSize', {
+    ipcRenderer.send('changeWindowSize-rubick', {
       height: getWindowHeight(),
     });
+    if (plugin.type === 'system') {
+      systemMethod[plugin.tag][feature.code]()
+      commit('commonUpdate', {
+        selected: null,
+        showMain: false,
+        options: [],
+      });
+      ipcRenderer.send('changeWindowSize-rubick', {
+        height: getWindowHeight([]),
+      });
+      router.push({
+        path: '/home',
+      });
+      return;
+    }
     router.push({
       path: '/plugin',
       query: {
