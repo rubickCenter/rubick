@@ -63,7 +63,7 @@ export default function init(mainWindow) {
       fn = fn[op];
     });
     const data = await fn(arg, window);
-    window.webContents.send(`msg-back-${arg.type}`, data);
+    event.sender.send(`msg-back-${arg.type}`, data);
   });
 
   ipcMain.on('new-window', (event, arg) => {

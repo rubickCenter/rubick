@@ -16,7 +16,7 @@ function getQueryVariable(variable) {
 if (location.href.indexOf('targetFile') > -1) {
   filePath = decodeURIComponent(getQueryVariable('targetFile'));
 } else {
-  filePath = location.href.replace('file://', '');
+  filePath = location.pathname.replace('file://', '');
 }
 const {ipcRenderer, nativeImage, clipboard, remote} = require('electron');
 
@@ -105,7 +105,8 @@ window.utools = window.rubick = {
       name,
     });
     return new Promise((resolve, reject) => {
-      ipcRenderer.once(`msg-back-getPath`, (e, result) => {
+      ipcRenderer.on(`msg-back-getPath`, (e, result) => {
+        console.log(result)
         result ? resolve(result) : reject();
       });
     })
@@ -118,6 +119,18 @@ window.utools = window.rubick = {
     return myNotification;
     // todo 实现 clickFeatureCode
   },
+  showOpenDialog(options) {
+    ipcRenderer.send('msg-trigger', {
+      type: 'showOpenDialog',
+      options: {...options},
+    });
+    return new Promise((resolve, reject) => {
+      ipcRenderer.once(`msg-back-showOpenDialog`, (e, result) => {
+        result ? resolve(result) : reject();
+      });
+    })
+  },
+
   copyImage(img) {
     convertImgToBase64(img,function(base64Image) {
       const image = nativeImage.createFromDataURL(base64Image)

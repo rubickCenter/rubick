@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, dialog} from 'electron';
 import {getlocalDataFile, saveData, getData} from './utils';
 import path from "path";
 
@@ -24,6 +24,9 @@ export default {
   },
   showMainWindow(arg, mainWindow) {
     mainWindow.show();
+  },
+  showOpenDialog({options}) {
+    return JSON.parse(JSON.stringify(dialog.showOpenDialogSync(options)));
   },
   onPluginEnter(arg) {
     return arg

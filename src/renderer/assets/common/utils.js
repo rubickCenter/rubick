@@ -14,7 +14,10 @@ function getWindowHeight(searchList) {
 }
 
 function searchKeyValues(lists, value){
-  return lists.filter(item => item.indexOf(value) >= 0)
+  return lists.filter(item => {
+    if (typeof item === 'string') return item.indexOf(value) >= 0;
+    return item.type.indexOf(value) >= 0;
+  })
 }
 
 function existOrNot(path) {
