@@ -44,7 +44,8 @@ function mkdirFolder(name) {
   });
 }
 
-function downloadFunc(downloadRepoUrl, name) {
+function downloadFunc(downloadRepoUrl, name, gitUrl) {
+  const targetGit = gitUrl ? gitUrl : `github:clouDr-f2e/${name}`;
   const plugin_path = path.join(__static, './plugins');
 
   return new Promise(async (resolve, reject) => {
@@ -59,7 +60,7 @@ function downloadFunc(downloadRepoUrl, name) {
         await process.execSync(`rm -rf ${temp_dest}`);
       }
 
-      download(`github:clouDr-f2e/${name}`, temp_dest, function (err) {
+      download(targetGit, temp_dest, function (err) {
         console.log(err ? 'Error' : 'Success')
         if (err) {
           console.log(err);

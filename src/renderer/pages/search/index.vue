@@ -14,8 +14,8 @@
           <a-icon type="code"/>
           开发者
         </a-menu-item>
-        <a-menu-item key="set">
-          <a-icon type="setting"/>
+        <a-menu-item key="settings">
+          <a-icon type="settings"/>
           设置
         </a-menu-item>
       </a-menu>

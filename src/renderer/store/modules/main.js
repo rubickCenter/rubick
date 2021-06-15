@@ -38,7 +38,7 @@ const mutations = {
     sysFile.savePlugins(state.devPlugins);
   },
   deleteProdPlugin(state, payload) {
-    state.devPlugins = state.devPlugins.filter(plugin => plugin.name !== payload.name);
+    state.devPlugins = state.devPlugins.filter(plugin => plugin.id !== payload.id);
     sysFile.savePlugins(state.devPlugins);
     // todo 删除 static 目录下的对应插件
   },
@@ -107,8 +107,9 @@ const actions = {
       const pluginConfig = {
         ...config,
         sourceFile: path.join(fileUrl, `../${config.main || 'index.html'}`),
-        name: uuidv4(),
+        id: uuidv4(),
         type: 'dev',
+        icon: 'image://' + path.join(fileUrl, `../${config.logo}`),
         subType: (() => {
           if (config.main) {
             return ''
@@ -202,6 +203,7 @@ const actions = {
     const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
     const pluginConfig = {
       ...config,
+      id: uuidv4(),
       sourceFile: `${fileUrl}/${config.main}`,
       type: 'prod'
     };

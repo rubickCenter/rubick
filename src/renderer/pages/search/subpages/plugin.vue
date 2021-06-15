@@ -2,7 +2,7 @@
   <div class="dev-container">
     <div class="dev-detail" v-if="prodPlugin.length">
       <a-menu v-model="currentSelect" style="width: 256px; height: 100%" mode="vertical">
-        <a-menu-item @click="currentSelect = [index]" v-for="(plugin, index) in devPlugins" :key="index">
+        <a-menu-item @click="currentSelect = [index]" v-for="(plugin, index) in prodPlugin" :key="index">
           <div>{{ plugin.pluginName }}</div>
           <div>{{ plugin.description }}</div>
         </a-menu-item>

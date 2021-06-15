@@ -12,10 +12,9 @@
       <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px">
         <a-icon type="right-circle" />
       </div>
-      <div><h3>1</h3></div>
-      <div><h3>2</h3></div>
-      <div><h3>3</h3></div>
-      <div><h3>4</h3></div>
+      <div v-for="banner in bannerList">
+        <img width="100%" :src="banner.src" />
+      </div>
     </a-carousel>
     <a-divider></a-divider>
     <h2>插件</h2>
@@ -29,7 +28,7 @@
         <a-list-item-meta
             :description="item.description"
         >
-          <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+          <div slot="title">{{ item.pluginName }}</div>
           <a-avatar
               slot="avatar"
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -49,18 +48,28 @@ export default {
     return {
       pluginList: [],
       loading: {},
+      bannerList: []
     }
   },
   async created() {
-    const result = await api.plugin.query();
+    const [result, bannerRes] = await Promise.all([
+      api.plugin.query(),
+      api.banner.query(),
+    ]);
     this.pluginList = result.result;
+    this.bannerList = bannerRes.result;
+    console.log(bannerRes)
   },
 
   methods: {
     async download(index, item) {
       if (this.loading[index]) return;
       this.$set(this.loading, index, true);
-      await this.downloadPlugin(item);
+      try {
+        await this.downloadPlugin(item);
+      } catch (e) {
+        this.$message.error(e);
+      }
       this.$set(this.loading, index, false);
     },
     showButton(item) {
@@ -82,7 +91,7 @@ export default {
    box-sizing: border-box;
    .ant-carousel .slick-slide {
      text-align: center;
-     height: 200px;
+     height: 235px;
      line-height: 160px;
      background: #364d79;
      overflow: hidden;

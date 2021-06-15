@@ -58,9 +58,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^1.7.5",
-    "anyproxy": "^4.1.3",
     "axios": "^0.18.1",
-    "chokidar": "^3.5.1",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
     "marked": "^2.0.7",

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Market from '../pages/search/subpages/market';
 import Dev from '../pages/search/subpages/dev';
 import Installed from '../pages/search/subpages/plugin';
+import Settings from '../pages/search/subpages/settings';
 
 Vue.use(Router)
 
@@ -24,6 +25,10 @@ export default new Router({
         {
           path: 'plugin',
           component: Installed
+        },
+        {
+          path: 'settings',
+          component: Settings
         },
       ]
     },
