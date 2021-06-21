@@ -60,7 +60,7 @@ function downloadFunc(downloadRepoUrl, name) {
         await process.execSync(`rm -rf ${temp_dest}`);
       }
 
-      download(targetGit, temp_dest, function (err) {
+      download(targetGit, temp_dest, {clone: true}, function (err) {
         console.log(err ? 'Error' : 'Success')
         if (err) {
           console.log(err);

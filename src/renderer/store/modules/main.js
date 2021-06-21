@@ -181,6 +181,7 @@ const actions = {
               value: 'plugin',
               icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
               desc: fe.explain,
+              type: plugin.type,
               click: (router) => {
                 actions.openPlugin({commit}, {cmd, plugin, feature: fe, router});
               }

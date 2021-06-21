@@ -39,6 +39,8 @@
                   :src="item.icon"
               />
             </a-list-item-meta>
+            <a-tag v-show="item.type === 'dev'">开发者</a-tag>
+            <a-tag v-show="item.type === 'system'">系统</a-tag>
           </a-list-item>
         </a-list>
       </div>
