@@ -31,7 +31,7 @@
           <div slot="title">{{ item.pluginName }}</div>
           <a-avatar
               slot="avatar"
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              :src="item.logo"
           />
         </a-list-item-meta>
       </a-list-item>
@@ -119,6 +119,12 @@ export default {
      display: flex !important;
      align-items: center;
      justify-content: space-between;
+   }
+   .ant-list-item-meta-description {
+     width: 200px;
+     overflow: hidden;
+     text-overflow:ellipsis;
+     white-space: nowrap;
    }
  }
 

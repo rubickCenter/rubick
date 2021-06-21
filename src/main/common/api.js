@@ -32,7 +32,7 @@ export default {
     return arg
   },
   setExpendHeight({height}, mainWindow) {
-    mainWindow.setSize(788, height || 60);
+    mainWindow.setSize(800, height || 60);
   },
   db: {
     put({data}) {

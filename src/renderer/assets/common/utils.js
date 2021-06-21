@@ -44,8 +44,8 @@ function mkdirFolder(name) {
   });
 }
 
-function downloadFunc(downloadRepoUrl, name, gitUrl) {
-  const targetGit = gitUrl ? gitUrl : `github:clouDr-f2e/${name}`;
+function downloadFunc(downloadRepoUrl, name) {
+  const targetGit = downloadRepoUrl ? downloadRepoUrl : `github:clouDr-f2e/${name}`;
   const plugin_path = path.join(__static, './plugins');
 
   return new Promise(async (resolve, reject) => {
@@ -107,10 +107,34 @@ function mergePlugins(plugins) {
   ]
 }
 
+function find(p) {
+  try {
+    let result;
+    const fileList = fs.readdirSync(p);
+    for (let i = 0; i < fileList.length; i++) {
+      let thisPath = p + "/" + fileList[i];
+      const data = fs.statSync(thisPath);
+
+      if (data.isFile() && fileList[i] === 'plugin.json') {
+        result = path.join(thisPath, '../');
+        return result;
+      }
+      if (data.isDirectory()) {
+        result = find(thisPath);
+      }
+    }
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+
+}
+
 export {
   getWindowHeight,
   searchKeyValues,
   downloadFunc,
   sysFile,
   mergePlugins,
+  find,
 }

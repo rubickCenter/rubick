@@ -22,7 +22,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     height: 60,
     useContentSize: true,
-    width: 788,
+    width: 800,
     frame: false,
     title: '拉比克',
     webPreferences: {

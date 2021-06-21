@@ -6,6 +6,7 @@ import {
   downloadFunc,
   sysFile,
   mergePlugins,
+  find,
 } from '../../assets/common/utils';
 import systemMethod from '../../assets/common/system';
 import fs from "fs";
@@ -198,7 +199,7 @@ const actions = {
   },
   async downloadPlugin({commit}, payload) {
     await downloadFunc(payload.gitUrl, payload.name);
-    const fileUrl = path.join(__static, `plugins/${payload.name}`);
+    const fileUrl = find(path.join(__static, `plugins/${payload.name}`));
     // 复制文件
     const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
     const pluginConfig = {

@@ -33,7 +33,7 @@ export default function init(mainWindow) {
   });
 
   ipcMain.on('changeWindowSize-rubick', (event, arg) => {
-    mainWindow.setSize(arg.width || 788, arg.height);
+    mainWindow.setSize(arg.width || 800, arg.height);
   });
 
   mainWindow.on('blur', () => {
