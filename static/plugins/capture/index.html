@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+      @import "./assets/iconfont/iconfont.css";
+
+      html, body, div {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      .mask {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: none;
+      }
+
+      .bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+
+      .image-canvas {
+          position: absolute;
+          display: none;
+          z-index: 1;
+      }
+
+      .size-info {
+          position: absolute;
+          color: #ffffff;
+          font-size: 12px;
+          background: rgba(40, 40, 40, 0.8);
+          padding: 5px 10px;
+          border-radius: 2px;
+          font-family: Arial Consolas sans-serif;
+          display: none;
+          z-index: 2;
+      }
+
+      .toolbar {
+          position: absolute;
+          color: #343434;
+          font-size: 12px;
+          background: #f5f5f5;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-family: Arial Consolas sans-serif;
+          display: none;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+          z-index: 2;
+          align-items: center;
+      }
+
+      .toolbar .iconfont {
+          font-size: 24px;
+          padding: 2px 5px;
+      }
+  </style>
+</head>
+
+<body>
+<div id="js-bg" class="bg"></div>
+<div id="js-mask" class="mask"></div>
+<canvas id="js-canvas" class="image-canvas"></canvas>
+<div id="js-size-info" class="size-info"></div>
+<div id="js-toolbar" class="toolbar">
+  <div class="iconfont icon-zhongzhi" id="js-tool-reset"></div>
+  <div class="iconfont icon-xiazai" id="js-tool-save"></div>
+  <div class="iconfont icon-guanbi" id="js-tool-close"></div>
+  <div class="iconfont icon-duihao" id="js-tool-ok"></div>
+</div>
+<script src="./capture-renderer.js"></script>
+</body>
+</html>
+

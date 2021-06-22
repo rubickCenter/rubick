@@ -7,6 +7,7 @@ import {
   sysFile,
   mergePlugins,
   find,
+  downloadZip,
 } from '../../assets/common/utils';
 import systemMethod from '../../assets/common/system';
 import fs from "fs";
@@ -179,7 +180,7 @@ const actions = {
             ...cmds.map((cmd) => ({
               name: cmd,
               value: 'plugin',
-              icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
+              icon: plugin.sourceFile ? 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`) : plugin.logo,
               desc: fe.explain,
               type: plugin.type,
               click: (router) => {
@@ -199,8 +200,8 @@ const actions = {
     });
   },
   async downloadPlugin({commit}, payload) {
-    await downloadFunc(payload.gitUrl, payload.name);
-    const fileUrl = find(path.join(__static, `plugins/${payload.name}`));
+    await downloadZip(payload.gitUrl, payload.name);
+    const fileUrl = find(path.join(__static, `plugins/${payload.name}-master`));
     // 复制文件
     const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
     const pluginConfig = {
@@ -221,7 +222,7 @@ const actions = {
         icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
       },
       searchValue: '',
-      showMain: true,
+      showMain: true
     });
     ipcRenderer.send('changeWindowSize-rubick', {
       height: getWindowHeight(),

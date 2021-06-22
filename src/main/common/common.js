@@ -45,10 +45,6 @@ export default function init(mainWindow) {
   });
 
   ipcMain.on('init-shortcut', (event) => {
-    globalShortcut.register('Esc', () => {
-      mainWindow.show();
-      event.sender.send('init-rubick');
-    });
     globalShortcut.register('ctrl+d', () => {
       event.sender.send('new-window');
     });

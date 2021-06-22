@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import process from 'child_process';
 import Store from 'electron-store';
+import downloadFile from 'download';
 
 const store = new Store();
 
@@ -44,6 +45,21 @@ function mkdirFolder(name) {
   });
 }
 
+async function downloadZip(downloadRepoUrl, name) {
+  const plugin_path = path.join(__static, './plugins');
+  const targetUrl = downloadRepoUrl ? downloadRepoUrl : `https://github.com/clouDr-f2e/${name}/archive/refs/heads/master.zip`;
+  if (!(await existOrNot(plugin_path))) {
+    await mkdirFolder(plugin_path);
+  }
+  // 基础模版所在目录，如果是初始化，则是模板名称，否则是项目名称
+  const temp_dest = `${plugin_path}/${name}-master`;
+  // 下载模板
+  if (await existOrNot(temp_dest)) {
+    await process.execSync(`rm -rf ${temp_dest}`);
+  }
+  await downloadFile(targetUrl, `${__static}/plugins`,{extract: true})
+}
+
 function downloadFunc(downloadRepoUrl, name) {
   const targetGit = downloadRepoUrl ? downloadRepoUrl : `github:clouDr-f2e/${name}`;
   const plugin_path = path.join(__static, './plugins');
@@ -82,7 +98,6 @@ const sysFile = {
   },
   getUserPlugins() {
     try {
-      console.log(store.get('user-plugins').devPlugins)
       return store.get('user-plugins').devPlugins;
     } catch (e) {
       return []
@@ -92,6 +107,7 @@ const sysFile = {
     store.delete('user-plugins');
   }
 }
+sysFile.removeAllPlugins()
 
 function mergePlugins(plugins) {
   return [
@@ -137,4 +153,5 @@ export {
   sysFile,
   mergePlugins,
   find,
+  downloadZip,
 }

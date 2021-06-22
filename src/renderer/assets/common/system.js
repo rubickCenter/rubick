@@ -9,5 +9,10 @@ export default {
     pick() {
       ipcRenderer.send('start-picker')
     }
+  },
+  'rubick-screen-short-cut': {
+    shortCut() {
+      ipcRenderer.send('capture-screen', {type: 'start'})
+    }
   }
 }

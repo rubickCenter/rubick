@@ -2,6 +2,7 @@ import { app, BrowserWindow, protocol } from 'electron'
 import '../renderer/store'
 import init from './common/common';
 import createTray from './tray';
+const {capture} = require("./browsers")();
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -19,6 +20,7 @@ function createWindow () {
   /**
    * Initial window options
    */
+  capture.useCapture()
   mainWindow = new BrowserWindow({
     height: 60,
     useContentSize: true,

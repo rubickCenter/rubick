@@ -59,6 +59,7 @@
   "dependencies": {
     "ant-design-vue": "^1.7.5",
     "axios": "^0.18.1",
+    "download": "^8.0.0",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
     "marked": "^2.0.7",
