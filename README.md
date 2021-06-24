@@ -108,3 +108,7 @@ utools.db.put({
 ### 最后
 utools过于强大，目前还没有完全实现其所有功能，不过我们会根据需要不断更新。欢迎小伙伴一起 `pr` 或 `star`
 
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.
+
