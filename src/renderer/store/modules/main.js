@@ -130,7 +130,7 @@ const actions = {
           {
             name: '新建rubick开发插件',
             value: 'new-plugin',
-            icon: 'plus-circle',
+            icon: 'https://static.91jkys.com/activity/img/b37ff555c748489f88f3adac15b76f18.png',
             desc: '新建rubick开发插件',
             click: (router) => {
               commit('commonUpdate', {
@@ -151,9 +151,18 @@ const actions = {
             name: '复制路径',
             desc: '复制路径',
             value: 'copy-path',
-            icon: 'plus-circle',
+            icon: 'https://static.91jkys.com/activity/img/ac0d4df0247345b9a84c8cd7ea3dd696.png',
             click: () => {
-              clipboard.writeText(fileUrl)
+              clipboard.writeText(fileUrl);
+              commit('commonUpdate', {
+                showMain: false,
+                selected: null,
+                options: [],
+              });
+              ipcRenderer.send('changeWindowSize-rubick', {
+                height: getWindowHeight([]),
+              });
+              remote.Notification('Rubick 通知', { body: '复制成功' });
             }
           }
         ]

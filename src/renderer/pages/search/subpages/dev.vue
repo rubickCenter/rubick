@@ -1,10 +1,15 @@
 <template>
   <div class="dev-container">
     <div class="dev-detail" v-if="devPlugin.length">
-      <a-menu v-model="currentSelect" style="width: 256px; height: 100%" mode="vertical">
+      <a-menu v-model="currentSelect" style="width: 200px; height: 100%" mode="vertical">
         <a-menu-item @click="currentSelect = [index]" v-for="(plugin, index) in devPlugin" :key="index">
-          <div>{{ plugin.pluginName }}</div>
-          <div>{{ plugin.description }}</div>
+          <div class="menu-item">
+            <img width="40" height="40" :src="pluginDetail.icon" />
+            <div>
+              <div class="title">{{ plugin.pluginName }}</div>
+              <div class="desc">{{ plugin.description }}</div>
+            </div>
+          </div>
         </a-menu-item>
       </a-menu>
       <div class="plugin-detail">
@@ -56,7 +61,7 @@
             </div>
           </a-tab-pane>
           <a-tab-pane key="2" tab="详情介绍">
-            Content of Tab Pane 2
+            <div class="detail-container" v-html="readme"></div>
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -70,6 +75,12 @@
 <script>
 import {mapState, mapMutations, mapActions} from 'vuex';
 import api from "../../../assets/api";
+import marked from "marked";
+import path from "path";
+import fs from "fs";
+
+const rendererMD = new marked.Renderer();
+
 export default {
   data() {
     return {
@@ -105,6 +116,25 @@ export default {
     },
     devPlugin() {
       return this.devPlugins.filter(plugin => plugin.type === 'dev')
+    },
+    readme() {
+      marked.setOptions({
+        renderer: rendererMD,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+      });
+      try {
+        const mdFile = path.join(this.pluginDetail.sourceFile, '../README.md');
+        return marked(fs.readFileSync(mdFile, 'utf8'));
+      } catch (e) {
+        return '暂无描述信息'
+      }
+
     }
   }
 }
@@ -113,15 +143,48 @@ export default {
 <style lang="less">
  .dev-container {
    height: calc(~'100vh - 110px');
+   width: 100%;
+   .ant-menu-item {
+     height: 60px !important;
+     display: flex;
+     align-items: center;
+     .menu-item {
+       display: flex;
+       align-items: center;
+       line-height: 22px !important;
+       img {
+         margin-right: 10px;
+       }
+       .title {
+         color: rgba(0,0,0,0.8);
+       }
+       .desc {
+         color: #999;
+       }
+     }
+   }
    .dev-detail {
      display: flex;
      align-items: flex-start;
      height: 100%;
+     width: 100%;
    }
    .plugin-detail {
      padding: 20px;
      box-sizing: border-box;
      flex: 1;
+     .detail-container {
+       height: 340px;
+       overflow: auto;
+       max-height: 320px;
+       width: 100%;
+       margin: 0;
+       padding: 0;
+
+       * {
+         width: 100%;
+       }
+     }
      .plugin-top {
        display: flex;
        align-items: flex-start;

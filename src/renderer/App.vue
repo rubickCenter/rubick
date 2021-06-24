@@ -90,6 +90,7 @@ export default {
     ...mapActions('main', ['onSearch', 'showMainUI']),
     ...mapMutations('main', ['commonUpdate']),
     checkNeedInit(e) {
+      // 如果搜索栏无内容，且按了删除键，则清空 tag
       if (this.searchValue === '' && e.keyCode === 8) {
         this.closeTag();
       }

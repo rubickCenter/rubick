@@ -46,18 +46,22 @@ function mkdirFolder(name) {
 }
 
 async function downloadZip(downloadRepoUrl, name) {
-  const plugin_path = path.join(__static, './plugins');
-  const targetUrl = downloadRepoUrl ? downloadRepoUrl : `https://github.com/clouDr-f2e/${name}/archive/refs/heads/master.zip`;
-  if (!(await existOrNot(plugin_path))) {
-    await mkdirFolder(plugin_path);
+  try {
+    const plugin_path = path.join(__static, './plugins');
+    const targetUrl = downloadRepoUrl ? downloadRepoUrl : `https://github.com/clouDr-f2e/${name}/archive/refs/heads/master.zip`;
+    if (!(await existOrNot(plugin_path))) {
+      await mkdirFolder(plugin_path);
+    }
+    // 基础模版所在目录，如果是初始化，则是模板名称，否则是项目名称
+    const temp_dest = `${plugin_path}/${name}-master`;
+    // 下载模板
+    if (await existOrNot(temp_dest)) {
+      await process.execSync(`rm -rf ${temp_dest}`);
+    }
+    await downloadFile(targetUrl, `${__static}/plugins`,{extract: true})
+  } catch (e) {
+    console.log(e);
   }
-  // 基础模版所在目录，如果是初始化，则是模板名称，否则是项目名称
-  const temp_dest = `${plugin_path}/${name}-master`;
-  // 下载模板
-  if (await existOrNot(temp_dest)) {
-    await process.execSync(`rm -rf ${temp_dest}`);
-  }
-  await downloadFile(targetUrl, `${__static}/plugins`,{extract: true})
 }
 
 function downloadFunc(downloadRepoUrl, name) {
@@ -123,7 +127,7 @@ function mergePlugins(plugins) {
   ]
 }
 
-function find(p) {
+function find(p, target = 'plugin.json') {
   try {
     let result;
     const fileList = fs.readdirSync(p);
@@ -131,7 +135,7 @@ function find(p) {
       let thisPath = p + "/" + fileList[i];
       const data = fs.statSync(thisPath);
 
-      if (data.isFile() && fileList[i] === 'plugin.json') {
+      if (data.isFile() && fileList[i] === target) {
         result = path.join(thisPath, '../');
         return result;
       }
@@ -143,7 +147,6 @@ function find(p) {
   } catch (e) {
     console.log(e);
   }
-
 }
 
 export {
