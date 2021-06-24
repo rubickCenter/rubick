@@ -4,7 +4,7 @@
       <a-menu v-model="currentSelect" style="width: 200px; height: 100%" mode="vertical">
         <a-menu-item @click="currentSelect = [index]" v-for="(plugin, index) in devPlugin" :key="index">
           <div class="menu-item">
-            <img width="40" height="40" :src="pluginDetail.icon" />
+            <img width="40" height="40" :src="plugin.icon" />
             <div>
               <div class="title">{{ plugin.pluginName }}</div>
               <div class="desc">{{ plugin.description }}</div>
