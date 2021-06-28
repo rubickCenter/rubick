@@ -39,11 +39,18 @@ const SYSTEM_PLUGINS = [
     ],
     "tag": 'rubick-screen-short-cut',
   }
-]
+];
+
+const APP_FINDER_PATH = [
+  '/System/Applications',
+  '/Applications',
+  '/System/Library/PreferencePanes',
+];
 
 export {
   WINDOW_MAX_HEIGHT,
   WINDOW_MIN_HEIGHT,
   PRE_ITEM_HEIGHT,
   SYSTEM_PLUGINS,
+  APP_FINDER_PATH,
 }

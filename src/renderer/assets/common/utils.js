@@ -5,6 +5,8 @@ import fs from 'fs';
 import process from 'child_process';
 import Store from 'electron-store';
 import downloadFile from 'download';
+import {nativeImage} from 'electron';
+import {APP_FINDER_PATH} from './constans';
 
 const store = new Store();
 
@@ -148,6 +150,70 @@ function find(p, target = 'plugin.json') {
     console.log(e);
   }
 }
+const fileLists = [];
+// 默认搜索目录
+APP_FINDER_PATH.forEach((searchPath) => {
+  fs.readdir(searchPath, (err, files) => {
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const appName = files[i];
+        const extname = path.extname(appName);
+        const appSubStr = appName.split(extname)[0];
+        if ((extname === '.app' || extname === '.prefPane') >= 0 ) {
+          try {
+            const path1 = path.join(searchPath, `${appName}/Contents/Resources/App.icns`);
+            const path2 = path.join(searchPath, `${appName}/Contents/Resources/AppIcon.icns`);
+            const path3 = path.join(searchPath, `${appName}/Contents/Resources/${appSubStr}.icns`);
+            const path4 = path.join(searchPath, `${appName}/Contents/Resources/${appSubStr.replace(' ', '')}.icns`);
+            let iconPath = path1;
+            if (fs.existsSync(path1)) {
+              iconPath = path1;
+            } else if (fs.existsSync(path2)) {
+              iconPath = path2;
+            } else if (fs.existsSync(path3)) {
+              iconPath = path3;
+            } else if (fs.existsSync(path4)) {
+              iconPath = path4;
+            } else {
+              // 性能最低的方式
+              const resourceList = fs.readdirSync(path.join(searchPath, `${appName}/Contents/Resources`));
+              const iconName = resourceList.filter(file => path.extname(file) === '.icns')[0];
+              iconPath = path.join(searchPath, `${appName}/Contents/Resources/${iconName}`);
+            }
+            nativeImage.createThumbnailFromPath(iconPath, {width: 64, height: 64}).then(img => {
+              fileLists.push({
+                name: appSubStr,
+                value: 'plugin',
+                icon: img.toDataURL(),
+                desc: path.join(searchPath, appName),
+                type: 'app',
+                action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`
+              })
+            })
+          } catch (e) {
+          }
+
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+});
+
+
+function debounce(fn, delay) {
+  let timer
+  return function () {
+    const context = this
+    const args = arguments
+
+    clearTimeout(timer)
+    timer = setTimeout(function () {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
 
 export {
   getWindowHeight,
@@ -157,4 +223,6 @@ export {
   mergePlugins,
   find,
   downloadZip,
+  fileLists,
+  debounce,
 }

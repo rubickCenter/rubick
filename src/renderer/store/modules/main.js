@@ -8,10 +8,12 @@ import {
   mergePlugins,
   find,
   downloadZip,
+  fileLists,
 } from '../../assets/common/utils';
 import systemMethod from '../../assets/common/system';
 import fs from "fs";
 import path from 'path';
+import {execSync} from 'child_process';
 
 const state = {
   selected: null,
@@ -89,7 +91,7 @@ const actions = {
       })
     })
   },
-  onSearch ({ commit }, paylpad) {
+  async onSearch ({ commit }, paylpad) {
     if (state.selected && state.selected.key !== 'plugin-container') {
       commit('commonUpdate', {searchValue: ''});
       return;
@@ -199,6 +201,16 @@ const actions = {
           ]
         })
       });
+      options = [
+        ...options,
+        ...(fileLists.filter(plugin => plugin.name.indexOf(value) >= 0)).map(plugin => {
+          plugin.click = () => {
+            console.log(plugin)
+            actions.openPlugin({commit}, {plugin});
+          }
+          return plugin
+        }),
+      ]
     }
 
     commit('commonUpdate', {
@@ -224,6 +236,19 @@ const actions = {
     });
   },
   openPlugin({commit}, {cmd, plugin, feature, router}) {
+    if (plugin.type === 'app') {
+      execSync(plugin.action);
+      commit('commonUpdate', {
+        selected: null,
+        showMain: false,
+        options: [],
+        searchValue: '',
+      });
+      ipcRenderer.send('changeWindowSize-rubick', {
+        height: getWindowHeight([]),
+      });
+      return;
+    }
     commit('commonUpdate', {
       selected: {
         key: 'plugin-container',

@@ -16,7 +16,7 @@
           id="search"
           :placeholder="subPlaceHolder && selected && selected.key === 'plugin-container' ? subPlaceHolder : 'Hi, Rubick'"
           class="main-input"
-          @change="e => onSearch({value: e.target.value})"
+          @change="e => search({value: e.target.value})"
           :value="searchValue"
           :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
       >
@@ -33,7 +33,7 @@
             <a-list-item-meta
                 :description="item.desc"
             >
-              <span slot="title" >{{ item.name }}</span>
+              <span slot="title" v-html="renderTitle(item.name)" ></span>
               <a-avatar
                   slot="avatar"
                   :src="item.icon"
@@ -67,7 +67,7 @@
 <script>
 import {mapActions, mapMutations, mapState} from "vuex";
 import {ipcRenderer, remote} from "electron";
-import {getWindowHeight} from "./assets/common/utils";
+import {getWindowHeight, debounce} from "./assets/common/utils";
 
 const {Menu, MenuItem} = remote;
 
@@ -75,7 +75,8 @@ export default {
   data() {
     return {
       searchType: this.$route.query.searchType ? 'subWindow' : '',
-      query: this.$route.query
+      query: this.$route.query,
+      searchFn: null,
     }
   },
   mounted() {
@@ -89,6 +90,16 @@ export default {
   methods: {
     ...mapActions('main', ['onSearch', 'showMainUI']),
     ...mapMutations('main', ['commonUpdate']),
+    search(v) {
+      if (!this.searchFn) {
+        this.searchFn = debounce(this.onSearch, 200);
+      }
+      this.searchFn(v);
+    },
+    renderTitle(title) {
+      const result = title.split(this.searchValue);
+      return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`
+    },
     checkNeedInit(e) {
       // 如果搜索栏无内容，且按了删除键，则清空 tag
       if (this.searchValue === '' && e.keyCode === 8) {
@@ -178,6 +189,9 @@ export default {
   padding-top: 60px;
   height: 100vh;
   overflow: auto;
+  ::-webkit-scrollbar {
+    width: 0;
+  }
 }
 .rubick-select, .rubick-select-subMenu {
   display: flex;
@@ -211,6 +225,8 @@ export default {
     left: 0;
     width: 100%;
     z-index: 99;
+    max-height: calc(~'100vh - 60px');
+    overflow: auto;
     .op-item {
       padding: 0 10px;
       height: 60px;
