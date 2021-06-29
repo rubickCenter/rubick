@@ -55,7 +55,7 @@ export default {
       }
       saveData(dbPath, dbData);
       return {
-        id: data.id,
+        id: data._id,
         ok: true,
         rev: '',
       }
@@ -102,15 +102,23 @@ export default {
       });
       saveData(dbPath, dbData);
       return docs.map(d => ({
-        id: d.id,
+        id: d._id,
         success: true,
         rev: '',
       }))
     },
     allDocs({key}) {
       const dbData = getData(dbPath);
-      const result = dbData.filter(d => d._id === key);
-      return result;
+      if (!key) {
+        return dbData;
+      }
+      if (typeof key === 'string') {
+        return dbData.filter(d => d._id.indexOf(key) >= 0);
+      }
+      if (Array.isArray(key)) {
+        return dbData.filter(d => key.indexOf(d._id) >= 0);
+      }
+      return [];
     }
   },
 

@@ -173,6 +173,29 @@ window.utools = window.rubick = {
           result ? resolve(result) : reject();
         });
       })
+    },
+    allDocs(key) {
+      ipcRenderer.send('msg-trigger', {
+        type: 'db.allDocs',
+        key,
+      });
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`msg-back-db.allDocs`, (e, result) => {
+          console.log(result);
+          result ? resolve(result) : reject();
+        });
+      })
+    },
+    bulkDocs(docs) {
+      ipcRenderer.send('msg-trigger', {
+        type: 'db.bulkDocs',
+        key,
+      });
+      return new Promise((resolve, reject) => {
+        ipcRenderer.once(`msg-back-db.bulkDocs`, (e, result) => {
+          result ? resolve(result) : reject();
+        });
+      })
     }
   },
   isDarkColors() {
