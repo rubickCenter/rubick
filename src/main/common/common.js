@@ -7,6 +7,7 @@ import {
 } from 'electron';
 import Api from './api';
 import robot from 'robotjs';
+import './config';
 
 const browsers = require("../browsers")();
 const mouseEvents = require("osx-mouse");
@@ -20,6 +21,19 @@ let closePicker = (newColor) => {
   }
 };
 
+function registerShortCut(mainWindow) {
+  const config = global.opConfig.get();
+  globalShortcut.unregisterAll();
+
+  globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+    mainWindow.show();
+  });
+
+  globalShortcut.register(config.perf.shortCut.separate, () => {
+    mainWindow.webContents.send('new-window');
+  });
+}
+
 export default function init(mainWindow) {
   const mouseTrack = mouseEvents();
   let down_time = 0;
@@ -31,25 +45,19 @@ export default function init(mainWindow) {
       new Notification({ title: 'Rubick 通知', body: '长按了' }).show();
     }
   });
+  registerShortCut(mainWindow);
+
+  ipcMain.on('re-register', (event, arg) => {
+    registerShortCut(mainWindow);
+  });
 
   ipcMain.on('changeWindowSize-rubick', (event, arg) => {
     mainWindow.setSize(arg.width || 800, arg.height);
   });
 
   mainWindow.on('blur', () => {
-    // mainWindow.hide();
+    mainWindow.hide();
   });
-
-  globalShortcut.register('Alt+R', () => {
-    mainWindow.show();
-  });
-
-  ipcMain.on('init-shortcut', (event) => {
-    globalShortcut.register('ctrl+d', () => {
-      event.sender.send('new-window');
-    });
-  })
-
 
   ipcMain.on('msg-trigger', async (event, arg) => {
     const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow

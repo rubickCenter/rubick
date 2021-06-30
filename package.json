@@ -62,6 +62,7 @@
     "download": "^8.0.0",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
+    "keycode": "^2.2.0",
     "marked": "^2.0.7",
     "node-fetch": "^2.6.1",
     "osx-mouse": "git+https://github.com/Toinane/osx-mouse.git",

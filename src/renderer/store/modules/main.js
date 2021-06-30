@@ -229,7 +229,8 @@ const actions = {
       ...config,
       id: uuidv4(),
       sourceFile: `${fileUrl}/${config.main}`,
-      type: 'prod'
+      type: 'prod',
+      icon: payload.logo
     };
     commit('commonUpdate', {
       devPlugins: [pluginConfig, ...state.devPlugins],

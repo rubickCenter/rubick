@@ -73,7 +73,6 @@ export default {
       this.$set(this.loading, index, false);
     },
     showButton(item) {
-      console.log(this.devPlugins)
       return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
     },
     ...mapActions('main', ['downloadPlugin'])
