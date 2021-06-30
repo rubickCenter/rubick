@@ -1,6 +1,7 @@
 import {WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS} from './constans';
 import path from 'path';
 import fs from 'fs';
+import process from 'child_process';
 import Store from 'electron-store';
 import downloadFile from 'download';
 import {nativeImage} from 'electron';
@@ -40,10 +41,15 @@ async function downloadZip(downloadRepoUrl, name) {
   try {
     const plugin_path = appPath;
     // 基础模版所在目录，如果是初始化，则是模板名称，否则是项目名称
-    // const temp_dest = `${plugin_path}/${name}`;
+    const temp_dest = `${plugin_path}/${name}`;
+    // 下载模板
+    if (await existOrNot(temp_dest)) {
+      await process.execSync(`rm -rf ${temp_dest}`);
+    }
+
     await downloadFile(downloadRepoUrl, plugin_path,{extract: true});
 
-    return `${plugin_path}/${name}`
+    return temp_dest;
   } catch (e) {
     console.log(e);
   }

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, protocol } from 'electron'
 import '../renderer/store'
 import init from './common/common';
+import {autoUpdate} from './common/autoUpdate';
 import createTray from './tray';
 const {capture} = require("./browsers")();
 /**
@@ -55,6 +56,7 @@ function createWindow () {
 app.on('ready', () => {
   createWindow()
   createTray(mainWindow);
+  autoUpdate();
 })
 
 app.on('window-all-closed', () => {

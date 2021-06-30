@@ -4,7 +4,7 @@ import pkg from '../../package.json';
 
 function createTray(window) {
   return new Promise((resolve, reject) => {
-    const appIcon = new Tray(path.join(__static, './rocket-t.png'));
+    const appIcon = new Tray(path.join(__static, './rocket.png'));
     const contextMenu = Menu.buildFromTemplate([
       {
         id: 3,
