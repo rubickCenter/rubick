@@ -73,6 +73,7 @@ export default {
       this.$set(this.loading, index, false);
     },
     showButton(item) {
+      console.log(this.devPlugins)
       return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
     },
     ...mapActions('main', ['downloadPlugin'])
@@ -89,6 +90,7 @@ export default {
    background: #fff;
    padding: 20px;
    box-sizing: border-box;
+   overflow: auto;
    .ant-carousel .slick-slide {
      text-align: center;
      height: 235px;

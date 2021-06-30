@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   getWindowHeight,
   searchKeyValues,
-  downloadFunc,
   sysFile,
   mergePlugins,
   find,
@@ -221,8 +220,9 @@ const actions = {
     });
   },
   async downloadPlugin({commit}, payload) {
-    await downloadZip(payload.gitUrl, payload.name);
-    const fileUrl = find(path.join(__static, `plugins/${payload.name}-master`));
+    const distUrl = await downloadZip(payload.downloadUrl, payload.name);
+    const fileUrl = find(distUrl);
+
     // 复制文件
     const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
     const pluginConfig = {

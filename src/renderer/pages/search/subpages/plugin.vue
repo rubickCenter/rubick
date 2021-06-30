@@ -27,7 +27,7 @@
         </div>
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" tab="功能关键字">
-            <div class="detail-container">
+            <div class="feature-container">
               <div class="desc-item" v-for="item in pluginDetail.features">
                 <div>{{item.explain}}</div>
                 <a-tag @click="openPlugin({cmd, plugin: pluginDetail, feature: item, router: $router})" v-for="cmd in item.cmds">{{cmd}}</a-tag>
@@ -123,7 +123,7 @@ export default {
         color: #999;
       }
     }
-    .detail-container {
+    .detail-container, .feature-container {
       height: 340px;
       overflow: auto;
     }
