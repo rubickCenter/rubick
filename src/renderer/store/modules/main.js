@@ -22,6 +22,7 @@ const state = {
   searchValue: '',
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
   subPlaceHolder: '',
+  pluginInfo: {},
 }
 
 const mutations = {
@@ -29,7 +30,7 @@ const mutations = {
     Object.keys(payload).forEach((key) => {
       state[key] = payload[key];
       if (key === 'devPlugins') {
-        sysFile.savePlugins(payload)
+        sysFile.savePlugins(payload[key])
       }
     });
   },
@@ -236,7 +237,7 @@ const actions = {
       devPlugins: [pluginConfig, ...state.devPlugins],
     });
   },
-  openPlugin({commit}, {cmd, plugin, feature, router}) {
+  openPlugin({commit}, {cmd, plugin, feature, router, payload}) {
     if (plugin.type === 'app') {
       execSync(plugin.action);
       commit('commonUpdate', {
@@ -253,7 +254,7 @@ const actions = {
     commit('commonUpdate', {
       selected: {
         key: 'plugin-container',
-        name: cmd,
+        name: cmd.label ? cmd.label : cmd,
         icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
       },
       searchValue: '',
@@ -277,10 +278,20 @@ const actions = {
       });
       return;
     }
+    commit('commonUpdate', {
+      pluginInfo: {
+        cmd,
+        ...plugin,
+        detail: feature,
+        payload,
+      }
+    });
+
     router.push({
       path: '/plugin',
       query: {
         ...plugin,
+        _modify: Date.now(),
         detail: JSON.stringify(feature)
       },
     })

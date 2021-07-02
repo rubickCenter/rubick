@@ -43,16 +43,15 @@ function convertImgToBase64(url, callback, outputFormat){
 window.utools = window.rubick = {
   // 事件
   onPluginEnter(cb) {
-    ipcRenderer.once('onPluginEnter', (e, message) => {
-      const feature = JSON.parse(message.detail)
-      console.log(feature)
-      cb({...feature, type: 'text'})
+    ipcRenderer.on('onPluginEnter', (e, message) => {
+      const feature = message.detail;
+      cb({...feature, type: message.cmd.type ? message.cmd.type : 'text', payload: message.payload})
     })
   },
   onPluginReady(cb) {
     ipcRenderer.once('onPluginReady', (e, message) => {
-      const feature = JSON.parse(message.detail)
-      cb({...feature, type: 'text'})
+      const feature = message.detail
+      cb({...feature, type: message.cmd.type ? message.cmd.type : 'text', payload: message.payload})
     })
   },
   onPluginOut(cb) {

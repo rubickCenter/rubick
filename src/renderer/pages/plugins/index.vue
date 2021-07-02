@@ -30,8 +30,8 @@ export default {
   mounted() {
     this.webview = document.querySelector('webview');
     this.webview.addEventListener('dom-ready', () => {
-      this.webview.send('onPluginReady', this.$route.query);
-      this.webview.send('onPluginEnter', this.$route.query);
+      this.webview.send('onPluginReady', this.pluginInfo);
+      this.webview.send('onPluginEnter', this.pluginInfo);
     });
     this.setSubPlaceHolder('Hi, Rubick');
     this.webview.addEventListener('ipc-message', (event) => {
@@ -74,14 +74,16 @@ export default {
     ...mapMutations('main', ['setSubPlaceHolder', 'commonUpdate']),
   },
   beforeRouteUpdate() {
-    this.path = `File://${this.$route.query.sourceFile}`
+    this.path = `File://${this.$route.query.sourceFile}`;
+    console.log(this.pluginInfo)
+    this.webview.send('onPluginEnter', this.pluginInfo);
   },
   beforeDestroy() {
     const webview = document.querySelector('webview');
     webview && webview.send('onPluginOut', this.$route.query)
   },
   computed: {
-    ...mapState('main', ['searchValue', 'devPlugins']),
+    ...mapState('main', ['searchValue', 'devPlugins', 'pluginInfo']),
     pluginDetail() {
       return (this.devPlugins.filter(plugin => plugin.name === this.query.name)[0] || {}).features
     },

@@ -20,9 +20,15 @@ let defaultConfig = {
         search: true,
       }
     },
+    superPanel: {
+      baiduAPI: {
+        key: '',
+        appid: '',
+      },
+      mouseDownTime: 500
+    }
   }
 }
-
 global.opConfig = {
   config: null,
   get() {
@@ -38,7 +44,6 @@ global.opConfig = {
     }
   },
   set(key, value) {
-    console.log(opConfig.config);
     opConfig.config[key] = value;
     fs.writeFileSync(configPath, JSON.stringify(opConfig.config));
   }

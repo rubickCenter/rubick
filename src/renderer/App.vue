@@ -80,15 +80,23 @@ export default {
     }
   },
   mounted() {
-    // 注册快捷键
-    ipcRenderer.send('init-shortcut');
     ipcRenderer.on('init-rubick', this.closeTag);
     ipcRenderer.on('new-window', this.newWindow);
+    // 超级面板打开插件
+    ipcRenderer.on('superPanel-openPlugin', (e, args) => {
+      this.openPlugin({
+        cmd: args.cmd,
+        plugin: args.plugin,
+        feature: args.feature,
+        router: this.$router,
+        payload: args.data,
+      })
+    });
     const searchNd = document.getElementById('search');
     searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)
   },
   methods: {
-    ...mapActions('main', ['onSearch', 'showMainUI']),
+    ...mapActions('main', ['onSearch', 'showMainUI', 'openPlugin']),
     ...mapMutations('main', ['commonUpdate']),
     search(v) {
       if (!this.searchFn) {

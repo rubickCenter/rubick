@@ -6,13 +6,7 @@
           偏好设置
         </a-menu-item>
         <a-menu-item :key="1">
-          本地启动文件
-        </a-menu-item>
-        <a-menu-item :key="2">
-          全局快捷键
-        </a-menu-item>
-        <a-menu-item :key="3">
-          所有关键字
+          超级面板
         </a-menu-item>
       </a-menu>
       <div class="settings-detail">
@@ -47,6 +41,30 @@
             </div>
           </div>
         </div>
+        <div  v-if="currentSelect[0] === 1">
+          <div class="setting-item">
+            <div class="title">弹出面板</div>
+            <a-select value="mouseRight" style="width: 200px" disabled>
+              <a-select-option value="mouseRight">长按鼠标右键</a-select-option>
+            </a-select>
+          </div>
+          <div class="setting-item">
+            <div class="title">长按以下设置的毫秒响应</div>
+            <a-slider :step="100" v-model:value="config.superPanel.mouseDownTime" :min="200" :max="1000" />
+          </div>
+          <div class="setting-item">
+            <div class="title">百度搜索配置</div>
+            <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 14 }">
+              <a-form-item label="appid">
+                <a-input v-model:value="config.superPanel.baiduAPI.appid" />
+              </a-form-item>
+              <a-form-item label="key">
+                <a-input v-model:value="config.superPanel.baiduAPI.key" />
+              </a-form-item>
+            </a-form>
+          </div>
+          <img width="100%" src="https://static.91jkys.com/upload/202107/02/fa4a5c614234409fb32ddda70cb900aa.jpg" />
+        </div>
       </div>
     </div>
   </div>
@@ -63,7 +81,7 @@ export default {
   data() {
     return {
       currentSelect: [0],
-      config: JSON.parse(JSON.stringify(opConfig.get()))
+      config: JSON.parse(JSON.stringify(opConfig.get())),
     }
   },
   methods: {
@@ -96,6 +114,7 @@ export default {
       deep: true,
       handler() {
         opConfig.set('perf', this.config.perf);
+        opConfig.set('superPanel', this.config.superPanel);
         ipcRenderer.send('re-register');
       }
     }
@@ -111,14 +130,19 @@ export default {
       height: 100%;
       display: flex;
       align-items: flex-start;
-      background: #F8FAFC;
+      background: #fff;
     }
     .settings-detail {
       padding: 20px;
       box-sizing: border-box;
       flex: 1;
+      overflow: auto;
+      height: 100%;
       .setting-item {
         margin-bottom: 20px;
+        .ant-form-item {
+          margin-bottom: 0;
+        }
         .title {
           color: #6C9FE2;
           font-size: 15px;
