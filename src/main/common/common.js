@@ -57,7 +57,7 @@ const getSelectedText = () => {
         text,
         fileUrl
       })
-    }, 100);
+    }, 300);
   })
 }
 
