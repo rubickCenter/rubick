@@ -97,9 +97,9 @@ const actions = {
       return;
     }
     const value = paylpad.value;
-    // 在插件界面
+    // 在插件界面不触发其他功能
     if((state.selected && state.selected.key === 'plugin-container') || paylpad.searchType === 'subWindow') {
-      commit('commonUpdate', {searchValue: value})
+      commit('commonUpdate', {searchValue: value});
       return;
     }
     const fileUrl = clipboard.read('public.file-url').replace('file://', '');

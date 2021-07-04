@@ -87,11 +87,6 @@ export default {
     pluginDetail() {
       return (this.devPlugins.filter(plugin => plugin.name === this.query.name)[0] || {}).features
     },
-  },
-  watch: {
-    searchValue() {
-      this.webview.send('msg-back-setSubInput', this.searchValue);
-    }
   }
 }
 </script>

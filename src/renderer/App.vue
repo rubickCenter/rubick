@@ -19,6 +19,10 @@
           @change="e => search({value: e.target.value})"
           :value="searchValue"
           :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
+          @keydown.down="(e) => changeCurrent(1)"
+          @keydown.up="() => changeCurrent(-1)"
+          @keypress.enter="(e) => targetSearch({value: e.target.value, type: 'enter'})"
+          @keypress.space="(e) => targetSearch({value: e.target.value, type: 'space'})"
       >
         <div @click="goMenu" class="suffix-tool" slot="suffix">
           <a-icon v-show="selected && selected.key === 'plugin-container'" class="icon-more" type="more" />
@@ -29,7 +33,12 @@
       </a-input>
       <div class="options" v-show="showOptions">
         <a-list item-layout="horizontal" :data-source="options">
-          <a-list-item @click="() => item.click($router)" class="op-item"  slot="renderItem" slot-scope="item, index">
+          <a-list-item
+              @click="() => item.click($router)"
+              :class="currentSelect === index ? 'active op-item' : 'op-item'"
+              slot="renderItem"
+              slot-scope="item, index"
+          >
             <a-list-item-meta
                 :description="item.desc"
             >
@@ -51,8 +60,10 @@
         <a-input
             :placeholder="subPlaceHolder"
             class="sub-input"
-            @change="(e) => onSearch({value: e.target.value, searchType: $route.query.searchType})"
+            @change="(e) => search({value: e.target.value, searchType: $route.query.searchType})"
             :value="searchValue"
+            @keypress.enter="(e) => targetSearch({value: e.target.value, type: 'enter'})"
+            @keypress.space="(e) => targetSearch({value: e.target.value, type: 'space'})"
         ></a-input>
       </div>
 
@@ -68,7 +79,7 @@
 import {mapActions, mapMutations, mapState} from "vuex";
 import {ipcRenderer, remote} from "electron";
 import {getWindowHeight, debounce} from "./assets/common/utils";
-
+const opConfig = remote.getGlobal('opConfig');
 const {Menu, MenuItem} = remote;
 
 export default {
@@ -77,6 +88,8 @@ export default {
       searchType: this.$route.query.searchType ? 'subWindow' : '',
       query: this.$route.query,
       searchFn: null,
+      config: opConfig.get(),
+      currentSelect: 0,
     }
   },
   mounted() {
@@ -104,6 +117,26 @@ export default {
       }
       this.searchFn(v);
     },
+    targetSearch(action) {
+      // 在插件界面唤起搜索功能
+      if((this.selected && this.selected.key === 'plugin-container') || this.searchType === 'subWindow') {
+        const webview = document.getElementById('webview');
+        if (action.type === 'space') {
+          if (this.config.perf.common.space) {
+            webview.send('msg-back-setSubInput', this.searchValue);
+          }
+          return;
+        }
+        webview.send('msg-back-setSubInput', this.searchValue);
+      } else if (this.showOptions) {
+        const item = this.options[this.currentSelect]
+        item.click(this.$router);
+      }
+    },
+    changeCurrent(index) {
+      this.currentSelect = this.currentSelect + index;
+    },
+
     renderTitle(title) {
       const result = title.split(this.searchValue);
       return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`
@@ -242,6 +275,9 @@ export default {
       max-height: 500px;
       overflow: auto;
       background: #fafafa;
+      &.active {
+        background: #DEE2E8;
+      }
     }
   }
 }
