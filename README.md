@@ -7,6 +7,19 @@
 基于 electron 的工具箱，媲美 utools的开源插件，已实现 utools 大部分的 API 能力，所以可以做到无缝适配 utools 开源的插件。
 之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick
 
+
+## 支持能力
+
+- [x] 支持 uTools 官方文档 90% API，还在更新中，很快可以做到 100%
+- [x] 插件化支持 uTools 所有开源插件
+- [x] 支持插件分离
+- [x] 支持系统命令取色、截屏、帮助
+- [x] 支持超级面板，长按右击呼出
+- [x] 支持全局快捷键设置
+- [x] 支持搜索本地已安装 app 或 偏好设置
+- [ ] 支持 Windows
+- [ ] 支持 Linux
+
 ![image](https://user-images.githubusercontent.com/21073039/122888869-d6e60d00-d374-11eb-9fb9-2a6e541e389e.png)
 
 ## utools 插件支持
