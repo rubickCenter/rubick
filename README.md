@@ -33,7 +33,10 @@
 - [ ] 支持 Windows
 - [ ] 支持 Linux
 
-![example.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/94fe23ead2da4707b88773177a571a07~tplv-k3u1fbpfcp-watermark.image)
+
+![QQ20210705-210753](https://user-images.githubusercontent.com/21073039/124477360-8770f980-ddd6-11eb-8dc3-ba318223697f.gif)
+
+
 
 ## 使用问题
 1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
