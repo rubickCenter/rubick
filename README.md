@@ -25,6 +25,10 @@
 
 ![image](https://user-images.githubusercontent.com/21073039/122888869-d6e60d00-d374-11eb-9fb9-2a6e541e389e.png)
 
+## 使用问题
+1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
+2. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
+
 ## utools 插件支持
 ### plugin.json
 在你觉得合适的地方新建一个文件夹，并创建 `plugin.json` 文件。这是最重要的一个文件，用来说明这个插件将如何与 `rubick` 集成，最基本的格式如下：
