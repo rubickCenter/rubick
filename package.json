@@ -54,7 +54,7 @@
       "icon": "build/icons/icon.ico"
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons/icon.png"
     }
   },
   "dependencies": {
@@ -70,7 +70,6 @@
     "md5": "^2.3.0",
     "mime-types": "^2.1.31",
     "node-fetch": "^2.6.1",
-    "osx-mouse": "^2.0.0",
     "puppeteer-core": "^10.0.0",
     "puppeteer-in-electron": "^3.0.3",
     "query-string": "^7.0.0",
@@ -103,7 +102,7 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^11.0.2",
+    "electron": "^12.0.13",
     "electron-builder": "22.10.5",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
@@ -133,10 +132,12 @@
   "iohook": {
     "targets": [
       "node-83",
-      "electron-85"
+      "electron-87"
     ],
     "platforms": [
-      "darwin"
+      "win32",
+      "darwin",
+      "linux"
     ],
     "arches": [
       "x64",

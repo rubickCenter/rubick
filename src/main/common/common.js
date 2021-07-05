@@ -11,7 +11,6 @@ import robot from 'robotjs';
 import './config';
 
 const browsers = require("../browsers")();
-const mouseEvents = require("osx-mouse");
 const {picker, separator, superPanel} = browsers;
 // 需要在超级面板展示的插件
 let optionPlugin = [];
@@ -143,23 +142,33 @@ export default function init(mainWindow) {
 
   // 拾色器
   ipcMain.on('start-picker', () => {
-    const mouseTrack = mouseEvents();
+    // 开启输入侦测
+    ioHook.start(false)
     picker.init();
     picker.getWindow().on("close", () => {
-      mouseTrack.destroy();
+      ioHook.unload();
+      ioHook.stop();
     });
-    mouseTrack.on('move', (x, y) => {
+    ioHook.on('mousemove', e => {
+      x = e.x
+      y = e.y
       if (!picker.getWindow()) return;
       let color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
       picker.getWindow().setPosition(parseInt(x) - 50, parseInt(y) - 50);
       picker.getWindow().webContents.send("updatePicker", color);
     })
-    mouseTrack.on("left-up", (x, y) => {
-      const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
-      clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
-      new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
-      closePicker();
+
+    ioHook.on('mouseup', e => {
+      if (e.button === 1) {
+        x = e.x
+        y = e.y
+        const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
+        clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
+        new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
+        closePicker();
+      }
     });
+
     let pos = robot.getMousePos();
     picker
       .getWindow()
@@ -173,7 +182,11 @@ export default function init(mainWindow) {
     );
 
     ipcMain.on("closePicker", closePicker);
-    mouseTrack.on("right-up", closePicker);
+    ioHook.on('mouseup', e => {
+      if (e.button === 3) {
+        closePicker()
+      }
+    });
   })
 }
 
