@@ -7,6 +7,8 @@
 基于 electron 的工具箱，媲美 utools的开源插件，已实现 utools 大部分的 API 能力，所以可以做到无缝适配 utools 开源的插件。
 之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick
 
+## 安装包
+* [Mac OS V0.0.1]()
 
 ## 支持能力
 
