@@ -21,6 +21,7 @@
     "asar": false,
     "productName": "rubick2",
     "appId": "com.example.yourapp2",
+    "electronVersion": "13.1.4",
     "directories": {
       "output": "build"
     },
