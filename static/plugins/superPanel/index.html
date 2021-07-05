@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
-<script crossorigin="anonymous" src="https://lib.baomitu.com/vue/2.6.12/vue.min.js"></script>
+<script src="./vue.min.js"></script>
 <style>
     * {
         margin: 0;
         padding: 0;
+    }
+    [v-cloak]{
+        display: none;
     }
    #app {
        -webkit-app-region: drag;
@@ -79,7 +82,7 @@
 </style>
 <script src="./index.js" type="module"></script>
 <body>
-<div id="app">
+<div id="app" v-cloak>
   <div class="top" @click="openMainWindow">
     <span class="img"><img src="./assets/logo.png" /></span>
     <span class="text" v-if="selectData.text && selectData.text.length">选择的文本 {{selectData.text.length}} 个</span>

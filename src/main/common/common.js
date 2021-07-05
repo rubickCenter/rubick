@@ -65,42 +65,29 @@ export default function init(mainWindow) {
   ipcMain.on('optionPlugin', (e, args) => {
     optionPlugin = args;
   });
-  const mouseTrack = mouseEvents();
-  let down_time = 0;
-  let isPress = false;
-  mouseTrack.on('right-down', () => {
-    isPress = true;
-    down_time = Date.now();
-    const config = global.opConfig.get();
-    setTimeout(async () => {
-      if (isPress) {
-        const copyResult = await getSelectedText();
-        let win = superPanel.getWindow();
+  ipcMain.on('right-down', async (e) => {
+    const copyResult = await getSelectedText();
+    let win = superPanel.getWindow();
 
-        if (win) {
-          win.webContents.send('trigger-super-panel', {
-            ...copyResult,
-            optionPlugin: optionPlugin.plugins,
-          });
-        } else {
-          superPanel.init(mainWindow);
-          win = superPanel.getWindow();
+    if (win) {
+      win.webContents.send('trigger-super-panel', {
+        ...copyResult,
+        optionPlugin: optionPlugin.plugins,
+      });
+    } else {
+      superPanel.init(mainWindow);
+      win = superPanel.getWindow();
 
-          win.once('ready-to-show', () => {
-            win.webContents.send('trigger-super-panel', {
-              ...copyResult,
-              optionPlugin: optionPlugin.plugins,
-            });
-          });
-        }
-        const pos = robot.getMousePos();
-        win.setPosition(parseInt(pos.x), parseInt(pos.y));
-        win.show();
-      }
-    }, config.superPanel.mouseDownTime);
-  })
-  mouseTrack.on('right-up', () => {
-    isPress = false;
+      win.once('ready-to-show', () => {
+        win.webContents.send('trigger-super-panel', {
+          ...copyResult,
+          optionPlugin: optionPlugin.plugins,
+        });
+      });
+    }
+    const pos = robot.getMousePos();
+    win.setPosition(parseInt(pos.x), parseInt(pos.y));
+    win.show();
   });
 
   // 注册快捷键

@@ -26,7 +26,8 @@ let defaultConfig = {
         appid: '',
       },
       mouseDownTime: 500
-    }
+    },
+    global: []
   }
 }
 global.opConfig = {
@@ -36,6 +37,11 @@ global.opConfig = {
     try {
       if (!opConfig.config) {
         opConfig.config = JSON.parse(fs.readFileSync(configPath) || JSON.stringify(defaultConfig[platform]));
+      }
+      // 重置
+      if (!opConfig.config.perf || !opConfig.config.superPanel || !opConfig.config.global) {
+        opConfig.config = defaultConfig[platform];
+        fs.writeFileSync(configPath, JSON.stringify(opConfig.config));
       }
       return opConfig.config;
     } catch (e) {

@@ -11,7 +11,8 @@ const {capture} = require("./browsers")();
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-
+// to fix https://github.com/electron/electron/issues/18397
+app.allowRendererProcessReuse = false;
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
