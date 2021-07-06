@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "muwoo <2424880409@qq.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -47,14 +47,14 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns",
+      "icon": "static/icons/icon.icns",
       "target": "pkg"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "static/icons/icon.ico"
     },
     "linux": {
-      "icon": "build/icons/icon.png"
+      "icon": "static/icons/icon.png"
     }
   },
   "dependencies": {
