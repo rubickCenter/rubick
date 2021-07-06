@@ -3,4 +3,5 @@ module.exports = () => ({
   separator: require("./separate")(),
   capture: require("./capture")(),
   superPanel: require("./superPanel")(),
+  main: require("./main")(),
 });
