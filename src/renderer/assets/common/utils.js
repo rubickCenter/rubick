@@ -74,7 +74,7 @@ const sysFile = {
   },
   getUserPlugins() {
     try {
-      return store.get('user-plugins').devPlugins;
+      return store.get('user-plugins');
     } catch (e) {
       return []
     }
@@ -97,15 +97,20 @@ function mergePlugins(plugins) {
     })
   ]
 
-  return result.filter((item, i) => {
-    let targetIndex;
-    result.forEach((tg, j) => {
+  const target = [];
+
+  result.forEach((item, i) => {
+    let targetIndex = -1;
+    target.forEach((tg, j) => {
       if (tg.tag === item.tag && tg.type === 'system') {
         targetIndex = j
       }
     });
-    return i === targetIndex;
+    if (targetIndex === -1) {
+      target.push(item)
+    }
   });
+  return target
 }
 
 function find(p, target = 'plugin.json') {
