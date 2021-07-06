@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="./vue.min.js"></script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    [v-cloak]{
+        display: none;
+    }
+   #app {
+       -webkit-app-region: drag;
+       width: 100%;
+       box-sizing: border-box;
+       background: #fff;
+       overflow: hidden;
+   }
+   .top {
+       width: 100%;
+       height: 50px;
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       border-bottom: 1px #ddd dashed;
+       padding: 0 10px;
+       box-sizing: border-box;
+   }
+   .top .img {
+       width: 32px;
+       height: 32px;
+       border-radius: 100%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background: #314659;
+   }
+   .top .img img {
+       width: 22px;
+       height: 22px;
+   }
+   .top .text {
+       color: #999;
+       font-size: 14px;
+   }
+   .translate {
+       width: 100%;
+       background: #F7F7F9;
+       font-size: 12px;
+       color: #555;
+       box-sizing: border-box;
+       padding: 5px;
+   }
+   .trans-item {
+       line-height: 20px;
+   }
+   .options-item {
+       border-bottom: 1px #ddd dashed;
+       height: 35px;
+       line-height: 35px;
+       padding: 0 10px;
+       color: #333;
+       font-size: 14px;
+       cursor: pointer;
+   }
+    .options-item:last-child {
+        border-bottom: none !important;
+    }
+    .icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+    .select-item {
+        display: flex;
+        align-items: center;
+    }
+</style>
+<script src="./index.js" type="module"></script>
+<body>
+<div id="app" v-cloak>
+  <div class="top" @click="openMainWindow">
+    <span class="img"><img src="./assets/logo.png" /></span>
+    <span class="text" v-if="selectData.text && selectData.text.length">选择的文本 {{selectData.text.length}} 个</span>
+  </div>
+  <div class="translate" v-if="selectData.translate">
+    <div class="trans-item" v-for="trans in selectData.translate">
+      <div>{{trans.src}}</div>
+      <div>n. {{trans.dst}}</div>
+    </div>
+  </div>
+  <div @click="() => commonClick(op, selectData.fileUrl)" class="options-item" v-for="op in targetOptions">
+    <div class="select-item">
+      <img class="icon" :src="op.icon" />
+      {{op.name}}
+    </div>
+  </div>
+</div>
+</body>
+</html>

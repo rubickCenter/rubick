@@ -21,6 +21,7 @@
     "asar": false,
     "productName": "rubick2",
     "appId": "com.example.yourapp2",
+    "compression":"maximum",
     "directories": {
       "output": "build"
     },
@@ -62,14 +63,20 @@
     "download": "^8.0.0",
     "download-git-repo": "^3.0.2",
     "electron-store": "^8.0.0",
+    "iohook": "^0.9.3",
+    "is-chinese": "^1.4.2",
     "keycode": "^2.2.0",
     "marked": "^2.0.7",
+    "md5": "^2.3.0",
+    "mime-types": "^2.1.31",
     "node-fetch": "^2.6.1",
-    "osx-mouse": "git+https://github.com/Toinane/osx-mouse.git",
+    "osx-mouse": "^2.0.0",
     "puppeteer-core": "^10.0.0",
     "puppeteer-in-electron": "^3.0.3",
     "query-string": "^7.0.0",
     "robotjs": "git+https://github.com/Toinane/robotjs.git",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "semver": "^7.3.5",
     "sudo-prompt": "^9.2.1",
     "unzip": "^0.1.11",
@@ -108,6 +115,7 @@
     "listr": "^0.14.3",
     "mini-css-extract-plugin": "0.4.0",
     "multispinner": "^0.2.1",
+    "node-abi": "^2.30.0",
     "node-loader": "^0.6.0",
     "react": "^17.0.2",
     "style-loader": "^0.21.0",
@@ -121,5 +129,18 @@
     "webpack-dev-server": "^3.1.4",
     "webpack-hot-middleware": "^2.22.2",
     "webpack-merge": "^4.1.3"
+  },
+  "iohook": {
+    "targets": [
+      "node-83",
+      "electron-85"
+    ],
+    "platforms": [
+      "darwin"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

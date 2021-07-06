@@ -20,9 +20,16 @@ let defaultConfig = {
         search: true,
       }
     },
+    superPanel: {
+      baiduAPI: {
+        key: '',
+        appid: '',
+      },
+      mouseDownTime: 500
+    },
+    global: []
   }
 }
-
 global.opConfig = {
   config: null,
   get() {
@@ -31,6 +38,11 @@ global.opConfig = {
       if (!opConfig.config) {
         opConfig.config = JSON.parse(fs.readFileSync(configPath) || JSON.stringify(defaultConfig[platform]));
       }
+      // 重置
+      if (!opConfig.config.perf || !opConfig.config.superPanel || !opConfig.config.global) {
+        opConfig.config = defaultConfig[platform];
+        fs.writeFileSync(configPath, JSON.stringify(opConfig.config));
+      }
       return opConfig.config;
     } catch (e) {
       opConfig.config = defaultConfig[platform]
@@ -38,7 +50,6 @@ global.opConfig = {
     }
   },
   set(key, value) {
-    console.log(opConfig.config);
     opConfig.config[key] = value;
     fs.writeFileSync(configPath, JSON.stringify(opConfig.config));
   }

@@ -4,6 +4,7 @@ import {
   BrowserWindow,
   clipboard,
   Notification,
+  app,
 } from 'electron';
 import Api from './api';
 import robot from 'robotjs';
@@ -11,7 +12,9 @@ import './config';
 
 const browsers = require("../browsers")();
 const mouseEvents = require("osx-mouse");
-const {picker, separator} = browsers;
+const {picker, separator, superPanel} = browsers;
+// 需要在超级面板展示的插件
+let optionPlugin = [];
 
 let closePicker = (newColor) => {
   if (picker.getWindow()) {
@@ -34,18 +37,75 @@ function registerShortCut(mainWindow) {
   });
 }
 
-export default function init(mainWindow) {
-  const mouseTrack = mouseEvents();
-  let down_time = 0;
-  mouseTrack.on('right-down', () => {
-    down_time = Date.now();
+const getSelectedText = () => {
+  return new Promise((resolve) => {
+    const lastText = clipboard.readText('clipboard');
+
+    const platform = process.platform;
+    if (platform === 'darwin') {
+      robot.keyTap('c', 'command');
+    } else {
+      robot.keyTap('c', 'control');
+    }
+
+    setTimeout(() => {
+      const text = clipboard.readText('clipboard') || ''
+      const fileUrl = clipboard.read('public.file-url');
+      clipboard.writeText(lastText);
+
+      resolve({
+        text,
+        fileUrl
+      })
+    }, 300);
   })
-  mouseTrack.on('right-up', () => {
-    if ((Date.now() - down_time) > 1000) {
-      new Notification({ title: 'Rubick 通知', body: '长按了' }).show();
+}
+
+export default function init(mainWindow) {
+  ipcMain.on('optionPlugin', (e, args) => {
+    optionPlugin = args;
+  });
+  ipcMain.on('right-down', async (e) => {
+    const copyResult = await getSelectedText();
+    let win = superPanel.getWindow();
+
+    if (win) {
+      win.webContents.send('trigger-super-panel', {
+        ...copyResult,
+        optionPlugin: optionPlugin.plugins,
+      });
+    } else {
+      superPanel.init(mainWindow);
+      win = superPanel.getWindow();
+
+      win.once('ready-to-show', () => {
+        win.webContents.send('trigger-super-panel', {
+          ...copyResult,
+          optionPlugin: optionPlugin.plugins,
+        });
+      });
+    }
+    const pos = robot.getMousePos();
+    win.setPosition(parseInt(pos.x), parseInt(pos.y));
+    win.show();
+  });
+
+  // 注册快捷键
+  registerShortCut(mainWindow);
+
+  // 设置开机启动
+  const config = global.opConfig.get();
+  app.setLoginItemSettings({
+    openAtLogin: config.perf.common.start,
+    openAsHidden: true,
+  });
+
+  mainWindow.once("ready-to-show", () => {
+    // 非隐藏式启动需要显示主窗口
+    if (!app.getLoginItemSettings().wasOpenedAsHidden) {
+      mainWindow.show();
     }
   });
-  registerShortCut(mainWindow);
 
   ipcMain.on('re-register', (event, arg) => {
     registerShortCut(mainWindow);
@@ -55,10 +115,12 @@ export default function init(mainWindow) {
     mainWindow.setSize(arg.width || 800, arg.height);
   });
 
+  // 打包后，失焦隐藏
   mainWindow.on('blur', () => {
-    mainWindow.hide();
+    app.isPackaged && mainWindow.hide();
   });
 
+  // 响应 preload.js 事件
   ipcMain.on('msg-trigger', async (event, arg) => {
     const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow
     const operators = arg.type.split('.');
@@ -70,6 +132,7 @@ export default function init(mainWindow) {
     event.sender.send(`msg-back-${arg.type}`, data);
   });
 
+  // 窗口分离
   ipcMain.on('new-window', (event, arg) => {
     const opts = {
       ...arg,
@@ -78,6 +141,7 @@ export default function init(mainWindow) {
     separator.init(opts);
   });
 
+  // 拾色器
   ipcMain.on('start-picker', () => {
     const mouseTrack = mouseEvents();
     picker.init();

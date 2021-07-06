@@ -4,7 +4,7 @@ import fs from 'fs';
 import process from 'child_process';
 import Store from 'electron-store';
 import downloadFile from 'download';
-import {nativeImage} from 'electron';
+import {nativeImage, ipcRenderer} from 'electron';
 import {APP_FINDER_PATH} from './constans';
 import {getlocalDataFile} from "../../../main/common/utils";
 
@@ -57,6 +57,19 @@ async function downloadZip(downloadRepoUrl, name) {
 
 const sysFile = {
   savePlugins(plugins) {
+    ipcRenderer.send('optionPlugin', {
+      plugins: plugins.filter((plugin) => {
+        let hasOption = false;
+        plugin.features.forEach(fe => {
+          fe.cmds.forEach(cmd => {
+            if (cmd.type) {
+              hasOption = true;
+            }
+          })
+        });
+        return hasOption;
+      })
+    });
     store.set('user-plugins', plugins);
   },
   getUserPlugins() {
@@ -72,7 +85,7 @@ const sysFile = {
 }
 
 function mergePlugins(plugins) {
-  return [
+  const result = [
     ...plugins,
     ...SYSTEM_PLUGINS.map(plugin => {
       return {
@@ -81,8 +94,18 @@ function mergePlugins(plugins) {
         sourceFile: '',
         type: 'system',
       }
-    }),
+    })
   ]
+
+  return result.filter((item, i) => {
+    let targetIndex;
+    result.forEach((tg, j) => {
+      if (tg.tag === item.tag && tg.type === 'system') {
+        targetIndex = j
+      }
+    });
+    return i === targetIndex;
+  });
 }
 
 function find(p, target = 'plugin.json') {
