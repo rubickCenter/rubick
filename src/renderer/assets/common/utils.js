@@ -4,7 +4,7 @@ import fs from 'fs';
 import process from 'child_process';
 import Store from 'electron-store';
 import downloadFile from 'download';
-import {nativeImage, ipcRenderer} from 'electron';
+import {nativeImage, ipcRenderer, app} from 'electron';
 import {APP_FINDER_PATH} from './constans';
 import {getlocalDataFile} from "../../../main/common/utils";
 
@@ -143,6 +143,8 @@ APP_FINDER_PATH.forEach((searchPath) => {
         const appName = files[i];
         const extname = path.extname(appName);
         const appSubStr = appName.split(extname)[0];
+
+        // macos
         if ((extname === '.app' || extname === '.prefPane') >= 0 ) {
           try {
             const path1 = path.join(searchPath, `${appName}/Contents/Resources/App.icns`);
@@ -178,13 +180,27 @@ APP_FINDER_PATH.forEach((searchPath) => {
           }
 
         }
+
+        // linux
+        if (extname === '.desktop') {
+          app.getFileIcon(searchPath).then(img => {
+            fileLists.push({
+              name: appSubStr,
+              value: 'plugin',
+              icon: img.toDataURL(),
+              desc: path.join(searchPath, appName),
+              type: 'app',
+              action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`
+            }
+            )          
+          })
+        }
       }
     } catch (e) {
       console.log(e);
     }
   });
 });
-
 
 function debounce(fn, delay) {
   let timer

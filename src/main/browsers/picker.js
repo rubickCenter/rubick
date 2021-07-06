@@ -24,6 +24,7 @@ module.exports = () => {
       webPreferences: {
         nodeIntegration: true,
         devTools: false,
+        contextIsolation: false,
       },
     });
 

@@ -32,6 +32,7 @@ module.exports = () => {
         backgroundThrottling: false,
         nodeIntegration: true,
         devTools: false,
+        contextIsolation: false,
       },
     });
     win.loadURL(`file://${__static}/plugins/superPanel/index.html`);

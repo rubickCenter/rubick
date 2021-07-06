@@ -32,6 +32,7 @@ module.exports = () => {
         show: false,
         webPreferences: {
           enableRemoteModule: true,
+          contextIsolation: false,
           nodeIntegration: true,
           webSecurity: false,
           // devTools: false,

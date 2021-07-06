@@ -42,6 +42,8 @@ const SYSTEM_PLUGINS = [
 ];
 
 const APP_FINDER_PATH = [
+  '/usr/share/applications',
+  '~/.local/share/applications',
   '/System/Applications',
   '/Applications',
   '/System/Library/PreferencePanes',

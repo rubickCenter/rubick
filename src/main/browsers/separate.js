@@ -24,6 +24,7 @@ module.exports = () => {
         enableRemoteModule: true,
         backgroundThrottling: false,
         webviewTag: true,
+        contextIsolation: false,
         nodeIntegration: true // 在网页中集成Node
       }
     });
