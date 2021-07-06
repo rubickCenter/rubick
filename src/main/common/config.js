@@ -28,6 +28,52 @@ let defaultConfig = {
       mouseDownTime: 500
     },
     global: []
+  },
+  Linux: {
+    perf: {
+      shortCut: {
+        showAndHidden: 'Ctrl+R',
+        separate: 'Ctrl+D'
+      },
+      common: {
+        start: true,
+        space: true,
+      },
+      local: {
+        search: true,
+      }
+    },
+    superPanel: {
+      baiduAPI: {
+        key: '',
+        appid: '',
+      },
+      mouseDownTime: 500
+    },
+    global: []
+  },
+  Windows: {
+    perf: {
+      shortCut: {
+        showAndHidden: 'Ctrl+R',
+        separate: 'Ctrl+D'
+      },
+      common: {
+        start: true,
+        space: true,
+      },
+      local: {
+        search: true,
+      }
+    },
+    superPanel: {
+      baiduAPI: {
+        key: '',
+        appid: '',
+      },
+      mouseDownTime: 500
+    },
+    global: []
   }
 }
 global.opConfig = {
