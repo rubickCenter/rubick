@@ -69,7 +69,7 @@
     "puppeteer-core": "^10.0.0",
     "puppeteer-in-electron": "^3.0.3",
     "query-string": "^7.0.0",
-    "robotjs": "git+ssh://git@github.com/Toinane/robotjs.git",
+    "robotjs": "git+https://github.com/Toinane/robotjs.git",
     "semver": "^7.3.5",
     "sudo-prompt": "^9.2.1",
     "unzip": "^0.1.11",
