@@ -2,13 +2,23 @@
 <img align="center" src="https://user-images.githubusercontent.com/21073039/123022701-c3848180-d408-11eb-86ec-7727f355ea96.png" />
 </div>
 
-<h1 align= "center">Rubick</h1>
+# Rubick
+
+<p>
+ <a href="https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.1-beta">
+    <img alt="release" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" />
+ </a>
+ <a href="https://github.com/clouDr-f2e/rubick/blob/master/LICENSE">
+    <img alt="npm" src="https://img.shields.io/github/license/clouDr-f2e/rubick" />
+ </a>
+</p>
+
 
 基于 electron 的工具箱，媲美 utools的开源插件，已实现 utools 大部分的 API 能力，所以可以做到无缝适配 utools 开源的插件。
 之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick
 
 ## 安装包
-* [Rubick Mac OS V0.0.1](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.1/rubick2-0.0.1.pkg)
+* [Rubick Mac OS V0.0.1](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.1-beta/rubick2-0.0.1.pkg)
 
 ## 支持能力
 
@@ -23,7 +33,10 @@
 - [ ] 支持 Windows
 - [ ] 支持 Linux
 
-![image](https://user-images.githubusercontent.com/21073039/122888869-d6e60d00-d374-11eb-9fb9-2a6e541e389e.png)
+
+![QQ20210705-210753](https://user-images.githubusercontent.com/21073039/124477360-8770f980-ddd6-11eb-8dc3-ba318223697f.gif)
+
+
 
 ## 使用问题
 1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
