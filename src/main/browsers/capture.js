@@ -30,15 +30,15 @@ module.exports = () => {
         enableLargerThanScreen: true,
         hasShadow: false,
         show: false,
+        title: 'capture',
         webPreferences: {
           enableRemoteModule: true,
           nodeIntegration: true,
           webSecurity: false,
-          // devTools: false,
+          devTools: false,
         }
       })
       captureWin.setAlwaysOnTop(true, 'screen-saver')
-      captureWin.setVisibleOnAllWorkspaces(true)
       captureWin.setFullScreenable(false)
 
       captureWin.loadFile(`${__static}/plugins/capture/index.html`);
@@ -50,6 +50,10 @@ module.exports = () => {
         captureWin.blur()
       }
 
+      captureWin.on("closed", () => {
+        captureWin = undefined;
+      });
+
       captureWin.once('ready-to-show', () => captureWin.show());
       return captureWin
     });
@@ -57,46 +61,43 @@ module.exports = () => {
 
   let getWindow = () => captureWins;
 
-  let useCapture = () => {
-    globalShortcut.register('Esc', () => {
+  const close = () => {
+    const wins = BrowserWindow.getAllWindows();
+    wins.forEach((win) => {
+      if (win.title === 'capture') win.close();
+      captureWins = [];
+    })
+  }
+
+  ipcMain.on('capture-screen', (e, { type = 'start', screenId, winId, x, y } = {}) => {
+    if (type === 'start') {
+      init()
+    } else if (type === 'complete') {
       if (captureWins) {
         captureWins.forEach(win => win.close())
         captureWins = []
       }
-    });
-
-    globalShortcut.register('CmdOrCtrl+Shift+S', init)
-
-    ipcMain.on('capture-screen', (e, { type = 'start', screenId, winId, x, y } = {}) => {
-      if (type === 'start') {
-        init()
-      } else if (type === 'complete') {
-        if (captureWins) {
-          captureWins.forEach(win => win.close())
-          captureWins = []
-        }
-        // nothing
-      } else if (type === 'select') {
-        captureWins.forEach(win => win.webContents.send('capture-screen', { type: 'select', screenId }))
-      } else if (type === 'getAllDisplays') {
-        const { screen } = require('electron');
-        let displays = screen.getAllDisplays();
-        const currentScreen = displays.filter(d => d.bounds.x === x && d.bounds.y === y)[0];
-        e.sender.send('getAllDisplays', {
-          screen: {
-            scaleFactor: currentScreen.scaleFactor,
-            id: currentScreen.id,
-            bounds: currentScreen.bounds,
-          },
-          winId,
-        });
-      }
-    });
-  }
+      // nothing
+    } else if (type === 'select') {
+      captureWins.forEach(win => win.webContents.send('capture-screen', { type: 'select', screenId }))
+    } else if (type === 'getAllDisplays') {
+      const { screen } = require('electron');
+      let displays = screen.getAllDisplays();
+      const currentScreen = displays.filter(d => d.bounds.x === x && d.bounds.y === y)[0];
+      e.sender.send('getAllDisplays', {
+        screen: {
+          scaleFactor: currentScreen.scaleFactor,
+          id: currentScreen.id,
+          bounds: currentScreen.bounds,
+        },
+        winId,
+      });
+    }
+  });
 
   return {
     init: init,
     getWindow: getWindow,
-    useCapture,
+    close,
   };
 };

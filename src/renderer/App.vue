@@ -27,7 +27,9 @@
         <div @click="goMenu" class="suffix-tool" slot="suffix">
           <a-icon v-show="selected && selected.key === 'plugin-container'" class="icon-more" type="more" />
           <img class="icon-tool" v-if="selected && selected.icon" :src="selected.icon" />
-          <a-icon  class="icon-tool" v-else type="tool"/>
+          <div v-else class="rubick-logo">
+            <img src="./assets/logo.png" />
+          </div>
         </div>
 
       </a-input>
@@ -78,7 +80,7 @@
 <script>
 import {mapActions, mapMutations, mapState} from "vuex";
 import {ipcRenderer, remote} from "electron";
-import {getWindowHeight, debounce} from "./assets/common/utils";
+import {getWindowHeight, debounce, searchKeyValues, fileLists} from "./assets/common/utils";
 const opConfig = remote.getGlobal('opConfig');
 const {Menu, MenuItem} = remote;
 
@@ -104,6 +106,32 @@ export default {
         router: this.$router,
         payload: args.data,
       })
+    });
+    ipcRenderer.on('global-short-key', (e, args) => {
+      let config;
+      this.devPlugins.forEach((plugin) => {
+        // dev 插件未开启
+        if (plugin.type === 'dev' && !plugin.status) return;
+        const feature = plugin.features;
+        feature.forEach(fe => {
+          const cmd = searchKeyValues(fe.cmds, args)[0];
+          const systemPlugin = fileLists.filter(plugin => plugin.name.indexOf(args) >= 0)[0];
+          if (cmd) {
+            config = {
+              cmd: cmd,
+              plugin: plugin,
+              feature: fe,
+              router: this.$router
+            }
+          } else if (systemPlugin) {
+            config = {
+              plugin: systemPlugin,
+              router: this.$router
+            }
+          }
+        })
+      });
+      config && this.openPlugin(config);
     });
     const searchNd = document.getElementById('search');
     searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)
@@ -211,7 +239,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('main', ['showMain', 'current', 'options', 'selected', 'searchValue', 'subPlaceHolder']),
+    ...mapState('main', ['showMain', 'devPlugins', 'current', 'options', 'selected', 'searchValue', 'subPlaceHolder']),
     showOptions() {
       // 有选项值，且不在显示主页
       if (this.options.length && !this.showMain) {
@@ -242,6 +270,18 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
+  .rubick-logo {
+    width: 40px;
+    height: 40px;
+    background: #314659;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    img {
+      width: 28px;
+    }
+  }
   .tag-container {
     display: flex;
     align-items: center;

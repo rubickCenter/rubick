@@ -70,7 +70,6 @@
     "md5": "^2.3.0",
     "mime-types": "^2.1.31",
     "node-fetch": "^2.6.1",
-    "osx-mouse": "^2.0.0",
     "puppeteer-core": "^10.0.0",
     "puppeteer-in-electron": "^3.0.3",
     "query-string": "^7.0.0",

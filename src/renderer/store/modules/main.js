@@ -205,7 +205,6 @@ const actions = {
         ...options,
         ...(fileLists.filter(plugin => plugin.name.indexOf(value) >= 0)).map(plugin => {
           plugin.click = () => {
-            console.log(plugin)
             actions.openPlugin({commit}, {plugin});
           }
           return plugin
