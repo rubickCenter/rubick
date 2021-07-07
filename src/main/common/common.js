@@ -155,32 +155,13 @@ export default function init(mainWindow) {
   // 拾色器
   ipcMain.on('start-picker', () => {
     // 开启输入侦测
-    ioHook.start(false)
+    ioHook.start(false);
+    ioHook.load();
     picker.init();
 
     picker.getWindow().on('close', () => {
       ioHook.stop();
-    });
-
-
-    ioHook.on('mousemove', e => {
-      let x = e.x
-      let y = e.y
-      if (!picker.getWindow()) return;
-      let color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
-      picker.getWindow().setPosition(parseInt(x) - 50, parseInt(y) - 50);
-      picker.getWindow().webContents.send("updatePicker", color);
-    })
-
-    ioHook.on('mouseup', e => {
-      if (e.button === 1) {
-        let x = e.x
-        let y = e.y
-        const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
-        clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
-        new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
-        closePicker();
-      }
+      ioHook.unload();
     });
 
     let pos = robot.getMousePos();
@@ -196,12 +177,33 @@ export default function init(mainWindow) {
     );
 
     ipcMain.on("closePicker", closePicker);
-    ioHook.on('mouseup', e => {
-      if (e.button === 3) {
-        closePicker()
-      }
-    });
+  });
+
+  ioHook.on('mousemove', e => {
+    let x = e.x
+    let y = e.y
+    if (!picker.getWindow()) return;
+    let color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
+    picker.getWindow().setPosition(parseInt(x) - 50, parseInt(y) - 50);
+    picker.getWindow().webContents.send("updatePicker", color);
   })
+
+  ioHook.on('mouseup', e => {
+    if (e.button === 1) {
+      let x = e.x
+      let y = e.y
+      const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
+      clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
+      new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
+      closePicker();
+    }
+  });
+
+  ioHook.on('mouseup', e => {
+    if (e.button === 3) {
+      closePicker()
+    }
+  });
 }
 
 
