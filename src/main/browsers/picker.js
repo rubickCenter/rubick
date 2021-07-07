@@ -3,7 +3,7 @@ const { BrowserWindow, nativeImage } = require("electron");
 module.exports = () => {
   let win;
 
-  let init = () => {
+  let init = (x, y) => {
     if (win === null || win === undefined) {
       createWindow();
     }

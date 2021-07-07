@@ -9,17 +9,16 @@ import {
 import Api from './api';
 import robot from 'robotjs';
 import './config';
+import ioHook from 'iohook';
 
 const browsers = require("../browsers")();
-const mouseEvents = require("osx-mouse");
-const {picker, separator, superPanel} = browsers;
+const {picker, separator, superPanel, capture} = browsers;
 // 需要在超级面板展示的插件
 let optionPlugin = [];
 
-let closePicker = (newColor) => {
+let closePicker = () => {
   if (picker.getWindow()) {
     ipcMain.removeListener("closePicker", closePicker);
-    ipcMain.removeListener("pickerRequested", (event) => {});
     picker.getWindow().close();
   }
 };
@@ -27,13 +26,25 @@ let closePicker = (newColor) => {
 function registerShortCut(mainWindow) {
   const config = global.opConfig.get();
   globalShortcut.unregisterAll();
-
+  // 注册偏好快捷键
   globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
     mainWindow.show();
   });
 
   globalShortcut.register(config.perf.shortCut.separate, () => {
     mainWindow.webContents.send('new-window');
+  });
+
+  // 注册自定义全局快捷键
+  config.global.forEach(sc => {
+    if (!sc.key || !sc.value) return;
+    globalShortcut.register(sc.key, () => {
+      mainWindow.webContents.send('global-short-key', sc.value);
+    });
+  });
+
+  globalShortcut.register('Esc', () => {
+    capture.close();
   });
 }
 
@@ -143,23 +154,35 @@ export default function init(mainWindow) {
 
   // 拾色器
   ipcMain.on('start-picker', () => {
-    const mouseTrack = mouseEvents();
+    // 开启输入侦测
+    ioHook.start(false)
     picker.init();
-    picker.getWindow().on("close", () => {
-      mouseTrack.destroy();
+
+    picker.getWindow().on('close', () => {
+      ioHook.stop();
     });
-    mouseTrack.on('move', (x, y) => {
+
+
+    ioHook.on('mousemove', e => {
+      let x = e.x
+      let y = e.y
       if (!picker.getWindow()) return;
       let color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
       picker.getWindow().setPosition(parseInt(x) - 50, parseInt(y) - 50);
       picker.getWindow().webContents.send("updatePicker", color);
     })
-    mouseTrack.on("left-up", (x, y) => {
-      const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
-      clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
-      new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
-      closePicker();
+
+    ioHook.on('mouseup', e => {
+      if (e.button === 1) {
+        let x = e.x
+        let y = e.y
+        const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
+        clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
+        new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
+        closePicker();
+      }
     });
+
     let pos = robot.getMousePos();
     picker
       .getWindow()
@@ -173,7 +196,11 @@ export default function init(mainWindow) {
     );
 
     ipcMain.on("closePicker", closePicker);
-    mouseTrack.on("right-up", closePicker);
+    ioHook.on('mouseup', e => {
+      if (e.button === 3) {
+        closePicker()
+      }
+    });
   })
 }
 

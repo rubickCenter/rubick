@@ -93,7 +93,7 @@
                   <span>先按功能键（Ctrl、Shift、Alt、Option、Command），再按其他普通键。或按 F1-F12 单键</span>
                 </template>
                 <div
-                    v-for="(index, item) in config.global"
+                    v-for="(item, index) in config.global"
                     class="value"
                     tabIndex=-1
                     @keydown="(e) => changeGlobalKey(e, index)"
@@ -107,7 +107,7 @@
               <div>功能关键字</div>
               <a-input
                   :value="item.value"
-                  v-for="(index, item) in config.global"
+                  v-for="(item, index) in config.global"
                   class="value"
                   :disabled="!item.key"
                   @change="(e) => changeGlobalValue(index, e.target.value)"
@@ -193,6 +193,13 @@ export default {
       if (compose) {
         this.$set(this.config.global[index], 'key', compose);
       }
+      // f1 - f12
+      if (e.keyCode >= 112 && e.keyCode <= 123) {
+        compose = keycodes[e.keyCode].toUpperCase();
+      }
+      if (compose) {
+        this.$set(this.config.global[index], 'key', compose);
+      }
     },
     changeGlobalValue(index, value) {
       this.$set(this.config.global[index], 'value', value);
@@ -204,6 +211,7 @@ export default {
       handler() {
         opConfig.set('perf', this.config.perf);
         opConfig.set('superPanel', this.config.superPanel);
+        opConfig.set('global', this.config.global);
         ipcRenderer.send('re-register');
       }
     }
