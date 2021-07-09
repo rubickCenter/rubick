@@ -110,6 +110,20 @@ function mergePlugins(plugins) {
       target.push(item)
     }
   });
+  ipcRenderer && ipcRenderer.send('optionPlugin', {
+    plugins: target.filter((plugin) => {
+      let hasOption = false;
+      plugin.features.forEach(fe => {
+        fe.cmds.forEach(cmd => {
+          if (cmd.type) {
+            hasOption = true;
+          }
+        })
+      });
+      return hasOption;
+    })
+  });
+
   return target
 }
 
