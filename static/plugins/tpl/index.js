@@ -1,4 +1,6 @@
 import doc from './doc.js';
+import list from './list.js';
+
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -11,6 +13,7 @@ function getQueryVariable(variable) {
 
 const routes = [
   { path: '/doc', name: 'doc', component: doc },
+  { path: '/list', name: 'list', component: list },
 ]
 
 const router = new VueRouter({
@@ -22,7 +25,7 @@ new Vue({
   data: {
     config: window.exports,
     code: '',
-    current: {}
+    current: {},
   },
   mounted() {
     this.code = getQueryVariable('code');

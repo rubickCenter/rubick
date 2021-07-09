@@ -162,6 +162,10 @@ export default {
       }
     },
     changeCurrent(index) {
+      const webview = document.getElementById('webview');
+      webview && webview.send('changeCurrent', index);
+      if (!this.options) return;
+      if (this.currentSelect + index > this.options.length - 1 || this.currentSelect + index < 0) return;
       this.currentSelect = this.currentSelect + index;
     },
 

@@ -72,7 +72,7 @@ export default {
   computed: {
     ...mapState('main', ['devPlugins']),
     pluginDetail() {
-      return this.devPlugins[this.currentSelect]
+      return this.prodPlugin[this.currentSelect]
     },
     prodPlugin() {
       return this.devPlugins.filter(plugin => plugin.type === 'prod')

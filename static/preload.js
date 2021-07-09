@@ -18,7 +18,7 @@ if (location.href.indexOf('targetFile') > -1) {
 } else {
   filePath = location.pathname.replace('file://', '');
 }
-const {ipcRenderer, nativeImage, clipboard, remote} = require('electron');
+const {ipcRenderer, nativeImage, clipboard, remote, shell} = require('electron');
 
 const currentWindow = remote.getCurrentWindow();
 const winId = currentWindow.id;
@@ -281,8 +281,13 @@ window.utools = window.rubick = {
         }
       }
     },
+  },
+  shellOpenExternal(url) {
+    shell.openExternal(url);
   }
 }
-require(path.join(filePath, '../preload.js'));
-window.exports && ipcRenderer.sendToHost('templateConfig', {config: window.exports});
+const preloadPath = getQueryVariable('preloadPath') || './preload.js';
 
+require(path.join(filePath, '../', preloadPath));
+window.exports && ipcRenderer.sendToHost('templateConfig', {config: JSON.parse(JSON.stringify(window.exports))});
+window.ipcRenderer = ipcRenderer;
