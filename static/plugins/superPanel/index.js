@@ -77,7 +77,28 @@ new Vue({
         const word = this.selectData.text;
         const isCh = isChinese(word);
         this.translate(word, isCh ? 'en' : 'zh');
-        this.targetOptions = this.options.translate;
+        this.targetOptions = JSON.parse(JSON.stringify(this.options.translate));
+        (this.selectData.optionPlugin || []).forEach(plugin => {
+          plugin.features.forEach(fe => {
+            fe.cmds.forEach(cmd => {
+              if (cmd.type === 'regex' && eval(cmd.match).test(word)) {
+                this.targetOptions.push({
+                  type: 'ext',
+                  name: cmd.label,
+                  icon: plugin.icon,
+                  click: () => {
+                    ipcRenderer.send('superPanel-openPlugin', {
+                      cmd: cmd,
+                      plugin: plugin,
+                      feature: fe,
+                      data: word
+                    })
+                  }
+                });
+              }
+            })
+          });
+        });
       } else if (!ext || path.parse(this.selectData.fileUrl).base === 'Desktop') {
         // 如果在桌面上或者没有选择任何文件，则展示通用选项
         this.targetOptions = this.options.common;
@@ -91,7 +112,6 @@ new Vue({
               // 如果是图片，则唤起图片选项
               const regImg = /\.(png|jpg|gif|jpeg|webp)$/;
               if (cmd.type === 'img' && regImg.test(ext)) {
-                console.log(plugin);
                 this.targetOptions.push({
                   type: 'ext',
                   name: cmd.label,
