@@ -230,7 +230,13 @@ const actions = {
       id: uuidv4(),
       sourceFile: `${fileUrl}/${config.main}`,
       type: 'prod',
-      icon: payload.logo
+      icon: payload.logo,
+      subType: (() => {
+        if (config.main) {
+          return ''
+        }
+        return 'template';
+      })()
     };
     commit('commonUpdate', {
       devPlugins: [pluginConfig, ...state.devPlugins],

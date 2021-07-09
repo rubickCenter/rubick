@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
-<script crossorigin="anonymous" src="https://lib.baomitu.com/vue/2.6.12/vue.min.js"></script>
-<script src="https://lib.baomitu.com/vue-router/3.5.1/vue-router.min.js"></script>
+<script src="../vue.min.js"></script>
+<script src="../vue-router.min.js"></script>
 <style>
     * {
         margin: 0;
@@ -54,6 +54,50 @@
       height: 100%;
       border: none;
   }
+    .options {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        z-index: 99;
+        max-height: calc(100vh);
+        overflow: auto;
+
+    }
+    .options::-webkit-scrollbar {
+        width: 0;
+    }
+    .op-item {
+        padding: 0 10px;
+        height: 60px;
+        max-height: 500px;
+        overflow: auto;
+        background: #fafafa;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
+    .icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+    .title {
+        width: 500px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .desc {
+        color: #999;
+        width: 500px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
+    .op-item.active {
+         background: #DEE2E8;
+     }
 </style>
 <body>
   <div id="app">
@@ -61,5 +105,6 @@
   </div>
 </body>
 <script src="./doc.js" type="module"></script>
+<script src="./list.js" type="module"></script>
 <script src="./index.js" type="module"></script>
 </html>

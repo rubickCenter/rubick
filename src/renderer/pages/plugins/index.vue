@@ -24,7 +24,7 @@ export default {
       webview: null,
       query: this.$route.query,
       config: {},
-      templatePath: `File://${path.join(__static, './plugins/doc/doc-tpl.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}`,
+      templatePath: `File://${path.join(__static, './plugins/tpl/index.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}&preloadPath=${this.$route.query.preload}`,
     }
   },
   mounted() {
@@ -75,7 +75,6 @@ export default {
   },
   beforeRouteUpdate() {
     this.path = `File://${this.$route.query.sourceFile}`;
-    console.log(this.pluginInfo)
     this.webview.send('onPluginEnter', this.pluginInfo);
   },
   beforeDestroy() {
