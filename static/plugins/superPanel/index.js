@@ -96,6 +96,21 @@ new Vue({
                   }
                 });
               }
+              if (cmd.type === 'over') {
+                this.targetOptions.push({
+                  type: 'ext',
+                  name: cmd.label,
+                  icon: plugin.icon,
+                  click: () => {
+                    ipcRenderer.send('superPanel-openPlugin', {
+                      cmd: cmd,
+                      plugin: plugin,
+                      feature: fe,
+                      data: word
+                    })
+                  }
+                });
+              }
             })
           });
         });

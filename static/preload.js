@@ -173,8 +173,7 @@ window.utools = window.rubick = {
     },
     get(key) {
       const dbData = getData(dbPath) || [];
-
-      return dbData.find(d => d._id === key);
+      return dbData.find(d => d._id === key) || '';
     },
     remove(key) {
       key = typeof key === 'object' ? key._id : key;
