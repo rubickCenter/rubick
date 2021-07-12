@@ -1,7 +1,7 @@
 <template>
   <div class="dev-container">
     <div class="dev-detail" v-if="devPlugin.length">
-      <a-menu v-model="currentSelect" style="width: 200px; height: 100%" mode="vertical">
+      <a-menu v-model="currentSelect" style="width: 256px; height: 100%" mode="vertical">
         <a-menu-item @click="currentSelect = [index]" v-for="(plugin, index) in devPlugin" :key="index">
           <div class="menu-item">
             <img width="40" height="40" :src="plugin.icon" />
@@ -160,6 +160,10 @@ export default {
        }
        .desc {
          color: #999;
+         width: 180px;
+         overflow: hidden;
+         text-overflow:ellipsis;
+         white-space: nowrap;
        }
      }
    }
@@ -170,11 +174,12 @@ export default {
      width: 100%;
    }
    .plugin-detail {
-     padding: 20px;
+     padding: 20px 20px 0 20px;
      box-sizing: border-box;
      flex: 1;
+     width: 500px;
      .detail-container {
-       height: 340px;
+       height: 320px;
        overflow: auto;
        max-height: 320px;
        width: 100%;
@@ -202,6 +207,8 @@ export default {
      .desc-item {
        border-bottom: 1px solid #ddd;
        padding: 10px 0;
+       width: 100%;
+       overflow: auto;
        .desc-title {
          display: flex;
          align-items: center;

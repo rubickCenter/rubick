@@ -1,6 +1,12 @@
+const {getData, getlocalDataFile, saveData} = require("./utils");
+
 const marked = require("marked");
 const rendererMD = new marked.Renderer();
 const path = require('path');
+const os = require('os');
+
+const appPath = path.join(getlocalDataFile());
+const dbPath = path.join(appPath, './db.json');
 
 let filePath = '';
 function getQueryVariable(variable) {
@@ -141,60 +147,89 @@ window.utools = window.rubick = {
   },
   db: {
     put(data) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'db.put',
-        data,
+      data._rev = '';
+      let dbData = getData(dbPath) || [];
+      let target = [];
+      dbData.some((d, i) => {
+        if (d._id === data._id) {
+          target = [d, i]
+          return true;
+        }
+        return false;
       });
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`msg-back-db.put`, (e, result) => {
-          result ? resolve(result) : reject();
-        });
-      })
+
+      // 更新
+      if (target[0]) {
+        dbData[target[1]] = data;
+      } else {
+        dbData.push(data);
+      }
+      saveData(dbPath, dbData);
+      return {
+        id: data._id,
+        ok: true,
+        rev: '',
+      }
     },
     get(key) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'db.get',
-        key,
-      });
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`msg-back-db.get`, (e, result) => {
-          result ? resolve(result) : reject();
-        });
-      })
+      const dbData = getData(dbPath) || [];
+
+      return dbData.find(d => d._id === key);
     },
     remove(key) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'db.remove',
-        key,
+      key = typeof key === 'object' ? key._id : key;
+      let dbData = getData(dbPath);
+      let find = false;
+      dbData.some((d, i) => {
+        if (d._id === key) {
+          dbData.splice(i, 1);
+          find = true;
+          return true;
+        }
+        return false;
       });
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`msg-back-db.remove`, (e, result) => {
-          result ? resolve(result) : reject();
-        });
-      })
-    },
-    allDocs(key) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'db.allDocs',
-        key,
-      });
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`msg-back-db.allDocs`, (e, result) => {
-          console.log(result);
-          result ? resolve(result) : reject();
-        });
-      })
+      if (find) {
+        saveData(dbPath, dbData);
+        return {
+          id: key,
+          ok: true,
+          rev: '',
+        }
+      } else {
+        return {
+          id: key,
+          ok: false,
+          rev: '',
+        }
+      }
     },
     bulkDocs(docs) {
-      ipcRenderer.send('msg-trigger', {
-        type: 'db.bulkDocs',
-        key,
+      const dbData = getData(dbPath);
+      dbData.forEach((d, i) => {
+        const result = docs.find(data => data._id === d._id);
+        if (result) {
+          dbData[i] = result;
+        }
       });
-      return new Promise((resolve, reject) => {
-        ipcRenderer.once(`msg-back-db.bulkDocs`, (e, result) => {
-          result ? resolve(result) : reject();
-        });
-      })
+      saveData(dbPath, dbData);
+      return docs.map(d => ({
+        id: d._id,
+        success: true,
+        rev: '',
+      }))
+    },
+    allDocs(key) {
+      const dbData = getData(dbPath);
+      if (!key) {
+        return dbData;
+      }
+      if (typeof key === 'string') {
+        return dbData.filter(d => d._id.indexOf(key) >= 0);
+      }
+      if (Array.isArray(key)) {
+        return dbData.filter(d => key.indexOf(d._id) >= 0);
+      }
+      return [];
     }
   },
   isDarkColors() {
@@ -210,6 +245,10 @@ window.utools = window.rubick = {
   },
   setFeature(feature) {
     ipcRenderer.sendToHost('setFeature', {feature});
+  },
+
+  removeFeature(code) {
+    ipcRenderer.sendToHost('removeFeature', {code});
   },
   ubrowser: {
     winId: '',
@@ -282,9 +321,19 @@ window.utools = window.rubick = {
       }
     },
   },
+
+  // 系统
   shellOpenExternal(url) {
     shell.openExternal(url);
-  }
+  },
+
+  isMacOs() {
+    return os.type() === 'Darwin';
+  },
+
+  isWindows() {
+    return os.type() === 'Windows_NT';
+  },
 }
 const preloadPath = getQueryVariable('preloadPath') || './preload.js';
 
