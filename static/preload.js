@@ -105,16 +105,7 @@ window.utools = window.rubick = {
   },
 
   getPath(name) {
-    ipcRenderer.send('msg-trigger', {
-      type: 'getPath',
-      name,
-    });
-    return new Promise((resolve, reject) => {
-      ipcRenderer.on(`msg-back-getPath`, (e, result) => {
-        console.log(result)
-        result ? resolve(result) : reject();
-      });
-    })
+    return remote.app.getPath(name);
   },
 
   showNotification(body, clickFeatureCode) {
