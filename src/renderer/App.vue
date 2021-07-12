@@ -99,6 +99,9 @@ export default {
     ipcRenderer.on('new-window', this.newWindow);
     // 超级面板打开插件
     ipcRenderer.on('superPanel-openPlugin', (e, args) => {
+      ipcRenderer.send('msg-trigger', {
+        type: 'showMainWindow',
+      });
       this.openPlugin({
         cmd: args.cmd,
         plugin: args.plugin,

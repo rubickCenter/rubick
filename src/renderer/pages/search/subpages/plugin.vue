@@ -111,9 +111,10 @@ export default {
     overflow: auto;
   }
   .plugin-detail {
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     box-sizing: border-box;
     flex: 1;
+    height: 100%;
     .plugin-top {
       display: flex;
       align-items: flex-start;

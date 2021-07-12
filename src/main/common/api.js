@@ -66,7 +66,7 @@ export default {
       return dbData.find(d => d._id === key) || {};
     },
     remove({key}) {
-      key = typeof key === 'object' ? key.id : key;
+      key = typeof key === 'object' ? key._id : key;
       let dbData = getData(dbPath);
       let find = false;
       dbData.some((d, i) => {

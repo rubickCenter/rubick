@@ -68,6 +68,19 @@ export default {
           }),
         });
       }
+      if (event.channel === 'removeFeature') {
+        this.commonUpdate({
+          devPlugins: this.devPlugins.map(plugin => {
+            if (plugin.name === this.query.name) {
+              return {
+                ...plugin,
+                features: plugin.features.filter(fe => fe.code !== event.args[0].code)
+              }
+            }
+            return plugin;
+          }),
+        });
+      }
     })
   },
   methods: {
