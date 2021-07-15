@@ -35,7 +35,6 @@ module.exports = () => {
       },
     });
     win.loadURL(`file://${__static}/plugins/superPanel/index.html`);
-    win.once('ready-to-show', () => win.show());
     win.on("closed", () => {
       win = undefined;
     });

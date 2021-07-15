@@ -26,6 +26,7 @@
 
 
         <a-list-item-meta
+            @click="showPannel(item)"
             :description="item.description"
         >
           <div slot="title">{{ item.pluginName }}</div>
@@ -48,7 +49,9 @@ export default {
     return {
       pluginList: [],
       loading: {},
-      bannerList: []
+      bannerList: [],
+      show: false,
+      currentSelect: {}
     }
   },
   async created() {
@@ -74,6 +77,10 @@ export default {
     },
     showButton(item) {
       return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
+    },
+    showPannel(item) {
+      this.show = true;
+      this.currentSelect = item;
     },
     ...mapActions('main', ['downloadPlugin'])
   },

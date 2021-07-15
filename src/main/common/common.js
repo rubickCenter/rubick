@@ -5,6 +5,7 @@ import {
   clipboard,
   Notification,
   app,
+  screen,
 } from 'electron';
 import Api from './api';
 import robot from 'robotjs';
@@ -28,6 +29,14 @@ function registerShortCut(mainWindow) {
   globalShortcut.unregisterAll();
   // 注册偏好快捷键
   globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+    const {x, y} = screen.getCursorScreenPoint();
+    const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+    const wx = parseInt(currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400);
+    const wy = parseInt(currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200);
+    mainWindow.setVisibleOnAllWorkspaces(true);
+    mainWindow.focus();
+    mainWindow.setVisibleOnAllWorkspaces(false);
+    mainWindow.setPosition(wx, wy);
     mainWindow.show();
   });
 
