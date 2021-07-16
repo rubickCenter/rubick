@@ -1,5 +1,4 @@
-const {stringify} = require('query-string');
-const { BrowserWindow, nativeImage } = require("electron");
+const { BrowserWindow } = require("electron");
 
 module.exports = () => {
   let win;
@@ -10,7 +9,7 @@ module.exports = () => {
 
   let createWindow = (opts) => {
     const winURL = process.env.NODE_ENV === 'development'
-      ? `http://localhost:9080/#/plugin?${stringify(opts)}`
+      ? `http://localhost:9080/#/plugin`
       : `${__dirname}/index.html`
     win = new BrowserWindow({
       height: 600,
@@ -27,11 +26,14 @@ module.exports = () => {
         nodeIntegration: true // 在网页中集成Node
       }
     });
-
     process.env.NODE_ENV === 'development' ? win.loadURL(winURL) : win.loadFile(winURL, {
-      hash: `#/plugin?${stringify(opts)}`,
+      hash: `#/plugin`,
     });
-    win.once('ready-to-show', () => win.show());
+
+    win.webContents.executeJavaScript(`window.setPluginInfo(${opts})`).then(() => {
+      win.show()
+    });
+
     win.on("closed", () => {
       win = undefined;
     });

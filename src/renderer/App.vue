@@ -47,6 +47,7 @@
               <span slot="title" v-html="renderTitle(item.name)" ></span>
               <a-avatar
                   slot="avatar"
+                  style="border-radius: 0;"
                   :src="item.icon"
               />
             </a-list-item-meta>
@@ -58,11 +59,11 @@
     </div>
     <div class="rubick-select-subMenu" v-else>
       <div>
-        <img class="icon-tool-sub" v-if="query && query.icon" :src="query.icon" />
+        <img class="icon-tool-sub" v-if="pluginInfo.icon" :src="pluginInfo.icon" />
         <a-input
             :placeholder="subPlaceHolder"
             class="sub-input"
-            @change="(e) => search({value: e.target.value, searchType: $route.query.searchType})"
+            @change="(e) => search({value: e.target.value, searchType: pluginInfo.searchType})"
             :value="searchValue"
             @keypress.enter="(e) => targetSearch({value: e.target.value, type: 'enter'})"
             @keypress.space="(e) => targetSearch({value: e.target.value, type: 'space'})"
@@ -71,7 +72,7 @@
 
       <div class="icon-container">
         <a-icon class="icon" type="info-circle" />
-        <a-icon class="icon" type="setting" />
+        <a-icon class="icon" @click="goMenu('separate')" type="setting" />
       </div>
     </div>
     <router-view></router-view>
@@ -87,13 +88,21 @@ const {Menu, MenuItem} = remote;
 export default {
   data() {
     return {
-      searchType: this.$route.query.searchType ? 'subWindow' : '',
       query: this.$route.query,
       searchFn: null,
       config: opConfig.get(),
       currentSelect: 0,
     }
   },
+
+  created() {
+    window.setPluginInfo = (pluginInfo) => {
+      this.commonUpdate({
+        pluginInfo: pluginInfo,
+      });
+    }
+  },
+
   mounted() {
     ipcRenderer.on('init-rubick', this.closeTag);
     ipcRenderer.on('new-window', this.newWindow);
@@ -173,6 +182,7 @@ export default {
     },
 
     renderTitle(title) {
+      if (typeof title !== 'string') return;
       const result = title.split(this.searchValue);
       return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`
     },
@@ -203,18 +213,13 @@ export default {
     },
     newWindow() {
       ipcRenderer.send('new-window', {
-        ...this.selected,
-        ...this.$route.query,
+        ...this.pluginInfo
       });
       this.closeTag();
     },
-    goMenu() {
-      if (this.selected && this.selected.key === 'plugin-container') {
+    goMenu(type) {
+      if ((this.selected && this.selected.key === 'plugin-container') || type === 'separate') {
         const pluginMenu = [
-          {
-            label: '分离窗口',
-            click: this.newWindow
-          },
           {
             label: '开发者工具',
             click: () => {
@@ -237,6 +242,12 @@ export default {
             label: '隐藏插件',
           },
         ];
+        if (type !== 'separate') {
+          pluginMenu.unshift({
+            label: '分离窗口',
+            click: this.newWindow
+          })
+        }
         let menu = Menu.buildFromTemplate(pluginMenu);
         menu.popup();
         return;
@@ -246,12 +257,15 @@ export default {
     },
   },
   computed: {
-    ...mapState('main', ['showMain', 'devPlugins', 'current', 'options', 'selected', 'searchValue', 'subPlaceHolder']),
+    ...mapState('main', ['showMain', 'devPlugins', 'current', 'options', 'selected', 'searchValue', 'subPlaceHolder', 'pluginInfo']),
     showOptions() {
       // 有选项值，且不在显示主页
       if (this.options.length && !this.showMain) {
         return true;
       }
+    },
+    searchType() {
+      return this.pluginInfo.searchType ? 'subWindow' : ''
     }
   }
 };

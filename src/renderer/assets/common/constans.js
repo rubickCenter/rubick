@@ -5,7 +5,7 @@ const PRE_ITEM_HEIGHT = 60;
 const SYSTEM_PLUGINS = [
   {
     "pluginName": "rubick 帮助文档",
-    "logo": "https://static.91jkys.com/activity/img/4eb6f2848b064f569c28fdf8495d5ec7.png",
+    "logo": require('../imgs/help.png'),
     "features": [
       {
         "code": "help",
@@ -17,7 +17,7 @@ const SYSTEM_PLUGINS = [
   },
   {
     "pluginName": "屏幕颜色拾取",
-    "logo": "https://static.91jkys.com/activity/img/6a1b4b8a17da45d680ea30b53a91aca8.png",
+    "logo": require('../imgs/picker.png'),
     "features": [
       {
         "code": "pick",
@@ -29,7 +29,7 @@ const SYSTEM_PLUGINS = [
   },
   {
     "pluginName": "截屏",
-    "logo": "https://static.91jkys.com/activity/img/b34d30b426f24eb2b77bf434b8493495.png",
+    "logo": require('../imgs/screenshot.png'),
     "features": [
       {
         "code": "shortCut",
@@ -38,6 +38,18 @@ const SYSTEM_PLUGINS = [
       },
     ],
     "tag": 'rubick-screen-short-cut',
+  },
+  {
+    "pluginName": "锁屏",
+    "logo": require('../imgs/lock.png'),
+    "features": [
+      {
+        "code": "lock",
+        "explain": "锁屏",
+        "cmds": [ "锁屏", "lock screen" ]
+      },
+    ],
+    "tag": 'rubick-lock',
   }
 ];
 
