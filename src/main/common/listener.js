@@ -3,6 +3,7 @@ import {exec, spawn} from "child_process";
 import robot from "robotjs";
 import Api from "./api";
 import ioHook from 'iohook';
+import {throttle} from './utils';
 
 const browsers = require("../browsers")();
 const {picker, separator, superPanel} = browsers;
@@ -72,6 +73,20 @@ class Listener {
   }
 
   init(mainWindow) {
+    this.fn = throttle(({x, y}, picker) => {
+      const img = robot.screen.capture(parseInt(x) - 5, parseInt(y) - 5, 9, 9);
+
+      const colors = {}
+
+      for(let i = 0; i< 9; i++) {
+        colors[i] = {};
+        for (let j = 0; j < 9; j++) {
+          colors[i][j] = img.colorAt(j, i);
+        }
+      }
+      picker.getWindow().webContents.send("updatePicker", colors);
+    }, 100);
+
     this.colorPicker();
     this.initPlugin();
     this.lockScreen();
@@ -123,27 +138,12 @@ class Listener {
         this.closePicker();
       });
     });
-
-
     ioHook.on('mousemove', e => {
       let x = e.x
       let y = e.y
       if (!picker.getWindow()) return;
-      let color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
       picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
-
-
-      const img = robot.screen.capture(parseInt(x) - 5, parseInt(y) - 5, 9, 9);
-
-      const colors = {}
-
-      for(let i = 0; i< 9; i++) {
-        colors[i] = {};
-        for (let j = 0; j < 9; j++) {
-          colors[i][j] = img.colorAt(j, i);
-        }
-      }
-      picker.getWindow().webContents.send("updatePicker", colors);
+      this.fn(e, picker);
     })
 
     ioHook.on('mouseup', e => {
