@@ -151,7 +151,7 @@ function find(p, target = 'plugin.json') {
 const fileLists = [];
 // 默认搜索目录
 APP_FINDER_PATH.forEach((searchPath) => {
-  fs.readdir(searchPath, (err, files) => {
+  fs.readdir(searchPath, async (err, files) => {
     try {
       for (let i = 0; i < files.length; i++) {
         const appName = files[i];
@@ -178,15 +178,14 @@ APP_FINDER_PATH.forEach((searchPath) => {
               const iconName = resourceList.filter(file => path.extname(file) === '.icns')[0];
               iconPath = path.join(searchPath, `${appName}/Contents/Resources/${iconName}`);
             }
-            nativeImage.createThumbnailFromPath(iconPath, {width: 64, height: 64}).then(img => {
-              fileLists.push({
-                name: appSubStr,
-                value: 'plugin',
-                icon: img.toDataURL(),
-                desc: path.join(searchPath, appName),
-                type: 'app',
-                action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`
-              })
+            const img = await nativeImage.createThumbnailFromPath(iconPath, {width: 64, height: 64});
+            fileLists.push({
+              name: appSubStr,
+              value: 'plugin',
+              icon: img.toDataURL(),
+              desc: path.join(searchPath, appName),
+              type: 'app',
+              action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`
             })
           } catch (e) {
           }

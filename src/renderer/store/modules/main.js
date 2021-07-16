@@ -22,7 +22,12 @@ const state = {
   searchValue: '',
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
   subPlaceHolder: '',
-  pluginInfo: {},
+  pluginInfo: (() => {
+    try {
+      console.log(window.pluginInfo);
+      return window.pluginInfo || {}
+    } catch (e) {}
+  })(),
 }
 
 const mutations = {

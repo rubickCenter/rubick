@@ -1,12 +1,8 @@
 import {app, BrowserWindow, dialog} from 'electron';
-import {getlocalDataFile, saveData, getData} from './utils';
-import path from "path";
 
 const puppeteer = require("puppeteer-core");
 const pie = require("puppeteer-in-electron")
 
-const appPath = path.join(getlocalDataFile());
-const dbPath = path.join(appPath, './db.json');
 
 let browser
 pie.initialize(app).then(res => {
@@ -33,93 +29,6 @@ export default {
   },
   setExpendHeight({height}, mainWindow) {
     mainWindow.setSize(800, height || 60);
-  },
-  db: {
-    put({data}) {
-      data._rev = '';
-      let dbData = getData(dbPath) || [];
-      let target = [];
-      dbData.some((d, i) => {
-        if (d._id === data._id) {
-          target = [d, i]
-          return true;
-        }
-        return false;
-      });
-
-      // 更新
-      if (target[0]) {
-        dbData[target[1]] = data;
-      } else {
-        dbData.push(data);
-      }
-      saveData(dbPath, dbData);
-      return {
-        id: data._id,
-        ok: true,
-        rev: '',
-      }
-    },
-    get({key}) {
-      const dbData = getData(dbPath) || [];
-
-      return dbData.find(d => d._id === key) || {};
-    },
-    remove({key}) {
-      key = typeof key === 'object' ? key._id : key;
-      let dbData = getData(dbPath);
-      let find = false;
-      dbData.some((d, i) => {
-        if (d._id === key) {
-          dbData.splice(i, 1);
-          find = true;
-          return true;
-        }
-        return false;
-      });
-      if (find) {
-        saveData(dbPath, dbData);
-        return {
-          id: key,
-          ok: true,
-          rev: '',
-        }
-      } else {
-        return {
-          id: key,
-          ok: false,
-          rev: '',
-        }
-      }
-    },
-    bulkDocs({docs}) {
-      const dbData = getData(dbPath);
-      dbData.forEach((d, i) => {
-        const result = docs.find(data => data._id === d._id);
-        if (result) {
-          dbData[i] = result;
-        }
-      });
-      saveData(dbPath, dbData);
-      return docs.map(d => ({
-        id: d._id,
-        success: true,
-        rev: '',
-      }))
-    },
-    allDocs({key}) {
-      const dbData = getData(dbPath);
-      if (!key) {
-        return dbData;
-      }
-      if (typeof key === 'string') {
-        return dbData.filter(d => d._id.indexOf(key) >= 0);
-      }
-      if (Array.isArray(key)) {
-        return dbData.filter(d => key.indexOf(d._id) >= 0);
-      }
-      return [];
-    }
   },
 
   ubrowser: {

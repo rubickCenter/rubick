@@ -21,7 +21,7 @@
     "asar": false,
     "productName": "rubick2",
     "appId": "com.example.yourapp2",
-    "compression":"maximum",
+    "compression": "maximum",
     "directories": {
       "output": "build"
     },

@@ -1,9 +1,19 @@
+const {ipcRenderer} = require("electron");
+let colorDomBoxs = null;
 
-const { ipcRenderer } = require("electron");
-
-document.querySelector(
-  "#picker"
-).style.border = `10px solid rgba(200, 200, 200, 0.3)`;
+ipcRenderer.on("updatePicker", ((e, args) => {
+  if (!colorDomBoxs) {
+    colorDomBoxs = [];
+    document.querySelectorAll(".content>div").forEach((e => {
+      colorDomBoxs.push(e.querySelectorAll(":scope > div"))
+    }));
+  }
+  for (let i = 0; i < 9; i ++){
+    for (let j = 0; j < 9; j ++) {
+      colorDomBoxs[i][j].style.background = '#' + args[i][j]
+    }
+  }
+}));
 
 document.addEventListener(
   "keydown",
@@ -12,7 +22,3 @@ document.addEventListener(
   },
   false
 );
-
-ipcRenderer.on("updatePicker", (event, color) => {
-  document.querySelector("#picker").style.border = `10px solid ${color}`;
-});

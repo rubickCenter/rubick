@@ -14,5 +14,10 @@ export default {
     shortCut() {
       ipcRenderer.send('capture-screen', {type: 'start'})
     }
+  },
+  'rubick-lock': {
+    lock() {
+      ipcRenderer.send('lock-screen');
+    }
   }
 }

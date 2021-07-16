@@ -1,6 +1,6 @@
 <template>
   <div>
-    <webview v-if="!query.subType" id="webview" :src="path" :preload="preload"></webview>
+    <webview v-if="!pluginInfo.subType" id="webview" :src="path" :preload="preload"></webview>
     <div v-else>
       <webview id="webview" :src="templatePath" :preload="preload"></webview>
     </div>
@@ -19,12 +19,9 @@ export default {
   name: "index.vue",
   data() {
     return {
-      path: `File://${this.$route.query.sourceFile}`,
       preload: `File://${path.join(__static, './preload.js')}`,
       webview: null,
-      query: this.$route.query,
       config: {},
-      templatePath: `File://${path.join(__static, './plugins/tpl/index.html')}?code=${JSON.parse(this.$route.query.detail).code}&targetFile=${encodeURIComponent(this.$route.query.sourceFile)}&preloadPath=${this.$route.query.preload}`,
     }
   },
   mounted() {
@@ -58,7 +55,7 @@ export default {
       if (event.channel === 'setFeature') {
         this.commonUpdate({
           devPlugins: this.devPlugins.map(plugin => {
-            if (plugin.name === this.query.name) {
+            if (plugin.name === this.pluginInfo.name) {
               return {
                 ...plugin,
                 features: [...plugin.features, event.args[0].feature]
@@ -71,7 +68,7 @@ export default {
       if (event.channel === 'removeFeature') {
         this.commonUpdate({
           devPlugins: this.devPlugins.map(plugin => {
-            if (plugin.name === this.query.name) {
+            if (plugin.name === this.pluginInfo.name) {
               return {
                 ...plugin,
                 features: plugin.features.filter(fe => fe.code !== event.args[0].code)
@@ -87,18 +84,24 @@ export default {
     ...mapMutations('main', ['setSubPlaceHolder', 'commonUpdate']),
   },
   beforeRouteUpdate() {
-    this.path = `File://${this.$route.query.sourceFile}`;
+    this.path = `File://${this.pluginInfo.sourceFile}`;
     this.webview.send('onPluginEnter', this.pluginInfo);
   },
   beforeDestroy() {
     const webview = document.querySelector('webview');
-    webview && webview.send('onPluginOut', this.$route.query)
+    webview && webview.send('onPluginOut', this.pluginInfo)
   },
   computed: {
     ...mapState('main', ['searchValue', 'devPlugins', 'pluginInfo']),
     pluginDetail() {
-      return (this.devPlugins.filter(plugin => plugin.name === this.query.name)[0] || {}).features
+      return (this.devPlugins.filter(plugin => plugin.name === this.pluginInfo.name)[0] || {}).features
     },
+    path() {
+      return `File://${this.pluginInfo.sourceFile}`
+    },
+    templatePath() {
+      return `File://${path.join(__static, './plugins/tpl/index.html')}?code=${JSON.parse(this.pluginInfo.detail).code}&targetFile=${encodeURIComponent(this.pluginInfo.sourceFile)}&preloadPath=${this.pluginInfo.preload}`;
+    }
   }
 }
 </script>

@@ -13,14 +13,13 @@ module.exports = () => {
     win = new BrowserWindow({
       frame: false,
       autoHideMenuBar: true,
-      width: 100,
-      height: 100,
+      width: 108,
+      height: 108,
       transparent: true,
       alwaysOnTop: true,
       resizable: false,
       focusable: true,
       hasShadow: false,
-      // icon: nativeImage.createFromPath(`${dirname}/build/icon.png`),
       webPreferences: {
         nodeIntegration: true,
         devTools: false,
