@@ -36,7 +36,7 @@ function createTray(window) {
         click() {
           dialog.showMessageBox({
             title: '拉比克',
-            message: '一站式前端开发工具箱',
+            message: '极简、插件化的现代桌面软件',
             detail: `Version: ${pkg.version}\nAuthor: muwoo`
           });
         }
@@ -45,6 +45,14 @@ function createTray(window) {
         id: 7,
         role: 'quit',
         label: '退出'
+      },
+      {
+        id: 7,
+        label: '重启',
+        click() {
+          app.relaunch();
+          app.exit();
+        }
       }
     ]);
     appIcon.on('click', () => {

@@ -1,6 +1,6 @@
 {
   "name": "rubick2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "muwoo <2424880409@qq.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -21,7 +21,7 @@
     "asar": false,
     "productName": "rubick2",
     "appId": "com.example.yourapp2",
-    "compression":"maximum",
+    "compression": "maximum",
     "directories": {
       "output": "build"
     },

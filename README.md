@@ -18,12 +18,9 @@
 之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick
 
 ## 安装包
-* [Rubick Mac OS V0.0.1](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.1-beta.3/rubick2-0.0.1.pkg)
+* [Rubick Mac OS V0.0.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2/rubick2-0.0.2.pkg)
 
 ## 支持能力
-
-- [x] 支持 uTools 官方文档 90% API，还在更新中，很快可以做到 100%
-- [x] 插件化支持 uTools 所有开源插件
 - [x] 支持远程下载安装插件，支持插件开发者模式
 - [x] 支持插件分离
 - [x] 支持系统命令取色、截屏、帮助
