@@ -1,13 +1,9 @@
 const {ipcRenderer, nativeImage, remote, clipboard} = require('electron')
-const md5 = require("md5");
 const rp = require("request-promise");
-const isChinese = require('is-chinese');
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require ('child_process');
 const mineType = require("mime-types");
-
-const opConfig = remote.getGlobal('opConfig');
 
 new Vue({
   el: '#app',
@@ -66,6 +62,7 @@ new Vue({
       ]
     },
     targetOptions: [],
+    loading: false,
   },
   created() {
     // 简单唤起超级面板
@@ -74,9 +71,9 @@ new Vue({
       const ext = path.extname(this.selectData.fileUrl);
       // 剪切板只有文本时，显示翻译
       if (!this.selectData.fileUrl) {
+        this.loading = true;
         const word = this.selectData.text;
-        const isCh = isChinese(word);
-        this.translate(word, isCh ? 'en' : 'zh');
+        this.translate(word);
         this.targetOptions = JSON.parse(JSON.stringify(this.options.translate));
         (this.selectData.optionPlugin || []).forEach(plugin => {
           plugin.features.forEach(fe => {
@@ -172,20 +169,20 @@ new Vue({
   },
 
   methods: {
-    translate(msg, to) {
-      const {appid, key} = opConfig.get().superPanel.baiduAPI;
-      if (!appid || !key) return;
-      const q = msg;
-      const salt = parseInt(Math.random() * 1000000000); //加盐
-      const sign = md5(appid + q + salt + key); //生成签名
+    translate(msg) {
       const params = encodeURI(
-        `q=${q}&from=auto&to=${to}&appid=${appid}&salt=${salt}&sign=${sign}`
+        `q=${msg}&keyfrom=neverland&key=969918857&type=data&doctype=json&version=1.1`
       );
       const options = {
-        uri: `https://fanyi-api.baidu.com/api/trans/vip/translate?${params}`,
+        uri: `http://fanyi.youdao.com/openapi.do?${params}`,
       };
       return rp(options).then((res) => {
-        this.$set(this.selectData, 'translate', JSON.parse(res).trans_result)
+        this.$set(this.selectData, 'translate', {
+          ...JSON.parse(res),
+          src: msg,
+        });
+      }).finally(() => {
+        this.loading = false;
       })
     },
     commonClick(item, fileUrl) {

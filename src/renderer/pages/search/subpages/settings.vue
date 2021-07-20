@@ -55,17 +55,6 @@
             <div class="title">长按以下设置的毫秒响应</div>
             <a-slider :step="100" v-model:value="config.superPanel.mouseDownTime" :min="200" :max="1000" />
           </div>
-          <div class="setting-item">
-            <div class="title">百度搜索配置</div>
-            <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 14 }">
-              <a-form-item label="appid">
-                <a-input v-model:value="config.superPanel.baiduAPI.appid" />
-              </a-form-item>
-              <a-form-item label="key">
-                <a-input v-model:value="config.superPanel.baiduAPI.key" />
-              </a-form-item>
-            </a-form>
-          </div>
           <img width="100%" src="https://static.91jkys.com/upload/202107/02/fa4a5c614234409fb32ddda70cb900aa.jpg" />
         </div>
         <div v-if="currentSelect[0] === 2">
