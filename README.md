@@ -15,7 +15,9 @@
 
 
 基于 electron 的工具箱，媲美 utools的开源插件，已实现 utools 大部分的 API 能力，所以可以做到无缝适配 utools 开源的插件。
-之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick
+之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick.
+
+Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
 
 ## 安装包
 * [Rubick Mac OS V0.0.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2/rubick2-0.0.2.pkg)
