@@ -108,6 +108,7 @@ export default {
     ipcRenderer.on('new-window', this.newWindow);
     // 超级面板打开插件
     ipcRenderer.on('superPanel-openPlugin', (e, args) => {
+      this.closeTag();
       ipcRenderer.send('msg-trigger', {
         type: 'showMainWindow',
       });
@@ -144,6 +145,11 @@ export default {
         })
       });
       config && this.openPlugin(config);
+    });
+    // 打开偏好设置
+    ipcRenderer.on('tray-setting', () => {
+      this.showMainUI();
+      this.changePath({key: 'settings'});
     });
     const searchNd = document.getElementById('search');
     searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)

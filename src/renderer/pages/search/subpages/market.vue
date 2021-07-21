@@ -26,7 +26,7 @@
 
 
         <a-list-item-meta
-            @click="showPannel(item)"
+            @click="showPannel(item, index)"
             :description="item.description"
         >
           <div slot="title">{{ item.pluginName }}</div>
@@ -37,12 +37,43 @@
         </a-list-item-meta>
       </a-list-item>
     </a-list>
+    <a-drawer
+      placement="right"
+      :visible="show"
+      @close="show=false"
+      width="100%"
+    >
+      <div class="plugin-market-desc" slot="title">
+        <img width="80" :src="currentSelect.logo"/>
+        <div class="desc">
+          <h4>{{currentSelect.pluginName}}</h4>
+          <div class="info">
+            <div class="actor">
+              开发者：{{currentSelect.author}}
+              <a-button
+                v-if="showButton(currentSelect)"
+                :loading="loading[currentSelect.index]"
+                @click="download(currentSelect.index, currentSelect)"
+                icon="cloud-download"
+                type="primary"
+              >
+                获取
+              </a-button>
+            </div>
+            <div>{{currentSelect.description}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="market-plugin-detail" v-html="readme"></div>
+    </a-drawer>
   </div>
 </template>
 
 <script>
 import api from '../../../assets/api';
 import {mapActions, mapState} from 'vuex';
+import marked from "marked";
+const rendererMD = new marked.Renderer();
 
 export default {
   data() {
@@ -78,19 +109,68 @@ export default {
     showButton(item) {
       return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
     },
-    showPannel(item) {
+    showPannel(item, index) {
       this.show = true;
       this.currentSelect = item;
+      this.currentSelect.index = index;
     },
     ...mapActions('main', ['downloadPlugin'])
   },
   computed: {
-    ...mapState('main', ['devPlugins'])
+    ...mapState('main', ['devPlugins']),
+    readme() {
+      marked.setOptions({
+        renderer: rendererMD,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+      });
+      try {
+        return marked(this.currentSelect.detail);
+      } catch (e) {
+        return '暂无描述信息'
+      }
+
+    }
   }
 }
 </script>
 
 <style lang="less">
+.market-plugin-detail {
+  img {
+    width: 100%;
+  }
+  height: 430px;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+.plugin-market-desc {
+  display: flex;
+  img {
+    margin-right: 20px;
+  }
+  .desc {
+    flex: 1;
+  }
+  .info {
+    font-size: 12px;
+    color: #999;
+    font-weight: normal;
+    padding-right: 40px;
+  }
+  .actor {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+  }
+}
  .market {
    height: calc(~'100vh - 110px');
    background: #fff;
