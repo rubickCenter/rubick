@@ -41,105 +41,41 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
 2. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
 
-## utools 插件支持
-### plugin.json
-在你觉得合适的地方新建一个文件夹，并创建 `plugin.json` 文件。这是最重要的一个文件，用来说明这个插件将如何与 `rubick` 集成，最基本的格式如下：
-```json
-{
-	"pluginName": "helloWorld",
-	"description": "我的第一个uTools插件",
-	"main": "index.html",
-	"version": "0.0.1",
-	"logo": "logo.png",
-	"features": [
-		{
-		  "code": "hello",
-		  "explain": "hello world",
-			"cmds":["hello", "你好"]
-		}
-	]
-}
-```
-所有字段和 `utools` 保持一致，这将可以完美使用`utools`的插件生态
+## 目前支持能力
+### 加载utools生态插件
+拿 `github` 上开源的 斗图 插件举例，要加载斗图插件，只需要将代码 clone下来后，复制其 `plugin.json` 进入搜索框即可使用
 
-## utools api 支持
-
-### 事件
-
-#### onPluginReady(callback)
-* `callback` Function
-
-> 当插件装载成功，uTools 将会主动调用这个方法（生命周期内仅调用一次），所有的 `api` 都应该在 `onPluginReady` 之后进行调用。
-
-##### 示例
-
-```js
-utools.onPluginReady(() => {
-  console.log('插件装配完成，已准备好')
-})
-```
-
-#### onPluginEnter(callback)
-* `callback` Function
-
-> 每当插件从后台进入到前台时，uTools 将会主动调用这个方法。
-
-##### 示例
-
-```js
-utools.onPluginEnter(({code, type, payload, optional}) => {
-  console.log('用户进入插件', code, type, payload)
-})
-```
-
-更多可以参考 `utools` 文档：https://u.tools/docs/developer/api.html#%E4%BA%8B%E4%BB%B6
-
-### 窗口交互
+斗图：https://github.com/vst93/doutu-uToolsPlugin
 
 
-### 本地数据库
-类似于 `utools` 的功能，我们也提供了本地数据库的 api 能力
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cba1eb758180433294c93b59724adefd~tplv-k3u1fbpfcp-watermark.image)
 
-#### utools.db.put(doc)
+### 超级面板
+长按鼠标右键，即可呼起超级面板，可以根据当前鼠标选择内容，匹配对应插件能力。比如当前选择图片后长按右击，则会呼起上传图床插件：
 
-##### 示例
-```js
-// 创建请求
-utools.db.put({
-  _id: "demo",
-  data: "demo"
-})
-// 返回 {id: "demo", ok: true, rev: "1-05c9b92e6f24287dc1f4ec79d9a34fa8"}
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1706cc730f1f46078cb700a445211317~tplv-k3u1fbpfcp-watermark.image)
 
-// 更新请求
-utools.db.put({
-  _id: "demo",
-  data: "demo",
-  _rev: "1-05c9b92e6f24287dc1f4ec79d9a34fa8"
-})
+### 模板
+为了更贴合 `uTools` 的插件能力，需要实现模板功能，模板即是一个内置 UI 样式的功能插件。
 
-```
 
-#### utools.db.get(id)
-#### utools.db.remove(doc)
-#### utools.db.bulkDocs(docs)
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b113ad547974699b9c73c28bc09b9b1~tplv-k3u1fbpfcp-watermark.image)
 
-### ubrowser
-可编程浏览器
+### utools 自带的系统命令
+#### 取色
 
-```js
-  const page = await utools.ubrowser.goto('https://www.baidu.com')
-  await page.value('#kw', 'uTools');
-  await page.click('#su');
-  page.run({
-      width: 600,
-      height: 800,
-    })
-```
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3e00e5f08545bcb96613689649b337~tplv-k3u1fbpfcp-watermark.image)
+
+#### 截屏
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18023dab52e1420c9e87362cefddb2a1~tplv-k3u1fbpfcp-watermark.image)
+
+#### 全局快捷键
+
+![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62cc424eacac4c9eb178f0e055e87d9a~tplv-k3u1fbpfcp-watermark.image)
 
 ### 最后
 utools过于强大，目前还没有完全实现其所有功能，不过我们会根据需要不断更新。欢迎小伙伴一起 `pr` 或 `star`
-
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.
