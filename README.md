@@ -47,8 +47,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 斗图：https://github.com/vst93/doutu-uToolsPlugin
 
-
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cba1eb758180433294c93b59724adefd~tplv-k3u1fbpfcp-watermark.image)
+<img src=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cba1eb758180433294c93b59724adefd~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 ### 超级面板
 长按鼠标右键，即可呼起超级面板，可以根据当前鼠标选择内容，匹配对应插件能力。比如当前选择图片后长按右击，则会呼起上传图床插件：
@@ -58,21 +57,22 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 ### 模板
 为了更贴合 `uTools` 的插件能力，需要实现模板功能，模板即是一个内置 UI 样式的功能插件。
 
-
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b113ad547974699b9c73c28bc09b9b1~tplv-k3u1fbpfcp-watermark.image)
+<img src=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b113ad547974699b9c73c28bc09b9b1~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 ### utools 自带的系统命令
 #### 取色
+基于 `robot.js` 以及 `iohook` 实现。未使用 C++ 扩展。
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3e00e5f08545bcb96613689649b337~tplv-k3u1fbpfcp-watermark.image)
+<img src=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3e00e5f08545bcb96613689649b337~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 #### 截屏
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18023dab52e1420c9e87362cefddb2a1~tplv-k3u1fbpfcp-watermark.image)
+<img src=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18023dab52e1420c9e87362cefddb2a1~tplv-k3u1fbpfcp-watermark.image width=500 />
+
 
 #### 全局快捷键
 
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62cc424eacac4c9eb178f0e055e87d9a~tplv-k3u1fbpfcp-watermark.image)
+<img src=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62cc424eacac4c9eb178f0e055e87d9a~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 ### 最后
 utools过于强大，目前还没有完全实现其所有功能，不过我们会根据需要不断更新。欢迎小伙伴一起 `pr` 或 `star`
