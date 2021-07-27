@@ -4,65 +4,55 @@ const PRE_ITEM_HEIGHT = 60;
 
 const SYSTEM_PLUGINS = [
   {
-    "pluginName": "rubick 帮助文档",
-    "logo": require('../imgs/help.png'),
-    "features": [
+    pluginName: 'rubick 帮助文档',
+    logo: require('../imgs/help.png'),
+    features: [
       {
-        "code": "help",
-        "explain": "rubick 帮助文档",
-        "cmds": [ "Help", "帮助" ]
-      },
+        code: 'help',
+        explain: 'rubick 帮助文档',
+        cmds: ['Help', '帮助']
+      }
     ],
-    "tag": 'rubick-help',
+    tag: 'rubick-help'
   },
   {
-    "pluginName": "屏幕颜色拾取",
-    "logo": require('../imgs/picker.png'),
-    "features": [
+    pluginName: '屏幕颜色拾取',
+    logo: require('../imgs/picker.png'),
+    features: [
       {
-        "code": "pick",
-        "explain": "rubick 帮助文档",
-        "cmds": [ "取色", "拾色", 'Pick color' ]
-      },
+        code: 'pick',
+        explain: 'rubick 帮助文档',
+        cmds: ['取色', '拾色', 'Pick color']
+      }
     ],
-    "tag": 'rubick-color',
+    tag: 'rubick-color'
   },
   {
-    "pluginName": "截屏",
-    "logo": require('../imgs/screenshot.png'),
-    "features": [
+    pluginName: '截屏',
+    logo: require('../imgs/screenshot.png'),
+    features: [
       {
-        "code": "shortCut",
-        "explain": "rubick 屏幕截取",
-        "cmds": [ "截屏", "shortCut" ]
-      },
+        code: 'shortCut',
+        explain: 'rubick 屏幕截取',
+        cmds: ['截屏', 'shortCut']
+      }
     ],
-    "tag": 'rubick-screen-short-cut',
+    tag: 'rubick-screen-short-cut'
   },
   {
-    "pluginName": "锁屏",
-    "logo": require('../imgs/lock.png'),
-    "features": [
+    pluginName: '锁屏',
+    logo: require('../imgs/lock.png'),
+    features: [
       {
-        "code": "lock",
-        "explain": "锁屏",
-        "cmds": [ "锁屏", "lock screen" ]
-      },
+        code: 'lock',
+        explain: '锁屏',
+        cmds: ['锁屏', 'lock screen']
+      }
     ],
-    "tag": 'rubick-lock',
+    tag: 'rubick-lock'
   }
 ];
 
-const APP_FINDER_PATH = [
-  '/System/Applications',
-  '/Applications',
-  '/System/Library/PreferencePanes',
-];
+const APP_FINDER_PATH = ['/System/Applications', '/Applications', '/System/Library/PreferencePanes'];
 
-export {
-  WINDOW_MAX_HEIGHT,
-  WINDOW_MIN_HEIGHT,
-  PRE_ITEM_HEIGHT,
-  SYSTEM_PLUGINS,
-  APP_FINDER_PATH,
-}
+export { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS, APP_FINDER_PATH };

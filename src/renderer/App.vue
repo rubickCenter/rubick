@@ -3,52 +3,65 @@
     <div v-if="!searchType" class="rubick-select">
       <div class="tag-container" v-if="selected">
         <a-tag
-            :key="selected.key"
-            @close="closeTag"
-            class="select-tag"
-            color="green"
-            closable
+          :key="selected.key"
+          @close="closeTag"
+          class="select-tag"
+          color="green"
+          closable
         >
           {{ selected.name }}
         </a-tag>
       </div>
       <a-input
-          id="search"
-          :placeholder="subPlaceHolder && selected && selected.key === 'plugin-container' ? subPlaceHolder : 'Hi, Rubick'"
-          class="main-input"
-          @change="e => search({value: e.target.value})"
-          :value="searchValue"
-          :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
-          @keydown.down="(e) => changeCurrent(1)"
-          @keydown.up="() => changeCurrent(-1)"
-          @keypress.enter="(e) => targetSearch({value: e.target.value, type: 'enter'})"
-          @keypress.space="(e) => targetSearch({value: e.target.value, type: 'space'})"
+        id="search"
+        :placeholder="
+          subPlaceHolder && selected && selected.key === 'plugin-container'
+            ? subPlaceHolder
+            : 'Hi, Rubick'
+        "
+        class="main-input"
+        @change="(e) => search({ value: e.target.value })"
+        :value="searchValue"
+        :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
+        @keydown.down="(e) => changeCurrent(1)"
+        @keydown.up="() => changeCurrent(-1)"
+        @keypress.enter="
+          (e) => targetSearch({ value: e.target.value, type: 'enter' })
+        "
+        @keypress.space="
+          (e) => targetSearch({ value: e.target.value, type: 'space' })
+        "
       >
         <div @click="goMenu" class="suffix-tool" slot="suffix">
-          <a-icon v-show="selected && selected.key === 'plugin-container'" class="icon-more" type="more" />
-          <img class="icon-tool" v-if="selected && selected.icon" :src="selected.icon" />
+          <a-icon
+            v-show="selected && selected.key === 'plugin-container'"
+            class="icon-more"
+            type="more"
+          />
+          <img
+            class="icon-tool"
+            v-if="selected && selected.icon"
+            :src="selected.icon"
+          />
           <div v-else class="rubick-logo">
             <img src="./assets/logo.png" />
           </div>
         </div>
-
       </a-input>
       <div class="options" v-show="showOptions">
         <a-list item-layout="horizontal" :data-source="options">
           <a-list-item
-              @click="() => item.click($router)"
-              :class="currentSelect === index ? 'active op-item' : 'op-item'"
-              slot="renderItem"
-              slot-scope="item, index"
+            @click="() => item.click($router)"
+            :class="currentSelect === index ? 'active op-item' : 'op-item'"
+            slot="renderItem"
+            slot-scope="item, index"
           >
-            <a-list-item-meta
-                :description="item.desc"
-            >
-              <span slot="title" v-html="renderTitle(item.name)" ></span>
+            <a-list-item-meta :description="item.desc">
+              <span slot="title" v-html="renderTitle(item.name)"></span>
               <a-avatar
-                  slot="avatar"
-                  style="border-radius: 0;"
-                  :src="item.icon"
+                slot="avatar"
+                style="border-radius: 0"
+                :src="item.icon"
               />
             </a-list-item-meta>
             <a-tag v-show="item.type === 'dev'">开发者</a-tag>
@@ -59,14 +72,28 @@
     </div>
     <div class="rubick-select-subMenu" v-else>
       <div>
-        <img class="icon-tool-sub" v-if="pluginInfo.icon" :src="pluginInfo.icon" />
+        <img
+          class="icon-tool-sub"
+          v-if="pluginInfo.icon"
+          :src="pluginInfo.icon"
+        />
         <a-input
-            :placeholder="subPlaceHolder"
-            class="sub-input"
-            @change="(e) => search({value: e.target.value, searchType: pluginInfo.searchType})"
-            :value="searchValue"
-            @keypress.enter="(e) => targetSearch({value: e.target.value, type: 'enter'})"
-            @keypress.space="(e) => targetSearch({value: e.target.value, type: 'space'})"
+          :placeholder="subPlaceHolder"
+          class="sub-input"
+          @change="
+            (e) =>
+              search({
+                value: e.target.value,
+                searchType: pluginInfo.searchType,
+              })
+          "
+          :value="searchValue"
+          @keypress.enter="
+            (e) => targetSearch({ value: e.target.value, type: 'enter' })
+          "
+          @keypress.space="
+            (e) => targetSearch({ value: e.target.value, type: 'space' })
+          "
         ></a-input>
       </div>
 
@@ -79,11 +106,16 @@
   </a-layout>
 </template>
 <script>
-import {mapActions, mapMutations, mapState} from "vuex";
-import {ipcRenderer, remote} from "electron";
-import {getWindowHeight, debounce, searchKeyValues, fileLists} from "./assets/common/utils";
-const opConfig = remote.getGlobal('opConfig');
-const {Menu, MenuItem} = remote;
+import { mapActions, mapMutations, mapState } from "vuex";
+import { ipcRenderer, remote } from "electron";
+import {
+  getWindowHeight,
+  debounce,
+  searchKeyValues,
+  fileLists,
+} from "./assets/common/utils";
+const opConfig = remote.getGlobal("opConfig");
+const { Menu, MenuItem } = remote;
 
 export default {
   data() {
@@ -92,7 +124,7 @@ export default {
       searchFn: null,
       config: opConfig.get(),
       currentSelect: 0,
-    }
+    };
   },
 
   created() {
@@ -100,17 +132,17 @@ export default {
       this.commonUpdate({
         pluginInfo: pluginInfo,
       });
-    }
+    };
   },
 
   mounted() {
-    ipcRenderer.on('init-rubick', this.closeTag);
-    ipcRenderer.on('new-window', this.newWindow);
+    ipcRenderer.on("init-rubick", this.closeTag);
+    ipcRenderer.on("new-window", this.newWindow);
     // 超级面板打开插件
-    ipcRenderer.on('superPanel-openPlugin', (e, args) => {
+    ipcRenderer.on("superPanel-openPlugin", (e, args) => {
       this.closeTag();
-      ipcRenderer.send('msg-trigger', {
-        type: 'showMainWindow',
+      ipcRenderer.send("msg-trigger", {
+        type: "showMainWindow",
       });
       this.openPlugin({
         cmd: args.cmd,
@@ -118,45 +150,47 @@ export default {
         feature: args.feature,
         router: this.$router,
         payload: args.data,
-      })
+      });
     });
-    ipcRenderer.on('global-short-key', (e, args) => {
+    ipcRenderer.on("global-short-key", (e, args) => {
       let config;
       this.devPlugins.forEach((plugin) => {
         // dev 插件未开启
-        if (plugin.type === 'dev' && !plugin.status) return;
+        if (plugin.type === "dev" && !plugin.status) return;
         const feature = plugin.features;
-        feature.forEach(fe => {
+        feature.forEach((fe) => {
           const cmd = searchKeyValues(fe.cmds, args)[0];
-          const systemPlugin = fileLists.filter(plugin => plugin.name.indexOf(args) >= 0)[0];
+          const systemPlugin = fileLists.filter(
+            (plugin) => plugin.name.indexOf(args) >= 0
+          )[0];
           if (cmd) {
             config = {
               cmd: cmd,
               plugin: plugin,
               feature: fe,
-              router: this.$router
-            }
+              router: this.$router,
+            };
           } else if (systemPlugin) {
             config = {
               plugin: systemPlugin,
-              router: this.$router
-            }
+              router: this.$router,
+            };
           }
-        })
+        });
       });
       config && this.openPlugin(config);
     });
     // 打开偏好设置
-    ipcRenderer.on('tray-setting', () => {
+    ipcRenderer.on("tray-setting", () => {
       this.showMainUI();
-      this.changePath({key: 'settings'});
+      this.changePath({ key: "settings" });
     });
-    const searchNd = document.getElementById('search');
-    searchNd && searchNd.addEventListener('keydown', this.checkNeedInit)
+    const searchNd = document.getElementById("search");
+    searchNd && searchNd.addEventListener("keydown", this.checkNeedInit);
   },
   methods: {
-    ...mapActions('main', ['onSearch', 'showMainUI', 'openPlugin']),
-    ...mapMutations('main', ['commonUpdate']),
+    ...mapActions("main", ["onSearch", "showMainUI", "openPlugin"]),
+    ...mapMutations("main", ["commonUpdate"]),
     search(v) {
       if (!this.searchFn) {
         this.searchFn = debounce(this.onSearch, 200);
@@ -165,44 +199,55 @@ export default {
     },
     targetSearch(action) {
       // 在插件界面唤起搜索功能
-      if((this.selected && this.selected.key === 'plugin-container') || this.searchType === 'subWindow') {
-        const webview = document.getElementById('webview');
-        if (action.type === 'space') {
+      if (
+        (this.selected && this.selected.key === "plugin-container") ||
+        this.searchType === "subWindow"
+      ) {
+        const webview = document.getElementById("webview");
+        if (action.type === "space") {
           if (this.config.perf.common.space) {
-            webview.send('msg-back-setSubInput', this.searchValue);
+            webview.send("msg-back-setSubInput", this.searchValue);
           }
           return;
         }
-        webview.send('msg-back-setSubInput', this.searchValue);
+        webview.send("msg-back-setSubInput", this.searchValue);
       } else if (this.showOptions) {
-        const item = this.options[this.currentSelect]
+        const item = this.options[this.currentSelect];
         item.click(this.$router);
       }
     },
     changeCurrent(index) {
-      const webview = document.getElementById('webview');
-      webview && webview.send('changeCurrent', index);
+      const webview = document.getElementById("webview");
+      webview && webview.send("changeCurrent", index);
       if (!this.options) return;
-      if (this.currentSelect + index > this.options.length - 1 || this.currentSelect + index < 0) return;
+      if (
+        this.currentSelect + index > this.options.length - 1 ||
+        this.currentSelect + index < 0
+      )
+        return;
       this.currentSelect = this.currentSelect + index;
     },
 
     renderTitle(title) {
-      if (typeof title !== 'string') return;
+      if (typeof title !== "string") return;
       const result = title.split(this.searchValue);
-      return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`
+      if (result && result.length > 1) {
+        return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`;
+      } else {
+        return `<div>${result[0]}</div>`;
+      }
     },
     checkNeedInit(e) {
       // 如果搜索栏无内容，且按了删除键，则清空 tag
-      if (this.searchValue === '' && e.keyCode === 8) {
+      if (this.searchValue === "" && e.keyCode === 8) {
         this.closeTag();
       }
     },
-    changePath({key}) {
-      this.$router.push({path: `/home/${key}`});
+    changePath({ key }) {
+      this.$router.push({ path: `/home/${key}` });
       this.commonUpdate({
-        current: [key]
-      })
+        current: [key],
+      });
     },
     closeTag(v) {
       this.commonUpdate({
@@ -210,60 +255,72 @@ export default {
         showMain: false,
         options: [],
       });
-      ipcRenderer.send('changeWindowSize-rubick', {
+      ipcRenderer.send("changeWindowSize-rubick", {
         height: getWindowHeight([]),
       });
       this.$router.push({
-        path: '/home',
+        path: "/home",
       });
     },
     newWindow() {
-      ipcRenderer.send('new-window', {
-        ...this.pluginInfo
+      ipcRenderer.send("new-window", {
+        ...this.pluginInfo,
       });
       this.closeTag();
     },
     goMenu(type) {
-      if ((this.selected && this.selected.key === 'plugin-container') || type === 'separate') {
+      if (
+        (this.selected && this.selected.key === "plugin-container") ||
+        type === "separate"
+      ) {
         const pluginMenu = [
           {
-            label: '开发者工具',
+            label: "开发者工具",
             click: () => {
-              const webview = document.getElementById('webview');
-              webview.openDevTools()
-            }
+              const webview = document.getElementById("webview");
+              webview.openDevTools();
+            },
           },
           {
-            label: '当前插件信息',
+            label: "当前插件信息",
             submenu: [
               {
-                label: '简介',
+                label: "简介",
               },
               {
-                label: '功能'
-              }
-            ]
+                label: "功能",
+              },
+            ],
           },
           {
-            label: '隐藏插件',
+            label: "隐藏插件",
           },
         ];
-        if (type !== 'separate') {
+        if (type !== "separate") {
           pluginMenu.unshift({
-            label: '分离窗口',
-            click: this.newWindow
-          })
+            label: "分离窗口",
+            click: this.newWindow,
+          });
         }
         let menu = Menu.buildFromTemplate(pluginMenu);
         menu.popup();
         return;
       }
       this.showMainUI();
-      this.changePath({key: 'market'})
+      this.changePath({ key: "market" });
     },
   },
   computed: {
-    ...mapState('main', ['showMain', 'devPlugins', 'current', 'options', 'selected', 'searchValue', 'subPlaceHolder', 'pluginInfo']),
+    ...mapState("main", [
+      "showMain",
+      "devPlugins",
+      "current",
+      "options",
+      "selected",
+      "searchValue",
+      "subPlaceHolder",
+      "pluginInfo",
+    ]),
     showOptions() {
       // 有选项值，且不在显示主页
       if (this.options.length && !this.showMain) {
@@ -271,9 +328,9 @@ export default {
       }
     },
     searchType() {
-      return this.pluginInfo.searchType ? 'subWindow' : ''
-    }
-  }
+      return this.pluginInfo.searchType ? "subWindow" : "";
+    },
+  },
 };
 </script>
 <style lang="less">
@@ -289,7 +346,8 @@ export default {
     width: 0;
   }
 }
-.rubick-select, .rubick-select-subMenu {
+.rubick-select,
+.rubick-select-subMenu {
   display: flex;
   padding-left: 10px;
   background: #fff;
@@ -333,7 +391,7 @@ export default {
     left: 0;
     width: 100%;
     z-index: 99;
-    max-height: calc(~'100vh - 60px');
+    max-height: calc(~"100vh - 60px");
     overflow: auto;
     .op-item {
       padding: 0 10px;
@@ -343,7 +401,7 @@ export default {
       overflow: auto;
       background: #fafafa;
       &.active {
-        background: #DEE2E8;
+        background: #dee2e8;
       }
     }
   }
