@@ -7,7 +7,20 @@ function createTray(window) {
     const appIcon = new Tray(path.join(__static, './rocket.png'));
     const contextMenu = Menu.buildFromTemplate([
       {
-        id: 3,
+        label: "帮助文档", click: () => {
+          process.nextTick((() => {
+            shell.openExternal('https://github.com/clouDr-f2e/rubick');
+          }))
+        }
+      }, {
+        label: "意见反馈", click: () => {
+          process.nextTick((() => {
+            shell.openExternal('https://github.com/clouDr-f2e/rubick/issues')
+          }))
+        }
+      },
+      {type: "separator"},
+      {
         label: '显示窗口',
         accelerator: "Alt+R",
         click() {
@@ -15,23 +28,25 @@ function createTray(window) {
         }
       },
       {
-        id: 4,
-        label: '文档',
+        role: 'quit',
+        label: '退出'
+      },
+      {
+        label: '重启',
         click() {
-          shell.openExternal('https://muwoo.github.io/rubick-doc/');
+          app.relaunch();
+          app.quit();
         }
       },
-
+      {type: "separator"},
       {
-        id: 5,
-        label: '显示窗口',
+        label: '偏好设置',
         click() {
           window.show();
-        }
+          window.webContents.send('tray-setting');
+        },
       },
-
       {
-        id: 6,
         label: '关于',
         click() {
           dialog.showMessageBox({
@@ -39,21 +54,8 @@ function createTray(window) {
             message: '极简、插件化的现代桌面软件',
             detail: `Version: ${pkg.version}\nAuthor: muwoo`
           });
-        }
+        },
       },
-      {
-        id: 7,
-        role: 'quit',
-        label: '退出'
-      },
-      {
-        id: 7,
-        label: '重启',
-        click() {
-          app.relaunch();
-          app.exit();
-        }
-      }
     ]);
     appIcon.on('click', () => {
       appIcon.popUpContextMenu(contextMenu);
