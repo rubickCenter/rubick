@@ -181,7 +181,7 @@ class Listener {
     // 锁屏
     ipcMain.on('lock-screen', () => {
       const lockCommands = {
-        darwin: '/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend',
+        darwin: '/System/Library/CoreServices/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine',
         win32: 'rundll32.exe user32.dll, LockWorkStation',
         linux: '(hash gnome-screensaver-command 2>/dev/null && gnome-screensaver-command -l) || (hash dm-tool 2>/dev/null && dm-tool lock)'
       };
