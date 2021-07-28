@@ -9,7 +9,6 @@ import { APP_FINDER_PATH } from './constans';
 import { getlocalDataFile } from '../../../main/common/utils';
 import iconvLite from 'iconv-lite';
 import bpList from 'bplist-parser';
-import pinyin from 'pinyin';
 
 const store = new Store();
 
@@ -234,12 +233,8 @@ APP_FINDER_PATH.forEach((searchPath, index) => {
             };
 
             if (appZhName && isZhRegex.test(appZhName)) {
-              const pinyinArr = pinyin(appZhName, { style: pinyin.STYLE_NORMAL });
               // pinyinArr = [['pin'], ['yin']]
-              const firstLetterArr = pinyinArr.map((str) => str[0][0]);
               fileOptions.keyWords.push(appZhName);
-              fileOptions.keyWords.push(pinyinArr.join(''));
-              fileOptions.keyWords.push(firstLetterArr.join(''));
             }
 
             fileLists.push({
