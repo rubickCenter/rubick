@@ -1,4 +1,4 @@
-import {clipboard, ipcRenderer, remote} from "electron";
+import { clipboard, ipcRenderer, remote } from 'electron';
 import { v4 as uuidv4 } from 'uuid';
 import {
   getWindowHeight,
@@ -7,12 +7,12 @@ import {
   mergePlugins,
   find,
   downloadZip,
-  fileLists,
+  fileLists
 } from '../../assets/common/utils';
 import systemMethod from '../../assets/common/system';
-import fs from "fs";
+import fs from 'fs';
 import path from 'path';
-import {execSync} from 'child_process';
+import { execSync } from 'child_process';
 
 const state = {
   selected: null,
@@ -25,17 +25,17 @@ const state = {
   pluginInfo: (() => {
     try {
       console.log(window.pluginInfo);
-      return window.pluginInfo || {}
+      return window.pluginInfo || {};
     } catch (e) {}
-  })(),
-}
+  })()
+};
 
 const mutations = {
-  commonUpdate (state, payload) {
+  commonUpdate(state, payload) {
     Object.keys(payload).forEach((key) => {
       state[key] = payload[key];
       if (key === 'devPlugins') {
-        sysFile.savePlugins(payload[key])
+        sysFile.savePlugins(payload[key]);
       }
     });
   },
@@ -43,16 +43,16 @@ const mutations = {
     state.subPlaceHolder = payload;
   },
   deleteDevPlugin(state, payload) {
-    state.devPlugins = state.devPlugins.filter(plugin => plugin.name !== payload.name);
+    state.devPlugins = state.devPlugins.filter((plugin) => plugin.name !== payload.name);
     sysFile.savePlugins(state.devPlugins);
   },
   deleteProdPlugin(state, payload) {
-    state.devPlugins = state.devPlugins.filter(plugin => plugin.id !== payload.id);
+    state.devPlugins = state.devPlugins.filter((plugin) => plugin.id !== payload.id);
     sysFile.savePlugins(state.devPlugins);
     // todo 删除 static 目录下的对应插件
   },
   devPluginStatusChange(state, payload) {
-    state.devPlugins.forEach(plugin => {
+    state.devPlugins.forEach((plugin) => {
       if (plugin.name === payload.name) {
         plugin.status = !plugin.status;
       }
@@ -60,12 +60,12 @@ const mutations = {
     state.devPlugins = [...state.devPlugins];
     sysFile.savePlugins(state.devPlugins);
   }
-}
+};
 
 const actions = {
-  showMainUI ({ commit, state }, paylpad) {
+  showMainUI({ commit, state }, paylpad) {
     ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight(),
+      height: getWindowHeight()
     });
     setTimeout(() => {
       commit('commonUpdate', {
@@ -81,34 +81,34 @@ const actions = {
     const config = JSON.parse(fs.readFileSync(path.join(payload.sourceFile, '../plugin.json'), 'utf-8'));
     const pluginConfig = {
       ...config,
-      sourceFile: path.join(payload.sourceFile, `../${config.main}`),
+      sourceFile: path.join(payload.sourceFile, `../${config.main}`)
     };
     const devPlugins = [...state.devPlugins];
     commit('commonUpdate', {
-      devPlugins: devPlugins.map(plugin => {
+      devPlugins: devPlugins.map((plugin) => {
         if (plugin.name === payload.name) {
           return {
             ...plugin,
-            ...pluginConfig,
-          }
+            ...pluginConfig
+          };
         }
         return plugin;
       })
-    })
+    });
   },
-  async onSearch ({ commit }, paylpad) {
+  async onSearch({ commit }, paylpad) {
     if (state.selected && state.selected.key !== 'plugin-container') {
-      commit('commonUpdate', {searchValue: ''});
+      commit('commonUpdate', { searchValue: '' });
       return;
     }
     const value = paylpad.value;
     // 在插件界面不触发其他功能
-    if((state.selected && state.selected.key === 'plugin-container') || paylpad.searchType === 'subWindow') {
-      commit('commonUpdate', {searchValue: value});
+    if ((state.selected && state.selected.key === 'plugin-container') || paylpad.searchType === 'subWindow') {
+      commit('commonUpdate', { searchValue: value });
       return;
     }
     const fileUrl = clipboard.read('public.file-url').replace('file://', '');
-    commit('commonUpdate', {searchValue: value})
+    commit('commonUpdate', { searchValue: value });
     // 复制文件
     if (fileUrl && value === 'plugin.json') {
       const config = JSON.parse(fs.readFileSync(fileUrl, 'utf-8'));
@@ -121,7 +121,7 @@ const actions = {
         icon: 'image://' + path.join(fileUrl, `../${config.logo}`),
         subType: (() => {
           if (config.main) {
-            return ''
+            return '';
           }
           return 'template';
         })()
@@ -146,12 +146,12 @@ const actions = {
                   key: 'plugin',
                   name: '新建rubick开发插件'
                 },
-                current: ['dev'],
+                current: ['dev']
               });
               ipcRenderer.send('changeWindowSize-rubick', {
-                height: getWindowHeight(),
+                height: getWindowHeight()
               });
-              router.push('/home/dev')
+              router.push('/home/dev');
             }
           },
           {
@@ -164,10 +164,10 @@ const actions = {
               commit('commonUpdate', {
                 showMain: false,
                 selected: null,
-                options: [],
+                options: []
               });
               ipcRenderer.send('changeWindowSize-rubick', {
-                height: getWindowHeight([]),
+                height: getWindowHeight([])
               });
               remote.Notification('Rubick 通知', { body: '复制成功' });
             }
@@ -176,9 +176,9 @@ const actions = {
       });
       // 调整窗口大小
       ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight(state.options),
+        height: getWindowHeight(state.options)
       });
-      return
+      return;
     }
 
     let options = [];
@@ -189,7 +189,7 @@ const actions = {
         // dev 插件未开启
         if (plugin.type === 'dev' && !plugin.status) return;
         const feature = plugin.features;
-        feature.forEach(fe => {
+        feature.forEach((fe) => {
           const cmds = searchKeyValues(fe.cmds, value);
           options = [
             ...options,
@@ -200,31 +200,44 @@ const actions = {
               desc: fe.explain,
               type: plugin.type,
               click: (router) => {
-                actions.openPlugin({commit}, {cmd, plugin, feature: fe, router});
+                actions.openPlugin({ commit }, { cmd, plugin, feature: fe, router });
               }
             }))
-          ]
-        })
+          ];
+        });
       });
+
+      let descMap = new Map();
       options = [
         ...options,
-        ...(fileLists.filter(plugin => plugin.name.indexOf(value) >= 0)).map(plugin => {
-          plugin.click = () => {
-            actions.openPlugin({commit}, {plugin});
-          }
-          return plugin
-        }),
-      ]
+        ...fileLists
+          .filter((plugin) => {
+            if (!descMap.get(plugin)) {
+              descMap.set(plugin, true);
+              return plugin.keyWord.toLocaleUpperCase().indexOf(value.toLocaleUpperCase()) >= 0;
+            } else {
+              return false;
+            }
+          })
+          .map((plugin) => {
+            plugin.click = () => {
+              actions.openPlugin({ commit }, { plugin });
+            };
+            return plugin;
+          })
+      ];
+
+      descMap = null;
     }
 
     commit('commonUpdate', {
       options
     });
     ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight(state.options),
+      height: getWindowHeight(state.options)
     });
   },
-  async downloadPlugin({commit}, payload) {
+  async downloadPlugin({ commit }, payload) {
     const distUrl = await downloadZip(payload.downloadUrl, payload.name);
     const fileUrl = find(distUrl);
 
@@ -238,26 +251,26 @@ const actions = {
       icon: payload.logo,
       subType: (() => {
         if (config.main) {
-          return ''
+          return '';
         }
         return 'template';
       })()
     };
     commit('commonUpdate', {
-      devPlugins: [pluginConfig, ...state.devPlugins],
+      devPlugins: [pluginConfig, ...state.devPlugins]
     });
   },
-  openPlugin({commit}, {cmd, plugin, feature, router, payload}) {
+  openPlugin({ commit }, { cmd, plugin, feature, router, payload }) {
     if (plugin.type === 'app') {
       execSync(plugin.action);
       commit('commonUpdate', {
         selected: null,
         showMain: false,
         options: [],
-        searchValue: '',
+        searchValue: ''
       });
       ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight([]),
+        height: getWindowHeight([])
       });
       return;
     }
@@ -265,26 +278,26 @@ const actions = {
       selected: {
         key: 'plugin-container',
         name: cmd.label ? cmd.label : cmd,
-        icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`),
+        icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`)
       },
       searchValue: '',
       showMain: true
     });
     ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight(),
+      height: getWindowHeight()
     });
     if (plugin.type === 'system') {
-      systemMethod[plugin.tag][feature.code]()
+      systemMethod[plugin.tag][feature.code]();
       commit('commonUpdate', {
         selected: null,
         showMain: false,
-        options: [],
+        options: []
       });
       ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight([]),
+        height: getWindowHeight([])
       });
       router.push({
-        path: '/home',
+        path: '/home'
       });
       return;
     }
@@ -293,7 +306,7 @@ const actions = {
         cmd,
         ...plugin,
         detail: feature,
-        payload,
+        payload
       }
     });
 
@@ -303,14 +316,14 @@ const actions = {
         ...plugin,
         _modify: Date.now(),
         detail: JSON.stringify(feature)
-      },
-    })
+      }
+    });
   }
-}
+};
 
 export default {
   namespaced: true,
   state,
   mutations,
   actions
-}
+};
