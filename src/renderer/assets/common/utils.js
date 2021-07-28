@@ -229,32 +229,24 @@ APP_FINDER_PATH.forEach((searchPath, index) => {
               icon: img.toDataURL(),
               desc: path.join(searchPath, appName),
               type: 'app',
-              action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`
+              action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`,
+              keyWords: [appSubStr]
             };
+
+            if (appZhName && isZhRegex.test(appZhName)) {
+              const pinyinArr = pinyin(appZhName, { style: pinyin.STYLE_NORMAL });
+              // pinyinArr = [['pin'], ['yin']]
+              const firstLetterArr = pinyinArr.map((str) => str[0][0]);
+              fileOptions.keyWords.push(appZhName);
+              fileOptions.keyWords.push(pinyinArr.join(''));
+              fileOptions.keyWords.push(firstLetterArr.join(''));
+            }
 
             fileLists.push({
               ...fileOptions,
               name: appSubStr,
-              keyWord: appSubStr
+              names: JSON.parse(JSON.stringify(fileOptions.keyWords)),
             });
-
-            if (appZhName && isZhRegex.test(appZhName)) {
-              let cmds = [];
-              const pinyinArr = pinyin(appZhName, { style: pinyin.STYLE_NORMAL });
-              // pinyinArr = [['pin'], ['yin']]
-              const firstLetterArr = pinyinArr.map((str) => str[0][0]);
-              cmds.push(appZhName);
-              cmds.push(pinyinArr.join(''));
-              cmds.push(firstLetterArr.join(''));
-
-              cmds.forEach((cmd) => {
-                fileLists.push({
-                  ...fileOptions,
-                  name: appZhName,
-                  keyWord: cmd
-                });
-              });
-            }
           } catch (e) {}
         }
       }

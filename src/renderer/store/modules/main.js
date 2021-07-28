@@ -214,7 +214,16 @@ const actions = {
           .filter((plugin) => {
             if (!descMap.get(plugin)) {
               descMap.set(plugin, true);
-              return plugin.keyWord.toLocaleUpperCase().indexOf(value.toLocaleUpperCase()) >= 0;
+              let has = false;
+              plugin.keyWords.some(keyWord => {
+                if (keyWord.toLocaleUpperCase().indexOf(value.toLocaleUpperCase()) >= 0) {
+                  has = keyWord;
+                  plugin.name = keyWord;
+                  return true;
+                }
+                return false;
+              });
+              return has;
             } else {
               return false;
             }
