@@ -1,6 +1,6 @@
 <template>
   <a-layout id="components-layout">
-    <div v-if="!searchType" class="rubick-select">
+    <div v-if="!searchType" class="rubick-select" @click="alert(123123)">
       <div class="tag-container" v-if="selected">
         <a-tag
           :key="selected.key"
@@ -345,9 +345,13 @@ export default {
   ::-webkit-scrollbar {
     width: 0;
   }
+  .main-input {
+      -webkit-app-region: no-drag;
+  }
 }
 .rubick-select,
 .rubick-select-subMenu {
+  -webkit-app-region: drag;
   display: flex;
   padding-left: 10px;
   background: #fff;

@@ -15,7 +15,8 @@
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "postinstall": "",
-    "rebuild": " ./node_modules/.bin/electron-rebuild"
+    "rebuild": " ./node_modules/.bin/electron-rebuild",
+    "rebuild_win": "cnpm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
   },
   "build": {
     "asar": false,
@@ -130,18 +131,5 @@
     "webpack-dev-server": "^3.1.4",
     "webpack-hot-middleware": "^2.22.2",
     "webpack-merge": "^4.1.3"
-  },
-  "iohook": {
-    "targets": [
-      "node-83",
-      "electron-85"
-    ],
-    "platforms": [
-      "darwin"
-    ],
-    "arches": [
-      "x64",
-      "ia32"
-    ]
   }
 }

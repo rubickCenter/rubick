@@ -47,7 +47,6 @@ export default {
 
 <style lang="less">
 .main-input {
-  -webkit-app-region: drag;
   height: 60px !important;
   flex: 1;
 

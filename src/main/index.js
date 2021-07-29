@@ -13,7 +13,10 @@ if (process.env.NODE_ENV !== 'development') {
 }
 // to fix https://github.com/electron/electron/issues/18397
 app.allowRendererProcessReuse = false;
-app.dock.hide();
+console.log(process.platform);
+if (process.platform === 'darwin') {
+  app.dock.hide();
+}
 
 function createWindow() {
   main.init();

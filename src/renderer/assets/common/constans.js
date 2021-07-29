@@ -53,6 +53,6 @@ const SYSTEM_PLUGINS = [
   }
 ];
 
-const APP_FINDER_PATH = ['/System/Applications', '/Applications', '/System/Library/PreferencePanes'];
+const APP_FINDER_PATH = process.platform === 'darwin' ? ['/System/Applications', '/Applications', '/System/Library/PreferencePanes'] : [];
 
 export { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS, APP_FINDER_PATH };
