@@ -64,7 +64,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 #### 取色
 基于 `robot.js` 以及 `iohook` 实现。未使用 C++ 扩展。
 
-<img src=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3e00e5f08545bcb96613689649b337~tplv-k3u1fbpfcp-watermark.image width=500 />
+![image](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3036ae85bf3549fc8bbbe2926ecbad55~tplv-k3u1fbpfcp-watermark.image)
 
 #### 截屏
 
