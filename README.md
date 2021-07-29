@@ -40,8 +40,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 
 ## 使用问题
-1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
-2. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
+依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
 
 ## 目前支持能力
 ### 加载utools生态插件
