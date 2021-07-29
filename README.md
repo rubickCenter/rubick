@@ -21,6 +21,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 ## 安装包
 * [Rubick Mac OS V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.1)
+* [TODO: Rubick Windows V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/tree/feat-win)
 
 ## 支持能力
 - [x] 支持 uTools 90% API。可直接按照 uTools 文档开发 Rubick 插件
