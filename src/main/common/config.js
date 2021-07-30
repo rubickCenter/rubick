@@ -57,7 +57,6 @@ global.opConfig = {
   config: null,
   get() {
     const platform = os.type();
-    console.log(platform);
     try {
       if (!opConfig.config) {
         opConfig.config = JSON.parse(fs.readFileSync(configPath) || JSON.stringify(defaultConfig[platform]));

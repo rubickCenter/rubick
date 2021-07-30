@@ -88,6 +88,9 @@
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0"
   },
+  "optionalDependencies": {
+    "win-mouse": "git+https://github.com/Toinane/win-mouse"
+},
   "devDependencies": {
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",

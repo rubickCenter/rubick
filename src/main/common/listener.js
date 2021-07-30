@@ -11,6 +11,7 @@ const {picker, separator, superPanel} = browsers;
 class Listener {
   constructor() {
     this.optionPlugin = {};
+    this.isWin = process.platform === 'win32';
   }
 
   getSelectedContent() {
@@ -31,7 +32,6 @@ class Listener {
         // 延时一定时间才能从剪切板内读取到内容
         const text = clipboard.readText('clipboard') || ''
         const fileUrl = clipboard.read('public.file-url');
-
         // 如果之前是文案，则回填
         clipboard.writeText(lastText);
 
@@ -103,15 +103,15 @@ class Listener {
     ipcMain.on('start-picker', () => {
       // 开启输入侦测
       ioHook.start(false);
-      ioHook.load();
+      !this.isWin && ioHook.load();
       picker.init();
 
       picker.getWindow().on('close', () => {
         ioHook.stop();
-        ioHook.unload();
+        !this.isWin && ioHook.unload();
       });
 
-      let pos = robot.getMousePos();
+      let pos = this.getPos(robot.getMousePos());
       picker
         .getWindow()
         .setPosition(parseInt(pos.x) + 10, parseInt(pos.y) + 10);
@@ -139,8 +139,7 @@ class Listener {
       });
     });
     ioHook.on('mousemove', e => {
-      let x = e.x
-      let y = e.y
+      let {x, y} = this.getPos(e);
       if (!picker.getWindow()) return;
       picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
       this.fn(e, picker);
@@ -192,6 +191,7 @@ class Listener {
   superPanel(mainWindow) {
     // 长按右击呼起超级面板
     ipcMain.on('right-down', async () => {
+
       const copyResult = await this.getSelectedContent();
       let win = superPanel.getWindow();
 
@@ -211,10 +211,14 @@ class Listener {
           });
         });
       }
-      const pos = robot.getMousePos();
+      const pos = this.getPos(robot.getMousePos());
       win.setPosition(parseInt(pos.x), parseInt(pos.y));
       win.show();
     });
+  }
+
+  getPos(point) {
+    return this.isWin ? screen.screenToDipPoint({x: point.x, y: point.y}) : point;
   }
 
   reRegisterShortCut(mainWindow) {
@@ -257,7 +261,10 @@ class Listener {
 
   initCapture() {
     ipcMain.on('capture-screen', () => {
-      spawn('/usr/sbin/screencapture', ["-c", "-i", "-r"], {detached: !0});
+      if (process.platform === 'darwin') {
+        spawn('/usr/sbin/screencapture', ["-c", "-i", "-r"], {detached: !0});
+      }
+      // todo win
     });
   }
 }

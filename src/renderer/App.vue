@@ -1,6 +1,6 @@
 <template>
   <a-layout id="components-layout">
-    <div v-if="!searchType" class="rubick-select" @click="alert(123123)">
+    <div v-if="!searchType" class="rubick-select">
       <div class="tag-container" v-if="selected">
         <a-tag
           :key="selected.key"

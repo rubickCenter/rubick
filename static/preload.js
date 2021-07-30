@@ -22,7 +22,7 @@ function getQueryVariable(variable) {
 if (location.href.indexOf('targetFile') > -1) {
   filePath = decodeURIComponent(getQueryVariable('targetFile'));
 } else {
-  filePath = location.pathname.replace('file://', '');
+  filePath = process.platform === 'win32' ? location.pathname.split(':')[1] : location.pathname.replace('file://', '');
 }
 const {ipcRenderer, nativeImage, clipboard, remote, shell} = require('electron');
 
