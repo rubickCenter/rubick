@@ -20,7 +20,8 @@
 Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
 
 ## 安装包
-* [Rubick Mac OS V0.0.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2/rubick2-0.0.2.pkg)
+* [Rubick Mac OS V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.1)
+* [TODO: Rubick Windows V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/tree/feat-win)
 
 ## 支持能力
 - [x] 支持 uTools 90% API。可直接按照 uTools 文档开发 Rubick 插件
@@ -40,8 +41,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 
 ## 使用问题
-1. 目前 `Rubick` 插件市场 server 端还没有部署，所以目前看不到插件市场的插件。
-2. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
+依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
 
 ## 目前支持能力
 ### 加载utools生态插件
@@ -65,7 +65,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 #### 取色
 基于 `robot.js` 以及 `iohook` 实现。未使用 C++ 扩展。
 
-<img src=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8c3e00e5f08545bcb96613689649b337~tplv-k3u1fbpfcp-watermark.image width=500 />
+![image](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3036ae85bf3549fc8bbbe2926ecbad55~tplv-k3u1fbpfcp-watermark.image)
 
 #### 截屏
 
@@ -77,7 +77,10 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 <img src=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62cc424eacac4c9eb178f0e055e87d9a~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 ### 最后
-utools过于强大，目前还没有完全实现其所有功能，不过我们会根据需要不断更新。欢迎小伙伴一起 `pr` 或 `star`
+对本项目有兴趣或者想要交流学习的同学可以扫码加下面的微信，备注 rubick，帮助我们更好的成长：
+
+![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.
