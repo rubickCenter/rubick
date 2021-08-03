@@ -89,6 +89,7 @@
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
+    "babel-runtime": "^6.26.0",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -104,7 +105,7 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^11.0.2",
+    "electron": "^12.0.15",
     "electron-builder": "22.10.5",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
@@ -135,7 +136,7 @@
   "iohook": {
     "targets": [
       "node-83",
-      "electron-85"
+      "electron-87"
     ],
     "platforms": [
       "darwin"

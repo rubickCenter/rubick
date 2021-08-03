@@ -1,9 +1,9 @@
 import { app } from 'electron'
 import '../renderer/store'
-import init from './common/common';
-import {autoUpdate} from './common/autoUpdate';
-import createTray from './tray';
-const {main} = require("./browsers")();
+import init from './common/common'
+import { autoUpdate } from './common/autoUpdate'
+import createTray from './tray'
+const { main } = require("./browsers")()
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -11,19 +11,16 @@ const {main} = require("./browsers")();
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-// to fix https://github.com/electron/electron/issues/18397
-app.allowRendererProcessReuse = false;
-app.dock.hide();
 
 function createWindow() {
-  main.init();
-  init(main.getWindow());
+  main.init()
+  init(main.getWindow())
 }
 
 app.on('ready', () => {
   createWindow()
-  createTray(main.getWindow());
-  autoUpdate();
+  createTray(main.getWindow())
+  autoUpdate()
 })
 
 app.on('window-all-closed', () => {
@@ -34,5 +31,5 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   createWindow()
-});
+})
 
