@@ -80,6 +80,8 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
 
+再次致敬 uTools！我做 Rubick 旨在技术分享，并不以商业化为目的，uTools 非常优秀，欢迎大家去使用 uTools，毕竟是一个团队在维护，可以享受最新的功能和体验。
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.
