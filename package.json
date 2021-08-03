@@ -66,6 +66,7 @@
     "electron-store": "^8.0.0",
     "iohook": "^0.9.3",
     "is-chinese": "^1.4.2",
+    "jian-pinyin": "^0.2.3",
     "keycode": "^2.2.0",
     "marked": "^2.0.7",
     "md5": "^2.3.0",

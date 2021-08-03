@@ -10,6 +10,8 @@ import { getlocalDataFile } from '../../../main/common/utils';
 import iconvLite from 'iconv-lite';
 import bpList from 'bplist-parser';
 
+import translate from './translate'
+
 const store = new Store();
 
 function getWindowHeight(searchList) {
@@ -233,7 +235,14 @@ APP_FINDER_PATH.forEach((searchPath, index) => {
             };
 
             if (appZhName && isZhRegex.test(appZhName)) {
-              // pinyinArr = [['pin'], ['yin']]
+              const py = translate(appZhName);
+              const pinyinArr = py.split(',');
+              const firstLatter = pinyinArr.map(py => py[0]);
+              // 拼音
+              fileOptions.keyWords.push(pinyinArr.join(''));
+              // 缩写
+              fileOptions.keyWords.push(firstLatter.join(''));
+              // 中文
               fileOptions.keyWords.push(appZhName);
             }
 

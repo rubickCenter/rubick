@@ -7,10 +7,12 @@ const configPath = path.join(getlocalDataFile(), './rubick-config.json');
 
 let defaultConfig = {
   Darwin: {
+    version: 2,
     perf: {
       shortCut: {
         showAndHidden: 'Option+R',
-        separate: 'Ctrl+D'
+        separate: 'Ctrl+D',
+        quit: 'Shift+Escape'
       },
       common: {
         start: true,
@@ -39,7 +41,7 @@ global.opConfig = {
         opConfig.config = JSON.parse(fs.readFileSync(configPath) || JSON.stringify(defaultConfig[platform]));
       }
       // 重置
-      if (!opConfig.config.perf || !opConfig.config.superPanel || !opConfig.config.global) {
+      if (!opConfig.version || opConfig.version < defaultConfig[platform].version) {
         opConfig.config = defaultConfig[platform];
         fs.writeFileSync(configPath, JSON.stringify(opConfig.config));
       }
