@@ -22,7 +22,7 @@ const SYSTEM_PLUGINS = [
       {
         code: 'pick',
         explain: 'rubick 帮助文档',
-        cmds: ['取色', '拾色', 'Pick color']
+        cmds: ['取色', '拾色', 'Pick color', 'qs', 'ss']
       }
     ],
     tag: 'rubick-color'
@@ -34,7 +34,7 @@ const SYSTEM_PLUGINS = [
       {
         code: 'shortCut',
         explain: 'rubick 屏幕截取',
-        cmds: ['截屏', 'shortCut']
+        cmds: ['截屏', 'shortCut', 'jp']
       }
     ],
     tag: 'rubick-screen-short-cut'
@@ -46,7 +46,7 @@ const SYSTEM_PLUGINS = [
       {
         code: 'lock',
         explain: '锁屏',
-        cmds: ['锁屏', 'lock screen']
+        cmds: ['锁屏', 'lock screen', 'sp']
       }
     ],
     tag: 'rubick-lock'

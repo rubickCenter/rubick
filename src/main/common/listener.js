@@ -32,6 +32,9 @@ class Listener {
         // 延时一定时间才能从剪切板内读取到内容
         const text = clipboard.readText('clipboard') || ''
         const fileUrl = clipboard.read('public.file-url');
+        if (this.isWin) {
+          // todo https://github.com/njzydark/Aragorn/blob/afe4a60972b4255dd417480ca6aca2af1fd8e637/packages/aragorn-app-main/src/uploaderManager.ts#L88
+        }
         // 如果之前是文案，则回填
         clipboard.writeText(lastText);
 
@@ -61,6 +64,11 @@ class Listener {
 
     globalShortcut.register(config.perf.shortCut.separate, () => {
       mainWindow.webContents.send('new-window');
+    });
+
+    globalShortcut.register(config.perf.shortCut.quit, () => {
+      mainWindow.webContents.send('init-rubick');
+      mainWindow.show();
     });
 
     // 注册自定义全局快捷键
