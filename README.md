@@ -13,17 +13,18 @@
  </a>
 </p>
 
+首先致敬 uTools！我做 Rubick 旨在技术分享，并不以商业化为目的，uTools 非常优秀，欢迎大家去使用 uTools，毕竟是一个团队在维护，可以享受最新的功能和体验。
+
 
 基于 electron 的工具箱，媲美 utools的开源插件。之所以做这个工具箱一方面是 utools 本身并未开源，但是公司内部的工具库又无法发布到 utools 插件中，所以为了既要享受 utools 生态又要有定制化需求，我们自己参考 utools 设计，做了 Rubick.
 
 Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
 
 ## 安装包
-* [Rubick Mac OS V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.1)
+* [Rubick Mac OS V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.2)
 * [Rubick Windows V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.1/rubick2.Setup.0.0.2-beta.1.exe)
 
-## 支持能力
-- [x] 支持 uTools github 开源插件。
+## 支持能力。
 - [x] 支持远程下载安装插件，支持插件开发者模式
 - [x] 支持插件分离
 - [x] 支持系统命令取色、截屏、帮助
@@ -43,7 +44,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 2. windows 版本目前有了一个最基础的可用版。完整版正在开发中，敬请期待
 
 ## 目前支持能力
-### 加载 github 插件
+### 加载插件
 拿 `github` 上开源的 斗图 插件举例，要加载斗图插件，只需要将代码 clone下来后，复制其 `plugin.json` 进入搜索框即可使用
 
 斗图：https://github.com/vst93/doutu-uToolsPlugin
