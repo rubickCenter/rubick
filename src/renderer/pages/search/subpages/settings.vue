@@ -55,7 +55,6 @@
             <div class="title">长按以下设置的毫秒响应</div>
             <a-slider :step="100" v-model:value="config.superPanel.mouseDownTime" :min="200" :max="1000" />
           </div>
-          <img width="100%" src="https://static.91jkys.com/upload/202107/02/fa4a5c614234409fb32ddda70cb900aa.jpg" />
         </div>
         <div v-if="currentSelect[0] === 2">
           <a-collapse>

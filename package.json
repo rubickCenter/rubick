@@ -19,7 +19,7 @@
     "rebuild_win": "cnpm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
   },
   "build": {
-    "asar": false,
+    "asar": true,
     "productName": "rubick2",
     "appId": "com.example.yourapp2",
     "compression": "maximum",
@@ -52,7 +52,10 @@
       "target": "pkg"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "target":[
+        "nsis",
+        "msi"
+      ]
     },
     "linux": {
       "icon": "build/icons"
