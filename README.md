@@ -22,7 +22,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 ## 安装包
 * [Rubick Mac OS V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.2)
-* [Rubick Windows V0.0.2-beta.1](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.1/rubick2.Setup.0.0.2-beta.1.exe)
+* [Rubick Windows V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.2/rubick2.Setup.0.0.2-beta.2.exe)
 
 ## 支持能力。
 - [x] 支持远程下载安装插件，支持插件开发者模式
@@ -41,7 +41,7 @@ Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化�
 
 ## 使用问题
 1. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
-2. windows 版本目前有了一个最基础的可用版。完整版正在开发中，敬请期待
+2. windows 版本目前有了一个最基础的可用版，代码在 [feat-win](https://github.com/clouDr-f2e/rubick/tree/feat-win) 分支。完整版正在开发中，敬请期待
 
 ## 目前支持能力
 ### 加载插件
