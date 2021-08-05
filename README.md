@@ -18,7 +18,7 @@
 基于 electron 的工具箱。Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
 
 ## 安装包
-* [Rubick Mac OS V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.2-beta.2)
+* [Rubick Mac OS V0.0.3-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.3-beta.1)
 * [Rubick Windows V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.2/rubick2.Setup.0.0.2-beta.2.exe)
 
 ## 支持能力。
