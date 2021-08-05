@@ -21,7 +21,7 @@
 * [Rubick Mac OS V0.0.3-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.3-beta.1)
 * [Rubick Windows V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.2/rubick2.Setup.0.0.2-beta.2.exe)
 
-## 支持能力。
+## 支持能力
 - [x] 支持远程下载安装插件，支持插件开发者模式
 - [x] 支持插件分离
 - [x] 支持系统命令取色、截屏、帮助
@@ -34,6 +34,10 @@
 
 
 ![example.gif](https://user-images.githubusercontent.com/21073039/128359309-2377d3cf-7b70-4e8f-9973-ae8f337a8006.gif)
+
+## 使用文档
+
+[Rubick Docs](https://cloudr-f2e.github.io/rubick/)
 
 
 ## 使用问题
