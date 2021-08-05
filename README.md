@@ -32,8 +32,8 @@
 - [ ] 支持 Linux
 
 
-![QQ20210705-210753](https://user-images.githubusercontent.com/21073039/124477360-8770f980-ddd6-11eb-8dc3-ba318223697f.gif)
 
+![example.gif](https://user-images.githubusercontent.com/21073039/128359309-2377d3cf-7b70-4e8f-9973-ae8f337a8006.gif)
 
 
 ## 使用问题
