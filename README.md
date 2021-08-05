@@ -1,5 +1,5 @@
 <div align= "center">
-<img align="center" src="https://user-images.githubusercontent.com/21073039/123022701-c3848180-d408-11eb-86ec-7727f355ea96.png" />
+<img align="center" width=300 src="https://user-images.githubusercontent.com/21073039/128333230-f3d30d76-644c-409f-9eb6-a5577bb75e51.png" />
 </div>
 
 # Rubick
