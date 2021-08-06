@@ -1,6 +1,6 @@
 <template>
   <div class="market">
-    <a-carousel arrows>
+    <a-carousel v-if="bannerList && !!bannerList.length" arrows>
       <div
           slot="prevArrow"
           slot-scope="props"
@@ -16,7 +16,7 @@
         <img width="100%" :src="banner.src" />
       </div>
     </a-carousel>
-    <a-divider></a-divider>
+    <a-divider v-if="bannerList && !!bannerList.length"></a-divider>
     <h2>插件</h2>
     <a-list item-layout="horizontal" style="width: 100%" :grid="{ gutter: 16, column: 2 }" :data-source="pluginList">
       <a-list-item slot="renderItem" slot-scope="item, index">

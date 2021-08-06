@@ -46,7 +46,7 @@ function convertImgToBase64(url, callback, outputFormat){
   img.src = url;
 }
 
-window.utools = window.rubick = {
+window.rubick = {
   // 事件
   onPluginEnter(cb) {
     ipcRenderer.on('onPluginEnter', (e, message) => {
@@ -240,78 +240,6 @@ window.utools = window.rubick = {
   removeFeature(code) {
     ipcRenderer.sendToHost('removeFeature', {code});
   },
-  ubrowser: {
-    winId: '',
-    async goto(md, opts) {
-      const objExp = new RegExp(/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/);
-      let winId;
-      let win;
-      win = new BrowserWindow({
-        show: false,
-        title: typeof opts === 'object' ? '' : opts,
-        webPreferences: {
-          webSecurity: false,
-          enableRemoteModule: true,
-          backgroundThrottling: false,
-          webviewTag: true,
-          nodeIntegration: true // 在网页中集成Node
-        }
-      });
-      if(objExp.test(md) && md.indexOf('http') === 0) {
-        await win.loadURL(md);
-        winId = win.id;
-      } else {
-        marked.setOptions({
-          renderer: rendererMD,
-          gfm: true,
-          tables: true,
-          breaks: false,
-          pedantic: false,
-          sanitize: false,
-          smartLists: true,
-          smartypants: false
-        });
-        const htmlContent = marked(md);
-        win.loadURL('data:text/html;charset=UTF-8,' + encodeURIComponent(htmlContent))
-        win.once('ready-to-show', () => win.show());
-        winId = win.id;
-      }
-      return {
-        value(selector, value) {
-          ipcRenderer.send('msg-trigger', {
-            type: 'ubrowser.value',
-            winId,
-            selector, value
-          });
-          return new Promise(resolve => {
-            ipcRenderer.once(`msg-back-ubrowser.value`, (e, result) => {
-              resolve(this)
-            });
-          })
-        },
-        click(selector) {
-          ipcRenderer.send('msg-trigger', {
-            type: 'ubrowser.click',
-            winId,
-            selector,
-          });
-          return new Promise(resolve => {
-            ipcRenderer.once(`msg-back-ubrowser.click`, (e, result) => {
-              resolve(this)
-            });
-          })
-        },
-        run(options) {
-          ipcRenderer.send('msg-trigger', {
-            type: 'ubrowser.run',
-            winId,
-            ...options
-          });
-        }
-      }
-    },
-  },
-
   // 系统
   shellOpenExternal(url) {
     shell.openExternal(url);
