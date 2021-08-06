@@ -19,7 +19,7 @@
 
 ## 安装包
 * [Rubick Mac OS V0.0.3-beta.1](https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.3-beta.1)
-* [Rubick Windows V0.0.2-beta.2](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.2-beta.2/rubick2.Setup.0.0.2-beta.2.exe)
+* [Rubick Windows V0.0.3-beta.3](https://github.com/clouDr-f2e/rubick/releases/download/v0.0.3-beta.1/rubick2.Setup.0.0.3-beta.1.exe)
 
 ## 支持能力
 - [x] 支持远程下载安装插件，支持插件开发者模式
