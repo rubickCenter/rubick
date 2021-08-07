@@ -75,7 +75,7 @@ rubick 更多支持 API 能力参考：[rubick 全局API](https://github.com/clo
 复制 `plugin.json` 文件，在 `rubick` 主窗口执行 `ctrl/command + v` 即可唤起安装插件的功能，选择`新建rubick插件`，进入插件主界面，
 开启插件后，在插件主窗口即可通过命令打开插件：
 
-![](/images/5.gif)
+![](/rubick/images/5.gif)
 
 本小节所有代码：[rubcik-plugin-demo](https://github.com/clouDr-f2e/rubick-plugin-demo)
 

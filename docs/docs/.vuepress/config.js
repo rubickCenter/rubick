@@ -25,6 +25,10 @@ module.exports = {
         path: '/dev/',
       },
       {
+        title: '常见问题',
+        path: '/qs/',
+      },
+      {
         title: 'TODO: 原理解析',
         children: [
           {
