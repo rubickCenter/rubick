@@ -93,9 +93,6 @@
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0"
   },
-  "optionalDependencies": {
-    "win-mouse": "git+https://github.com/Toinane/win-mouse"
-},
   "devDependencies": {
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
@@ -139,5 +136,18 @@
     "webpack-dev-server": "^3.1.4",
     "webpack-hot-middleware": "^2.22.2",
     "webpack-merge": "^4.1.3"
+  },
+  "iohook": {
+    "targets": [
+      "node-83",
+      "electron-85"
+    ],
+    "platforms": [
+      "win32"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }
