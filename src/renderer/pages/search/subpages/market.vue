@@ -13,7 +13,7 @@
         <a-icon type="right-circle" />
       </div>
       <div v-for="banner in bannerList">
-        <img width="100%" :src="banner.src" />
+        <img @click="jumpTo(banner.link)" width="100%" :src="banner.src" />
       </div>
     </a-carousel>
     <a-divider v-if="bannerList && !!bannerList.length"></a-divider>
@@ -73,6 +73,7 @@
 import api from '../../../assets/api';
 import {mapActions, mapState} from 'vuex';
 import marked from "marked";
+import {shell} from "electron";
 const rendererMD = new marked.Renderer();
 
 export default {
@@ -113,6 +114,11 @@ export default {
       this.show = true;
       this.currentSelect = item;
       this.currentSelect.index = index;
+    },
+    jumpTo(link) {
+      if (link) {
+        shell.openExternal(link)
+      }
     },
     ...mapActions('main', ['downloadPlugin'])
   },

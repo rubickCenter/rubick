@@ -9,13 +9,6 @@ export default function init(mainWindow) {
   listener.registerShortCut(mainWindow);
   listener.init(mainWindow);
 
-  // 设置开机启动
-  const config = global.opConfig.get();
-  app.setLoginItemSettings({
-    openAtLogin: config.perf.common.start,
-    openAsHidden: true,
-  });
-
   mainWindow.once("ready-to-show", () => {
     // 非隐藏式启动需要显示主窗口
     if (!app.getLoginItemSettings().wasOpenedAsHidden) {
