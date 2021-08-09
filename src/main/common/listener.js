@@ -1,9 +1,9 @@
-import {BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen} from "electron";
+import {app, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen} from "electron";
 import {exec, spawn} from "child_process";
 import robot from "robotjs";
 import Api from "./api";
 import ioHook from 'iohook';
-import {throttle} from './utils';
+import {throttle, commonConst} from './utils';
 
 const browsers = require("../browsers")();
 const {picker, separator, superPanel} = browsers;
@@ -20,8 +20,7 @@ class Listener {
       clipboard.clear();
 
       // 复制选中文案
-      const platform = process.platform;
-      if (platform === 'darwin') {
+      if (commonConst.macOS()) {
         robot.keyTap('c', 'command');
       } else {
         robot.keyTap('c', 'control');
@@ -52,9 +51,11 @@ class Listener {
       const currentDisplay = screen.getDisplayNearestPoint({ x, y });
       const wx = parseInt(currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400);
       const wy = parseInt(currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200);
-      mainWindow.setVisibleOnAllWorkspaces(true);
+
+      mainWindow.setAlwaysOnTop(true)
+      mainWindow.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
       mainWindow.focus();
-      mainWindow.setVisibleOnAllWorkspaces(false);
+      mainWindow.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
       mainWindow.setPosition(wx, wy);
       mainWindow.show();
     });
@@ -92,6 +93,7 @@ class Listener {
       picker.getWindow().webContents.send("updatePicker", colors);
     }, 100);
 
+    this.setAutoLogin();
     this.colorPicker();
     this.initPlugin();
     this.lockScreen();
@@ -224,9 +226,20 @@ class Listener {
 
   reRegisterShortCut(mainWindow) {
     ipcMain.on('re-register', (event, arg) => {
+      this.setAutoLogin();
       this.registerShortCut(mainWindow);
     });
   }
+
+  setAutoLogin() {
+    // 设置开机启动
+    const config = global.opConfig.get();
+    app.setLoginItemSettings({
+      openAtLogin: config.perf.common.start,
+      openAsHidden: true,
+    });
+  }
+
 
   changeSize(mainWindow) {
     // 修改窗口尺寸

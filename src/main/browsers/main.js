@@ -18,6 +18,7 @@ module.exports = () => {
       frame: false,
       title: '拉比克',
       show: false,
+      skipTaskbar: true,
       webPreferences: {
         webSecurity: false,
         enableRemoteModule: true,

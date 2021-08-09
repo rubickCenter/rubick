@@ -1,10 +1,20 @@
-import { dialog, Menu, Tray, app, shell, ipcMain } from 'electron';
+import { dialog, Menu, Tray, app, shell } from 'electron';
 import path from 'path';
 import pkg from '../../package.json';
+import os from 'os';
+import {commonConst} from './common/utils';
 
 function createTray(window) {
   return new Promise((resolve, reject) => {
-    const appIcon = new Tray(path.join(__static, './rocket.png'));
+    let icon;
+    if (commonConst.macOS()) {
+      icon = './icon@3x.png'
+    }else if (commonConst.windows()) {
+      icon = parseInt(os.release()) < 10 ? './icon@2x.png' : './icon.ico';
+    }else {
+      icon = 'icon@2x.png'
+    }
+    const appIcon = new Tray(path.join(__static, icon));
     const contextMenu = Menu.buildFromTemplate([
       {
         label: "帮助文档", click: () => {

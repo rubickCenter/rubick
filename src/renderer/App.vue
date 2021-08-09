@@ -44,7 +44,7 @@
             :src="selected.icon"
           />
           <div v-else class="rubick-logo">
-            <img src="./assets/logo.png" />
+            <img src="./assets/imgs/logo.png" />
           </div>
         </div>
       </a-input>
@@ -358,13 +358,13 @@ export default {
   .rubick-logo {
     width: 40px;
     height: 40px;
-    background: #314659;
+    background: #574778;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 100%;
     img {
-      width: 28px;
+      width: 32px;
     }
   }
   .tag-container {
