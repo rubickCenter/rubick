@@ -52,11 +52,7 @@
       "target": "pkg"
     },
     "win": {
-      "icon": "build/icons/icon.ico",
-      "target":[
-        "nsis",
-        "msi"
-      ]
+      "icon": "build/icons/icon.ico"
     },
     "linux": {
       "icon": "build/icons"
@@ -144,6 +140,7 @@
       "electron-85"
     ],
     "platforms": [
+      "darwin",
       "win32"
     ],
     "arches": [
