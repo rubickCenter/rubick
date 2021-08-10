@@ -308,7 +308,7 @@ class Listener {
           const cursorPosition = screen.getCursorScreenPoint();
           const dx = winStartPosition.x + cursorPosition.x - mouseStartPosition.x;
           const dy = winStartPosition.y + cursorPosition.y - mouseStartPosition.y;
-          let {x, y} = this.getPos({x: dx, y: dy});
+          let {x, y} = {x: dx, y: dy};
           win.setPosition(parseInt(x), parseInt(y));
         });
 
