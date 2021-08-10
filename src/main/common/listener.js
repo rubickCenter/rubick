@@ -106,6 +106,7 @@ class Listener {
     this.reRegisterShortCut(mainWindow);
     this.changeSize(mainWindow);
     this.msgTrigger(mainWindow);
+    this.windowMoveInit(mainWindow);
   }
 
   colorPicker() {
@@ -118,6 +119,7 @@ class Listener {
 
       picker.getWindow().on('close', () => {
         ioHook.stop();
+        ioHook.removeAllListeners();
         !this.isWin && ioHook.unload();
       });
 
@@ -147,29 +149,30 @@ class Listener {
       ipcMain.on("closePicker", () => {
         this.closePicker();
       });
-    });
-    ioHook.on('mousemove', e => {
-      let {x, y} = this.getPos(e);
-      if (!picker.getWindow()) return;
-      picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
-      this.fn(e, picker);
-    })
 
-    ioHook.on('mouseup', e => {
-      if (e.button === 1) {
-        let x = e.x
-        let y = e.y
-        const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
-        clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
-        new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
-        this.closePicker();
-      }
-    });
+      ioHook.on('mousemove', e => {
+        let {x, y} = this.getPos(e);
+        if (!picker.getWindow()) return;
+        picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
+        this.fn(e, picker);
+      })
 
-    ioHook.on('mouseup', e => {
-      if (e.button === 3) {
-        this.closePicker()
-      }
+      ioHook.on('mouseup', e => {
+        if (e.button === 1) {
+          let x = e.x
+          let y = e.y
+          const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
+          clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
+          new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
+          this.closePicker();
+        }
+      });
+
+      ioHook.on('mouseup', e => {
+        if (e.button === 3) {
+          this.closePicker()
+        }
+      });
     });
   }
 
@@ -286,6 +289,36 @@ class Listener {
         spawn('/usr/sbin/screencapture', ["-c", "-i", "-r"], {detached: !0});
       }
       // todo win
+    });
+  }
+
+  windowMoveInit(win) {
+    let hasInit = false;
+    ipcMain.on('window-move', () => {
+      if (!hasInit) {
+        hasInit = true;
+        ioHook.start(false);
+        !this.isWin && ioHook.load();
+
+        const winPosition = win.getPosition();
+        const winStartPosition = { x: winPosition[0], y: winPosition[1] };
+        const mouseStartPosition = screen.getCursorScreenPoint();
+
+        ioHook.on('mousedrag', e => {
+          const cursorPosition = screen.getCursorScreenPoint();
+          const dx = winStartPosition.x + cursorPosition.x - mouseStartPosition.x;
+          const dy = winStartPosition.y + cursorPosition.y - mouseStartPosition.y;
+          let {x, y} = this.getPos({x: dx, y: dy});
+          win.setPosition(parseInt(x), parseInt(y));
+        });
+
+        ioHook.on('mouseup', e => {
+          hasInit = false;
+          ioHook.stop();
+          ioHook.removeAllListeners();
+          !this.isWin && ioHook.unload();
+        });
+      }
     });
   }
 }

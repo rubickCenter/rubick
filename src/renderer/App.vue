@@ -1,109 +1,111 @@
 <template>
-  <a-layout id="components-layout">
-    <div v-if="!searchType" class="rubick-select">
-      <div class="tag-container" v-if="selected">
-        <a-tag
-          :key="selected.key"
-          @close="closeTag"
-          class="select-tag"
-          color="green"
-          closable
-        >
-          {{ selected.name }}
-        </a-tag>
-      </div>
-      <a-input
-        id="search"
-        :placeholder="
+  <div @mousedown="drag" >
+    <a-layout  id="components-layout">
+      <div v-if="!searchType" class="rubick-select">
+        <div class="tag-container" v-if="selected">
+          <a-tag
+            :key="selected.key"
+            @close="closeTag"
+            class="select-tag"
+            color="green"
+            closable
+          >
+            {{ selected.name }}
+          </a-tag>
+        </div>
+        <a-input
+          id="search"
+          :placeholder="
           subPlaceHolder && selected && selected.key === 'plugin-container'
             ? subPlaceHolder
             : 'Hi, Rubick'
         "
-        class="main-input"
-        @change="(e) => search({ value: e.target.value })"
-        :value="searchValue"
-        :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
-        @keydown.down="(e) => changeCurrent(1)"
-        @keydown.up="() => changeCurrent(-1)"
-        @keypress.enter="
+          class="main-input"
+          @change="(e) => search({ value: e.target.value })"
+          :value="searchValue"
+          :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
+          @keydown.down="(e) => changeCurrent(1)"
+          @keydown.up="() => changeCurrent(-1)"
+          @keypress.enter="
           (e) => targetSearch({ value: e.target.value, type: 'enter' })
         "
-        @keypress.space="
+          @keypress.space="
           (e) => targetSearch({ value: e.target.value, type: 'space' })
         "
-      >
-        <div @click="goMenu" class="suffix-tool" slot="suffix">
-          <a-icon
-            v-show="selected && selected.key === 'plugin-container'"
-            class="icon-more"
-            type="more"
-          />
-          <img
-            class="icon-tool"
-            v-if="selected && selected.icon"
-            :src="selected.icon"
-          />
-          <div v-else class="rubick-logo">
-            <img src="./assets/imgs/logo.png" />
+        >
+          <div @click="goMenu" class="suffix-tool" slot="suffix">
+            <a-icon
+              v-show="selected && selected.key === 'plugin-container'"
+              class="icon-more"
+              type="more"
+            />
+            <img
+              class="icon-tool"
+              v-if="selected && selected.icon"
+              :src="selected.icon"
+            />
+            <div v-else class="rubick-logo">
+              <img src="./assets/imgs/logo.png" />
+            </div>
           </div>
+        </a-input>
+        <div class="options" v-show="showOptions">
+          <a-list item-layout="horizontal" :data-source="options">
+            <a-list-item
+              @click="() => item.click($router)"
+              :class="currentSelect === index ? 'active op-item' : 'op-item'"
+              slot="renderItem"
+              slot-scope="item, index"
+            >
+              <a-list-item-meta :description="item.desc">
+                <span slot="title" v-html="renderTitle(item.name)"></span>
+                <a-avatar
+                  slot="avatar"
+                  style="border-radius: 0"
+                  :src="item.icon"
+                />
+              </a-list-item-meta>
+              <a-tag v-show="item.type === 'dev'">开发者</a-tag>
+              <a-tag v-show="item.type === 'system'">系统</a-tag>
+            </a-list-item>
+          </a-list>
         </div>
-      </a-input>
-      <div class="options" v-show="showOptions">
-        <a-list item-layout="horizontal" :data-source="options">
-          <a-list-item
-            @click="() => item.click($router)"
-            :class="currentSelect === index ? 'active op-item' : 'op-item'"
-            slot="renderItem"
-            slot-scope="item, index"
-          >
-            <a-list-item-meta :description="item.desc">
-              <span slot="title" v-html="renderTitle(item.name)"></span>
-              <a-avatar
-                slot="avatar"
-                style="border-radius: 0"
-                :src="item.icon"
-              />
-            </a-list-item-meta>
-            <a-tag v-show="item.type === 'dev'">开发者</a-tag>
-            <a-tag v-show="item.type === 'system'">系统</a-tag>
-          </a-list-item>
-        </a-list>
       </div>
-    </div>
-    <div class="rubick-select-subMenu" v-else>
-      <div>
-        <img
-          class="icon-tool-sub"
-          v-if="pluginInfo.icon"
-          :src="pluginInfo.icon"
-        />
-        <a-input
-          :placeholder="subPlaceHolder"
-          class="sub-input"
-          @change="
+      <div class="rubick-select-subMenu" v-else>
+        <div>
+          <img
+            class="icon-tool-sub"
+            v-if="pluginInfo.icon"
+            :src="pluginInfo.icon"
+          />
+          <a-input
+            :placeholder="subPlaceHolder"
+            class="sub-input"
+            @change="
             (e) =>
               search({
                 value: e.target.value,
                 searchType: pluginInfo.searchType,
               })
           "
-          :value="searchValue"
-          @keypress.enter="
+            :value="searchValue"
+            @keypress.enter="
             (e) => targetSearch({ value: e.target.value, type: 'enter' })
           "
-          @keypress.space="
+            @keypress.space="
             (e) => targetSearch({ value: e.target.value, type: 'space' })
           "
-        ></a-input>
-      </div>
+          ></a-input>
+        </div>
 
-      <div class="icon-container">
-        <a-icon class="icon" type="info-circle" />
-        <a-icon class="icon" @click="goMenu('separate')" type="setting" />
+        <div class="icon-container">
+          <a-icon class="icon" type="info-circle" />
+          <a-icon class="icon" @click="goMenu('separate')" type="setting" />
+        </div>
       </div>
-    </div>
-    <router-view></router-view>
-  </a-layout>
+      <router-view></router-view>
+    </a-layout>
+  </div>
 </template>
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
@@ -309,6 +311,9 @@ export default {
       this.showMainUI();
       this.changePath({ key: "market" });
     },
+    drag() {
+      ipcRenderer.send('window-move');
+    }
   },
   computed: {
     ...mapState("main", [
@@ -345,13 +350,9 @@ export default {
   ::-webkit-scrollbar {
     width: 0;
   }
-  .main-input {
-      -webkit-app-region: no-drag;
-  }
 }
 .rubick-select,
 .rubick-select-subMenu {
-  -webkit-app-region: drag;
   display: flex;
   padding-left: 10px;
   background: #fff;
