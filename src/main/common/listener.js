@@ -203,27 +203,16 @@ class Listener {
 
   superPanel(mainWindow) {
     // 长按右击呼起超级面板
+    superPanel.init(mainWindow);
     ipcMain.on('right-down', async () => {
 
       const copyResult = await this.getSelectedContent();
       let win = superPanel.getWindow();
 
-      if (win) {
-        win.webContents.send('trigger-super-panel', {
-          ...copyResult,
-          optionPlugin: this.optionPlugin.plugins,
-        });
-      } else {
-        superPanel.init(mainWindow);
-        win = superPanel.getWindow();
-
-        win.once('ready-to-show', () => {
-          win.webContents.send('trigger-super-panel', {
-            ...copyResult,
-            optionPlugin: this.optionPlugin.plugins,
-          });
-        });
-      }
+      win.webContents.send('trigger-super-panel', {
+        ...copyResult,
+        optionPlugin: this.optionPlugin.plugins,
+      });
       const pos = this.getPos(robot.getMousePos());
       win.setPosition(parseInt(pos.x), parseInt(pos.y));
       win.show();
