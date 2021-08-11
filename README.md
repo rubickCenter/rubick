@@ -5,13 +5,19 @@
 
 <div align= "center">
  <h1>Rubick</h1>
-
- <a href="https://github.com/clouDr-f2e/rubick/releases/tag/v0.0.1-beta">
-    <img alt="release" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" />
+ 
+ <img alt="release" src="https://img.shields.io/github/downloads/clouDr-f2e/rubick/total" />
+ <a href="https://github.com/clouDr-f2e/rubick/releases">
+    <img alt="release" src="https://img.shields.io/github/package-json/v/clouDr-f2e/rubick" />
+ </a>
+ <a href="https://github.com/clouDr-f2e/rubick/actions">
+   <img alt=building src=https://img.shields.io/github/workflow/status/clouDr-f2e/rubick/Build>
  </a>
  <a href="https://github.com/clouDr-f2e/rubick/blob/master/LICENSE">
     <img alt="npm" src="https://img.shields.io/github/license/clouDr-f2e/rubick" />
  </a>
+ <img alt="star" src="https://img.shields.io/github/stars/clouDr-f2e/rubick?style=social"></a>
+
 </div>
 
 
