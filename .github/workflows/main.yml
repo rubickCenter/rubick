@@ -42,11 +42,20 @@ jobs:
         run: |
           sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
       # step3: yarn
-      - name: Yarn install
+      - name: macos Yarn install
+        if: matrix.os == 'macos-latest'
         run: |
           yarn
           yarn global add xvfb-maybe
           npm run rebuild
+
+      - name: win Yarn install
+          if: matrix.os == 'windows-2019'
+          run: |
+            yarn
+            yarn global add xvfb-maybe
+            npm run rebuild_win
+
       - name: Build  & release app
         run: |
           npm run release
