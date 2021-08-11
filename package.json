@@ -10,7 +10,7 @@
     "build": "node .electron-vue/build.js && electron-builder",
     "dev": "node .electron-vue/dev-runner.js",
     "rebuild": " ./node_modules/.bin/electron-rebuild",
-    "rebuild_win": "cnpm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
+    "rebuild_win": "npm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
   },
   "build": {
     "asar": true,
