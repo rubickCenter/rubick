@@ -54,7 +54,7 @@ jobs:
         run: |
           yarn
           yarn global add xvfb-maybe
-          npm run rebuild
+          npm run rebuild_win
 
       - name: Build  & release app
         run: |
