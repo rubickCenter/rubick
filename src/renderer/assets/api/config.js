@@ -1,4 +1,4 @@
 export default {
-  development: 'http://rubick-server.qa.91jkys.com',
-  production: 'http://rubick-server.qa.91jkys.com',
+  development: 'http://118.195.176.247:8080',
+  production: 'http://118.195.176.247:8080'
 };
