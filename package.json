@@ -6,22 +6,16 @@
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
+    "release": "vue-cli-service electron:build --publish always",
     "build": "node .electron-vue/build.js && electron-builder",
-    "build:dir": "node .electron-vue/build.js && electron-builder --dir",
-    "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
-    "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "node .electron-vue/dev-runner.js",
-    "pack": "npm run pack:main && npm run pack:renderer",
-    "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
-    "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "",
     "rebuild": " ./node_modules/.bin/electron-rebuild",
     "rebuild_win": "cnpm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
   },
   "build": {
     "asar": true,
     "productName": "rubick2",
-    "appId": "com.example.yourapp2",
+    "appId": "com.muwoo.rubick",
     "compression": "maximum",
     "directories": {
       "output": "build"
@@ -49,10 +43,18 @@
     },
     "mac": {
       "icon": "build/icons/icon.icns",
-      "target": "pkg"
+      "target": "pkg",
+      "extendInfo": {
+        "LSUIElement": 1
+      }
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "linux": {
       "icon": "build/icons"

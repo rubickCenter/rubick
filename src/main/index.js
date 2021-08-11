@@ -4,6 +4,7 @@ import init from './common/common';
 import {autoUpdate} from './common/autoUpdate';
 import createTray from './tray';
 import {commonConst} from './common/utils';
+import pkg from '../../package.json';
 
 const {main} = require("./browsers")();
 
@@ -73,6 +74,9 @@ class initApp {
         this.createWindow();
       }
     });
+    if (commonConst.windows()) {
+      app.setAppUserModelId(pkg.build.appId);
+    }
   }
 
   onQuit () {
