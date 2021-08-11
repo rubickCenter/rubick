@@ -81,7 +81,7 @@
     "query-string": "^7.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "robotjs": "git+ssh://git@github.com/Toinane/robotjs.git",
+    "robotjs": "git+https://github.com/Toinane/robotjs.git",
     "semver": "^7.3.5",
     "sudo-prompt": "^9.2.1",
     "unzip": "^0.1.11",
