@@ -32,7 +32,8 @@ module.exports = {
         title: 'TODO: 原理解析',
         children: [
           {
-            title: '插件化实现原理'
+            title: '插件化实现原理',
+            path: '/blogs/plugin/',
           },
           {
             title: '右击增强实现原理'

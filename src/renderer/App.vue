@@ -39,11 +39,15 @@
               class="icon-more"
               type="more"
             />
-            <img
-              class="icon-tool"
-              v-if="selected && selected.icon"
-              :src="selected.icon"
-            />
+            <div v-if="selected && selected.icon" style="position: relative">
+              <a-spin v-show="pluginLoading" class="loading">
+                <a-icon slot="indicator" type="loading" style="font-size: 42px" spin />
+              </a-spin>
+              <img
+                class="icon-tool"
+                :src="selected.icon"
+              />
+            </div>
             <div v-else class="rubick-logo">
               <img src="./assets/imgs/logo.png" />
             </div>
@@ -163,7 +167,18 @@ export default {
         feature.forEach((fe) => {
           const cmd = searchKeyValues(fe.cmds, args)[0];
           const systemPlugin = fileLists.filter(
-            (plugin) => plugin.name.indexOf(args) >= 0
+            (plugin) => {
+              let has = false;
+              plugin.keyWords.some(keyWord => {
+                if (keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >= 0) {
+                  has = keyWord;
+                  plugin.name = keyWord;
+                  return true;
+                }
+                return false;
+              });
+              return has;
+            }
           )[0];
           if (cmd) {
             config = {
@@ -325,6 +340,7 @@ export default {
       "searchValue",
       "subPlaceHolder",
       "pluginInfo",
+      "pluginLoading",
     ]),
     showOptions() {
       // 有选项值，且不在显示主页
@@ -448,6 +464,11 @@ export default {
     font-size: 26px;
     font-weight: bold;
     cursor: pointer;
+  }
+  .loading {
+    position:absolute;
+    top: 0;
+    left: 0;
   }
 }
 </style>

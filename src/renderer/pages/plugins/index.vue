@@ -1,6 +1,11 @@
 <template>
   <div>
-    <webview v-if="!pluginInfo.subType" id="webview" :src="path" :preload="preload"></webview>
+    <webview
+      v-if="!pluginInfo.subType"
+      id="webview"
+      :src="path"
+      :preload="preload"
+    ></webview>
     <div v-else>
       <webview id="webview" :src="templatePath" :preload="preload"></webview>
     </div>
@@ -29,6 +34,14 @@ export default {
     this.webview.addEventListener('dom-ready', () => {
       this.webview.send('onPluginReady', this.pluginInfo);
       this.webview.send('onPluginEnter', this.pluginInfo);
+      this.commonUpdate({
+        pluginLoading: true,
+      });
+    });
+    this.webview.addEventListener('did-finish-load', () => {
+      this.commonUpdate({
+        pluginLoading: false,
+      });
     });
     this.setSubPlaceHolder('Hi, Rubick');
     this.webview.addEventListener('ipc-message', (event) => {
@@ -83,10 +96,6 @@ export default {
   methods: {
     ...mapMutations('main', ['setSubPlaceHolder', 'commonUpdate']),
   },
-  beforeRouteUpdate() {
-    this.path = `File://${this.pluginInfo.sourceFile}`;
-    this.webview.send('onPluginEnter', this.pluginInfo);
-  },
   beforeDestroy() {
     const webview = document.querySelector('webview');
     webview && webview.send('onPluginOut', this.pluginInfo)
@@ -97,10 +106,13 @@ export default {
       return (this.devPlugins.filter(plugin => plugin.name === this.pluginInfo.name)[0] || {}).features
     },
     path() {
+      this.$nextTick(() => {
+        this.webview && this.webview.send('onPluginEnter', this.pluginInfo);
+      });
       return `File://${this.pluginInfo.sourceFile}`
     },
     templatePath() {
-      return `File://${path.join(__static, './plugins/tpl/index.html')}?code=${JSON.parse(this.pluginInfo.detail).code}&targetFile=${encodeURIComponent(this.pluginInfo.sourceFile)}&preloadPath=${this.pluginInfo.preload}`;
+      return `File://${path.join(__static, './plugins/tpl/index.html')}?code=${this.pluginInfo.detail.code}&targetFile=${encodeURIComponent(this.pluginInfo.sourceFile)}&preloadPath=${this.pluginInfo.preload}`;
     }
   }
 }

@@ -181,6 +181,8 @@ new Vue({
           ...JSON.parse(res),
           src: msg,
         });
+      }).catch(() => {
+        this.$set(this.selectData, 'translate', null);
       }).finally(() => {
         this.loading = false;
       })

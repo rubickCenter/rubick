@@ -252,6 +252,10 @@ window.rubick = {
   isWindows() {
     return os.type() === 'Windows_NT';
   },
+
+  shellOpenPath(path) {
+    shell.openPath(path)
+  }
 }
 const preloadPath = getQueryVariable('preloadPath') || './preload.js';
 
