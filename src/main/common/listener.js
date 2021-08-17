@@ -215,6 +215,10 @@ class Listener {
       });
       const pos = this.getPos(robot.getMousePos());
       win.setPosition(parseInt(pos.x), parseInt(pos.y));
+      win.setAlwaysOnTop(true);
+      win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
+      win.focus();
+      win.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
       win.show();
     });
   }
