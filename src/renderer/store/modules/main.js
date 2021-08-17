@@ -22,9 +22,9 @@ const state = {
   searchValue: '',
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
   subPlaceHolder: '',
+  pluginLoading: true,
   pluginInfo: (() => {
     try {
-      console.log(window.pluginInfo);
       return window.pluginInfo || {};
     } catch (e) {}
   })()
