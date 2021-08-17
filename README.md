@@ -34,6 +34,7 @@
 - [x] 支持超级面板，长按右击呼出
 - [x] 支持全局快捷键设置
 - [x] 支持搜索本地已安装 app 或 偏好设置
+- [x] macos touchBar 唤起插件
 - [x] 支持 Windows(目前是 mac 的 alpha 版本，功能尚不全，正在迁移中)
 - [ ] 支持 Linux
 
@@ -51,6 +52,12 @@
 2. windows 版本目前有了一个最基础的可用版，代码在 [feat-win](https://github.com/clouDr-f2e/rubick/tree/feat-win) 分支。完整版正在开发中，敬请期待
 
 ## 目前支持能力
+
+### touchBar 唤起插件
+macOS 支持 touchbar 快速唤起插件
+
+<img src=https://user-images.githubusercontent.com/21073039/129727195-7dd50152-19f8-4064-9bcc-24393a896a6d.png width=500 />
+
 
 ### 超级面板
 长按鼠标右键，即可呼起超级面板，可以根据当前鼠标选择内容，匹配对应插件能力。比如当前选择图片后长按右击，则会呼起上传图床插件：
