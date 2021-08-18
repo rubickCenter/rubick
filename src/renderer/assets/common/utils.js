@@ -130,7 +130,10 @@ function mergePlugins(plugins) {
         return hasOption;
       })
     });
-
+  ipcRenderer &&
+  ipcRenderer.send('pluginInit', {
+    plugins: target
+  });
   return target;
 }
 

@@ -1,9 +1,11 @@
-import {app, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen} from "electron";
+import {app, nativeImage, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen, TouchBar} from "electron";
 import {exec, spawn} from "child_process";
 import robot from "robotjs";
 import Api from "./api";
 import ioHook from 'iohook';
 import {throttle, commonConst} from './utils';
+import path from 'path';
+import fs from "fs";
 
 const browsers = require("../browsers")();
 const {picker, separator, superPanel} = browsers;
@@ -102,6 +104,7 @@ class Listener {
     this.lockScreen();
     this.separate();
     this.initCapture();
+    this.initTouchBar(mainWindow);
     this.superPanel(mainWindow);
     this.reRegisterShortCut(mainWindow);
     this.changeSize(mainWindow);
@@ -181,6 +184,43 @@ class Listener {
       ipcMain.removeListener("closePicker", this.closePicker);
       picker.getWindow().close();
     }
+  }
+
+  initTouchBar(mainWindow) {
+    const { TouchBarButton, TouchBarGroup, TouchBarPopover } = TouchBar;
+    let items = [];
+    ipcMain.on('pluginInit', (e, args) => {
+      this.optionPlugin = args;
+      items = args.plugins.map((item) => {
+        const iconPath = path.join(item.sourceFile, '../', item.logo);
+        if (!fs.existsSync(iconPath)) return false;
+        const icon = nativeImage.createFromPath(iconPath);
+
+        return new TouchBarButton({
+          icon,
+          backgroundColor: '#ff9fb4',
+          click() {
+            mainWindow.webContents.send('superPanel-openPlugin', {
+              cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
+              plugin: item,
+              feature: item.features,
+            });
+          }
+        })
+      }).filter(Boolean);
+      const touchBarPopover = new TouchBarPopover({
+        items: new TouchBar({
+          items,
+        }),
+        label: '插件',
+        showCloseButton: true
+      })
+
+      const touchBar = new TouchBar({
+        items: [touchBarPopover]
+      });
+      mainWindow.setTouchBar(touchBar);
+    });
   }
 
   initPlugin() {
