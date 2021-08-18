@@ -199,7 +199,6 @@ class Listener {
 
         return new TouchBarButton({
           icon,
-          backgroundColor: '#ff9fb4',
           click() {
             mainWindow.webContents.send('superPanel-openPlugin', {
               cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
@@ -214,7 +213,6 @@ class Listener {
         if(item.type === 'system') {
           return new TouchBarButton({
             icon: nativeImage.createFromDataURL(item.logo).resize({width: 20, height: 20}),
-            backgroundColor: '#ff9fb4',
             click() {
               mainWindow.webContents.send('superPanel-openPlugin', {
                 cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
