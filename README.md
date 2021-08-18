@@ -56,7 +56,7 @@
 ### touchBar 唤起插件
 macOS 支持 touchbar 快速唤起插件
 
-<img src=https://user-images.githubusercontent.com/21073039/129727195-7dd50152-19f8-4064-9bcc-24393a896a6d.png width=500 />
+![2oyn8-wu97m (3)](https://user-images.githubusercontent.com/21073039/129894362-1dbb8436-921c-4138-be9c-072dc2e62549.gif)
 
 
 ### 超级面板
