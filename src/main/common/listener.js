@@ -1,9 +1,11 @@
-import {app, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen} from "electron";
+import {app, nativeImage, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen, TouchBar} from "electron";
 import {exec, spawn} from "child_process";
 import robot from "robotjs";
 import Api from "./api";
 import ioHook from 'iohook';
 import {throttle, commonConst} from './utils';
+import path from 'path';
+import fs from "fs";
 
 const browsers = require("../browsers")();
 const {picker, separator, superPanel} = browsers;
@@ -102,6 +104,7 @@ class Listener {
     this.lockScreen();
     this.separate();
     this.initCapture();
+    this.initTouchBar(mainWindow);
     this.superPanel(mainWindow);
     this.reRegisterShortCut(mainWindow);
     this.changeSize(mainWindow);
@@ -181,6 +184,62 @@ class Listener {
       ipcMain.removeListener("closePicker", this.closePicker);
       picker.getWindow().close();
     }
+  }
+
+  initTouchBar(mainWindow) {
+    const { TouchBarButton, TouchBarGroup, TouchBarPopover } = TouchBar;
+    let items = [];
+    let system = [];
+    ipcMain.on('pluginInit', (e, args) => {
+      this.optionPlugin = args;
+      items = args.plugins.map((item) => {
+        const iconPath = path.join(item.sourceFile, '../', item.logo);
+        if (!fs.existsSync(iconPath)) return false;
+        const icon = nativeImage.createFromPath(iconPath).resize({width: 20, height: 20});
+
+        return new TouchBarButton({
+          icon,
+          backgroundColor: '#ff9fb4',
+          click() {
+            mainWindow.webContents.send('superPanel-openPlugin', {
+              cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
+              plugin: item,
+              feature: item.features[0],
+            });
+          }
+        })
+      }).filter(Boolean);
+
+      system = args.plugins.map((item) => {
+        if(item.type === 'system') {
+          return new TouchBarButton({
+            icon: nativeImage.createFromDataURL(item.logo).resize({width: 20, height: 20}),
+            backgroundColor: '#ff9fb4',
+            click() {
+              mainWindow.webContents.send('superPanel-openPlugin', {
+                cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
+                plugin: item,
+                feature: item.features[0],
+              });
+            }
+          });
+        }
+        return false;
+      }).filter(Boolean);
+
+      const plugin = new TouchBarPopover({
+        items: new TouchBar({
+          items,
+        }),
+        label: '已安装插件',
+        showCloseButton: true
+      });
+
+      const touchBar = new TouchBar({
+        items: [plugin, ...system]
+      });
+      mainWindow.setTouchBar(touchBar);
+    });
   }
 
   initPlugin() {
