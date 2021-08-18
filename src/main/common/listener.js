@@ -189,12 +189,13 @@ class Listener {
   initTouchBar(mainWindow) {
     const { TouchBarButton, TouchBarGroup, TouchBarPopover } = TouchBar;
     let items = [];
+    let system = [];
     ipcMain.on('pluginInit', (e, args) => {
       this.optionPlugin = args;
       items = args.plugins.map((item) => {
         const iconPath = path.join(item.sourceFile, '../', item.logo);
         if (!fs.existsSync(iconPath)) return false;
-        const icon = nativeImage.createFromPath(iconPath);
+        const icon = nativeImage.createFromPath(iconPath).resize({width: 20, height: 20});
 
         return new TouchBarButton({
           icon,
@@ -203,21 +204,39 @@ class Listener {
             mainWindow.webContents.send('superPanel-openPlugin', {
               cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
               plugin: item,
-              feature: item.features,
+              feature: item.features[0],
             });
           }
         })
       }).filter(Boolean);
-      const touchBarPopover = new TouchBarPopover({
+
+      system = args.plugins.map((item) => {
+        if(item.type === 'system') {
+          return new TouchBarButton({
+            icon: nativeImage.createFromDataURL(item.logo).resize({width: 20, height: 20}),
+            backgroundColor: '#ff9fb4',
+            click() {
+              mainWindow.webContents.send('superPanel-openPlugin', {
+                cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
+                plugin: item,
+                feature: item.features[0],
+              });
+            }
+          });
+        }
+        return false;
+      }).filter(Boolean);
+
+      const plugin = new TouchBarPopover({
         items: new TouchBar({
           items,
         }),
-        label: '插件',
+        label: '已安装插件',
         showCloseButton: true
-      })
+      });
 
       const touchBar = new TouchBar({
-        items: [touchBarPopover]
+        items: [plugin, ...system]
       });
       mainWindow.setTouchBar(touchBar);
     });
