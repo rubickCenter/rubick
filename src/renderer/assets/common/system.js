@@ -2,7 +2,7 @@ import {shell, ipcRenderer} from 'electron';
 export default {
   'rubick-help': {
     help() {
-      shell.openExternal('https://u.tools/docs/guide/about-uTools.html')
+      shell.openExternal('https://cloudr-f2e.github.io/rubick/')
     }
   },
   'rubick-color': {
