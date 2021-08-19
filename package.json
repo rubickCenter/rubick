@@ -78,7 +78,7 @@
     "query-string": "^7.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "robotjs": "git+https://github.com/Toinane/robotjs.git",
+    "robotjs": "git+https://ghproxy.com/https://github.com/Toinane/robotjs.git",
     "semver": "^7.3.5",
     "sudo-prompt": "^9.2.1",
     "unzip": "^0.1.11",
@@ -135,7 +135,7 @@
   },
   "iohook": {
     "targets": [
-      "node-83",
+      "node-85",
       "electron-85"
     ],
     "platforms": [
