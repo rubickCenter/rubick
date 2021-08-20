@@ -1,14 +1,14 @@
-import {app, nativeImage, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen, TouchBar} from "electron";
-import {exec, spawn} from "child_process";
+import { app, nativeImage, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen, TouchBar } from "electron";
+import { exec, spawn } from "child_process";
 import robot from "robotjs";
 import Api from "./api";
 import ioHook from 'iohook';
-import {throttle, commonConst} from './utils';
+import { throttle, commonConst } from './utils';
 import path from 'path';
 import fs from "fs";
 
 const browsers = require("../browsers")();
-const {picker, separator, superPanel} = browsers;
+const { picker, separator, superPanel } = browsers;
 
 class Listener {
   constructor() {
@@ -52,15 +52,15 @@ class Listener {
     globalShortcut.unregisterAll();
     // 注册偏好快捷键
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
-      const {x, y} = screen.getCursorScreenPoint();
+      const { x, y } = screen.getCursorScreenPoint();
       const currentDisplay = screen.getDisplayNearestPoint({ x, y });
       const wx = parseInt(currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400);
       const wy = parseInt(currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200);
 
       mainWindow.setAlwaysOnTop(true)
-      mainWindow.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
+      mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       mainWindow.focus();
-      mainWindow.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
+      mainWindow.setVisibleOnAllWorkspaces(false, { visibleOnFullScreen: true });
       mainWindow.setPosition(wx, wy);
       mainWindow.show();
     });
@@ -84,12 +84,12 @@ class Listener {
   }
 
   init(mainWindow) {
-    this.fn = throttle(({x, y}, picker) => {
+    this.fn = throttle(({ x, y }, picker) => {
       const img = robot.screen.capture(parseInt(x) - 5, parseInt(y) - 5, 9, 9);
 
       const colors = {}
 
-      for(let i = 0; i< 9; i++) {
+      for (let i = 0; i < 9; i++) {
         colors[i] = {};
         for (let j = 0; j < 9; j++) {
           colors[i][j] = img.colorAt(j, i);
@@ -135,7 +135,7 @@ class Listener {
 
       const colors = {}
 
-      for(let i = 0; i< 9; i++) {
+      for (let i = 0; i < 9; i++) {
         colors[i] = {};
         for (let j = 0; j < 9; j++) {
           colors[i][j] = img.colorAt(j, i);
@@ -145,18 +145,22 @@ class Listener {
       picker
         .getWindow()
         .webContents.send(
-        "updatePicker",
-        colors
-      );
+          "updatePicker",
+          colors
+        );
 
       ipcMain.on("closePicker", () => {
         this.closePicker();
       });
 
       ioHook.on('mousemove', e => {
-        let {x, y} = this.getPos(e);
+        let { x, y } = this.getPos(e);
         if (!picker.getWindow()) return;
-        picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
+        // picker.getWindow().setPosition(parseInt(x) + 10, parseInt(y) + 10);
+        // picker.getWindow().setSize(108, 108)
+        picker.getWindow().setBounds({ x: parseInt(x) + 10, y: parseInt(y) + 10, width: 108, height: 108 });
+
+        // console.log(picker.getWindow().getBounds());
         this.fn(e, picker);
       })
 
@@ -195,7 +199,7 @@ class Listener {
       items = args.plugins.map((item) => {
         const iconPath = path.join(item.sourceFile, '../', item.logo);
         if (!fs.existsSync(iconPath)) return false;
-        const icon = nativeImage.createFromPath(iconPath).resize({width: 20, height: 20});
+        const icon = nativeImage.createFromPath(iconPath).resize({ width: 20, height: 20 });
 
         return new TouchBarButton({
           icon,
@@ -210,9 +214,9 @@ class Listener {
       }).filter(Boolean);
 
       system = args.plugins.map((item) => {
-        if(item.type === 'system') {
+        if (item.type === 'system') {
           return new TouchBarButton({
-            icon: nativeImage.createFromDataURL(item.logo).resize({width: 20, height: 20}),
+            icon: nativeImage.createFromDataURL(item.logo).resize({ width: 20, height: 20 }),
             click() {
               mainWindow.webContents.send('superPanel-openPlugin', {
                 cmd: item.features[0].cmds.filter(cmd => typeof cmd === 'string')[0],
@@ -273,15 +277,15 @@ class Listener {
       const pos = this.getPos(robot.getMousePos());
       win.setPosition(parseInt(pos.x), parseInt(pos.y));
       win.setAlwaysOnTop(true);
-      win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
+      win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       win.focus();
-      win.setVisibleOnAllWorkspaces(false, {visibleOnFullScreen: true});
+      win.setVisibleOnAllWorkspaces(false, { visibleOnFullScreen: true });
       win.show();
     });
   }
 
   getPos(point) {
-    return this.isWin ? screen.screenToDipPoint({x: point.x, y: point.y}) : point;
+    return this.isWin ? screen.screenToDipPoint({ x: point.x, y: point.y }) : point;
   }
 
   reRegisterShortCut(mainWindow) {
@@ -336,7 +340,7 @@ class Listener {
   initCapture() {
     ipcMain.on('capture-screen', () => {
       if (process.platform === 'darwin') {
-        spawn('/usr/sbin/screencapture', ["-c", "-i", "-r"], {detached: !0});
+        spawn('/usr/sbin/screencapture', ["-c", "-i", "-r"], { detached: !0 });
       }
       // todo win
     });
@@ -344,6 +348,8 @@ class Listener {
 
   windowMoveInit(win) {
     let hasInit = false;
+    let diff = { x: 0, y: 0, width: 0, height: 0 }
+
     ipcMain.on('window-move', () => {
       if (!hasInit) {
         hasInit = true;
@@ -358,8 +364,21 @@ class Listener {
           const cursorPosition = screen.getCursorScreenPoint();
           const dx = winStartPosition.x + cursorPosition.x - mouseStartPosition.x;
           const dy = winStartPosition.y + cursorPosition.y - mouseStartPosition.y;
-          let {x, y} = {x: dx, y: dy};
-          win.setPosition(parseInt(x), parseInt(y));
+          let bounds = win.getBounds()
+          let setbounds = {
+            x: dx - diff.x, y: dy - diff.y, width: bounds.width - diff.width,
+            height: bounds.height - diff.height,
+          };
+          let x = setbounds.x - bounds.x
+          let y = setbounds.y - bounds.y
+          if (x * x + y * y > 4) {
+            win.setBounds(setbounds)
+            bounds = win.getBounds()
+            diff.x = bounds.x - setbounds.x
+            diff.y = bounds.y - setbounds.y
+            diff.width = bounds.width - setbounds.width
+            diff.height = bounds.height - setbounds.height
+          }
         });
 
         ioHook.on('mouseup', e => {
