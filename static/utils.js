@@ -20,8 +20,31 @@ function getData(path, defaultValue) {
   }
 }
 
+const isArray = Array.isArray ||
+  function(object){ return object instanceof Array }
+
+function isPlainObject(obj) {
+  return isObject(obj) && Object.getPrototypeOf(obj) == Object.prototype
+}
+
+function isObject(obj) { return typeof obj == "object" }
+
+
+function extend(target, source, deep) {
+  for (let key in source)
+    if (deep && (isPlainObject(source[key]) || isArray(source[key]))) {
+      if (isPlainObject(source[key]) && !isPlainObject(target[key]))
+        target[key] = {}
+      if (isArray(source[key]) && !isArray(target[key]))
+        target[key] = []
+      extend(target[key], source[key], deep)
+    }
+    else if (source[key] !== undefined) target[key] = source[key]
+}
+
 module.exports = {
   getlocalDataFile,
   saveData,
-  getData
+  getData,
+  extend
 }

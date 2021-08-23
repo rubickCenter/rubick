@@ -6,6 +6,7 @@ import ioHook from 'iohook';
 import {throttle, commonConst} from './utils';
 import path from 'path';
 import fs from "fs";
+import mito from './monitor';
 
 const browsers = require("../browsers")();
 const {picker, separator, superPanel} = browsers;
@@ -85,7 +86,13 @@ class Listener {
 
   init(mainWindow) {
     this.fn = throttle(({x, y}, picker) => {
-      const img = robot.screen.capture(parseInt(x) - 5, parseInt(y) - 5, 9, 9);
+      const { scaleFactor } = screen.getDisplayNearestPoint({x, y});
+      const img = robot.screen.capture(
+        x - parseInt(5 / scaleFactor),
+        y - parseInt(5 / scaleFactor),
+        10,
+        10
+      );
 
       const colors = {}
 
@@ -233,10 +240,21 @@ class Listener {
         showCloseButton: true
       });
 
+      const monitor = new TouchBarPopover({
+        items: mito.touchBar,
+        label: '系统监控',
+        showCloseButton: true
+      });
+
       const touchBar = new TouchBar({
-        items: [plugin, ...system]
+        items: [
+          plugin,
+          monitor,
+          ...system
+        ]
       });
       mainWindow.setTouchBar(touchBar);
+      mito.start(mainWindow);
     });
   }
 

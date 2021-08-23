@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require ('child_process');
 const mineType = require("mime-types");
+const {extend} = require('../../utils');
 
 new Vue({
   el: '#app',
@@ -116,7 +117,8 @@ new Vue({
         this.targetOptions = this.options.common;
       } else {
         // 有文件选择
-        this.targetOptions = JSON.parse(JSON.stringify(this.options.selected));
+        this.targetOptions = [];
+        extend(this.targetOptions, this.options.selected, true);
         // 检测上传
         (this.selectData.optionPlugin || []).forEach(plugin => {
           plugin.features.forEach(fe => {
