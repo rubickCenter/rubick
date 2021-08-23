@@ -1,6 +1,6 @@
 {
   "name": "rubick2",
-  "version": "0.0.3-beta.4",
+  "version": "0.0.3-beta.5",
   "author": "muwoo <2424880409@qq.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -81,6 +81,7 @@
     "robotjs": "git+https://github.com/Toinane/robotjs.git",
     "semver": "^7.3.5",
     "sudo-prompt": "^9.2.1",
+    "systeminformation": "^5.8.0",
     "unzip": "^0.1.11",
     "uuid": "^8.3.2",
     "vue": "^2.5.16",
