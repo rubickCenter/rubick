@@ -26,6 +26,7 @@
 ## 安装包
 * [Rubick Mac OS](https://github.com/clouDr-f2e/rubick/releases)
 * [Rubick Windows](https://github.com/clouDr-f2e/rubick/releases)
+* [Rubick Linux](https://github.com/clouDr-f2e/rubick/releases)
 
 ## 支持能力
 - [x] 支持远程下载安装插件，支持插件开发者模式
@@ -36,7 +37,7 @@
 - [x] 支持搜索本地已安装 app 或 偏好设置
 - [x] macos touchBar 唤起插件
 - [x] 支持 Windows(目前是 mac 的 alpha 版本，功能尚不全，正在迁移中)
-- [ ] 支持 Linux
+- [x] 支持 Linux
 
 
 
