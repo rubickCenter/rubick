@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-2019]
 
     # create steps
     steps:
@@ -55,6 +55,13 @@ jobs:
           yarn
           yarn global add xvfb-maybe
           npm run rebuild_win
+
+      - name: linux Yarn install
+        if: ${{runner.os == 'Linux'}}
+        run: |
+          yarn
+          yarn global add xvfb-maybe
+          npm run rebuild_linux
 
       - name: Build  & release app
         run: |
