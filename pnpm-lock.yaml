@@ -2758,7 +2758,6 @@ packages:
   /fsevents/1.2.13:
     resolution: {integrity: sha1-8yXLBFVZJCi88Rs4M3DvcOO/zDg=, tarball: fsevents/download/fsevents-1.2.13.tgz?cache=0&sync_timestamp=1612537044236&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffsevents%2Fdownload%2Ffsevents-1.2.13.tgz}
     engines: {node: '>= 4.0'}
-    os: [darwin]
     deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
     requiresBuild: true
     dependencies:
@@ -3188,15 +3187,13 @@ packages:
     resolution: {integrity: sha1-AdJwnHnUFpi7AdTezF6dpOSgM9k=, tarball: http-parser-js/download/http-parser-js-0.5.3.tgz}
     dev: true
 
-  /http-proxy/1.18.1_debug@4.3.2:
+  /http-proxy/1.18.1:
     resolution: {integrity: sha1-QBVB8FNIhLv5UmAzTnL4juOXZUk=, tarball: http-proxy/download/http-proxy-1.18.1.tgz}
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: registry.nlark.com/follow-redirects/1.14.1_debug@4.3.2
+      follow-redirects: registry.nlark.com/follow-redirects/1.14.1
       requires-port: 1.0.0
-    transitivePeerDependencies:
-      - debug
     dev: true
 
   /http-signature/1.1.1:
@@ -4380,6 +4377,7 @@ packages:
 
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=, tarball: ms/download/ms-2.0.0.tgz}
+    dev: false
 
   /ms/2.1.1:
     resolution: {integrity: sha1-MKWGTrPrsKZvLr5tcnrwagnYbgo=, tarball: ms/download/ms-2.1.1.tgz}
@@ -4387,10 +4385,6 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha1-0J0fNXtEP0kzgqjrPM0YOHKuYAk=, tarball: ms/download/ms-2.1.2.tgz}
-
-  /ms/2.1.3:
-    resolution: {integrity: sha1-V0yBOM4dK1hh8LRFedut1gxmFbI=, tarball: ms/download/ms-2.1.3.tgz}
-    dev: true
 
   /multicast-dns-service-types/1.1.0:
     resolution: {integrity: sha1-iZ8R2WhuXgXLkbNdXw5jt3PPyQE=, tarball: multicast-dns-service-types/download/multicast-dns-service-types-1.1.0.tgz}
@@ -5242,7 +5236,7 @@ packages:
     resolution: {integrity: sha1-DodiKjMlqjPokihcr4tOhGUppSU=, tarball: readdirp/download/readdirp-2.2.1.tgz?cache=0&sync_timestamp=1615719701333&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freaddirp%2Fdownload%2Freaddirp-2.2.1.tgz}
     engines: {node: '>=0.10'}
     dependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: registry.nlark.com/graceful-fs/4.2.6
       micromatch: 3.1.10
       readable-stream: 2.3.7
     dev: true
@@ -8054,7 +8048,7 @@ packages:
     dev: true
 
   registry.nlark.com/chalk/1.1.3:
-    resolution: {integrity: sha1-qBFcVeSnAv5NFQq9OHKCKn4J/Jg=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/chalk/download/chalk-1.1.3.tgz?cache=0&sync_timestamp=1627650698357&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fchalk%2Fdownload%2Fchalk-1.1.3.tgz}
+    resolution: {integrity: sha1-qBFcVeSnAv5NFQq9OHKCKn4J/Jg=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/chalk/download/chalk-1.1.3.tgz?cache=0&sync_timestamp=1627646644975&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fchalk%2Fdownload%2Fchalk-1.1.3.tgz}
     name: chalk
     version: 1.1.3
     engines: {node: '>=0.10.0'}
@@ -8436,7 +8430,7 @@ packages:
     name: debug
     version: 2.6.9
     dependencies:
-      ms: 2.0.0
+      ms: registry.nlark.com/ms/2.0.0
 
   registry.nlark.com/debug/3.1.0:
     resolution: {integrity: sha1-W7WgZyYotkFJVmuhaBnmFRjGcmE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/debug/download/debug-3.1.0.tgz}
@@ -8451,7 +8445,7 @@ packages:
     name: debug
     version: 3.2.7
     dependencies:
-      ms: 2.1.3
+      ms: registry.nlark.com/ms/2.1.3
     dev: true
 
   registry.nlark.com/debug/4.3.1:
@@ -8997,19 +8991,11 @@ packages:
       trim-repeated: registry.nlark.com/trim-repeated/1.0.0
     dev: false
 
-  registry.nlark.com/follow-redirects/1.14.1_debug@4.3.2:
+  registry.nlark.com/follow-redirects/1.14.1:
     resolution: {integrity: sha1-2RFN7Qoc/dM04WTmZirQK/2R/0M=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.1.tgz}
-    id: registry.nlark.com/follow-redirects/1.14.1
     name: follow-redirects
     version: 1.14.1
     engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: registry.nlark.com/debug/4.3.2_supports-color@6.1.0
     dev: true
 
   registry.nlark.com/follow-redirects/1.5.10:
@@ -9257,7 +9243,6 @@ packages:
     name: graceful-fs
     version: 4.2.6
     dev: true
-    optional: true
 
   registry.nlark.com/has-flag/1.0.0:
     resolution: {integrity: sha1-nZ55MWXOAXoA8AQYxD+UKnsdEfo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/has-flag/download/has-flag-1.0.0.tgz}
@@ -9342,19 +9327,16 @@ packages:
       webpack: registry.nlark.com/webpack/4.46.0_webpack-cli@3.3.12
     dev: true
 
-  registry.nlark.com/http-proxy-middleware/0.19.1_debug@4.3.2:
+  registry.nlark.com/http-proxy-middleware/0.19.1:
     resolution: {integrity: sha1-GDx9xKoUeRUDBkmMIQza+WCApDo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/http-proxy-middleware/download/http-proxy-middleware-0.19.1.tgz}
-    id: registry.nlark.com/http-proxy-middleware/0.19.1
     name: http-proxy-middleware
     version: 0.19.1
     engines: {node: '>=4.0.0'}
     dependencies:
-      http-proxy: 1.18.1_debug@4.3.2
+      http-proxy: 1.18.1
       is-glob: 4.0.1
       lodash: 4.17.21
       micromatch: 3.1.10
-    transitivePeerDependencies:
-      - debug
     dev: true
 
   registry.nlark.com/http2-wrapper/1.0.3:
@@ -9940,6 +9922,17 @@ packages:
       loader-utils: 1.4.0
       webpack: registry.nlark.com/webpack/4.46.0_webpack-cli@3.3.12
       webpack-sources: registry.nlark.com/webpack-sources/1.4.3
+    dev: true
+
+  registry.nlark.com/ms/2.0.0:
+    resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/ms/download/ms-2.0.0.tgz}
+    name: ms
+    version: 2.0.0
+
+  registry.nlark.com/ms/2.1.3:
+    resolution: {integrity: sha1-V0yBOM4dK1hh8LRFedut1gxmFbI=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/ms/download/ms-2.1.3.tgz}
+    name: ms
+    version: 2.1.3
     dev: true
 
   registry.nlark.com/multicast-dns/6.2.3:
@@ -11209,6 +11202,7 @@ packages:
     name: systeminformation
     version: 5.8.2
     engines: {node: '>=4.0.0'}
+    os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos]
     hasBin: true
     dev: false
 
@@ -11625,7 +11619,7 @@ packages:
       del: 4.1.1
       express: 4.17.1
       html-entities: 1.4.0
-      http-proxy-middleware: registry.nlark.com/http-proxy-middleware/0.19.1_debug@4.3.2
+      http-proxy-middleware: registry.nlark.com/http-proxy-middleware/0.19.1
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.5

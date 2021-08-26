@@ -10,7 +10,8 @@
     "build": "node .electron-vue/build.js && electron-builder",
     "dev": "node .electron-vue/dev-runner.js",
     "rebuild": " ./node_modules/.bin/electron-rebuild",
-    "rebuild_win": "npm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85"
+    "rebuild_win": "npm rebuild --runtime=electron --target=11.4.10 --disturl=https://atom.io/download/atom-shell --abi=85",
+    "rebuild_linux": "npm rebuild --runtime=electron --target=12.0.15 --disturl=https://atom.io/download/atom-shell --abi=87"
   },
   "build": {
     "asar": true,
@@ -91,7 +92,6 @@
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
-    "babel-runtime": "^6.26.0",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -100,6 +100,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
+    "babel-runtime": "^6.26.0",
     "cfonts": "^2.1.2",
     "chalk": "^2.4.1",
     "copy-webpack-plugin": "^4.5.1",
@@ -142,7 +143,8 @@
     ],
     "platforms": [
       "darwin",
-      "win32"
+      "win32",
+      "linux"
     ],
     "arches": [
       "x64",

@@ -50,6 +50,7 @@
 ## 使用问题
 1. 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
 2. windows 版本目前有了一个最基础的可用版，代码在 [feat-win](https://github.com/clouDr-f2e/rubick/tree/feat-win) 分支。完整版正在开发中，敬请期待
+3. linux 开发分支 cross-platform 的 iohook 开发模式下可能需要手动下载并放入node_modules, 将在未来修复
 
 ## 目前支持能力
 
