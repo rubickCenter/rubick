@@ -1,18 +1,18 @@
 import { app, globalShortcut } from 'electron'
 import '../renderer/store'
-import init from './common/common';
-import {autoUpdate} from './common/autoUpdate';
-import createTray from './tray';
-import {commonConst} from './common/utils';
-import pkg from '../../package.json';
+import init from './common/common'
+import { autoUpdate } from './common/autoUpdate'
+import createTray from './tray'
+import { commonConst } from './common/utils'
+import pkg from '../../package.json'
 
-const {main} = require("./browsers")();
+const { main } = require("./browsers")()
 
 if (commonConst.production()) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 // to fix https://github.com/electron/electron/issues/18397
-app.allowRendererProcessReuse = false;
+app.allowRendererProcessReuse = false
 
 class initApp {
   launchApp() {
@@ -28,28 +28,28 @@ class initApp {
   }
 
   createWindow() {
-    main.init();
-    init(main.getWindow());
+    main.init()
+    init(main.getWindow())
   }
 
   beforeReady() {
     // 系统托盘
     if (commonConst.macOS()) {
       if (commonConst.production() && !app.isInApplicationsFolder()) {
-        app.moveToApplicationsFolder();
+        app.moveToApplicationsFolder()
       } else {
-        app.dock.hide();
+        app.dock.hide()
       }
-    }else {
-      app.disableHardwareAcceleration();
+    } else {
+      app.disableHardwareAcceleration()
     }
   }
 
   onReady() {
     const readyFunction = () => {
-      this.createWindow();
-      createTray(main.getWindow());
-      autoUpdate();
+      this.createWindow()
+      createTray(main.getWindow())
+      autoUpdate()
     }
     if (!app.isReady()) {
       app.on('ready', readyFunction)
@@ -61,25 +61,25 @@ class initApp {
   onRunning() {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
       // 当运行第二个实例时,将会聚焦到myWindow这个窗口
-      const win = main.getWindow();
+      const win = main.getWindow()
       if (win) {
         if (win.isMinimized()) {
-          win.restore();
+          win.restore()
         }
-        win.focus();
+        win.focus()
       }
-    });
+    })
     app.on('activate', () => {
       if (!main.getWindow()) {
-        this.createWindow();
+        this.createWindow()
       }
-    });
+    })
     if (commonConst.windows()) {
-      app.setAppUserModelId(pkg.build.appId);
+      app.setAppUserModelId(pkg.build.appId)
     }
   }
 
-  onQuit () {
+  onQuit() {
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         app.quit()
@@ -106,4 +106,4 @@ class initApp {
   }
 }
 
-(new initApp()).launchApp();
+(new initApp()).launchApp()

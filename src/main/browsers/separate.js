@@ -1,11 +1,11 @@
-const { BrowserWindow } = require("electron");
+const { BrowserWindow } = require("electron")
 
 module.exports = () => {
-  let win;
+  let win
 
   let init = (opts) => {
-    createWindow(opts);
-  };
+    createWindow(opts)
+  }
 
   let createWindow = (opts) => {
     const winURL = process.env.NODE_ENV === 'development'
@@ -22,27 +22,28 @@ module.exports = () => {
         webSecurity: false,
         enableRemoteModule: true,
         backgroundThrottling: false,
+        contextIsolation: false,
         webviewTag: true,
         nodeIntegration: true // 在网页中集成Node
       }
-    });
+    })
     process.env.NODE_ENV === 'development' ? win.loadURL(winURL) : win.loadFile(winURL, {
       hash: `#/plugin`,
-    });
+    })
 
     win.webContents.executeJavaScript(`window.setPluginInfo(${opts})`).then(() => {
       win.show()
-    });
+    })
 
     win.on("closed", () => {
-      win = undefined;
-    });
-  };
+      win = undefined
+    })
+  }
 
-  let getWindow = () => win;
+  let getWindow = () => win
 
   return {
     init: init,
     getWindow: getWindow,
-  };
-};
+  }
+}
