@@ -6,7 +6,7 @@
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
-    "release": "node .electron-vue/build.js && electron-builder",
+    "release": "node .electron-vue/build.js && electron-builder --publish always",
     "build": "node .electron-vue/build.js && electron-builder",
     "dev": "node .electron-vue/dev-runner.js",
     "rebuild": " ./node_modules/.bin/electron-rebuild",
@@ -55,7 +55,7 @@
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons/"
     }
   },
   "dependencies": {
