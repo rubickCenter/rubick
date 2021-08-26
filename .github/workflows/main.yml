@@ -41,7 +41,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get install libxtst-dev libpng++-dev
-          sudo snap install snapcraft --classic
           sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
       # step3: yarn
       - name: macos Yarn install
