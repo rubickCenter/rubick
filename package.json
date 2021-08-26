@@ -55,7 +55,8 @@
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
-      "icon": "build/icons/"
+      "icon": "build/icons/",
+      "publish": ["github"]
     }
   },
   "dependencies": {
