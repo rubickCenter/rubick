@@ -1,10 +1,10 @@
-const { BrowserWindow, protocol } = require("electron");
+const { BrowserWindow, protocol } = require("electron")
 module.exports = () => {
-  let win;
+  let win
 
   let init = (opts) => {
-    createWindow(opts);
-  };
+    createWindow(opts)
+  }
 
   let createWindow = (opts) => {
     const winURL = process.env.NODE_ENV === 'development'
@@ -23,6 +23,7 @@ module.exports = () => {
         webSecurity: false,
         enableRemoteModule: true,
         backgroundThrottling: false,
+        contextIsolation: false,
         webviewTag: true,
         nodeIntegration: true // 在网页中集成Node
       }
@@ -31,24 +32,24 @@ module.exports = () => {
     win.loadURL(winURL)
 
     protocol.interceptFileProtocol('image', (req, callback) => {
-      const url = req.url.substr(8);
-      callback(decodeURI(url));
+      const url = req.url.substr(8)
+      callback(decodeURI(url))
     }, (error) => {
       if (error) {
-        console.error('Failed to register protocol');
+        console.error('Failed to register protocol')
       }
-    });
+    })
 
-    win.once('ready-to-show', () => win.show());
+    win.once('ready-to-show', () => win.show())
     win.on("closed", () => {
-      win = undefined;
-    });
-  };
+      win = undefined
+    })
+  }
 
-  let getWindow = () => win;
+  let getWindow = () => win
 
   return {
     init: init,
     getWindow: getWindow,
-  };
-};
+  }
+}
