@@ -194,6 +194,7 @@ class Listener {
   }
 
   initTouchBar(mainWindow) {
+    if (!commonConst.macOS()) return;
     const { TouchBarButton, TouchBarGroup, TouchBarPopover } = TouchBar;
     let items = [];
     let system = [];

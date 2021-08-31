@@ -107,10 +107,10 @@ const actions = {
       commit('commonUpdate', { searchValue: value });
       return;
     }
-    const fileUrl = clipboard.read('public.file-url').replace('file://', '');
+    const fileUrl = paylpad.filePath || clipboard.read('public.file-url').replace('file://', '');
     commit('commonUpdate', { searchValue: value });
     // 复制文件
-    if (fileUrl && value === 'plugin.json') {
+    if (paylpad.filePath || (fileUrl && value === 'plugin.json')) {
       const config = JSON.parse(fs.readFileSync(fileUrl, 'utf-8'));
 
       const pluginConfig = {
@@ -132,7 +132,6 @@ const actions = {
           name: 'plugin.json'
         },
         searchValue: '',
-        devPlugins: [pluginConfig, ...state.devPlugins],
         options: [
           {
             name: '新建rubick开发插件',
@@ -142,6 +141,7 @@ const actions = {
             click: (router) => {
               commit('commonUpdate', {
                 showMain: true,
+                devPlugins: [pluginConfig, ...state.devPlugins],
                 selected: {
                   key: 'plugin',
                   name: '新建rubick开发插件'

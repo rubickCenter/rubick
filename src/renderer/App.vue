@@ -22,6 +22,7 @@
         "
           class="main-input"
           @change="(e) => search({ value: e.target.value })"
+          @keydown.ctrl.86="shouldPaste"
           :value="searchValue"
           :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
           @keydown.down="(e) => changeCurrent(1)"
@@ -113,7 +114,7 @@
 </template>
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer, remote, clipboard } from "electron";
 import {
   getWindowHeight,
   debounce,
@@ -208,6 +209,18 @@ export default {
   methods: {
     ...mapActions("main", ["onSearch", "showMainUI", "openPlugin"]),
     ...mapMutations("main", ["commonUpdate"]),
+    shouldPaste(e) {
+      let filePath = '';
+      if (process.platform === 'win32') {
+        const rawFilePath = clipboard.read('FileNameW');
+        filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');      } else {
+        if (filePath.indexOf('plugin.json') >= 0) {
+          this.search({
+            filePath,
+          });
+        }
+      }
+    },
     search(v) {
       if (!this.searchFn) {
         this.searchFn = debounce(this.onSearch, 200);
