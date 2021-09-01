@@ -36,13 +36,8 @@ module.exports = {
             path: '/blogs/plugin/',
           },
           {
-            title: '右击增强实现原理'
-          },
-          {
-            title: '系统插件实现原理'
-          },
-          {
-            title: '文件检索实现原理'
+            title: '超级面板实现原理',
+            path: '/blogs/superPannel/',
           },
         ]
       },

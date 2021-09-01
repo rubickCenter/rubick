@@ -213,7 +213,7 @@ export default {
       let filePath = '';
       if (process.platform === 'win32') {
         const rawFilePath = clipboard.read('FileNameW');
-        filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');      } else {
+        filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');
         if (filePath.indexOf('plugin.json') >= 0) {
           this.search({
             filePath,
