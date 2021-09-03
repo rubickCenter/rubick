@@ -17,7 +17,7 @@ const getico = apps =>{
         if (!exists) {
           fs.writeFile(iconpath, data.Base64ImageData, "base64", err => {
             if (err) { console.log(err); }
-          })
+          });
         }
       })
     })
@@ -60,7 +60,7 @@ const getWinAppList = () => {
     for (var app of apps) {
       const dict = {}
       let lines = app.split('\r\n')
-      for (var line of lines) {
+      for (const line of lines) {
         if (line) {
           const key = line.split(/\s+:\s*/)[0];
           const value = line.split(/\s+:\s*/)[1];
@@ -71,6 +71,7 @@ const getWinAppList = () => {
         dict.LegalName = dict.DisplayName.replace(/[\\\/\:\*\?\"\<\>\|]/g, "");
         dict.Icon =  path.join(os.tmpdir(), 'ProcessIcon', `${encodeURIComponent(dict.LegalName)}.png`);
         fileLists.push({
+          ...dict,
           value: 'plugin',
           icon: dict.Icon,
           desc: dict.DisplayIcon,
