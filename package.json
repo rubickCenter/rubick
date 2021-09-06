@@ -1,6 +1,6 @@
 {
   "name": "rubick2",
-  "version": "0.0.3-beta.10",
+  "version": "0.0.3-beta.11",
   "author": "muwoo <2424880409@qq.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -69,7 +69,6 @@
     "download-git-repo": "^3.0.2",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.0.0",
-    "icon-extractor": "^1.0.3",
     "iohook": "^0.9.3",
     "is-chinese": "^1.4.2",
     "jian-pinyin": "^0.2.3",

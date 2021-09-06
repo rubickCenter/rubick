@@ -1,35 +1,9 @@
-import fs from "fs";
 import path from "path";
 import os from 'os';
 import child from 'child_process';
 import iconv from 'iconv-lite';
 
 const fileLists = [];
-
-const getico = apps =>{
-  const iconExtractor = require('icon-extractor');
-  iconExtractor.emitter.on('icon', function (data) {
-    let icondir = path.join(os.tmpdir(), 'ProcessIcon')
-    fs.exists(icondir, exists => {
-      if (!exists) { fs.mkdirSync(icondir) }
-      let iconpath = path.join(icondir, `${data.Context}.png`)
-      fs.exists(iconpath, exists => {
-        if (!exists) {
-          fs.writeFile(iconpath, data.Base64ImageData, "base64", err => {
-            if (err) { console.log(err); }
-          });
-        }
-      })
-    })
-  });
-
-  for (var app of apps) {
-    if (app.DisplayIcon !== undefined) {
-      app.DisplayIcon = app.DisplayIcon.split(',')[0];
-    }
-    iconExtractor.getIcon(app.LegalName, app.DisplayIcon);
-  }
-}
 
 const powershell = (cmd, callback) => {
   const ps = child.spawn('powershell', ['-NoProfile', '-Command', cmd], { encoding: 'buffer' })
@@ -60,7 +34,7 @@ const getWinAppList = () => {
     for (var app of apps) {
       const dict = {}
       let lines = app.split('\r\n')
-      for (const line of lines) {
+      for (var line of lines) {
         if (line) {
           const key = line.split(/\s+:\s*/)[0];
           const value = line.split(/\s+:\s*/)[1];
@@ -70,20 +44,20 @@ const getWinAppList = () => {
       if (dict.DisplayName && dict.DisplayIcon && dict.DisplayIcon.indexOf('.exe') >= 0) {
         dict.LegalName = dict.DisplayName.replace(/[\\\/\:\*\?\"\<\>\|]/g, "");
         dict.Icon =  path.join(os.tmpdir(), 'ProcessIcon', `${encodeURIComponent(dict.LegalName)}.png`);
+        const appPath = dict.DisplayIcon.split(',')[0];
         fileLists.push({
           ...dict,
           value: 'plugin',
           icon: dict.Icon,
-          desc: dict.DisplayIcon,
+          desc: appPath,
           type: 'app',
-          action: `start "dummyclient" "${dict.DisplayIcon}"`,
+          action: `start "dummyclient" "${appPath}"`,
           keyWords: [dict.DisplayName],
           name: dict.DisplayName,
           names: [dict.DisplayName],
         });
       }
     }
-    getico(fileLists);
   });
 }
 
