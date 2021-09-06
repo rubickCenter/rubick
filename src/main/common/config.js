@@ -7,7 +7,7 @@ const configPath = path.join(getlocalDataFile(), './rubick-config.json')
 
 let defaultConfig = {
   Darwin: {
-    version: 2,
+    version: 3,
     perf: {
       shortCut: {
         showAndHidden: 'Option+R',
@@ -32,7 +32,7 @@ let defaultConfig = {
     global: []
   },
   Windows_NT: {
-    version: 2,
+    version: 3,
     perf: {
       shortCut: {
         showAndHidden: 'Option+R',
@@ -57,7 +57,7 @@ let defaultConfig = {
     global: []
   },
   Linux: {
-    version: 1,
+    version: 3,
     perf: {
       shortCut: {
         showAndHidden: 'Option+R',
@@ -85,13 +85,13 @@ let defaultConfig = {
 global.opConfig = {
   config: null,
   get() {
-    const platform = os.type()
+    const platform = os.type();
     try {
       if (!opConfig.config) {
         opConfig.config = JSON.parse(fs.readFileSync(configPath) || JSON.stringify(defaultConfig[platform]))
       }
       // 重置
-      if (!opConfig.version || opConfig.version < defaultConfig[platform].version) {
+      if (!opConfig.config.version || opConfig.config.version < defaultConfig[platform].version) {
         opConfig.config = defaultConfig[platform]
         fs.writeFileSync(configPath, JSON.stringify(opConfig.config))
       }
@@ -102,7 +102,7 @@ global.opConfig = {
     }
   },
   set(key, value) {
-    opConfig.config[key] = value
+    opConfig.config[key] = value;
     fs.writeFileSync(configPath, JSON.stringify(opConfig.config))
   }
 }
