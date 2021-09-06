@@ -1,10 +1,12 @@
 import { app, globalShortcut } from 'electron'
-import '../renderer/store'
 import init from './common/common'
 import { autoUpdate } from './common/autoUpdate'
 import createTray from './tray'
 import { commonConst } from './common/utils'
 import pkg from '../../package.json'
+import Store from 'electron-store';
+
+Store.initRenderer()
 
 const { main } = require("./browsers")()
 

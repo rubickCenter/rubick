@@ -14,7 +14,7 @@ module.exports = () => {
     win = new BrowserWindow({
       height: 60,
       useContentSize: true,
-      resizable: false,
+      resizable: true,
       width: 800,
       frame: false,
       title: '拉比克',

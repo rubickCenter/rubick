@@ -7,18 +7,6 @@ import translate from "./translate";
 const fileLists = [];
 const isZhRegex = /[\u4e00-\u9fa5]/;
 
-const getico = apps =>{
-  const iconExtractor = require('icon-extractor');
-
-  iconExtractor.emitter.on('icon', function (data) {
-    apps[data.Context].icon = 'data:image/png;base64,' + data.Base64ImageData;
-  });
-
-  apps.forEach((app, i) => {
-    iconExtractor.getIcon(i, app.desc);
-  });
-}
-
 const powershell = (cmd, callback) => {
   const ps = child.spawn('powershell', ['-NoProfile', '-Command', cmd], { encoding: 'buffer' })
   let chunks = [];
@@ -82,7 +70,6 @@ const getWinAppList = () => {
           names: JSON.parse(JSON.stringify(keyWords)),
         });
       }
-      getico(fileLists);
     }
   });
 }
