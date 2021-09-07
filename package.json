@@ -69,6 +69,7 @@
     "download-git-repo": "^3.0.2",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.0.0",
+    "file-icon-info": "^1.1.1",
     "iohook": "^0.9.3",
     "is-chinese": "^1.4.2",
     "jian-pinyin": "^0.2.3",

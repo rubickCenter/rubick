@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from "path";
 import os from 'os';
 import child from 'child_process';
@@ -6,6 +7,26 @@ import translate from "./translate";
 
 const fileLists = [];
 const isZhRegex = /[\u4e00-\u9fa5]/;
+
+const getico = apps =>{
+  const fii = require('file-icon-info');
+  const icondir = path.join(os.tmpdir(), 'ProcessIcon');
+  const exists = fs.existsSync(icondir);
+  if (!exists) { fs.mkdirSync(icondir) }
+
+  apps.forEach((app, i) => {
+    fii.getIcon(app.desc, data => {
+      let iconpath = path.join(icondir, `${app.LegalName}.png`)
+      fs.exists(iconpath, exists => {
+        if (!exists) {
+          fs.writeFile(iconpath, data, "base64", err => {
+            if (err) { console.log(err); }
+          })
+        }
+      });
+    });
+  });
+}
 
 const powershell = (cmd, callback) => {
   const ps = child.spawn('powershell', ['-NoProfile', '-Command', cmd], { encoding: 'buffer' })
@@ -71,6 +92,7 @@ const getWinAppList = () => {
         });
       }
     }
+    getico(fileLists);
   });
 }
 
