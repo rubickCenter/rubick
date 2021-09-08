@@ -5,7 +5,7 @@ import pkg from '../../../package.json';
 const os = require('os');
 
 const version = pkg.version;
-const releaseUrl = 'http://rubick-server.qa.91jkys.com/release/query';
+const releaseUrl = 'http://118.195.176.247:8080/release/query';
 
 export async function autoUpdate() {
   let res;

@@ -1,102 +1,91 @@
 import fs from 'fs';
-import path from "path";
+import path from 'path';
 import os from 'os';
-import child from 'child_process';
-import iconv from 'iconv-lite';
-import translate from "./translate";
+import translate from './translate';
+import {shell} from 'electron';
+
+const fii = require('file-icon-info');
+const filePath =  path.resolve('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs');
 
 const fileLists = [];
 const isZhRegex = /[\u4e00-\u9fa5]/;
 
-const getico = apps =>{
-  const fii = require('file-icon-info');
-  const icondir = path.join(os.tmpdir(), 'ProcessIcon');
-  const exists = fs.existsSync(icondir);
-  if (!exists) { fs.mkdirSync(icondir) }
+const icondir = path.join(os.tmpdir(), 'ProcessIcon');
+const exists = fs.existsSync(icondir);
+if (!exists) { fs.mkdirSync(icondir) }
 
-  apps.forEach((app, i) => {
-    fii.getIcon(app.desc, data => {
-      let iconpath = path.join(icondir, `${app.LegalName}.png`)
-      fs.exists(iconpath, exists => {
-        if (!exists) {
-          fs.writeFile(iconpath, data, "base64", err => {
-            if (err) { console.log(err); }
-          })
-        }
-      });
+const getico = app =>{
+  fii.getIcon(app.desc, data => {
+    let iconpath = path.join(icondir, `${app.name}.png`)
+    fs.exists(iconpath, exists => {
+      if (!exists) {
+        fs.writeFile(iconpath, data, 'base64', err => {
+          if (err) { console.log(err); }
+        })
+      }
     });
   });
 }
 
-const powershell = (cmd, callback) => {
-  const ps = child.spawn('powershell', ['-NoProfile', '-Command', cmd], { encoding: 'buffer' })
-  let chunks = [];
-  let err_chunks = [];
-  ps.stdout.on('data', chunk => {
-    chunks.push(iconv.decode(chunk, 'cp936'))
-  })
-  ps.stderr.on('data', err_chunk => {
-    err_chunks.push(iconv.decode(err_chunk, 'cp936'))
-  })
-  ps.on('close', code => {
-    let stdout = chunks.join("");
-    let stderr = err_chunks.join("");
-    callback(stdout, stderr)
-  })
-}
+function fileDisplay(filePath){
+  //根据文件路径读取文件，返回文件列表
+  fs.readdir(filePath,function(err,files){
+    if(err){
+      console.warn(err)
+    }else{
+      files.forEach(function(filename){
+        const filedir = path.join(filePath, filename);
+        fs.stat(filedir,function(eror,stats){
+          if(eror){
+            console.warn('获取文件stats失败');
+          } else {
+            const isFile = stats.isFile(); // 是文件
+            const isDir = stats.isDirectory(); // 是文件夹
+            if(isFile){
+              const appName = filename.split('.')[0];
+              const keyWords = [appName];
+              const appDetail = shell.readShortcutLink(filedir);
+              if (!appDetail.target) return;
 
-const getWinAppList = () => {
-  let filterValues = "Select-Object DisplayName,DisplayIcon,UninstallString,DisplayVersion,InstallDate,Publisher,InstallLocation"
-  let localMatcine = `Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${filterValues}`;
-  let currentUser = `Get-ItemProperty HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${filterValues}`;
-  let Wow6432Node = `Get-ItemProperty HKLM:\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | ${filterValues}`;
-  let x64 = process.arch === 'x64' ? `;${Wow6432Node}` : '';
-  powershell(`${localMatcine};${currentUser}${x64}`, (stdout, stderr) => {
-    let apps = stdout.trim().replace(/\r\n[ ]{10,}/g,"").split('\r\n\r\n');
-    for (const app of apps) {
-      const dict = {}
-      let lines = app.split('\r\n')
-      for (var line of lines) {
-        if (line) {
-          const key = line.split(/\s+:\s*/)[0];
-          const value = line.split(/\s+:\s*/)[1];
-          dict[key] = value;
-        }
-      }
-      if (dict.DisplayName && dict.DisplayIcon && dict.DisplayIcon.indexOf('.exe') >= 0) {
-        dict.LegalName = dict.DisplayName.replace(/[\\\/\:\*\?\"\<\>\|]/g, "");
-        dict.Icon =  path.join(os.tmpdir(), 'ProcessIcon', `${encodeURIComponent(dict.LegalName)}.png`);
-        const firstLatter = dict.DisplayName.split(' ').map(name => name[0]).join('');
-        const appPath = dict.DisplayIcon.split(',')[0].replace(/"/g, '');
-        const keyWords = [dict.DisplayName, firstLatter];
-        if (isZhRegex.test(dict.DisplayName)) {
-          const py = translate(dict.DisplayName);
-          const pinyinArr = py.split(',');
-          const zh_firstLatter = pinyinArr.map(py => py[0]);
-          // 拼音
-          keyWords.push(pinyinArr.join(''));
-          // 缩写
-          keyWords.push(zh_firstLatter.join(''));
-        }
+              if (isZhRegex.test(appName)) {
+                const py = translate(appName);
+                const pinyinArr = py.split(',');
+                const zh_firstLatter = pinyinArr.map(py => py[0]);
+                // 拼音
+                keyWords.push(pinyinArr.join(''));
+                // 缩写
+                keyWords.push(zh_firstLatter.join(''));
+              } else {
+                const firstLatter = appName.split(' ').map(name => name[0]).join('');
+                keyWords.push(firstLatter);
+              }
 
-        fileLists.push({
-          ...dict,
-          value: 'plugin',
-          icon: dict.Icon,
-          desc: appPath,
-          type: 'app',
-          action: `start "dummyclient" "${appPath}"`,
-          keyWords: keyWords,
-          name: dict.DisplayName,
-          names: JSON.parse(JSON.stringify(keyWords)),
-        });
-      }
+              const icon = path.join(os.tmpdir(), 'ProcessIcon', `${encodeURIComponent(appName)}.png`);
+
+              const appInfo = {
+                value: 'plugin',
+                desc: appDetail.target,
+                type: 'app',
+                icon,
+                action: `start "dummyclient" "${appDetail.target}"`,
+                keyWords: keyWords,
+                name: appName,
+                names: JSON.parse(JSON.stringify(keyWords)),
+              }
+              fileLists.push(appInfo);
+              getico(appInfo);
+            }
+            if(isDir) {
+              fileDisplay(filedir); // 递归，如果是文件夹，就继续遍历该文件夹下面的文件
+            }
+          }
+        })
+      });
     }
-    getico(fileLists);
   });
 }
 
 export const getApp = {
-  init: getWinAppList,
-  fileLists,
-};
+  init: () => fileDisplay(filePath),
+  fileLists
+}
