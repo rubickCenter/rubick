@@ -17,7 +17,13 @@ const getico = app =>{
   try {
     const buffer = fileIcon(app.desc, 32);
     const iconpath = path.join(icondir, `${app.name}.png`);
-    fs.writeFileSync(iconpath, buffer, 'base64');
+
+    fs.exists(iconpath, exists => {
+      if (!exists) {
+        fs.writeFile(iconpath, buffer, 'base64', () => {});
+      }
+    });
+
   } catch(e) {
     console.log(e, app.desc);
   }
