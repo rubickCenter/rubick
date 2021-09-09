@@ -3,8 +3,7 @@ import path from 'path';
 import os from 'os';
 import translate from './translate';
 import {shell} from 'electron';
-
-const fii = require('file-icon-info');
+const fileIcon = require('extract-file-icon');
 const filePath =  path.resolve('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs');
 
 const fileLists = [];
@@ -15,16 +14,13 @@ const exists = fs.existsSync(icondir);
 if (!exists) { fs.mkdirSync(icondir) }
 
 const getico = app =>{
-  fii.getIcon(app.desc, data => {
-    let iconpath = path.join(icondir, `${app.name}.png`)
-    fs.exists(iconpath, exists => {
-      if (!exists) {
-        fs.writeFile(iconpath, data, 'base64', err => {
-          if (err) { console.log(err); }
-        })
-      }
-    });
-  });
+  try {
+    const buffer = fileIcon(app.desc, 32);
+    const iconpath = path.join(icondir, `${app.name}.png`);
+    fs.writeFileSync(iconpath, buffer, 'base64');
+  } catch(e) {
+    console.log(e, app.desc);
+  }
 }
 
 function fileDisplay(filePath){
