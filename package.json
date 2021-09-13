@@ -85,6 +85,7 @@
     "request-promise": "^4.2.6",
     "robotjs": "git+https://github.com/Toinane/robotjs.git",
     "semver": "^7.3.5",
+    "shelljs": "^0.8.4",
     "sudo-prompt": "^9.2.1",
     "systeminformation": "^5.8.0",
     "unzip": "^0.1.11",

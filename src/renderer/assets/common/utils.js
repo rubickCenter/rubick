@@ -1,11 +1,11 @@
 import { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS } from './constans';
 import path from 'path';
 import fs from 'fs';
-import child_process from 'child_process';
 import Store from 'electron-store';
 import downloadFile from 'download';
 import { ipcRenderer } from 'electron';
 import { getlocalDataFile } from '../../../main/common/utils';
+import shell from 'shelljs';
 
 const getApp = process.platform === 'win32' ? require('./win-app').getApp : require('./darwin-app').getApp;
 
@@ -50,7 +50,7 @@ async function downloadZip(downloadRepoUrl, name) {
     const temp_dest = `${plugin_path}/${name}`;
     // 下载模板
     if (await existOrNot(temp_dest)) {
-      await child_process.execSync(`rm -rf ${temp_dest}`);
+      shell.rm('-rf', temp_dest);
     }
 
     await downloadFile(downloadRepoUrl, plugin_path, { extract: true });
