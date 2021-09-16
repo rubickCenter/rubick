@@ -1,4 +1,14 @@
-import {app, nativeImage, BrowserWindow, clipboard, globalShortcut, ipcMain, Notification, screen, TouchBar} from "electron";
+import {
+  app,
+  nativeImage,
+  BrowserWindow,
+  clipboard,
+  globalShortcut,
+  ipcMain,
+  Notification,
+  screen,
+  TouchBar
+} from 'electron';
 import {exec, spawn} from "child_process";
 import robot from "robotjs";
 import Api from "./api";
@@ -54,7 +64,7 @@ class Listener {
     // 注册偏好快捷键
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
       const {x, y} = screen.getCursorScreenPoint();
-      const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+      const currentDisplay = screen.getDisplayNearestPoint({x, y});
       const wx = parseInt(currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400);
       const wy = parseInt(currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200);
 
@@ -86,7 +96,7 @@ class Listener {
 
   init(mainWindow) {
     this.fn = throttle(({x, y}, picker) => {
-      const { scaleFactor } = screen.getDisplayNearestPoint({x, y});
+      const {scaleFactor} = screen.getDisplayNearestPoint({x, y});
       const img = robot.screen.capture(
         x - parseInt(5 / scaleFactor),
         y - parseInt(5 / scaleFactor),
@@ -96,7 +106,7 @@ class Listener {
 
       const colors = {}
 
-      for(let i = 0; i< 9; i++) {
+      for (let i = 0; i < 9; i++) {
         colors[i] = {};
         for (let j = 0; j < 9; j++) {
           colors[i][j] = img.colorAt(j, i);
@@ -142,7 +152,7 @@ class Listener {
 
       const colors = {}
 
-      for(let i = 0; i< 9; i++) {
+      for (let i = 0; i < 9; i++) {
         colors[i] = {};
         for (let j = 0; j < 9; j++) {
           colors[i][j] = img.colorAt(j, i);
@@ -173,7 +183,7 @@ class Listener {
           let y = e.y
           const color = "#" + robot.getPixelColor(parseInt(x), parseInt(y));
           clipboard.writeText("#" + robot.getPixelColor(parseInt(x), parseInt(y)));
-          new Notification({ title: 'Rubick 通知', body: `${color} 已保存到剪切板` }).show();
+          new Notification({title: 'Rubick 通知', body: `${color} 已保存到剪切板`}).show();
           this.closePicker();
         }
       });
@@ -195,7 +205,7 @@ class Listener {
 
   initTouchBar(mainWindow) {
     if (!commonConst.macOS()) return;
-    const { TouchBarButton, TouchBarGroup, TouchBarPopover } = TouchBar;
+    const {TouchBarButton, TouchBarGroup, TouchBarPopover} = TouchBar;
     let items = [];
     let system = [];
     ipcMain.on('pluginInit', (e, args) => {
@@ -218,7 +228,7 @@ class Listener {
       }).filter(Boolean);
 
       system = args.plugins.map((item) => {
-        if(item.type === 'system') {
+        if (item.type === 'system') {
           return new TouchBarButton({
             icon: nativeImage.createFromDataURL(item.logo).resize({width: 20, height: 20}),
             click() {
@@ -364,6 +374,7 @@ class Listener {
   windowMoveInit(win) {
     let hasInit = false;
     ipcMain.on('window-move', () => {
+      let bounds = win.getBounds();
       if (!hasInit) {
         hasInit = true;
         ioHook.start(false);
@@ -377,8 +388,9 @@ class Listener {
           const cursorPosition = screen.getCursorScreenPoint();
           const dx = winStartPosition.x + cursorPosition.x - mouseStartPosition.x;
           const dy = winStartPosition.y + cursorPosition.y - mouseStartPosition.y;
-          let {x, y} = {x: dx, y: dy};
-          win.setPosition(parseInt(x), parseInt(y));
+          bounds.x = parseInt(dx);
+          bounds.y = parseInt(dy);
+          win.setBounds(bounds);
         });
 
         ioHook.on('mouseup', e => {
