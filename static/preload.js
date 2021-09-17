@@ -1,5 +1,5 @@
 const {getData, getlocalDataFile, saveData} = require("./utils");
-
+const axios = require('axios');
 const marked = require("marked");
 const rendererMD = new marked.Renderer();
 const path = require('path');
@@ -255,6 +255,14 @@ window.rubick = {
 
   shellOpenPath(path) {
     shell.openPath(path)
+  },
+
+  request(config = {}) {
+    return axios.create({
+      timeout: 10000,
+      withCredentials: true,
+      ...config,
+    });
   }
 }
 const preloadPath = getQueryVariable('preloadPath') || './preload.js';
