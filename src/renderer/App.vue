@@ -1,6 +1,6 @@
 <template>
-  <div @mousedown="drag" >
-    <a-layout  id="components-layout">
+  <div @mousedown="drag">
+    <a-layout id="components-layout">
       <div v-if="!searchType" class="rubick-select">
         <div class="tag-container" v-if="selected">
           <a-tag
@@ -16,23 +16,26 @@
         <a-input
           id="search"
           :placeholder="
-          subPlaceHolder && selected && selected.key === 'plugin-container'
-            ? subPlaceHolder
-            : 'Hi, Rubick'
-        "
+            subPlaceHolder && selected && selected.key === 'plugin-container'
+              ? subPlaceHolder
+              : 'Hi, Rubick'
+          "
+          @mousedown.stop="dragWhenInput"
           class="main-input"
           @change="(e) => search({ value: e.target.value })"
           @keydown.ctrl.86="shouldPaste"
           :value="searchValue"
-          :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
+          :maxLength="
+            selected && selected.key !== 'plugin-container' ? 0 : 1000
+          "
           @keydown.down="(e) => changeCurrent(1)"
           @keydown.up="() => changeCurrent(-1)"
           @keypress.enter="
-          (e) => targetSearch({ value: e.target.value, type: 'enter' })
-        "
+            (e) => targetSearch({ value: e.target.value, type: 'enter' })
+          "
           @keypress.space="
-          (e) => targetSearch({ value: e.target.value, type: 'space' })
-        "
+            (e) => targetSearch({ value: e.target.value, type: 'space' })
+          "
         >
           <div @click="goMenu" class="suffix-tool" slot="suffix">
             <a-icon
@@ -42,12 +45,14 @@
             />
             <div v-if="selected && selected.icon" style="position: relative">
               <a-spin v-show="pluginLoading" class="loading">
-                <a-icon slot="indicator" type="loading" style="font-size: 42px" spin />
+                <a-icon
+                  slot="indicator"
+                  type="loading"
+                  style="font-size: 42px"
+                  spin
+                />
               </a-spin>
-              <img
-                class="icon-tool"
-                :src="selected.icon"
-              />
+              <img class="icon-tool" :src="selected.icon" />
             </div>
             <div v-else class="rubick-logo">
               <img src="./assets/imgs/logo.png" />
@@ -87,19 +92,19 @@
             :placeholder="subPlaceHolder"
             class="sub-input"
             @change="
-            (e) =>
-              search({
-                value: e.target.value,
-                searchType: pluginInfo.searchType,
-              })
-          "
+              (e) =>
+                search({
+                  value: e.target.value,
+                  searchType: pluginInfo.searchType,
+                })
+            "
             :value="searchValue"
             @keypress.enter="
-            (e) => targetSearch({ value: e.target.value, type: 'enter' })
-          "
+              (e) => targetSearch({ value: e.target.value, type: 'enter' })
+            "
             @keypress.space="
-            (e) => targetSearch({ value: e.target.value, type: 'space' })
-          "
+              (e) => targetSearch({ value: e.target.value, type: 'space' })
+            "
           ></a-input>
         </div>
 
@@ -167,20 +172,21 @@ export default {
         const feature = plugin.features;
         feature.forEach((fe) => {
           const cmd = searchKeyValues(fe.cmds, args)[0];
-          const systemPlugin = fileLists.filter(
-            (plugin) => {
-              let has = false;
-              plugin.keyWords.some(keyWord => {
-                if (keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >= 0) {
-                  has = keyWord;
-                  plugin.name = keyWord;
-                  return true;
-                }
-                return false;
-              });
-              return has;
-            }
-          )[0];
+          const systemPlugin = fileLists.filter((plugin) => {
+            let has = false;
+            plugin.keyWords.some((keyWord) => {
+              if (
+                keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >=
+                0
+              ) {
+                has = keyWord;
+                plugin.name = keyWord;
+                return true;
+              }
+              return false;
+            });
+            return has;
+          })[0];
           if (cmd) {
             config = {
               cmd: cmd,
@@ -210,11 +216,14 @@ export default {
     ...mapActions("main", ["onSearch", "showMainUI", "openPlugin"]),
     ...mapMutations("main", ["commonUpdate"]),
     shouldPaste(e) {
-      let filePath = '';
-      if (process.platform === 'win32') {
-        const rawFilePath = clipboard.read('FileNameW');
-        filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');
-        if (filePath.indexOf('plugin.json') >= 0) {
+      let filePath = "";
+      if (process.platform === "win32") {
+        const rawFilePath = clipboard.read("FileNameW");
+        filePath = rawFilePath.replace(
+          new RegExp(String.fromCharCode(0), "g"),
+          ""
+        );
+        if (filePath.indexOf("plugin.json") >= 0) {
           this.search({
             filePath,
           });
@@ -340,8 +349,13 @@ export default {
       this.changePath({ key: "market" });
     },
     drag() {
-      ipcRenderer.send('window-move');
-    }
+      ipcRenderer.send("window-move");
+    },
+    dragWhenInput(e) {
+      if (this.searchValue == "") {
+        ipcRenderer.send("window-move");
+      }
+    },
   },
   computed: {
     ...mapState("main", [
@@ -479,7 +493,7 @@ export default {
     cursor: pointer;
   }
   .loading {
-    position:absolute;
+    position: absolute;
     top: 0;
     left: 0;
   }
