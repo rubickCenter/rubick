@@ -126,6 +126,7 @@ import {
   searchKeyValues,
   fileLists,
 } from "./assets/common/utils";
+import { commonConst } from "../main/common/utils";
 const opConfig = remote.getGlobal("opConfig");
 const { Menu, MenuItem } = remote;
 
@@ -217,7 +218,7 @@ export default {
     ...mapMutations("main", ["commonUpdate"]),
     shouldPaste(e) {
       let filePath = "";
-      if (process.platform === "win32") {
+      if (commonConst.windows()) {
         const rawFilePath = clipboard.read("FileNameW");
         filePath = rawFilePath.replace(
           new RegExp(String.fromCharCode(0), "g"),
@@ -226,11 +227,46 @@ export default {
         if (filePath.indexOf("plugin.json") >= 0) {
           this.search({
             filePath,
+            disableDebounce: true,
           });
         }
+      } else if (commonConst.linux()) {
+        const text = clipboard.readText("selection");
+        // 在gnome的文件管理器中，复制文件的结果通常是
+        //
+        // x-special/nautilus-clipboard
+        // copy
+        // file:///home/admin/dir/plugin.json
+        const splitLF = text.split(" ");
+        let pathUrl;
+        if (
+          splitLF.length == 3 &&
+          splitLF[0] === "x-special/nautilus-clipboard" &&
+          splitLF[1] === "copy" &&
+          (pathUrl = splitLF[2]).startsWith("file://") &&
+          pathUrl.indexOf("plugin.json") >= 0
+        ) {
+          filePath = pathUrl.slice(7);
+          this.search({
+            filePath,
+            disableDebounce: true,
+          });
+        }
+        // 其他的发行版、文件管理器尚未测试
       }
     },
+    /**
+     * @param {Object} v 搜索配置对象。
+     * 若v.disableDebounce为true，则不会触发防抖动保护。
+     * 该值的作用是让search()方法被多个监听器同时调用时，在某些情况下无视其他监听器的防抖动保护。
+     * 其他属性 v.value、v.filePath 参见 src/renderer/store/modules/main.js的onSearch函数。
+     */
     search(v) {
+      console.log("search was called , param v is :", v);
+      if (!v.disableDebounce) {
+        this.onSearch(v);
+        return;
+      }
       if (!this.searchFn) {
         this.searchFn = debounce(this.onSearch, 200);
       }
@@ -297,9 +333,13 @@ export default {
       ipcRenderer.send("changeWindowSize-rubick", {
         height: getWindowHeight([]),
       });
-      this.$router.push({
-        path: "/home",
-      });
+      if (this.$router.history.current.fullPath !== "/home") {
+        // 该if是为了避免跳转到相同路由而报错。
+        // (之前在输入栏为空时按退格会疯狂报错)
+        this.$router.push({
+          path: "/home",
+        });
+      }
     },
     newWindow() {
       ipcRenderer.send("new-window", {

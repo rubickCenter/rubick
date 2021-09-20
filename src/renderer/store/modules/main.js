@@ -1,5 +1,5 @@
-import { clipboard, ipcRenderer, remote } from 'electron';
-import { v4 as uuidv4 } from 'uuid';
+import { clipboard, ipcRenderer, remote } from "electron";
+import { v4 as uuidv4 } from "uuid";
 import {
   getWindowHeight,
   searchKeyValues,
@@ -7,34 +7,34 @@ import {
   mergePlugins,
   find,
   downloadZip,
-  fileLists
-} from '../../assets/common/utils';
-import systemMethod from '../../assets/common/system';
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
+  fileLists,
+} from "../../assets/common/utils";
+import systemMethod from "../../assets/common/system";
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
 
 const state = {
   selected: null,
   options: [],
   showMain: false,
-  current: ['market'],
-  searchValue: '',
+  current: ["market"],
+  searchValue: "",
   devPlugins: mergePlugins(sysFile.getUserPlugins() || []),
-  subPlaceHolder: '',
+  subPlaceHolder: "",
   pluginLoading: true,
   pluginInfo: (() => {
     try {
       return window.pluginInfo || {};
     } catch (e) {}
-  })()
+  })(),
 };
 
 const mutations = {
   commonUpdate(state, payload) {
     Object.keys(payload).forEach((key) => {
       state[key] = payload[key];
-      if (key === 'devPlugins') {
+      if (key === "devPlugins") {
         sysFile.savePlugins(payload[key]);
       }
     });
@@ -43,11 +43,15 @@ const mutations = {
     state.subPlaceHolder = payload;
   },
   deleteDevPlugin(state, payload) {
-    state.devPlugins = state.devPlugins.filter((plugin) => plugin.name !== payload.name);
+    state.devPlugins = state.devPlugins.filter(
+      (plugin) => plugin.name !== payload.name
+    );
     sysFile.savePlugins(state.devPlugins);
   },
   deleteProdPlugin(state, payload) {
-    state.devPlugins = state.devPlugins.filter((plugin) => plugin.id !== payload.id);
+    state.devPlugins = state.devPlugins.filter(
+      (plugin) => plugin.id !== payload.id
+    );
     sysFile.savePlugins(state.devPlugins);
     // todo 删除 static 目录下的对应插件
   },
@@ -59,124 +63,136 @@ const mutations = {
     });
     state.devPlugins = [...state.devPlugins];
     sysFile.savePlugins(state.devPlugins);
-  }
+  },
 };
 
 const actions = {
   showMainUI({ commit, state }, paylpad) {
-    ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight()
+    ipcRenderer.send("changeWindowSize-rubick", {
+      height: getWindowHeight(),
     });
     setTimeout(() => {
-      commit('commonUpdate', {
+      commit("commonUpdate", {
         showMain: true,
         selected: {
-          key: 'market',
-          name: '插件中心'
-        }
+          key: "market",
+          name: "插件中心",
+        },
       });
     }, 50);
   },
   reloadDevPlugin({ commit }, payload) {
-    const config = JSON.parse(fs.readFileSync(path.join(payload.sourceFile, '../plugin.json'), 'utf-8'));
+    const config = JSON.parse(
+      fs.readFileSync(path.join(payload.sourceFile, "../plugin.json"), "utf-8")
+    );
     const pluginConfig = {
       ...config,
-      sourceFile: path.join(payload.sourceFile, `../${config.main}`)
+      sourceFile: path.join(payload.sourceFile, `../${config.main}`),
     };
     const devPlugins = [...state.devPlugins];
-    commit('commonUpdate', {
+    commit("commonUpdate", {
       devPlugins: devPlugins.map((plugin) => {
         if (plugin.name === payload.name) {
           return {
             ...plugin,
-            ...pluginConfig
+            ...pluginConfig,
           };
         }
         return plugin;
-      })
+      }),
     });
   },
-  async onSearch({ commit }, paylpad) {
-    if (state.selected && state.selected.key !== 'plugin-container') {
-      commit('commonUpdate', { searchValue: '' });
+  /**
+   * @param {Object} payload payload.filePath为配置文件的绝对路径。payload.value为搜索栏文字值。
+   */
+  async onSearch({ commit }, payload) {
+    if (state.selected && state.selected.key !== "plugin-container") {
+      commit("commonUpdate", { searchValue: "" });
       return;
     }
-    const value = paylpad.value;
+    const value = payload.value;
     // 在插件界面不触发其他功能
-    if ((state.selected && state.selected.key === 'plugin-container') || paylpad.searchType === 'subWindow') {
-      commit('commonUpdate', { searchValue: value });
+    if (
+      (state.selected && state.selected.key === "plugin-container") ||
+      payload.searchType === "subWindow"
+    ) {
+      commit("commonUpdate", { searchValue: value });
       return;
     }
-    const fileUrl = paylpad.filePath || clipboard.read('public.file-url').replace('file://', '');
-    commit('commonUpdate', { searchValue: value });
+    const fileUrl =
+      payload.filePath ||
+      clipboard.read("public.file-url").replace("file://", "");
+    commit("commonUpdate", { searchValue: value });
     // 复制文件
-    if (paylpad.filePath || (fileUrl && value === 'plugin.json')) {
-      const config = JSON.parse(fs.readFileSync(fileUrl, 'utf-8'));
+    if (payload.filePath || (fileUrl && value === "plugin.json")) {
+      const config = JSON.parse(fs.readFileSync(fileUrl, "utf-8"));
 
       const pluginConfig = {
         ...config,
-        sourceFile: path.join(fileUrl, `../${config.main || 'index.html'}`),
+        sourceFile: path.join(fileUrl, `../${config.main || "index.html"}`),
         id: uuidv4(),
-        type: 'dev',
-        icon: 'image://' + path.join(fileUrl, `../${config.logo}`),
+        type: "dev",
+        icon: "image://" + path.join(fileUrl, `../${config.logo}`),
         subType: (() => {
           if (config.main) {
-            return '';
+            return "";
           }
-          return 'template';
-        })()
+          return "template";
+        })(),
       };
-      commit('commonUpdate', {
+      commit("commonUpdate", {
         selected: {
-          key: 'plugin',
-          name: 'plugin.json'
+          key: "plugin",
+          name: "plugin.json",
         },
-        searchValue: '',
+        searchValue: "",
         options: [
           {
-            name: '新建rubick开发插件',
-            value: 'new-plugin',
-            icon: 'https://static.91jkys.com/activity/img/b37ff555c748489f88f3adac15b76f18.png',
-            desc: '新建rubick开发插件',
+            name: "新建rubick开发插件",
+            value: "new-plugin",
+            icon:
+              "https://static.91jkys.com/activity/img/b37ff555c748489f88f3adac15b76f18.png",
+            desc: "新建rubick开发插件",
             click: (router) => {
-              commit('commonUpdate', {
+              commit("commonUpdate", {
                 showMain: true,
                 devPlugins: [pluginConfig, ...state.devPlugins],
                 selected: {
-                  key: 'plugin',
-                  name: '新建rubick开发插件'
+                  key: "plugin",
+                  name: "新建rubick开发插件",
                 },
-                current: ['dev']
+                current: ["dev"],
               });
-              ipcRenderer.send('changeWindowSize-rubick', {
-                height: getWindowHeight()
+              ipcRenderer.send("changeWindowSize-rubick", {
+                height: getWindowHeight(),
               });
-              router.push('/home/dev');
-            }
+              router.push("/home/dev");
+            },
           },
           {
-            name: '复制路径',
-            desc: '复制路径',
-            value: 'copy-path',
-            icon: 'https://static.91jkys.com/activity/img/ac0d4df0247345b9a84c8cd7ea3dd696.png',
+            name: "复制路径",
+            desc: "复制路径",
+            value: "copy-path",
+            icon:
+              "https://static.91jkys.com/activity/img/ac0d4df0247345b9a84c8cd7ea3dd696.png",
             click: () => {
               clipboard.writeText(fileUrl);
-              commit('commonUpdate', {
+              commit("commonUpdate", {
                 showMain: false,
                 selected: null,
-                options: []
+                options: [],
               });
-              ipcRenderer.send('changeWindowSize-rubick', {
-                height: getWindowHeight([])
+              ipcRenderer.send("changeWindowSize-rubick", {
+                height: getWindowHeight([]),
               });
-              remote.Notification('Rubick 通知', { body: '复制成功' });
-            }
-          }
-        ]
+              remote.Notification("Rubick 通知", { body: "复制成功" });
+            },
+          },
+        ],
       });
       // 调整窗口大小
-      ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight(state.options)
+      ipcRenderer.send("changeWindowSize-rubick", {
+        height: getWindowHeight(state.options),
       });
       return;
     }
@@ -187,7 +203,7 @@ const actions = {
     if (value) {
       state.devPlugins.forEach((plugin) => {
         // dev 插件未开启
-        if (plugin.type === 'dev' && !plugin.status) return;
+        if (plugin.type === "dev" && !plugin.status) return;
         const feature = plugin.features;
         feature.forEach((fe) => {
           const cmds = searchKeyValues(fe.cmds, value);
@@ -195,14 +211,19 @@ const actions = {
             ...options,
             ...cmds.map((cmd) => ({
               name: cmd,
-              value: 'plugin',
-              icon: plugin.sourceFile ? 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`) : plugin.logo,
+              value: "plugin",
+              icon: plugin.sourceFile
+                ? "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`)
+                : plugin.logo,
               desc: fe.explain,
               type: plugin.type,
               click: (router) => {
-                actions.openPlugin({ commit }, { cmd, plugin, feature: fe, router });
-              }
-            }))
+                actions.openPlugin(
+                  { commit },
+                  { cmd, plugin, feature: fe, router }
+                );
+              },
+            })),
           ];
         });
       });
@@ -215,8 +236,12 @@ const actions = {
             if (!descMap.get(plugin)) {
               descMap.set(plugin, true);
               let has = false;
-              plugin.keyWords.some(keyWord => {
-                if (keyWord.toLocaleUpperCase().indexOf(value.toLocaleUpperCase()) >= 0) {
+              plugin.keyWords.some((keyWord) => {
+                if (
+                  keyWord
+                    .toLocaleUpperCase()
+                    .indexOf(value.toLocaleUpperCase()) >= 0
+                ) {
                   has = keyWord;
                   plugin.name = keyWord;
                   return true;
@@ -233,17 +258,17 @@ const actions = {
               actions.openPlugin({ commit }, { plugin });
             };
             return plugin;
-          })
+          }),
       ];
 
       descMap = null;
     }
 
-    commit('commonUpdate', {
-      options
+    commit("commonUpdate", {
+      options,
     });
-    ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight(state.options)
+    ipcRenderer.send("changeWindowSize-rubick", {
+      height: getWindowHeight(state.options),
     });
   },
   async downloadPlugin({ commit }, payload) {
@@ -251,88 +276,90 @@ const actions = {
     const fileUrl = find(distUrl);
 
     // 复制文件
-    const config = JSON.parse(fs.readFileSync(`${fileUrl}/plugin.json`, 'utf-8'));
+    const config = JSON.parse(
+      fs.readFileSync(`${fileUrl}/plugin.json`, "utf-8")
+    );
     const pluginConfig = {
       ...config,
       id: uuidv4(),
       sourceFile: `${fileUrl}/${config.main}`,
-      type: 'prod',
+      type: "prod",
       icon: payload.logo,
       subType: (() => {
         if (config.main) {
-          return '';
+          return "";
         }
-        return 'template';
-      })()
+        return "template";
+      })(),
     };
-    commit('commonUpdate', {
-      devPlugins: [pluginConfig, ...state.devPlugins]
+    commit("commonUpdate", {
+      devPlugins: [pluginConfig, ...state.devPlugins],
     });
   },
   openPlugin({ commit }, { cmd, plugin, feature, router, payload }) {
-    if (plugin.type === 'app') {
+    if (plugin.type === "app") {
       execSync(plugin.action);
-      commit('commonUpdate', {
+      commit("commonUpdate", {
         selected: null,
         showMain: false,
         options: [],
-        searchValue: ''
+        searchValue: "",
       });
-      ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight([])
+      ipcRenderer.send("changeWindowSize-rubick", {
+        height: getWindowHeight([]),
       });
       return;
     }
-    commit('commonUpdate', {
+    commit("commonUpdate", {
       selected: {
-        key: 'plugin-container',
+        key: "plugin-container",
         name: cmd.label ? cmd.label : cmd,
-        icon: 'image://' + path.join(plugin.sourceFile, `../${plugin.logo}`)
+        icon: "image://" + path.join(plugin.sourceFile, `../${plugin.logo}`),
       },
-      searchValue: '',
-      showMain: true
+      searchValue: "",
+      showMain: true,
     });
-    ipcRenderer.send('changeWindowSize-rubick', {
-      height: getWindowHeight()
+    ipcRenderer.send("changeWindowSize-rubick", {
+      height: getWindowHeight(),
     });
-    if (plugin.type === 'system') {
+    if (plugin.type === "system") {
       systemMethod[plugin.tag][feature.code]();
-      commit('commonUpdate', {
+      commit("commonUpdate", {
         selected: null,
         showMain: false,
-        options: []
+        options: [],
       });
-      ipcRenderer.send('changeWindowSize-rubick', {
-        height: getWindowHeight([])
+      ipcRenderer.send("changeWindowSize-rubick", {
+        height: getWindowHeight([]),
       });
       router.push({
-        path: '/home'
+        path: "/home",
       });
       return;
     }
-    commit('commonUpdate', {
+    commit("commonUpdate", {
       pluginInfo: {
         cmd,
         ...plugin,
         detail: feature,
-        payload
-      }
+        payload,
+      },
     });
 
     router.push({
-      path: '/plugin',
+      path: "/plugin",
       query: {
         ...plugin,
         _modify: Date.now(),
-        detail: JSON.stringify(feature)
-      }
+        detail: JSON.stringify(feature),
+      },
     });
-  }
+  },
 };
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 };
