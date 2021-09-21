@@ -2,14 +2,19 @@
   <div class="market">
     <a-carousel v-if="bannerList && !!bannerList.length" arrows>
       <div
-          slot="prevArrow"
-          slot-scope="props"
-          class="custom-slick-arrow"
-          style="left: 10px;zIndex: 1"
+        slot="prevArrow"
+        slot-scope="props"
+        class="custom-slick-arrow"
+        style="left: 10px;zIndex: 1"
       >
         <a-icon type="left-circle" />
       </div>
-      <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px">
+      <div
+        slot="nextArrow"
+        slot-scope="props"
+        class="custom-slick-arrow"
+        style="right: 10px"
+      >
         <a-icon type="right-circle" />
       </div>
       <div v-for="banner in bannerList">
@@ -18,38 +23,49 @@
     </a-carousel>
     <a-divider v-if="bannerList && !!bannerList.length"></a-divider>
     <h2>插件</h2>
-    <a-list item-layout="horizontal" style="width: 100%" :grid="{ gutter: 16, column: 2 }" :data-source="pluginList">
+    <a-list
+      item-layout="horizontal"
+      style="width: 100%"
+      :grid="{ gutter: 16, column: 2 }"
+      :data-source="pluginList"
+    >
       <a-list-item slot="renderItem" slot-scope="item, index">
-        <a-button v-if="showButton(item)" :loading="loading[index]" type="link" slot="actions" @click="download(index, item)">
-          <a-icon v-show="!loading[index]" style="font-size: 20px;" type="cloud-download" />
+        <a-button
+          v-if="showButton(item)"
+          :loading="loading[index]"
+          type="link"
+          slot="actions"
+          @click="download(index, item)"
+        >
+          <a-icon
+            v-show="!loading[index]"
+            style="font-size: 20px;"
+            type="cloud-download"
+          />
         </a-button>
 
-
         <a-list-item-meta
-            @click="showPannel(item, index)"
-            :description="item.description"
+          @click="showPannel(item, index)"
+          :description="item.description"
         >
           <div slot="title">{{ item.pluginName }}</div>
-          <a-avatar
-              slot="avatar"
-              :src="item.logo"
-          />
+          <a-avatar slot="avatar" :src="item.logo" />
         </a-list-item-meta>
       </a-list-item>
     </a-list>
     <a-drawer
       placement="right"
       :visible="show"
-      @close="show=false"
+      @close="show = false"
       width="100%"
     >
       <div class="plugin-market-desc" slot="title">
-        <img width="80" :src="currentSelect.logo"/>
+        <img width="80" :src="currentSelect.logo" />
         <div class="desc">
-          <h4>{{currentSelect.pluginName}}</h4>
+          <h4>{{ currentSelect.pluginName }}</h4>
           <div class="info">
             <div class="actor">
-              开发者：{{currentSelect.author}}
+              开发者：{{ currentSelect.author }}
               <a-button
                 v-if="showButton(currentSelect)"
                 :loading="loading[currentSelect.index]"
@@ -60,7 +76,7 @@
                 获取
               </a-button>
             </div>
-            <div>{{currentSelect.description}}</div>
+            <div>{{ currentSelect.description }}</div>
           </div>
         </div>
       </div>
@@ -70,10 +86,10 @@
 </template>
 
 <script>
-import api from '../../../assets/api';
-import {mapActions, mapState} from 'vuex';
+import api from "../../../assets/api";
+import { mapActions, mapState } from "vuex";
 import marked from "marked";
-import {shell} from "electron";
+import { shell } from "electron";
 const rendererMD = new marked.Renderer();
 
 export default {
@@ -83,8 +99,8 @@ export default {
       loading: {},
       bannerList: [],
       show: false,
-      currentSelect: {}
-    }
+      currentSelect: {},
+    };
   },
   async created() {
     const [result, bannerRes] = await Promise.all([
@@ -93,7 +109,7 @@ export default {
     ]);
     this.pluginList = result.result;
     this.bannerList = bannerRes.result;
-    console.log(bannerRes)
+    console.log(bannerRes);
   },
 
   methods: {
@@ -108,7 +124,9 @@ export default {
       this.$set(this.loading, index, false);
     },
     showButton(item) {
-      return !this.devPlugins.filter(plugin => (plugin.name === item.name && plugin.type === 'prod')).length;
+      return !this.devPlugins.filter(
+        (plugin) => plugin.name === item.name && plugin.type === "prod"
+      ).length;
     },
     showPannel(item, index) {
       this.show = true;
@@ -117,13 +135,13 @@ export default {
     },
     jumpTo(link) {
       if (link) {
-        shell.openExternal(link)
+        shell.openExternal(link);
       }
     },
-    ...mapActions('main', ['downloadPlugin'])
+    ...mapActions("main", ["downloadPlugin"]),
   },
   computed: {
-    ...mapState('main', ['devPlugins']),
+    ...mapState("main", ["devPlugins"]),
     readme() {
       marked.setOptions({
         renderer: rendererMD,
@@ -133,17 +151,16 @@ export default {
         pedantic: false,
         sanitize: false,
         smartLists: true,
-        smartypants: false
+        smartypants: false,
       });
       try {
         return marked(this.currentSelect.detail);
       } catch (e) {
-        return '暂无描述信息'
+        return "暂无描述信息";
       }
-
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less">
@@ -177,49 +194,48 @@ export default {
     justify-content: space-between;
   }
 }
- .market {
-   height: calc(~'100vh - 110px');
-   background: #fff;
-   padding: 20px;
-   box-sizing: border-box;
-   overflow: auto;
-   .ant-carousel .slick-slide {
-     text-align: center;
-     height: 235px;
-     line-height: 160px;
-     background: #364d79;
-     overflow: hidden;
-   }
+.market {
+  height: calc(~"100vh - 110px");
+  background: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+  .ant-carousel .slick-slide {
+    text-align: center;
+    height: 235px;
+    line-height: 160px;
+    background: #364d79;
+    overflow: hidden;
+  }
 
-   .ant-carousel .custom-slick-arrow {
-     width: 25px;
-     height: 25px;
-     font-size: 25px;
-     color: #fff;
-     background-color: rgba(31, 45, 61, 0.11);
-     opacity: 0.3;
-   }
-   .ant-carousel .custom-slick-arrow:before {
-     display: none;
-   }
-   .ant-carousel .custom-slick-arrow:hover {
-     opacity: 0.5;
-   }
+  .ant-carousel .custom-slick-arrow {
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+    color: #fff;
+    background-color: rgba(31, 45, 61, 0.11);
+    opacity: 0.3;
+  }
+  .ant-carousel .custom-slick-arrow:before {
+    display: none;
+  }
+  .ant-carousel .custom-slick-arrow:hover {
+    opacity: 0.5;
+  }
 
-   .ant-carousel .slick-slide h3 {
-     color: #fff;
-   }
-   .ant-list-item {
-     display: flex !important;
-     align-items: center;
-     justify-content: space-between;
-   }
-   .ant-list-item-meta-description {
-     width: 200px;
-     overflow: hidden;
-     text-overflow:ellipsis;
-     white-space: nowrap;
-   }
- }
-
+  .ant-carousel .slick-slide h3 {
+    color: #fff;
+  }
+  .ant-list-item {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ant-list-item-meta-description {
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 </style>

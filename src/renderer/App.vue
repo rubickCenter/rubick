@@ -1,6 +1,6 @@
 <template>
-  <div @mousedown="drag" >
-    <a-layout  id="components-layout">
+  <div @mousedown="drag">
+    <a-layout id="components-layout">
       <div v-if="!searchType" class="rubick-select">
         <div class="tag-container" v-if="selected">
           <a-tag
@@ -16,23 +16,26 @@
         <a-input
           id="search"
           :placeholder="
-          subPlaceHolder && selected && selected.key === 'plugin-container'
-            ? subPlaceHolder
-            : 'Hi, Rubick'
-        "
+            subPlaceHolder && selected && selected.key === 'plugin-container'
+              ? subPlaceHolder
+              : 'Hi, Rubick'
+          "
+          @mousedown.stop="dragWhenInput"
           class="main-input"
           @change="(e) => search({ value: e.target.value })"
           @keydown.ctrl.86="shouldPaste"
           :value="searchValue"
-          :maxLength="selected && selected.key !== 'plugin-container' ? 0 : 1000"
+          :maxLength="
+            selected && selected.key !== 'plugin-container' ? 0 : 1000
+          "
           @keydown.down="(e) => changeCurrent(1)"
           @keydown.up="() => changeCurrent(-1)"
           @keypress.enter="
-          (e) => targetSearch({ value: e.target.value, type: 'enter' })
-        "
+            (e) => targetSearch({ value: e.target.value, type: 'enter' })
+          "
           @keypress.space="
-          (e) => targetSearch({ value: e.target.value, type: 'space' })
-        "
+            (e) => targetSearch({ value: e.target.value, type: 'space' })
+          "
         >
           <div @click="goMenu" class="suffix-tool" slot="suffix">
             <a-icon
@@ -42,12 +45,14 @@
             />
             <div v-if="selected && selected.icon" style="position: relative">
               <a-spin v-show="pluginLoading" class="loading">
-                <a-icon slot="indicator" type="loading" style="font-size: 42px" spin />
+                <a-icon
+                  slot="indicator"
+                  type="loading"
+                  style="font-size: 42px"
+                  spin
+                />
               </a-spin>
-              <img
-                class="icon-tool"
-                :src="selected.icon"
-              />
+              <img class="icon-tool" :src="selected.icon" />
             </div>
             <div v-else class="rubick-logo">
               <img src="./assets/imgs/logo.png" />
@@ -87,19 +92,19 @@
             :placeholder="subPlaceHolder"
             class="sub-input"
             @change="
-            (e) =>
-              search({
-                value: e.target.value,
-                searchType: pluginInfo.searchType,
-              })
-          "
+              (e) =>
+                search({
+                  value: e.target.value,
+                  searchType: pluginInfo.searchType,
+                })
+            "
             :value="searchValue"
             @keypress.enter="
-            (e) => targetSearch({ value: e.target.value, type: 'enter' })
-          "
+              (e) => targetSearch({ value: e.target.value, type: 'enter' })
+            "
             @keypress.space="
-            (e) => targetSearch({ value: e.target.value, type: 'space' })
-          "
+              (e) => targetSearch({ value: e.target.value, type: 'space' })
+            "
           ></a-input>
         </div>
 
@@ -121,6 +126,7 @@ import {
   searchKeyValues,
   fileLists,
 } from "./assets/common/utils";
+import { commonConst } from "../main/common/utils";
 const opConfig = remote.getGlobal("opConfig");
 const { Menu, MenuItem } = remote;
 
@@ -167,20 +173,21 @@ export default {
         const feature = plugin.features;
         feature.forEach((fe) => {
           const cmd = searchKeyValues(fe.cmds, args)[0];
-          const systemPlugin = fileLists.filter(
-            (plugin) => {
-              let has = false;
-              plugin.keyWords.some(keyWord => {
-                if (keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >= 0) {
-                  has = keyWord;
-                  plugin.name = keyWord;
-                  return true;
-                }
-                return false;
-              });
-              return has;
-            }
-          )[0];
+          const systemPlugin = fileLists.filter((plugin) => {
+            let has = false;
+            plugin.keyWords.some((keyWord) => {
+              if (
+                keyWord.toLocaleUpperCase().indexOf(args.toLocaleUpperCase()) >=
+                0
+              ) {
+                has = keyWord;
+                plugin.name = keyWord;
+                return true;
+              }
+              return false;
+            });
+            return has;
+          })[0];
           if (cmd) {
             config = {
               cmd: cmd,
@@ -210,18 +217,56 @@ export default {
     ...mapActions("main", ["onSearch", "showMainUI", "openPlugin"]),
     ...mapMutations("main", ["commonUpdate"]),
     shouldPaste(e) {
-      let filePath = '';
-      if (process.platform === 'win32') {
-        const rawFilePath = clipboard.read('FileNameW');
-        filePath = rawFilePath.replace(new RegExp(String.fromCharCode(0), 'g'), '');
-        if (filePath.indexOf('plugin.json') >= 0) {
+      let filePath = "";
+      if (commonConst.windows()) {
+        const rawFilePath = clipboard.read("FileNameW");
+        filePath = rawFilePath.replace(
+          new RegExp(String.fromCharCode(0), "g"),
+          ""
+        );
+        if (filePath.indexOf("plugin.json") >= 0) {
           this.search({
             filePath,
+            disableDebounce: true,
           });
         }
+      } else if (commonConst.linux()) {
+        const text = clipboard.readText("selection");
+        // 在gnome的文件管理器中，复制文件的结果通常是
+        //
+        // x-special/nautilus-clipboard
+        // copy
+        // file:///home/admin/dir/plugin.json
+        const splitLF = text.split(" ");
+        let pathUrl;
+        if (
+          splitLF.length == 3 &&
+          splitLF[0] === "x-special/nautilus-clipboard" &&
+          splitLF[1] === "copy" &&
+          (pathUrl = splitLF[2]).startsWith("file://") &&
+          pathUrl.indexOf("plugin.json") >= 0
+        ) {
+          filePath = pathUrl.slice(7);
+          this.search({
+            filePath,
+            disableDebounce: true,
+          });
+        }
+        // 其他的发行版、文件管理器尚未测试
       }
     },
+    /**
+     * @param {Object} v 搜索配置对象。
+     * 若v.disableDebounce为true，则不会触发防抖动保护。
+     * 该值的作用是让search()方法被多个监听器同时调用时，在某些情况下无视其他监听器的防抖动保护。
+     * 其他属性 v.value、v.filePath 参见 src/renderer/store/modules/main.js的onSearch函数。
+     */
     search(v) {
+      console.log("search was called , param v is :", v);
+      if (!v.disableDebounce) {
+        this.onSearch(v);
+        return;
+      }
       if (!this.searchFn) {
         this.searchFn = debounce(this.onSearch, 200);
       }
@@ -288,9 +333,13 @@ export default {
       ipcRenderer.send("changeWindowSize-rubick", {
         height: getWindowHeight([]),
       });
-      this.$router.push({
-        path: "/home",
-      });
+      if (this.$router.history.current.fullPath !== "/home") {
+        // 该if是为了避免跳转到相同路由而报错。
+        // (之前在输入栏为空时按退格会疯狂报错)
+        this.$router.push({
+          path: "/home",
+        });
+      }
     },
     newWindow() {
       ipcRenderer.send("new-window", {
@@ -340,8 +389,13 @@ export default {
       this.changePath({ key: "market" });
     },
     drag() {
-      ipcRenderer.send('window-move');
-    }
+      ipcRenderer.send("window-move");
+    },
+    dragWhenInput(e) {
+      if (this.searchValue == "") {
+        ipcRenderer.send("window-move");
+      }
+    },
   },
   computed: {
     ...mapState("main", [
@@ -479,7 +533,7 @@ export default {
     cursor: pointer;
   }
   .loading {
-    position:absolute;
+    position: absolute;
     top: 0;
     left: 0;
   }
