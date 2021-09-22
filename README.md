@@ -55,7 +55,7 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 
 
 ## Tips
-依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
+If you're in a development environment，Run `npm run rebuild` after install。
 
 ## Current support capability
 
