@@ -1,4 +1,5 @@
-English | [简体中文](https://github.com/clouDr-f2e/rubick/blob/master/README.zh-CN.md)
+[English](https://github.com/clouDr-f2e/rubick/blob/master/README.md) | 简体中文
+
 
 <div align= "center">
 <img align="center" width=200 src="https://user-images.githubusercontent.com/21073039/128333805-73e086f0-5523-46a3-a096-cba80b904c46.png" />
@@ -7,7 +8,7 @@ English | [简体中文](https://github.com/clouDr-f2e/rubick/blob/master/README
 
 <div align= "center">
  <h1>Rubick</h1>
- 
+
  <img alt="release" src="https://img.shields.io/github/downloads/clouDr-f2e/rubick/total" />
  <a href="https://github.com/clouDr-f2e/rubick/releases">
     <img alt="release" src="https://img.shields.io/github/package-json/v/clouDr-f2e/rubick" />
@@ -27,7 +28,7 @@ English | [简体中文](https://github.com/clouDr-f2e/rubick/blob/master/README
 </div>
 
 
-Based on electron open source toolbox, free integration of rich plug-ins, to create the ultimate desktop efficiency tool。Rubick is one of the heroes of Dota ，The core skill is the ability to use other heroes as plug-ins，Finished the walk 。Very consistent with the design concept of this tool，So named Rubick。
+基于 electron 的开源工具箱，自由集成丰富插件，打造极致的桌面端效能工具。Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
 
 ## 安装包
 * [Rubick Mac OS](https://github.com/clouDr-f2e/rubick/releases)
@@ -35,61 +36,62 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 * [Rubick Linux](https://github.com/clouDr-f2e/rubick/releases)
 
 ## 支持能力
-- [x] Support remote download plug-in installation, support plug-in developer mode
-- [x] Support plug-in separation
-- [x] Support system command color picker、screen capture、 help
-- [x] Support super panel, long press and right click to make a call
-- [x] Support global shortcut key Settings
-- [x] You can search for locally installed APPS or preferences
-- [x] Support macos touchBar arouse the plug-in
-- [x] Support Windows
-- [x] Support Linux
+- [x] 支持远程下载安装插件，支持插件开发者模式
+- [x] 支持插件分离
+- [x] 支持系统命令取色、截屏、帮助
+- [x] 支持超级面板，长按右击呼出
+- [x] 支持全局快捷键设置
+- [x] 支持搜索本地已安装 app 或 偏好设置
+- [x] macos touchBar 唤起插件
+- [x] 支持 Windows
+- [x] 支持 Linux
 
 
 
 ![example.gif](https://user-images.githubusercontent.com/21073039/128359309-2377d3cf-7b70-4e8f-9973-ae8f337a8006.gif)
 
-## Docs
+## 使用文档
 
 [Rubick Docs](https://cloudr-f2e.github.io/rubick/)
 
 
-## Tips
+## 使用问题
 依赖于 `robotjs` dev 环境运行请在 `install` 后执行 `npm run rebuild`
 
-## Current support capability
+## 目前支持能力
 
-### touchBar
-macOS support touchbar Quick recall plug-in
+### touchBar 唤起插件
+macOS 支持 touchbar 快速唤起插件
 
 ![2oyn8-wu97m (3)](https://user-images.githubusercontent.com/21073039/129894362-1dbb8436-921c-4138-be9c-072dc2e62549.gif)
 
-### Super Panel
-Long press the right mouse button to call up the super panel. You can select content according to the current mouse and match the ability of the plug-in. For example, after selecting a picture, long press and right click to call up the plug-in to upload the picture bed.
+
+### 超级面板
+长按鼠标右键，即可呼起超级面板，可以根据当前鼠标选择内容，匹配对应插件能力。比如当前选择图片后长按右击，则会呼起上传图床插件：
 
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1706cc730f1f46078cb700a445211317~tplv-k3u1fbpfcp-watermark.image)
 
-### Template
-A template is a built-in UI-style function plug-in.
+### 模板
+模板即是一个内置 UI 样式的功能插件。
 
 <img src=https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b113ad547974699b9c73c28bc09b9b1~tplv-k3u1fbpfcp-watermark.image width=500 />
 
-### System Command
-#### Color picker
-Based on `robot.js` and `iohook`。
+### 系统命令
+#### 取色
+基于 `robot.js` 以及 `iohook` 实现。未使用 C++ 扩展。
 
 ![image](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3036ae85bf3549fc8bbbe2926ecbad55~tplv-k3u1fbpfcp-watermark.image)
 
-#### Screen capture
+#### 截屏
 
 <img src=https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/18023dab52e1420c9e87362cefddb2a1~tplv-k3u1fbpfcp-watermark.image width=500 />
 
 
-#### Global Hotkeys
+#### 全局快捷键
 
 <img src=https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/62cc424eacac4c9eb178f0e055e87d9a~tplv-k3u1fbpfcp-watermark.image width=500 />
 
-### At last
+### 最后
 对本项目有兴趣或者想要交流学习的同学可以扫码加下面的微信，备注 rubick，帮助我们更好的成长：
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
