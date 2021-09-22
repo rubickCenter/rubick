@@ -29,12 +29,12 @@ English | [简体中文](https://github.com/clouDr-f2e/rubick/blob/master/README
 
 Based on electron open source toolbox, free integration of rich plug-ins, to create the ultimate desktop efficiency tool。Rubick is one of the heroes of Dota ，The core skill is the ability to use other heroes as plug-ins，Finished the walk 。Very consistent with the design concept of this tool，So named Rubick。
 
-## 安装包
+## Installation package
 * [Rubick Mac OS](https://github.com/clouDr-f2e/rubick/releases)
 * [Rubick Windows](https://github.com/clouDr-f2e/rubick/releases)
 * [Rubick Linux](https://github.com/clouDr-f2e/rubick/releases)
 
-## 支持能力
+## Feature list
 - [x] Support remote download plug-in installation, support plug-in developer mode
 - [x] Support plug-in separation
 - [x] Support system command color picker、screen capture、 help
