@@ -6,7 +6,7 @@
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
-    "version": "standard-version -- --prerelease alpha",
+    "version": "standard-version",
     "release": "node .electron-vue/build.js && electron-builder --publish always",
     "build": "node .electron-vue/build.js && electron-builder",
     "dev": "node .electron-vue/dev-runner.js",

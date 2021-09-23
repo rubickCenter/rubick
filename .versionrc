@@ -1,0 +1,13 @@
+{
+  "header": "变更日志",
+  "types": [
+    {"type":"feat","section":"新增功能", "hidden": false},
+    {"type":"fix","section":"Bug 修复", "hidden": false},
+    {"type":"ref","section":"重构", "hidden": false},
+    {"type":"docs","section":"文档", "hidden": false}
+  ],
+  "compareUrlFormat": "https://github.com/clouDr-f2e/rubick/compare/{{previousTag}}...{{currentTag}}",
+  "commitUrlFormat": "https://github.com/clouDr-f2e/rubick/commit/{{hash}}",
+  "issueUrlFormat": "https://github.com/clouDr-f2e/rubick/issues/{{id}}",
+  "userUrlFormat": "https://github.com/{{user}}"
+}
