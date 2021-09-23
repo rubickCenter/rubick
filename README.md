@@ -98,6 +98,9 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
 
 
+## ChangeLog
+[CHANGELOG](https://github.com/clouDr-f2e/rubick/CHANGELOG.md)
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.
 
