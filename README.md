@@ -99,7 +99,7 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 
 ## ChangeLog
-[CHANGELOG](https://github.com/clouDr-f2e/rubick/CHANGELOG.md)
+[CHANGELOG](https://github.com/clouDr-f2e/rubick/blob/master/CHANGELOG.md)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/clouDr-f2e/rubick/blob/master/LICENSE) file for details.

@@ -13,7 +13,7 @@ module.exports = {
     nav: [
       { text: '使用文档', link: '/guide/' },
       { text: '开发者', link: '/dev/' },
-      { text: 'ChangeLog', link: 'https://github.com/clouDr-f2e/rubick/CHANGELOG.md' },
+      { text: 'ChangeLog', link: 'https://github.com/clouDr-f2e/rubick/blob/master/CHANGELOG.md' },
     ],
     sidebar: [
       {
