@@ -305,7 +305,7 @@ export default {
 
     renderTitle(title) {
       if (typeof title !== "string") return;
-      const result = title.split(this.searchValue);
+      const result = title.toLowerCase().split(this.searchValue.toLowerCase());
       if (result && result.length > 1) {
         return `<div>${result[0]}<span style="color: red">${this.searchValue}</span>${result[1]}</div>`;
       } else {

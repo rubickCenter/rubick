@@ -1,5 +1,5 @@
 const {getData, getlocalDataFile, saveData} = require("./utils");
-
+const axios = require('axios');
 const marked = require("marked");
 const rendererMD = new marked.Renderer();
 const path = require('path');
@@ -22,7 +22,7 @@ function getQueryVariable(variable) {
 if (location.href.indexOf('targetFile') > -1) {
   filePath = decodeURIComponent(getQueryVariable('targetFile'));
 } else {
-  filePath = process.platform === 'win32' ? location.pathname.split(':')[1] : location.pathname.replace('file://', '');
+  filePath = process.platform === 'win32' ? location.pathname.replace('/', '') : location.pathname.replace('file://', '');
 }
 const {ipcRenderer, nativeImage, clipboard, remote, shell} = require('electron');
 
@@ -255,6 +255,14 @@ window.rubick = {
 
   shellOpenPath(path) {
     shell.openPath(path)
+  },
+
+  request(config = {}) {
+    return axios.create({
+      timeout: 10000,
+      withCredentials: true,
+      ...config,
+    });
   }
 }
 const preloadPath = getQueryVariable('preloadPath') || './preload.js';

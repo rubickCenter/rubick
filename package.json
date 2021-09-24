@@ -1,11 +1,12 @@
 {
   "name": "rubick2",
-  "version": "0.0.6-beta.1",
+  "version": "0.0.10",
   "author": "muwoo <2424880409@qq.com>",
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
+    "version": "standard-version",
     "release": "node .electron-vue/build.js && electron-builder --publish always",
     "build": "node .electron-vue/build.js && electron-builder",
     "dev": "node .electron-vue/dev-runner.js",
@@ -129,6 +130,7 @@
     "node-abi": "^2.30.0",
     "node-loader": "^0.6.0",
     "react": "^17.0.2",
+    "standard-version": "^9.3.1",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",
     "vue-html-loader": "^1.2.4",
