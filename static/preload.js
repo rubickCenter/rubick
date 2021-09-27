@@ -239,6 +239,7 @@ window.rubick = {
 
   removeFeature(code) {
     ipcRenderer.sendToHost('removeFeature', {code});
+    return true;
   },
   // 系统
   shellOpenExternal(url) {
@@ -251,6 +252,10 @@ window.rubick = {
 
   isWindows() {
     return os.type() === 'Windows_NT';
+  },
+
+  isLinux() {
+    return os.type() === 'Linux';
   },
 
   shellOpenPath(path) {
