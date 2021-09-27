@@ -54,3 +54,8 @@
 如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/clouDr-f2e/rubick/issues/20) 
 有价值的想法我们会加入到后期的开发当中。同时也欢迎一起加入共建。
 
+### 联系我们
+
+扫码关注 Rubick 官微, 与我们保持联系：
+
+![wechat](https://z3.ax1x.com/2021/09/26/4yRpN9.jpg)
