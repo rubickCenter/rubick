@@ -1,4 +1,12 @@
 变更日志
+### [0.0.11](https://github.com/clouDr-f2e/rubick/compare/v0.0.10...v0.0.11) (2021-09-27)
+
+
+### 文档
+
+* 增加 changelog 功能 ([c89ecb9](https://github.com/clouDr-f2e/rubick/commit/c89ecb9c66607f5d390c564d753bc30bd180bf91))
+* 增加 changelog 功能 ([0a1ba91](https://github.com/clouDr-f2e/rubick/commit/0a1ba91792dcf71c64896d9ec26b266e2c9b0355))
+
 ### [0.0.10](https://github.com/clouDr-f2e/rubick/compare/v0.0.9...v0.0.10) (2021-09-23)
 
 
