@@ -18,15 +18,15 @@
             <div class="title">快捷键(需要使用 option/ctrl/shift/command 键修饰)</div>
             <div class="settings-item-li">
               <div class="label">显示/隐藏快捷键</div>
-              <div class="value" tabIndex=-1 @keydown="(e) => changeShortCut(e, 'showAndHidden')">{{ config.perf.shortCut.showAndHidden }}</div>
+              <div class="value" tabIndex=-1 @keyup="(e) => changeShortCut(e, 'showAndHidden')">{{ config.perf.shortCut.showAndHidden }}</div>
             </div>
             <div class="settings-item-li">
               <div class="label">插件分离快捷键</div>
-              <div class="value" tabIndex=-1 @keydown="(e) => changeShortCut(e, 'separate')">{{ config.perf.shortCut.separate }}</div>
+              <div class="value" tabIndex=-1 @keyup="(e) => changeShortCut(e, 'separate')">{{ config.perf.shortCut.separate }}</div>
             </div>
             <div class="settings-item-li">
               <div class="label">返回主界面</div>
-              <div class="value" tabIndex=-1 @keydown="(e) => changeShortCut(e, 'quit')">{{ config.perf.shortCut.quit }}</div>
+              <div class="value" tabIndex=-1 @keyup="(e) => changeShortCut(e, 'quit')">{{ config.perf.shortCut.quit }}</div>
             </div>
           </div>
           <div class="setting-item">
@@ -88,7 +88,7 @@
                     v-for="(item, index) in config.global"
                     class="value"
                     tabIndex=-1
-                    @keydown="(e) => changeGlobalKey(e, index)"
+                    @keyup="(e) => changeGlobalKey(e, index)"
                 >
                   {{ item.key }}
                 </div>
@@ -171,7 +171,7 @@ export default {
     changeGlobalKey(e, index) {
       let compose;
       if(e.altKey && e.keyCode !== 18){
-        compose = `Option+${keycodes[e.keyCode].toUpperCase()}`;
+        compose = `Alt+${keycodes[e.keyCode].toUpperCase()}`;
       }
       if(e.ctrlKey && e.keyCode !== 17){
         compose = `Ctrl+${keycodes[e.keyCode].toUpperCase()}`;
