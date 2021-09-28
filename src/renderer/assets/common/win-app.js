@@ -47,7 +47,7 @@ function fileDisplay(filePath){
               const appName = filename.split('.')[0];
               const keyWords = [appName];
               const appDetail = shell.readShortcutLink(filedir);
-              if (!appDetail.target) return;
+              if (!appDetail.target || appDetail.target.toLowerCase().indexOf('unin') >= 0) return;
 
               if (isZhRegex.test(appName)) {
                 const py = translate(appName);

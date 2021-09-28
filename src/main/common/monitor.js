@@ -104,18 +104,10 @@ const touchBar = new TouchBar({
   ]
 })
 
-let intervalObj;
-
 const start = (window) => {
-  window.on('blur', () => {
-    clearInterval(intervalObj);
-  });
   window.on('focus', () => {
-    intervalObj = setInterval(() => {
-      updateData();
-    }, 1000);
+    updateData();
   });
-  updateData();
 }
 
 export default {
