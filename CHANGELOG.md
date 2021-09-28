@@ -1,4 +1,11 @@
 变更日志
+### [0.0.12](https://github.com/clouDr-f2e/rubick/compare/v0.0.11...v0.0.12) (2021-09-28)
+
+
+### 重构
+
+* 支持新api ([79b60b8](https://github.com/clouDr-f2e/rubick/commit/79b60b89a543773ab05392fd2b90db04ae5020ef))
+
 ### [0.0.11](https://github.com/clouDr-f2e/rubick/compare/v0.0.10...v0.0.11) (2021-09-27)
 
 
