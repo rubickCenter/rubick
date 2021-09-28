@@ -225,10 +225,12 @@ window.rubick = {
   isDarkColors() {
     return false;
   },
+  features: [],
   getFeatures() {
     ipcRenderer.sendToHost('getFeatures');
     return new Promise(resolve => {
       ipcRenderer.on(`msg-back-getFeatures`, (e, result) => {
+        rubick.features = result;
         resolve(result);
       });
     });
@@ -239,7 +241,7 @@ window.rubick = {
 
   removeFeature(code) {
     ipcRenderer.sendToHost('removeFeature', {code});
-    return true;
+    return !!rubick.features.filter(fe => fe.code === code).length;
   },
   // 系统
   shellOpenExternal(url) {
