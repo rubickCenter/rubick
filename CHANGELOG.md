@@ -3,8 +3,11 @@
 
 
 ### 重构
-
+* 优化rubick removeFeature API
 * 支持新api ([79b60b8](https://github.com/clouDr-f2e/rubick/commit/79b60b89a543773ab05392fd2b90db04ae5020ef))
+
+### Bug 修复
+* [#46]; win应用搜索出现卸载应用问题
 
 ### [0.0.11](https://github.com/clouDr-f2e/rubick/compare/v0.0.10...v0.0.11) (2021-09-27)
 
