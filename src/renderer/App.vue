@@ -392,7 +392,7 @@ export default {
       ipcRenderer.send("window-move");
     },
     dragWhenInput(e) {
-      if (this.searchValue == "") {
+      if (this.searchValue === "") {
         ipcRenderer.send("window-move");
       }
     },
