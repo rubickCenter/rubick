@@ -97,6 +97,9 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
 
+扫码关注 Rubick 官微, 获取最新动态：
+
+![wechat](https://z3.ax1x.com/2021/09/26/4yRpN9.jpg)
 
 ## ChangeLog
 [CHANGELOG](https://github.com/clouDr-f2e/rubick/blob/master/CHANGELOG.md)
