@@ -59,14 +59,6 @@
             </div>
           </div>
         </a-input>
-        <span class="button-hide-on-blur" @click="changeHideOnBlur">
-          <a-icon
-            type="pushpin"
-            :style="{
-              color: config.perf.common.hideOnBlur ? 'grey' : '#ea68a2',
-            }"
-          ></a-icon>
-        </span>
         <div v-show="showOptions" class="options">
           <a-list item-layout="horizontal" :data-source="options">
             <a-list-item
@@ -88,6 +80,18 @@
             </a-list-item>
           </a-list>
         </div>
+        <span
+          v-show="selected"
+          class="button-hide-on-blur"
+          @click="changeHideOnBlur"
+        >
+          <a-icon
+            type="pushpin"
+            :style="{
+              color: config.perf.common.hideOnBlur ? 'grey' : '#ea68a2',
+            }"
+          ></a-icon>
+        </span>
       </div>
       <div v-else class="rubick-select-subMenu">
         <div>
@@ -340,6 +344,7 @@ export default {
         showMain: false,
         options: [],
       });
+      this.setHideOnBlur(true);
       ipcRenderer.send("changeWindowSize-rubick", {
         height: getWindowHeight([]),
       });
@@ -409,6 +414,11 @@ export default {
     changeHideOnBlur(e) {
       let cfg = { ...this.config };
       cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
+      this.config = cfg;
+    },
+    setHideOnBlur(v) {
+      let cfg = { ...this.config };
+      cfg.perf.common.hideOnBlur = v;
       this.config = cfg;
     },
   },
