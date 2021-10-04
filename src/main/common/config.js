@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { getLocalDataFile } from "./utils";
 import os from "os";
+import { app } from "electron";
 
 const configPath = path.join(getLocalDataFile(), "./rubick-config.json");
 
@@ -16,6 +17,8 @@ const defaultConfigForAnyPlatform = {
     common: {
       start: true,
       space: true,
+      // 是否失焦隐藏。默认在dev环境不隐藏，在打包后隐藏。
+      hideOnBlur: app.isPackaged,
     },
     local: {
       search: true,
