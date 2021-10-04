@@ -1,13 +1,13 @@
-const { BrowserWindow, nativeImage } = require("electron")
+const { BrowserWindow, nativeImage } = require("electron");
 
 module.exports = () => {
-  let win
+  let win;
 
   let init = (x, y) => {
     if (win === null || win === undefined) {
-      createWindow()
+      createWindow();
     }
-  }
+  };
 
   let createWindow = () => {
     win = new BrowserWindow({
@@ -25,18 +25,18 @@ module.exports = () => {
         contextIsolation: false,
         devTools: false,
       },
-    })
+    });
 
-    win.loadURL(`file://${__static}/plugins/picker/index.html`)
+    win.loadURL(`file://${__static}/plugins/picker/index.html`);
     win.on("closed", () => {
-      win = undefined
-    })
-  }
+      win = undefined;
+    });
+  };
 
-  let getWindow = () => win
+  let getWindow = () => win;
 
   return {
-    init: init,
-    getWindow: getWindow,
-  }
-}
+    init,
+    getWindow,
+  };
+};

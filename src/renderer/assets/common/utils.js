@@ -1,13 +1,21 @@
-import { WINDOW_MAX_HEIGHT, WINDOW_MIN_HEIGHT, PRE_ITEM_HEIGHT, SYSTEM_PLUGINS } from './constans';
-import path from 'path';
-import fs from 'fs';
-import Store from 'electron-store';
-import downloadFile from 'download';
-import { ipcRenderer } from 'electron';
-import { getlocalDataFile } from '../../../main/common/utils';
-import shell from 'shelljs';
+import {
+  WINDOW_MAX_HEIGHT,
+  WINDOW_MIN_HEIGHT,
+  PRE_ITEM_HEIGHT,
+  SYSTEM_PLUGINS,
+} from "./constans";
+import path from "path";
+import fs from "fs";
+import Store from "electron-store";
+import downloadFile from "download";
+import { ipcRenderer } from "electron";
+import { getLocalDataFile } from "../../../main/common/utils";
+import shell from "shelljs";
 
-const getApp = process.platform === 'win32' ? require('./win-app').getApp : require('./darwin-app').getApp;
+const getApp =
+  process.platform === "win32"
+    ? require("./win-app").getApp
+    : require("./darwin-app").getApp;
 
 const store = new Store();
 
@@ -17,14 +25,16 @@ const fileLists = getApp.fileLists;
 function getWindowHeight(searchList) {
   if (!searchList) return WINDOW_MAX_HEIGHT;
   if (!searchList.length) return WINDOW_MIN_HEIGHT;
-  return searchList.length * PRE_ITEM_HEIGHT + WINDOW_MIN_HEIGHT + 5 > WINDOW_MAX_HEIGHT
+  return searchList.length * PRE_ITEM_HEIGHT + WINDOW_MIN_HEIGHT + 5 >
+    WINDOW_MAX_HEIGHT
     ? WINDOW_MAX_HEIGHT
     : searchList.length * PRE_ITEM_HEIGHT + WINDOW_MIN_HEIGHT + 5;
 }
 
 function searchKeyValues(lists, value) {
   return lists.filter((item) => {
-    if (typeof item === 'string') return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    if (typeof item === "string")
+      return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
     return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
   });
 }
@@ -41,7 +51,7 @@ function existOrNot(path) {
   });
 }
 
-const appPath = getlocalDataFile();
+const appPath = getLocalDataFile();
 
 async function downloadZip(downloadRepoUrl, name) {
   try {
@@ -50,7 +60,7 @@ async function downloadZip(downloadRepoUrl, name) {
     const temp_dest = `${plugin_path}/${name}`;
     // 下载模板
     if (await existOrNot(temp_dest)) {
-      shell.rm('-rf', temp_dest);
+      shell.rm("-rf", temp_dest);
     }
 
     await downloadFile(downloadRepoUrl, plugin_path, { extract: true });
@@ -63,7 +73,7 @@ async function downloadZip(downloadRepoUrl, name) {
 
 const sysFile = {
   savePlugins(plugins) {
-    ipcRenderer.send('optionPlugin', {
+    ipcRenderer.send("optionPlugin", {
       plugins: plugins.filter((plugin) => {
         let hasOption = false;
         plugin.features.forEach((fe) => {
@@ -74,20 +84,20 @@ const sysFile = {
           });
         });
         return hasOption;
-      })
+      }),
     });
-    store.set('user-plugins', plugins);
+    store.set("user-plugins", plugins);
   },
   getUserPlugins() {
     try {
-      return store.get('user-plugins');
+      return store.get("user-plugins");
     } catch (e) {
       return [];
     }
   },
   removeAllPlugins() {
-    store.delete('user-plugins');
-  }
+    store.delete("user-plugins");
+  },
 };
 
 function mergePlugins(plugins) {
@@ -97,10 +107,10 @@ function mergePlugins(plugins) {
       return {
         ...plugin,
         status: true,
-        sourceFile: '',
-        type: 'system'
+        sourceFile: "",
+        type: "system",
       };
-    })
+    }),
   ];
 
   const target = [];
@@ -108,7 +118,7 @@ function mergePlugins(plugins) {
   result.forEach((item, i) => {
     let targetIndex = -1;
     target.forEach((tg, j) => {
-      if (tg.tag === item.tag && tg.type === 'system') {
+      if (tg.tag === item.tag && tg.type === "system") {
         targetIndex = j;
       }
     });
@@ -117,7 +127,7 @@ function mergePlugins(plugins) {
     }
   });
   ipcRenderer &&
-    ipcRenderer.send('optionPlugin', {
+    ipcRenderer.send("optionPlugin", {
       plugins: target.filter((plugin) => {
         let hasOption = false;
         plugin.features.forEach((fe) => {
@@ -128,25 +138,25 @@ function mergePlugins(plugins) {
           });
         });
         return hasOption;
-      })
+      }),
     });
   ipcRenderer &&
-  ipcRenderer.send('pluginInit', {
-    plugins: target
-  });
+    ipcRenderer.send("pluginInit", {
+      plugins: target,
+    });
   return target;
 }
 
-function find(p, target = 'plugin.json') {
+function find(p, target = "plugin.json") {
   try {
     let result;
     const fileList = fs.readdirSync(p);
     for (let i = 0; i < fileList.length; i++) {
-      let thisPath = p + '/' + fileList[i];
+      let thisPath = p + "/" + fileList[i];
       const data = fs.statSync(thisPath);
 
       if (data.isFile() && fileList[i] === target) {
-        result = path.join(thisPath, '../');
+        result = path.join(thisPath, "../");
         return result;
       }
       if (data.isDirectory()) {
@@ -172,4 +182,13 @@ function debounce(fn, delay) {
   };
 }
 
-export { getWindowHeight, searchKeyValues, sysFile, mergePlugins, find, downloadZip, fileLists, debounce };
+export {
+  getWindowHeight,
+  searchKeyValues,
+  sysFile,
+  mergePlugins,
+  find,
+  downloadZip,
+  fileLists,
+  debounce,
+};

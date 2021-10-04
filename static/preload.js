@@ -1,45 +1,56 @@
-const {getData, getlocalDataFile, saveData} = require("./utils");
-const axios = require('axios');
+const { getData, getLocalDataFile, saveData } = require("./utils");
+const axios = require("axios");
 const marked = require("marked");
 const rendererMD = new marked.Renderer();
-const path = require('path');
-const os = require('os');
+const path = require("path");
+const os = require("os");
 
-const appPath = path.join(getlocalDataFile());
-const dbPath = path.join(appPath, './db.json');
+const appPath = path.join(getLocalDataFile());
+const dbPath = path.join(appPath, "./db.json");
 
-let filePath = '';
+let filePath = "";
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
-  for (var i=0;i<vars.length;i++) {
+  for (var i = 0; i < vars.length; i++) {
     var pair = vars[i].split("=");
-    if(pair[0] == variable){return pair[1];}
+    if (pair[0] == variable) {
+      return pair[1];
+    }
   }
-  return(false);
+  return false;
 }
 
-if (location.href.indexOf('targetFile') > -1) {
-  filePath = decodeURIComponent(getQueryVariable('targetFile'));
+if (location.href.indexOf("targetFile") > -1) {
+  filePath = decodeURIComponent(getQueryVariable("targetFile"));
 } else {
-  filePath = process.platform === 'win32' ? location.pathname.replace('/', '') : location.pathname.replace('file://', '');
+  filePath =
+    process.platform === "win32"
+      ? location.pathname.replace("/", "")
+      : location.pathname.replace("file://", "");
 }
-const {ipcRenderer, nativeImage, clipboard, remote, shell} = require('electron');
+const {
+  ipcRenderer,
+  nativeImage,
+  clipboard,
+  remote,
+  shell,
+} = require("electron");
 
 const currentWindow = remote.getCurrentWindow();
 const winId = currentWindow.id;
 const BrowserWindow = remote.BrowserWindow;
 
-function convertImgToBase64(url, callback, outputFormat){
-  var canvas = document.createElement('CANVAS'),
-    ctx = canvas.getContext('2d'),
-    img = new Image;
-  img.crossOrigin = 'Anonymous';
-  img.onload = function(){
+function convertImgToBase64(url, callback, outputFormat) {
+  var canvas = document.createElement("CANVAS"),
+    ctx = canvas.getContext("2d"),
+    img = new Image();
+  img.crossOrigin = "Anonymous";
+  img.onload = function() {
     canvas.height = img.height;
     canvas.width = img.width;
-    ctx.drawImage(img,0,0);
-    var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL(outputFormat || "image/png");
     callback.call(this, dataURL);
     canvas = null;
   };
@@ -49,58 +60,67 @@ function convertImgToBase64(url, callback, outputFormat){
 window.rubick = {
   // 事件
   onPluginEnter(cb) {
-    ipcRenderer.on('onPluginEnter', (e, message) => {
+    ipcRenderer.on("onPluginEnter", (e, message) => {
       const feature = message.detail;
-      cb({...feature, type: message.cmd.type ? message.cmd.type : 'text', payload: message.payload})
-    })
+      cb({
+        ...feature,
+        type: message.cmd.type ? message.cmd.type : "text",
+        payload: message.payload,
+      });
+    });
   },
   onPluginReady(cb) {
-    ipcRenderer.once('onPluginReady', (e, message) => {
-      const feature = message.detail
-      cb({...feature, type: message.cmd.type ? message.cmd.type : 'text', payload: message.payload})
-    })
+    ipcRenderer.once("onPluginReady", (e, message) => {
+      const feature = message.detail;
+      cb({
+        ...feature,
+        type: message.cmd.type ? message.cmd.type : "text",
+        payload: message.payload,
+      });
+    });
   },
   onPluginOut(cb) {
-    ipcRenderer.once('onPluginOut', (e, message) => {
-      const feature = JSON.parse(message.detail)
-      cb({...feature, type: 'text'})
-    })
+    ipcRenderer.once("onPluginOut", (e, message) => {
+      const feature = JSON.parse(message.detail);
+      cb({ ...feature, type: "text" });
+    });
   },
 
   // 窗口交互
   hideMainWindow() {
-    ipcRenderer.send('msg-trigger', {
-      type: 'hideMainWindow',
+    ipcRenderer.send("msg-trigger", {
+      type: "hideMainWindow",
     });
   },
   showMainWindow() {
-    ipcRenderer.send('msg-trigger', {
-      type: 'showMainWindow',
+    ipcRenderer.send("msg-trigger", {
+      type: "showMainWindow",
     });
   },
   setExpendHeight(height) {
-    ipcRenderer.send('msg-trigger', {
-      type: 'setExpendHeight',
+    ipcRenderer.send("msg-trigger", {
+      type: "setExpendHeight",
       height,
-      winId
+      winId,
     });
   },
   setSubInput(onChange, placeHolder, isFocus) {
-    ipcRenderer.sendToHost('setSubInput', {
-      placeHolder, isFocus
+    ipcRenderer.sendToHost("setSubInput", {
+      placeHolder,
+      isFocus,
     });
     ipcRenderer.on(`msg-back-setSubInput`, (e, result) => {
-      onChange({text: result});
+      onChange({ text: result });
     });
   },
 
   removeSubInput() {
-    ipcRenderer.sendToHost('removeSubInput');
+    ipcRenderer.sendToHost("removeSubInput");
   },
 
   setSubInputValue(text) {
-    ipcRenderer.sendToHost('setSubInputValue', {
-      text
+    ipcRenderer.sendToHost("setSubInputValue", {
+      text,
     });
   },
 
@@ -109,41 +129,41 @@ window.rubick = {
   },
 
   showNotification(body, clickFeatureCode) {
-    const myNotification = new Notification('Rubick 通知', {
-      body
+    const myNotification = new Notification("Rubick 通知", {
+      body,
     });
     return myNotification;
     // todo 实现 clickFeatureCode
   },
   showOpenDialog(options) {
-    ipcRenderer.send('msg-trigger', {
-      type: 'showOpenDialog',
-      options: {...options},
+    ipcRenderer.send("msg-trigger", {
+      type: "showOpenDialog",
+      options: { ...options },
     });
     return new Promise((resolve, reject) => {
       ipcRenderer.once(`msg-back-showOpenDialog`, (e, result) => {
         result ? resolve(result) : reject();
       });
-    })
+    });
   },
 
   copyImage(img) {
-    convertImgToBase64(img,function(base64Image) {
-      const image = nativeImage.createFromDataURL(base64Image)
-      clipboard.writeImage(image)
-    })
+    convertImgToBase64(img, function(base64Image) {
+      const image = nativeImage.createFromDataURL(base64Image);
+      clipboard.writeImage(image);
+    });
   },
   copyText(text) {
     clipboard.writeText(text);
   },
   db: {
     put(data) {
-      data._rev = '';
+      data._rev = "";
       let dbData = getData(dbPath) || [];
       let target = [];
       dbData.some((d, i) => {
         if (d._id === data._id) {
-          target = [d, i]
+          target = [d, i];
           return true;
         }
         return false;
@@ -159,15 +179,15 @@ window.rubick = {
       return {
         id: data._id,
         ok: true,
-        rev: '',
-      }
+        rev: "",
+      };
     },
     get(key) {
       const dbData = getData(dbPath) || [];
-      return dbData.find(d => d._id === key) || '';
+      return dbData.find((d) => d._id === key) || "";
     },
     remove(key) {
-      key = typeof key === 'object' ? key._id : key;
+      key = typeof key === "object" ? key._id : key;
       let dbData = getData(dbPath);
       let find = false;
       dbData.some((d, i) => {
@@ -183,52 +203,52 @@ window.rubick = {
         return {
           id: key,
           ok: true,
-          rev: '',
-        }
+          rev: "",
+        };
       } else {
         return {
           id: key,
           ok: false,
-          rev: '',
-        }
+          rev: "",
+        };
       }
     },
     bulkDocs(docs) {
       const dbData = getData(dbPath);
       dbData.forEach((d, i) => {
-        const result = docs.find(data => data._id === d._id);
+        const result = docs.find((data) => data._id === d._id);
         if (result) {
           dbData[i] = result;
         }
       });
       saveData(dbPath, dbData);
-      return docs.map(d => ({
+      return docs.map((d) => ({
         id: d._id,
         success: true,
-        rev: '',
-      }))
+        rev: "",
+      }));
     },
     allDocs(key) {
       const dbData = getData(dbPath);
       if (!key) {
         return dbData;
       }
-      if (typeof key === 'string') {
-        return dbData.filter(d => d._id.indexOf(key) >= 0);
+      if (typeof key === "string") {
+        return dbData.filter((d) => d._id.indexOf(key) >= 0);
       }
       if (Array.isArray(key)) {
-        return dbData.filter(d => key.indexOf(d._id) >= 0);
+        return dbData.filter((d) => key.indexOf(d._id) >= 0);
       }
       return [];
-    }
+    },
   },
   isDarkColors() {
     return false;
   },
   features: [],
   getFeatures() {
-    ipcRenderer.sendToHost('getFeatures');
-    return new Promise(resolve => {
+    ipcRenderer.sendToHost("getFeatures");
+    return new Promise((resolve) => {
       ipcRenderer.on(`msg-back-getFeatures`, (e, result) => {
         rubick.features = result;
         resolve(result);
@@ -236,12 +256,12 @@ window.rubick = {
     });
   },
   setFeature(feature) {
-    ipcRenderer.sendToHost('setFeature', {feature});
+    ipcRenderer.sendToHost("setFeature", { feature });
   },
 
   removeFeature(code) {
-    ipcRenderer.sendToHost('removeFeature', {code});
-    return !!rubick.features.filter(fe => fe.code === code).length;
+    ipcRenderer.sendToHost("removeFeature", { code });
+    return !!rubick.features.filter((fe) => fe.code === code).length;
   },
   // 系统
   shellOpenExternal(url) {
@@ -249,19 +269,19 @@ window.rubick = {
   },
 
   isMacOs() {
-    return os.type() === 'Darwin';
+    return os.type() === "Darwin";
   },
 
   isWindows() {
-    return os.type() === 'Windows_NT';
+    return os.type() === "Windows_NT";
   },
 
   isLinux() {
-    return os.type() === 'Linux';
+    return os.type() === "Linux";
   },
 
   shellOpenPath(path) {
-    shell.openPath(path)
+    shell.openPath(path);
   },
 
   request(config = {}) {
@@ -270,10 +290,13 @@ window.rubick = {
       withCredentials: true,
       ...config,
     });
-  }
-}
-const preloadPath = getQueryVariable('preloadPath') || './preload.js';
+  },
+};
+const preloadPath = getQueryVariable("preloadPath") || "./preload.js";
 
-require(path.join(filePath, '../', preloadPath));
-window.exports && ipcRenderer.sendToHost('templateConfig', {config: JSON.parse(JSON.stringify(window.exports))});
+require(path.join(filePath, "../", preloadPath));
+window.exports &&
+  ipcRenderer.sendToHost("templateConfig", {
+    config: JSON.parse(JSON.stringify(window.exports)),
+  });
 window.ipcRenderer = ipcRenderer;

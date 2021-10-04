@@ -1,15 +1,16 @@
-const { BrowserWindow, protocol } = require("electron")
+const { BrowserWindow, protocol } = require("electron");
 module.exports = () => {
-  let win
+  let win;
 
   let init = (opts) => {
-    createWindow(opts)
-  }
+    createWindow(opts);
+  };
 
   let createWindow = (opts) => {
-    const winURL = process.env.NODE_ENV === 'development'
-      ? `http://localhost:9080`
-      : `file://${__dirname}/index.html`
+    const winURL =
+      process.env.NODE_ENV === "development"
+        ? `http://localhost:9080`
+        : `file://${__dirname}/index.html`;
 
     win = new BrowserWindow({
       height: 60,
@@ -17,7 +18,7 @@ module.exports = () => {
       resizable: true,
       width: 800,
       frame: false,
-      title: '拉比克',
+      title: "拉比克",
       show: false,
       skipTaskbar: true,
       webPreferences: {
@@ -26,31 +27,35 @@ module.exports = () => {
         backgroundThrottling: false,
         contextIsolation: false,
         webviewTag: true,
-        nodeIntegration: true // 在网页中集成Node
+        nodeIntegration: true, // 在网页中集成Node
+      },
+    });
+
+    win.loadURL(winURL);
+
+    protocol.interceptFileProtocol(
+      "image",
+      (req, callback) => {
+        const url = req.url.substr(8);
+        callback(decodeURI(url));
+      },
+      (error) => {
+        if (error) {
+          console.error("Failed to register protocol");
+        }
       }
-    })
+    );
 
-    win.loadURL(winURL)
-
-    protocol.interceptFileProtocol('image', (req, callback) => {
-      const url = req.url.substr(8)
-      callback(decodeURI(url))
-    }, (error) => {
-      if (error) {
-        console.error('Failed to register protocol')
-      }
-    })
-
-    win.once('ready-to-show', () => win.show())
+    win.once("ready-to-show", () => win.show());
     win.on("closed", () => {
-      win = undefined
-    })
-  }
+      win = undefined;
+    });
+  };
 
-  let getWindow = () => win
+  let getWindow = () => win;
 
   return {
-    init: init,
-    getWindow: getWindow,
-  }
-}
+    init,
+    getWindow,
+  };
+};

@@ -2,7 +2,7 @@
   <div @mousedown="drag">
     <a-layout id="components-layout">
       <div v-if="!searchType" class="rubick-select">
-        <div class="tag-container" v-if="selected">
+        <div v-if="selected" class="tag-container">
           <a-tag
             :key="selected.key"
             @close="closeTag"
@@ -59,7 +59,7 @@
             </div>
           </div>
         </a-input>
-        <div class="options" v-show="showOptions">
+        <div v-show="showOptions" class="options">
           <a-list item-layout="horizontal" :data-source="options">
             <a-list-item
               @click="() => item.click($router)"
@@ -81,7 +81,7 @@
           </a-list>
         </div>
       </div>
-      <div class="rubick-select-subMenu" v-else>
+      <div v-else class="rubick-select-subMenu">
         <div>
           <img
             class="icon-tool-sub"
