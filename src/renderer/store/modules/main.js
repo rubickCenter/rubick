@@ -67,7 +67,7 @@ const mutations = {
 };
 
 const actions = {
-  showMainUI({ commit, state }, paylpad) {
+  showMainUI({ commit, state }, payload) {
     ipcRenderer.send("changeWindowSize-rubick", {
       height: getWindowHeight(),
     });

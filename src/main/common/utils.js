@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export const getlocalDataFile = () => {
+export const getLocalDataFile = () => {
   let localDataFile = process.env.HOME;
   if (!localDataFile) {
     localDataFile = process.env.LOCALAPPDATA;
@@ -14,13 +14,13 @@ export function saveData(path, value) {
 
 export function getData(path, defaultValue) {
   try {
-    return JSON.parse(fs.readFileSync(path, 'utf8'));
+    return JSON.parse(fs.readFileSync(path, "utf8"));
   } catch (e) {
     return defaultValue || undefined;
   }
 }
 
-export function throttle (func, wait, options) {
+export function throttle(func, wait, options) {
   let context, args, result;
   let timeout = null;
   let previous = 0;
@@ -54,21 +54,19 @@ export function throttle (func, wait, options) {
 }
 
 export const commonConst = {
-  linux: function () {
-    return process.platform === 'linux'
+  linux: function() {
+    return process.platform === "linux";
   },
-  macOS () {
-    return process.platform === 'darwin';
+  macOS() {
+    return process.platform === "darwin";
   },
-  windows () {
-    return process.platform === 'win32'
+  windows() {
+    return process.platform === "win32";
   },
-  production: function () {
-    return process.env.NODE_ENV !== 'development';
+  production: function() {
+    return process.env.NODE_ENV !== "development";
   },
-  dev: function () {
-    return process.env.NODE_ENV === 'development';
+  dev: function() {
+    return process.env.NODE_ENV === "development";
   },
-}
-
-
+};

@@ -2,7 +2,7 @@
   <div @mousedown="drag">
     <a-layout id="components-layout">
       <div v-if="!searchType" class="rubick-select">
-        <div class="tag-container" v-if="selected">
+        <div v-if="selected" class="tag-container">
           <a-tag
             :key="selected.key"
             @close="closeTag"
@@ -59,7 +59,7 @@
             </div>
           </div>
         </a-input>
-        <div class="options" v-show="showOptions">
+        <div v-show="showOptions" class="options">
           <a-list item-layout="horizontal" :data-source="options">
             <a-list-item
               @click="() => item.click($router)"
@@ -80,8 +80,20 @@
             </a-list-item>
           </a-list>
         </div>
+        <span
+          v-show="selected"
+          class="button-hide-on-blur"
+          @click="changeHideOnBlur"
+        >
+          <a-icon
+            type="pushpin"
+            :style="{
+              color: config.perf.common.hideOnBlur ? 'grey' : '#ea68a2',
+            }"
+          ></a-icon>
+        </span>
       </div>
-      <div class="rubick-select-subMenu" v-else>
+      <div v-else class="rubick-select-subMenu">
         <div>
           <img
             class="icon-tool-sub"
@@ -135,11 +147,10 @@ export default {
     return {
       query: this.$route.query,
       searchFn: null,
-      config: opConfig.get(),
+      config: { ...opConfig.get() },
       currentSelect: 0,
     };
   },
-
   created() {
     window.setPluginInfo = (pluginInfo) => {
       this.commonUpdate({
@@ -147,7 +158,6 @@ export default {
       });
     };
   },
-
   mounted() {
     ipcRenderer.on("init-rubick", this.closeTag);
     ipcRenderer.on("new-window", this.newWindow);
@@ -319,10 +329,14 @@ export default {
       }
     },
     changePath({ key }) {
-      this.$router.push({ path: `/home/${key}` });
-      this.commonUpdate({
-        current: [key],
-      });
+      const path = `/home/${key}`;
+      // 避免重复点击导致跳转相同路由而爆红
+      if (this.$router.history.current.fullPath != path) {
+        this.$router.push({ path });
+        this.commonUpdate({
+          current: [key],
+        });
+      }
     },
     closeTag(v) {
       this.commonUpdate({
@@ -330,6 +344,7 @@ export default {
         showMain: false,
         options: [],
       });
+      this.setHideOnBlur(true);
       ipcRenderer.send("changeWindowSize-rubick", {
         height: getWindowHeight([]),
       });
@@ -392,9 +407,19 @@ export default {
       ipcRenderer.send("window-move");
     },
     dragWhenInput(e) {
-      if (this.searchValue == "") {
+      if (this.searchValue === "") {
         ipcRenderer.send("window-move");
       }
+    },
+    changeHideOnBlur(e) {
+      let cfg = { ...this.config };
+      cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
+      this.config = cfg;
+    },
+    setHideOnBlur(v) {
+      let cfg = { ...this.config };
+      cfg.perf.common.hideOnBlur = v;
+      this.config = cfg;
     },
   },
   computed: {
@@ -410,13 +435,24 @@ export default {
       "pluginLoading",
     ]),
     showOptions() {
-      // 有选项值，且不在显示主页
+      // 有选项值，且不在显示主页。（即出现下方选项框）
       if (this.options.length && !this.showMain) {
         return true;
       }
     },
     searchType() {
       return this.pluginInfo.searchType ? "subWindow" : "";
+    },
+  },
+  watch: {
+    config: {
+      deep: true,
+      handler() {
+        opConfig.set("perf", this.config.perf);
+        opConfig.set("superPanel", this.config.superPanel);
+        opConfig.set("global", this.config.global);
+        ipcRenderer.send("re-register");
+      },
     },
   },
 };
@@ -537,5 +573,10 @@ export default {
     top: 0;
     left: 0;
   }
+}
+.button-hide-on-blur {
+  padding: 0px 3px 0px 0px;
+  // 小按钮只会在碰到1/3处时被认为点击。
+  height: 33%;
 }
 </style>

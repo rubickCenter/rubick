@@ -6,14 +6,14 @@ module.exports = () => {
   let init = (mainWindow) => {
     if (win === null || win === undefined) {
       createWindow();
-      ipcMain.on('superPanel-hidden', () => {
+      ipcMain.on("superPanel-hidden", () => {
         win.hide();
       });
-      ipcMain.on('superPanel-setSize', (e, height) => {
+      ipcMain.on("superPanel-setSize", (e, height) => {
         win.setSize(250, height);
       });
-      ipcMain.on('superPanel-openPlugin', (e, args) => {
-        mainWindow.webContents.send('superPanel-openPlugin', args);
+      ipcMain.on("superPanel-openPlugin", (e, args) => {
+        mainWindow.webContents.send("superPanel-openPlugin", args);
       });
     }
   };
@@ -39,7 +39,7 @@ module.exports = () => {
       win = undefined;
     });
     // 打包后，失焦隐藏
-    win.on('blur', () => {
+    win.on("blur", () => {
       win.hide();
     });
   };
@@ -47,7 +47,7 @@ module.exports = () => {
   let getWindow = () => win;
 
   return {
-    init: init,
-    getWindow: getWindow,
+    init,
+    getWindow,
   };
 };

@@ -1,6 +1,7 @@
-import {app} from 'electron';
-import './config';
-import Listener from './listener';
+import { app } from "electron";
+import "./config";
+import Listener from "./listener";
+import { remote } from "electron";
 
 export default function init(mainWindow) {
   const listener = new Listener();
@@ -16,11 +17,11 @@ export default function init(mainWindow) {
     }
   });
 
-  // 打包后，失焦隐藏
-  mainWindow.on('blur', () => {
-    app.isPackaged && mainWindow.hide();
+  // 判断失焦是否隐藏
+  mainWindow.on("blur", () => {
+    const config = { ...opConfig.get() };
+    if (config.perf.common.hideOnBlur) {
+      mainWindow.hide();
+    }
   });
-
 }
-
-
