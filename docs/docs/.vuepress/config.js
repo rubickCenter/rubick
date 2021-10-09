@@ -1,7 +1,7 @@
 module.exports = {
   title: 'Rubick',
   description: '你的开源桌面插件应用',
-  base: '/rubick/',
+  base: '/',
   themeConfig: {
     themeColor: {
       blue: "#2196f3",
