@@ -69,7 +69,7 @@ $ npm install --global --production windows-build-tools
 可以去一下 `C:\Users\you username\.windows-build-tools` 找一下看看应该会有一个 `vs_BuildTools` 文件
 双击后，会出现以下弹窗：
 
-![](/rubick/images/6.png)
+![](/images/6.png)
 
 点击启动，如果一切正常那么可以方向关掉你的命令行了，此时 vs 已经安装成功，接下来要配置一下编译工具：
 ```shell
@@ -91,7 +91,7 @@ $npm run rebuild
 ```
 
 ## 最后
-如果您在启动过程中还有其他的问题，欢迎随时给我们反馈，我们会在第一时间回复：[issues](https://github.com/clouDr-f2e/rubick/issues/20) 
+如果您在启动过程中还有其他的问题，欢迎随时给我们反馈，我们会在第一时间回复：[issues](https://github.com/rubickCenter/rubick/issues/20) 
 
 
 

@@ -1,7 +1,7 @@
 module.exports = {
   title: 'Rubick',
   description: '你的开源桌面插件应用',
-  base: '/rubick/',
+  base: '/',
   themeConfig: {
     themeColor: {
       blue: "#2196f3",
@@ -13,7 +13,7 @@ module.exports = {
     nav: [
       { text: '使用文档', link: '/guide/' },
       { text: '开发者', link: '/dev/' },
-      { text: 'ChangeLog', link: 'https://github.com/clouDr-f2e/rubick/blob/master/CHANGELOG.md' },
+      { text: 'ChangeLog', link: 'https://github.com/rubickCenter/rubick/blob/master/CHANGELOG.md' },
     ],
     sidebar: [
       {
@@ -44,7 +44,7 @@ module.exports = {
       },
     ],
     // 假定是 GitHub. 同时也可以是一个完整的 GitLab URL
-    repo: 'https://github.com/clouDr-f2e/rubick',
+    repo: 'https://github.com/rubickCenter/rubick',
     // 自定义仓库链接文字。默认从 `themeConfig.repo` 中自动推断为
     // "GitHub"/"GitLab"/"Bitbucket" 其中之一，或是 "Source"。
     repoLabel: 'Github',
