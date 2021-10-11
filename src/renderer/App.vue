@@ -80,18 +80,6 @@
             </a-list-item>
           </a-list>
         </div>
-        <span
-          v-show="selected"
-          class="button-hide-on-blur"
-          @click="changeHideOnBlur"
-        >
-          <a-icon
-            type="pushpin"
-            :style="{
-              color: config.perf.common.hideOnBlur ? 'grey' : '#ea68a2',
-            }"
-          ></a-icon>
-        </span>
       </div>
       <div v-else class="rubick-select-subMenu">
         <div>
@@ -369,6 +357,10 @@ export default {
       ) {
         const pluginMenu = [
           {
+            label: this.config.perf.common.hideOnBlur ? "自动隐藏" : "钉住",
+            click: this.changeHideOnBlur,
+          },
+          {
             label: "开发者工具",
             click: () => {
               const webview = document.getElementById("webview");
@@ -573,10 +565,5 @@ export default {
     top: 0;
     left: 0;
   }
-}
-.button-hide-on-blur {
-  padding: 0px 3px 0px 0px;
-  // 小按钮只会在碰到1/3处时被认为点击。
-  height: 33%;
 }
 </style>
