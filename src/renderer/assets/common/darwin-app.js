@@ -1,15 +1,35 @@
-import fs from "fs";
-import path from "path";
-import {nativeImage} from "electron";
-import translate from "./translate";
-import {APP_FINDER_PATH} from "./constans";
-import iconvLite from "iconv-lite";
-import bpList from "bplist-parser";
+import fs from 'fs';
+import path from 'path';
+import { nativeImage } from 'electron';
+import translate from './translate';
+import { APP_FINDER_PATH } from './constans';
+import iconvLite from 'iconv-lite';
+import bpList from 'bplist-parser';
 
 const fileLists = [];
 
 const isZhRegex = /[\u4e00-\u9fa5]/;
-const getDisplayNameRegex = /\"(?:CFBundleDisplayName)\"\s\=\s\"(.*)\"/;
+const getDisplayNameRegex = /\"?(?:CFBundleDisplayName)\"?\s\=\s\"(.*)\"/;
+
+/**
+ * 通过文件描述获取文件中文名字
+ * @param {string} appInfoPath 文件路径
+ */
+function getAppZhNameByDisplay(appInfoPath) {
+  let appZhName = '';
+  let fileContent = fs.readFileSync(appInfoPath);
+  if (fileContent) {
+    // 解析为utf8或者utf16
+    let contentWithUtf16 = iconvLite.decode(fileContent, 'utf-16');
+    let contentWithUtf8 = iconvLite.decode(fileContent, 'utf-8');
+
+    contentWithUtf16 = contentWithUtf16.match(getDisplayNameRegex);
+    contentWithUtf8 = contentWithUtf8.match(getDisplayNameRegex);
+    appZhName = (contentWithUtf16 && contentWithUtf16[1]) || (contentWithUtf8 && contentWithUtf8[1]);
+  }
+
+  return appZhName;
+}
 
 async function getAppZhName(rootPath, appName) {
   try {
@@ -27,13 +47,7 @@ async function getAppZhName(rootPath, appName) {
     }
     let appZhName = '';
     if (rootPath == '/Applications') {
-      const container = iconvLite.decode(fs.readFileSync(appInfoPath), 'utf-16');
-      if (container) {
-        const res = container.match(getDisplayNameRegex);
-        appZhName = res && res[1];
-      } else {
-        return ERROR_RESULT;
-      }
+      appZhName = getAppZhNameByDisplay(appInfoPath);
     } else {
       const [{ CFBundleDisplayName = '', CFBundleName = '' }] = await bpList.parseFile(appInfoPath);
       appZhName = CFBundleDisplayName || CFBundleName;
@@ -45,7 +59,7 @@ async function getAppZhName(rootPath, appName) {
   }
 }
 
-function getDarwinAppList () {
+function getDarwinAppList() {
   APP_FINDER_PATH.forEach((searchPath, index) => {
     fs.readdir(searchPath, async (err, files) => {
       try {
@@ -84,13 +98,13 @@ function getDarwinAppList () {
                 desc: path.join(searchPath, appName),
                 type: 'app',
                 action: `open ${path.join(searchPath, appName).replace(' ', '\\ ')}`,
-                keyWords: [appSubStr]
+                keyWords: [appSubStr],
               };
 
               if (appZhName && isZhRegex.test(appZhName)) {
                 const py = translate(appZhName);
                 const pinyinArr = py.split(',');
-                const firstLatter = pinyinArr.map(py => py[0]);
+                const firstLatter = pinyinArr.map((py) => py[0]);
                 // 拼音
                 fileOptions.keyWords.push(pinyinArr.join(''));
                 // 缩写
@@ -117,4 +131,4 @@ function getDarwinAppList () {
 export const getApp = {
   init: getDarwinAppList,
   fileLists,
-}
+};
