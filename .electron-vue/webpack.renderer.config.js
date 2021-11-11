@@ -104,6 +104,11 @@ let rendererConfig = {
             name: 'fonts/[name]--[folder].[ext]'
           }
         }
+      },
+      {
+        include: /node_modules/,
+        test: /\.mjs$/,
+        type: 'javascript/auto'
       }
     ]
   },

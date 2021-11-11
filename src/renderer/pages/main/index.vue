@@ -12,7 +12,6 @@
         placeholder="搜索"
       />
       <div class="subfix">
-        <DingIcon :class="ding ? 'active' : 'normal'" />
       </div>
     </div>
     <div
@@ -99,24 +98,6 @@ import dayjs from 'dayjs'
 
 import {debounce} from '../../../common/utils'
 
-const DingSvg = {
-  template: `
-    <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1634697746495" class="icon" viewBox="0 0 1028 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1833" xmlns:xlink="http://www.w3.org/1999/xlink" width="128.5" height="128"><defs><style type="text/css">@font-face { font-family: element-icons; src: url("chrome-extension://moombeodfomdpjnpocobemoiaemednkg/fonts/element-icons.woff") format("woff"), url("chrome-extension://moombeodfomdpjnpocobemoiaemednkg/fonts/element-icons.ttf ") format("truetype"); }
-    </style></defs><path d="M768 20.48l235.52 225.28c30.72 20.48 30.72 61.44 10.24 92.16-30.72 30.72-71.68 30.72-92.16 10.24l-10.24-10.24-20.48-20.48-235.52 337.92 71.68 71.68c20.48 30.72 20.48 71.68-10.24 92.16-20.48 20.48-51.2 20.48-81.92 0L204.8 378.88c-20.48-30.72-20.48-61.44 0-92.16 20.48-20.48 61.44-20.48 81.92 0l71.68 71.68 337.92-235.52-10.24-10.24C655.36 81.92 655.36 51.2 675.84 20.48c20.48-20.48 61.44-30.72 92.16 0zM419.84 686.08l-81.92-81.92c-71.68 81.92-184.32 204.8-204.8 235.52-30.72 30.72-51.2 71.68-71.68 112.64 51.2-10.24 92.16-30.72 122.88-61.44 30.72-20.48 153.6-133.12 235.52-204.8z m0 0" p-id="1834"></path></svg>
-  `
-}
-
-const DingIcon = {
-  template: `
-    <a-icon :component="DingSvg" />
-  `,
-  data () {
-    return {
-      DingSvg
-    }
-  }
-}
-
 export default {
   data () {
     return {
@@ -177,9 +158,6 @@ export default {
     formatDate (time) {
       return dayjs(time).format('YYYY/MM/DD hh:mm:ss')
     }
-  },
-  components: {
-    DingIcon
   }
 }
 </script>

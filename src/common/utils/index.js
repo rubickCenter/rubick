@@ -1,5 +1,5 @@
 import fs from 'fs'
-
+import path from 'path'
 const getWindowHeight = () => {}
 const searchKeyValues = () => {}
 const fileLists = []
@@ -72,6 +72,17 @@ function mergePlugins (origin, target) {
   return JSON.parse(JSON.stringify(origin.concat(diff)))
 }
 
+function mkdirsSync (dirname) {
+  if (fs.existsSync(dirname)) {
+    return true
+  } else {
+    if (mkdirsSync(path.dirname(dirname))) {
+      fs.mkdirSync(dirname)
+      return true
+    }
+  }
+}
+
 export {
   getWindowHeight,
   debounce,
@@ -82,5 +93,6 @@ export {
   find,
   getLocalDataFile,
   existOrNot,
-  mergePlugins
+  mergePlugins,
+  mkdirsSync
 }

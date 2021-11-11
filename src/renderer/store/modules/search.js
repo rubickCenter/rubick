@@ -1,10 +1,7 @@
 import { execSync } from 'child_process'
 import path from 'path'
-import {darwinSearch} from 'rubick-core/packages/rubick-adapter-appsearch'
 import {mergePlugins} from '../../../common/utils'
 import PluginsLoader from '../../../common/utils/pluginsLoader'
-
-import {nativeImage} from 'electron'
 
 function searchKeyValues (lists, value) {
   return lists.filter((item) => {
@@ -21,7 +18,8 @@ let db = {}
 const state = {
   searchList: [],
   totalPlugins: [],
-  searchValue: ''
+  searchValue: '',
+  uiPlugins: []
 }
 
 const _rev = {
@@ -54,6 +52,10 @@ const mutations = {
     Object.keys(payload).forEach((key) => {
       state[key] = payload[key]
     })
+  },
+  updateUIPlugins (state, payload) {
+    console.log(payload)
+    state.uiPlugins = payload
   }
 }
 
@@ -72,19 +74,21 @@ const actions = {
 
     commit('updateSearchList', distPlugins)
     commit('updateTotalPlugins', distPlugins)
+    const uiPlugins = await pluginsLoader.getUIPlugin()
 
-    darwinSearch(nativeImage).then(apps => {
-      console.log(apps)
-      distPlugins = mergePlugins(state.searchList, apps)
-      commit('updateSearchList', distPlugins)
-      commit('updateTotalPlugins', distPlugins)
-      // 更新完成后需要重新filter
-      actions.onSearch({commit, state}, state.searchValue)
-    })
+    commit('updateUIPlugins', uiPlugins)
+
+    const apps = await pluginsLoader.getAppList()
+    distPlugins = mergePlugins(state.searchList, apps)
+    commit('updateSearchList', distPlugins)
+    commit('updateTotalPlugins', distPlugins)
+    // 更新完成后需要重新filter
+    actions.onSearch({commit, state}, state.searchValue)
   },
   onSearch ({commit, state}, value) {
     let options = []
     const plugins = JSON.parse(JSON.stringify(state.totalPlugins))
+    const uiPlugins = JSON.parse(JSON.stringify(state.uiPlugins))
     if (!value) {
       commit('updateSearchList', plugins)
       return
@@ -94,9 +98,9 @@ const actions = {
       commit('commonUpdate', {
         searchValue: value
       })
-      plugins.forEach((plugin) => {
+      uiPlugins.forEach((plugin) => {
         // dev 插件未开启
-        if ((plugin.type === 'dev' && !plugin.status) || plugin.type === 'app') return
+        if (plugin.type === 'dev' && !plugin.status) return
         const feature = plugin.features
         feature.forEach((fe) => {
           const cmds = searchKeyValues(fe.cmds, value)
@@ -129,7 +133,7 @@ const actions = {
             if (!descMap.get(plugin)) {
               descMap.set(plugin, true)
               let has = false
-              plugin.keyWords.some((keyWord) => {
+              plugin.keyWords && plugin.keyWords.some((keyWord) => {
                 if (
                   keyWord
                     .toLocaleUpperCase()
