@@ -58,7 +58,7 @@ function debounce (fn, delay) {
 }
 
 function mergePlugins (origin, target) {
-  const diff = target.filter(t => {
+  const add = target.filter(t => {
     let has = false
     origin.some(o => {
       if (t._name === o._name) {
@@ -69,7 +69,31 @@ function mergePlugins (origin, target) {
     return !has
   })
 
-  return JSON.parse(JSON.stringify(origin.concat(diff)))
+  const subtract = origin.filter(t => {
+    let has = false
+    target.some(o => {
+      if (t._name === o._name) {
+        has = true
+      }
+      return has
+    })
+    return !has
+  })
+
+  console.log(subtract)
+
+  const total = JSON.parse(JSON.stringify(origin.concat(add)))
+
+  return total.filter(t => {
+    let has = false
+    subtract.some(o => {
+      if (t._name === o._name) {
+        has = true
+      }
+      return has
+    })
+    return !has
+  })
 }
 
 function mkdirsSync (dirname) {

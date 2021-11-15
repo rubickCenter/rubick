@@ -35,6 +35,7 @@
     methods: {
       changeMenu (menu) {
         this.active = menu
+        this.$router.push(menu)
       }
     }
   }

@@ -16,10 +16,11 @@ const dbItemName = 'main'
 let db = {}
 
 const state = {
-  searchList: [],
-  totalPlugins: [],
+  searchList: [], // 当前搜索的列表
+  totalPlugins: [], // app
   searchValue: '',
-  uiPlugins: []
+  uiPlugins: [], // 安装的 ui 插件
+  sysPlugins: []
 }
 
 const _rev = {
@@ -54,8 +55,10 @@ const mutations = {
     })
   },
   updateUIPlugins (state, payload) {
-    console.log(payload)
     state.uiPlugins = payload
+  },
+  updateSysPlugins (state, payload) {
+    state.sysPlugins = payload
   }
 }
 
@@ -75,8 +78,9 @@ const actions = {
     commit('updateSearchList', distPlugins)
     commit('updateTotalPlugins', distPlugins)
     const uiPlugins = await pluginsLoader.getUIPlugin()
-
+    const sysPlugins = await pluginsLoader.getSysPlugin()
     commit('updateUIPlugins', uiPlugins)
+    commit('updateSysPlugins', sysPlugins)
 
     const apps = await pluginsLoader.getAppList()
     distPlugins = mergePlugins(state.searchList, apps)
@@ -173,6 +177,12 @@ const actions = {
         searchValue: ''
       })
     }
+  },
+  async downloadPlugin ({commit}, payload) {
+    const plugins = await pluginsLoader.download(payload)
+    commit('commonUpdate', {
+      [payload.type]: plugins
+    })
   }
 }
 

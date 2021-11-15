@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/pages/plugins/index.vue').default
     },
     {
+      path: '/market',
+      name: 'market',
+      component: require('@/pages/market/index.vue').default
+    },
+    {
       path: '*',
       redirect: '/home'
     }
