@@ -3,6 +3,7 @@ import { autoUpdate } from '../common/utils/autoUpdate'
 import createTray from '../common/utils/tray'
 import { commonConst } from '../common/utils'
 import pkg from '../../package.json'
+import Listener from '../common/utils/listener'
 
 import {main} from './browsers'
 
@@ -20,7 +21,6 @@ class InitApp {
     if (!gotTheLock) {
       app.quit()
     } else {
-      console.log(1111)
       this.beforeReady()
       this.onReady()
       this.onRunning()
@@ -28,6 +28,9 @@ class InitApp {
     }
   }
   init () {
+    const listener = new Listener()
+    // 注册快捷键
+    listener.init()
   }
 
   createWindow () {

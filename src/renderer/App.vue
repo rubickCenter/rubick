@@ -11,11 +11,13 @@
         <div class="menu-item" @click="changeMenu('market')">
           <a-icon :class="active === 'market' && 'active'" type="appstore" style="font-size: 24px;" />
         </div>
-        <div class="menu-item" @click="changeMenu('plugin')">
-          <a-icon :class="active === 'plugin' && 'active'" type="heart" style="font-size: 24px;" />
+        <div class="menu-item" @click="changeMenu('installed')">
+          <a-icon :class="active === 'installed' && 'active'" type="heart" style="font-size: 24px;" />
         </div>
-        <div class="menu-item" @click="changeMenu('setting')">
-          <a-icon :class="active === 'setting' && 'active'" type="setting" style="font-size: 24px;" />
+        <div class="menu-item" @click="changeMenu('settings')">
+          <a-icon :class="active === 'settings' && 'active'" type="setting" style="font-size: 24px;" />
+        </div> <div class="menu-item" @click="changeMenu('dev')">
+          <a-icon :class="active === 'dev' && 'active'" type="bug" style="font-size: 24px;" />
         </div>
       </div>
       <div class="menu-item bottom" @click="changeMenu('more')">

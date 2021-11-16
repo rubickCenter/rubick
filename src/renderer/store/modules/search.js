@@ -2,6 +2,8 @@ import { execSync } from 'child_process'
 import path from 'path'
 import {mergePlugins} from '../../../common/utils'
 import PluginsLoader from '../../../common/utils/pluginsLoader'
+import {ipcRenderer} from 'electron'
+import fs from 'fs'
 
 function searchKeyValues (lists, value) {
   return lists.filter((item) => {
@@ -167,14 +169,16 @@ const actions = {
 
     commit('updateSearchList', options)
   },
-  openPlugin ({commit}, plugin) {
+  openPlugin ({commit}, payload) {
+    const {plugin} = payload
     if (plugin.type === 'app') {
       execSync(plugin.action)
-      commit('commonUpdate', {
-        selected: null,
-        showMain: false,
-        options: [],
-        searchValue: ''
+    }
+    if (plugin.type === 'ui') {
+      ipcRenderer.send('msg-trigger', {
+        type: 'openPlugin',
+        url: plugin.sourceFile,
+        opts: JSON.stringify(payload)
       })
     }
   },
@@ -183,6 +187,22 @@ const actions = {
     commit('commonUpdate', {
       [payload.type]: plugins
     })
+  },
+  async getDevPluginDetail ({commit}, {devPluginPath, type, startCmd}) {
+    const info = JSON.parse(fs.readFileSync(path.resolve(devPluginPath, 'plugin.json'), 'utf-8'))
+    const pluginInfo = {
+      sourceFile: path.join(devPluginPath, `./${info.main || 'index.html'}`),
+      type: type,
+      name: startCmd,
+      path: devPluginPath,
+      desc: info.description,
+      icon: 'image://' + path.join(devPluginPath, `./${info.logo || ''}`),
+      ...info
+    }
+    actions.openPlugin(
+      { commit },
+      { cmd: startCmd, plugin: pluginInfo }
+    )
   }
 }
 

@@ -75,10 +75,12 @@ export default class {
 
       const targetPluginPath = path.resolve(pluginPath, 'node_modules', plugin)
       return {
+        sourceFile: path.join(targetPluginPath, `./${info.main || 'index.html'}`),
+        type: 'ui',
         name: plugin,
         path: targetPluginPath,
         desc: info.description,
-        icon: path.join(targetPluginPath, info.logo || ''),
+        icon: 'image://' + path.join(targetPluginPath, `./${info.logo || ''}`),
         ...info
       }
     })

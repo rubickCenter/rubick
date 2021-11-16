@@ -11,14 +11,24 @@ export default new Router({
       component: require('@/pages/main/index.vue').default
     },
     {
-      path: '/plugin',
-      name: 'plugin',
-      component: require('@/pages/plugins/index.vue').default
-    },
-    {
       path: '/market',
       name: 'market',
       component: require('@/pages/market/index.vue').default
+    },
+    {
+      path: '/installed',
+      name: 'installed',
+      component: require('@/pages/installed/index.vue').default
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: require('@/pages/settings/index.vue').default
+    },
+    {
+      path: '/dev',
+      name: 'dev',
+      component: require('@/pages/dev/index.vue').default
     },
     {
       path: '*',

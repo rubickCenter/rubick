@@ -127,7 +127,7 @@ export default {
     },
     openPluginMs (index) {
       setTimeout(() => {
-        this.openPlugin(this.currentPlugin)
+        this.currentPlugin.click()
       }, 10)
     },
     /**

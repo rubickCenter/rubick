@@ -1,4 +1,8 @@
-import {app, BrowserWindow, protocol} from 'electron'
+import {
+  app,
+  BrowserWindow,
+  protocol
+} from 'electron'
 const remoteMain = require('@electron/remote/main')
 
 remoteMain.initialize()
