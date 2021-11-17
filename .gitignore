@@ -19,3 +19,5 @@ thumbs.db
 .idea
 .vscode
 
+plugin-runner/
+

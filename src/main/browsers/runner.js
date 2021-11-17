@@ -3,9 +3,9 @@ import {BrowserWindow} from 'electron'
 export default () => {
   let win
 
-  let init = (url) => {
+  let init = (url, opts) => {
     if (win === null || win === undefined) {
-      createWindow(url)
+      createWindow(url, opts)
     }
   }
 
@@ -20,24 +20,26 @@ export default () => {
       hasShadow: false,
       show: false,
       webPreferences: {
+        webviewTag: true,
+        webSecurity: false,
+        backgroundThrottling: false,
         nodeIntegration: true,
         contextIsolation: false,
         devTools: true,
         preload: `${__static}/runner/preload.js`
       }
     })
-    win.loadURL(`file://${url}`)
+    win.loadURL(`file://${url}?${encodeURIComponent(opts)}`)
     win.on('closed', () => {
       win = undefined
     })
-    console.log(opts)
-    win.webContents
-      .executeJavaScript(`window.rubick.setPluginInfo(${opts})`)
-      .then(() => {
-        win.show()
-      })
-
-    win.once('ready-to-show', () => win.show())
+    win.once('ready-to-show', () => {
+      win.show()
+      win.webContents.send('onPluginEnter', JSON.parse(opts))
+    })
+    win.webContents.on('dom-ready', () => {
+      win.webContents.send('onPluginReady', JSON.parse(opts))
+    })
   }
 
   let getWindow = () => win
