@@ -19,7 +19,7 @@
           "@babel/preset-env",
           {
             "modules": false,
-            "corejs": 3,
+            "corejs": 2,
             "useBuiltIns": "usage"
           }
         ]
