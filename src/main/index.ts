@@ -1,80 +1,104 @@
 "use strict";
-import { app, protocol, BrowserWindow } from "electron";
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
-const isDevelopment = process.env.NODE_ENV !== "production";
+import { app, globalShortcut, protocol, BrowserWindow } from "electron";
+import { main } from "./browsers";
+import commonConst from "../common/utils/commonConst";
 
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
-]);
+class App {
+  private windowCreator: { init: () => void; getWindow: () => BrowserWindow };
 
-async function createWindow() {
-  // Create the browser window.
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env
-        .ELECTRON_NODE_INTEGRATION as unknown as boolean,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-    },
-  });
-
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
-    if (!process.env.IS_TEST) win.webContents.openDevTools();
-  } else {
-    createProtocol("app");
-    // Load the index.html when not in development
-    win.loadURL("app://./index.html");
-  }
-}
-
-// Quit when all windows are closed.
-app.on("window-all-closed", () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("activate", () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
-});
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS3_DEVTOOLS);
-    } catch (e) {
-      console.error("Vue Devtools failed to install:", e.toString());
+  constructor() {
+    protocol.registerSchemesAsPrivileged([
+      { scheme: "app", privileges: { secure: true, standard: true } },
+    ]);
+    this.windowCreator = main();
+    const gotTheLock = app.requestSingleInstanceLock();
+    if (!gotTheLock) {
+      app.quit();
+    } else {
+      this.beforeReady();
+      this.onReady();
+      this.onRunning();
+      this.onQuit();
     }
   }
-  createWindow();
-});
 
-// Exit cleanly on request from parent process in development mode.
-if (isDevelopment) {
-  if (process.platform === "win32") {
-    process.on("message", (data) => {
-      if (data === "graceful-exit") {
+  beforeReady() {
+    // 系统托盘
+    if (commonConst.macOS()) {
+      if (commonConst.production() && !app.isInApplicationsFolder()) {
+        app.moveToApplicationsFolder();
+      } else {
+        app.dock.hide();
+      }
+    } else {
+      app.disableHardwareAcceleration();
+    }
+  }
+
+  createWindow() {
+    this.windowCreator.init();
+  }
+
+  onReady() {
+    const readyFunction = () => {
+      this.createWindow();
+      // this.init()
+      // createTray(this.windowCreator.getWindow())
+      // autoUpdate()
+    };
+    if (!app.isReady()) {
+      app.on("ready", readyFunction);
+    } else {
+      readyFunction();
+    }
+  }
+
+  onRunning() {
+    app.on("second-instance", () => {
+      // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+      const win = this.windowCreator.getWindow();
+      if (win) {
+        if (win.isMinimized()) {
+          win.restore();
+        }
+        win.focus();
+      }
+    });
+    app.on("activate", () => {
+      if (!this.windowCreator.getWindow()) {
+        this.createWindow();
+      }
+    });
+    if (commonConst.windows()) {
+      // app.setAppUserModelId(pkg.build.appId)
+    }
+  }
+
+  onQuit() {
+    app.on("window-all-closed", () => {
+      if (process.platform !== "darwin") {
         app.quit();
       }
     });
-  } else {
-    process.on("SIGTERM", () => {
-      app.quit();
+
+    app.on("will-quit", () => {
+      globalShortcut.unregisterAll();
     });
+
+    if (commonConst.dev()) {
+      if (process.platform === "win32") {
+        process.on("message", (data) => {
+          if (data === "graceful-exit") {
+            app.quit();
+          }
+        });
+      } else {
+        process.on("SIGTERM", () => {
+          app.quit();
+        });
+      }
+    }
   }
 }
+
+new App();
