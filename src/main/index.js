@@ -58,6 +58,13 @@ class initApp {
     } else {
       readyFunction()
     }
+    // 禁止刷新
+    if (commonConst.production()) {
+      app.on("browser-window-focus", function () {
+        globalShortcut.register("CommandOrControl+R", () => {});
+        globalShortcut.register("F5", () => {});
+      });
+    }
   }
 
   onRunning() {
