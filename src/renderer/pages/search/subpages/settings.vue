@@ -202,6 +202,7 @@ export default {
         this.config.perf.shortCut[key] = compose;
         change = true;
       }
+      this.config = { ...this.config };
     },
     addConfig() {
       this.config.global.push({
