@@ -58,13 +58,31 @@ class initApp {
     } else {
       readyFunction()
     }
-    // 禁止刷新
+    // 生产环境禁止刷新
     if (commonConst.production()) {
       app.on("browser-window-focus", function () {
         globalShortcut.register("CommandOrControl+R", () => {});
         globalShortcut.register("F5", () => {});
       });
     }
+    // 自定义 CommandOrControl+W，关闭窗口会导致错误
+    app.on("browser-window-focus", function () {
+      globalShortcut.register("CommandOrControl+W", () => {
+        const win = main.getWindow();
+        if(win.isVisible()){
+          win.hide();
+        }
+      });
+    });
+    // 失焦卸载快捷键
+    app.on('browser-window-blur', function(){
+      if(globalShortcut.isRegistered("CommandOrControl+W"))
+        globalShortcut.unregister("CommandOrControl+W");
+      if(globalShortcut.isRegistered("CommandOrControl+R"))
+        globalShortcut.unregister("CommandOrControl+R");
+      if(globalShortcut.isRegistered("F5"))
+        globalShortcut.unregister("F5");
+    })
   }
 
   onRunning() {
