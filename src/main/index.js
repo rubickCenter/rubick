@@ -58,6 +58,15 @@ class initApp {
     } else {
       readyFunction()
     }
+    // 自定义 CommandOrControl+W，关闭窗口会导致错误
+    app.on("browser-window-focus", function () {
+      globalShortcut.register("CommandOrControl+W", () => {
+        const win = main.getWindow();
+        if(win.isVisible()){
+          win.hide();
+        }
+      });
+    });
   }
 
   onRunning() {
