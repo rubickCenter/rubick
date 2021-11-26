@@ -1,0 +1,29 @@
+{
+  "pluginName": "rubick 系统菜单",
+  "description": "rubick 系统菜单",
+  "main": "index.html",
+  "logo": "logo.jpg",
+  "version": "0.0.0",
+  "preload":"preload.js",
+  "features": [
+    {
+      "code": "market",
+      "explain": "rubick 插件市场",
+      "cmds":[
+        "插件市场"
+      ]
+    },{
+      "code": "plugins",
+      "explain": "rubick 已安装插件",
+      "cmds":[
+        "已安装插件"
+      ]
+    },{
+      "code": "settings",
+      "explain": "rubick 偏好设置",
+      "cmds":[
+        "偏好设置"
+      ]
+    }
+  ]
+}

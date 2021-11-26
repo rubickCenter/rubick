@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "feature:dev": "cd feature & npm run serve",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
@@ -13,12 +14,19 @@
   },
   "main": "background.js",
   "dependencies": {
+    "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
+    "cross-spawn": "^7.0.3",
+    "get-mac-apps": "^1.0.2",
+    "got": "^11.8.3",
+    "libnpmsearch": "^3.1.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
+    "@ts-type/package-dts": "^1.0.53",
     "@types/electron-devtools-installer": "^2.2.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
@@ -40,6 +48,7 @@
     "less-loader": "^5.0.0",
     "prettier": "^2.2.1",
     "typescript": "~4.1.5",
-    "vue-cli-plugin-electron-builder": "~2.1.1"
+    "vue-cli-plugin-electron-builder": "~2.1.1",
+    "worker-plugin": "^5.0.1"
   }
 }

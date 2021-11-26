@@ -2,6 +2,9 @@
 import { app, globalShortcut, protocol, BrowserWindow } from "electron";
 import { main } from "./browsers";
 import commonConst from "../common/utils/commonConst";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import API from "./common/api";
 
 class App {
   private windowCreator: { init: () => void; getWindow: () => BrowserWindow };
@@ -42,6 +45,7 @@ class App {
   onReady() {
     const readyFunction = () => {
       this.createWindow();
+      API(this.windowCreator.getWindow());
       // this.init()
       // createTray(this.windowCreator.getWindow())
       // autoUpdate()

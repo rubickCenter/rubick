@@ -1,3 +1,3 @@
 import main from "./main";
-console.log(111);
-export { main };
+import runner from "./runner";
+export { main, runner };

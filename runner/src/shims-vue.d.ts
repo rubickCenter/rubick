@@ -4,9 +4,3 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
-
-declare module 'main' {
-  export function main (): any
-}
-
-declare const __static: string

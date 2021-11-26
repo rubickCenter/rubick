@@ -5,7 +5,7 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        "@": path.join(__dirname, "./src/renderer"),
+        "@": path.join(__dirname, "./src"),
       },
     },
   },
@@ -16,6 +16,7 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
+      nodeIntegration: true,
       mainProcessFile: "src/main/index.ts",
       mainProcessWatch: ["src/main"],
       // Use this to change the entry point of your app's render process. default src/[main|index].[js|ts]
