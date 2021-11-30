@@ -29,7 +29,7 @@ export default () => {
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      win.loadURL("http://localhost:8080" as string);
+      win.loadURL("http://localhost:8081" as string);
     } else {
       // Load the index.html when not in development
       win.loadURL(`file://${__static}/runner/index.html`);

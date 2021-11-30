@@ -10,3 +10,5 @@ declare module 'main' {
 }
 
 declare const __static: string
+
+declare module 'lodash.throttle'

@@ -1,6 +1,9 @@
 <template>
-  {{pluginInfo}}
-  <webview id="webview" :src="`File://${pluginInfo.indexPath}`"></webview>
+  <webview
+    id="webview"
+    :src="`File://${pluginInfo.indexPath}`"
+    :preload="preload"
+  />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +13,7 @@ const state = reactive({
 });
 
 window.setPluginInfo = (pluginInfo: any) => {
+  console.log(pluginInfo);
   try {
     state.pluginInfo = pluginInfo;
   } catch (e) {
