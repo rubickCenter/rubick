@@ -9,7 +9,7 @@ export default () => {
 
   const createWindow = async () => {
     win = new BrowserWindow({
-      height: 600,
+      height: 60,
       useContentSize: true,
       resizable: true,
       width: 800,

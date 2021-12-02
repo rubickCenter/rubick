@@ -12,31 +12,22 @@ export default () => {
   const createWindow = (plugin) => {
     win = new BrowserWindow({
       autoHideMenuBar: true,
-      width: 800,
-      height: 800,
+      width: 850,
+      height: 700,
       alwaysOnTop: true,
-      resizable: false,
       focusable: true,
       show: false,
       webPreferences: {
+        enableRemoteModule: true,
         webSecurity: false,
         nodeIntegration: true,
         contextIsolation: false,
         devTools: true,
         webviewTag: true,
+        preload: `${__static}/preload.js`,
       },
     });
-
-    if (process.env.WEBPACK_DEV_SERVER_URL) {
-      // Load the url of the dev server if in development mode
-      win.loadURL("http://localhost:8081" as string);
-    } else {
-      // Load the index.html when not in development
-      win.loadURL(`file://${__static}/runner/index.html`);
-    }
-    win.webContents.on("dom-ready", () => {
-      win.webContents.executeJavaScript(`window.setPluginInfo(${JSON.stringify(plugin)})`);
-    });
+    win.loadURL(plugin.indexPath);
 
     win.once("ready-to-show", () => {
       win.show();

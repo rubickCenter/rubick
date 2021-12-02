@@ -1,10 +1,20 @@
-import { reactive, toRefs, nextTick } from "vue";
-import { nativeImage, remote } from "electron";
+import { reactive, toRefs, toRaw } from "vue";
+import { nativeImage, remote, ipcRenderer } from "electron";
 import { appSearch, PluginHandler } from "@/core";
 import path from "path";
 import throttle from "lodash.throttle";
+import commonConst from "@/common/utils/commonConst";
 
 const appPath = remote.app.getPath("cache");
+
+function searchKeyValues(lists, value) {
+  return lists.filter((item) => {
+    if (typeof item === "string") {
+      return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    }
+    return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+  });
+}
 
 const createPluginManager = (): any => {
   const baseDir = path.join(appPath, "./rubick-plugins");
@@ -17,6 +27,7 @@ const createPluginManager = (): any => {
     plugins: [],
     options: [],
     searchValue: "",
+    localPlugins: [],
   });
 
   const initPlugins = async () => {
@@ -35,9 +46,44 @@ const createPluginManager = (): any => {
     const value = e.target.value;
     state.searchValue = value;
     if (!value) return;
-    // todo 先搜索 plugin
-    // todo 再搜索 app
+    state.localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
     let options: any = [];
+    // todo 先搜索 plugin
+    state.localPlugins.forEach((plugin) => {
+      const feature = plugin.features;
+      feature.forEach((fe) => {
+        const cmds = searchKeyValues(fe.cmds, value);
+        options = [
+          ...options,
+          ...cmds.map((cmd) => ({
+            name: cmd,
+            value: "plugin",
+            icon: plugin.logo,
+            desc: fe.explain,
+            type: plugin.pluginType,
+            click: () => {
+              const pluginPath = path.resolve(
+                pluginInstance.baseDir,
+                "node_modules",
+                plugin.name
+              );
+              ipcRenderer.sendSync("msg-trigger", {
+                type: "openPlugin",
+                plugin: {
+                  ...toRaw(plugin),
+                  indexPath: `file://${path.join(
+                    pluginPath,
+                    "./",
+                    plugin.main
+                  )}`,
+                },
+              });
+            },
+          })),
+        ];
+      });
+    });
+    // todo 再搜索 app
     const descMap = new Map();
     options = [
       ...options,
@@ -77,7 +123,9 @@ const createPluginManager = (): any => {
     const pluginInfo = await pluginInstance.getAdapterInfo(pluginName, pluginPath);
     return {
       ...pluginInfo,
-      indexPath: path.join(pluginPath, "../", pluginInfo.main),
+      indexPath: commonConst.dev()
+        ? "http://localhost:8080/#/"
+        : `file://${path.join(pluginPath, "../", pluginInfo.main)}`,
     };
   };
 

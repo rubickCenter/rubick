@@ -5,6 +5,7 @@ import commonConst from "../common/utils/commonConst";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import API from "./common/api";
+import "../common/utils/localPlugin";
 
 class App {
   private windowCreator: { init: () => void; getWindow: () => BrowserWindow };

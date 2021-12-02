@@ -8,7 +8,6 @@ const API: any = {
     win.setSize(800, height || 60);
   },
   openPlugin({plugin}) {
-    console.log(plugin);
     runnerInstance.init(plugin);
   },
 };

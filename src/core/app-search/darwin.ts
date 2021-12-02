@@ -31,7 +31,7 @@ async function getAppIcon(
     const existsnone = fs.existsSync(iconnone);
     if (exists) return true;
     if (existsnone) return false;
-    const appName: string = appPath.split("/").pop() ?? "";
+    const appName: string = appPath.split("/").pop() || "";
     const extname: string = path.extname(appName);
     const appSubStr: string = appName.split(extname)[0];
     const path1 = path.join(appPath, `/Contents/Resources/App.icns`);

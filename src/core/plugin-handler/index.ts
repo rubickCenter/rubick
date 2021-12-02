@@ -34,7 +34,8 @@ class AdapterHandler {
       );
     }
     this.baseDir = options.baseDir;
-    this.registry = options.registry ?? "https://registry.npm.taobao.org";
+    console.log(this.baseDir);
+    this.registry = options.registry || "https://registry.npm.taobao.org";
   }
 
   /**
@@ -68,8 +69,8 @@ class AdapterHandler {
   }
 
   // 安装并启动插件
-  async install(adapters: Array<string>, opts?: any) {
-    const installCmd = opts.isDev ? "link" : "install";
+  async install(adapters: Array<string>) {
+    const installCmd = "install";
     // 安装
     await this.execCommand(installCmd, adapters);
   }

@@ -1,18 +1,19 @@
 <template>
   <webview
+    v-if="preload"
     id="webview"
     :src="`File://${pluginInfo.indexPath}`"
     :preload="preload"
   />
 </template>
 
-<script setup lang="ts">
+<script setup >
 import { reactive, toRefs, onMounted } from "vue";
 const state = reactive({
   pluginInfo: {},
 });
 
-window.setPluginInfo = (pluginInfo: any) => {
+window.setPluginInfo = (pluginInfo) => {
   console.log(pluginInfo);
   try {
     state.pluginInfo = pluginInfo;
@@ -21,14 +22,7 @@ window.setPluginInfo = (pluginInfo: any) => {
   }
 };
 
-onMounted(() => {
-  const webview: any = document.querySelector("webview");
-  webview.addEventListener("dom-ready", () => {
-    webview.openDevTools();
-  });
-});
-
-const { pluginInfo } = toRefs(state);
+const { pluginInfo, preload } = toRefs(state);
 </script>
 
 <style>
