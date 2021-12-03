@@ -1,22 +1,25 @@
-import { app, BrowserWindow } from "electron";
+import { BrowserView, BrowserWindow, session } from "electron";
+import path from "path";
+import commonConst from "../../common/utils/commonConst";
 
 export default () => {
-  let win;
+  let view;
 
-  const init = (plugin) => {
-    if (win === null || win === undefined) {
-      createWindow(plugin);
+  const init = (plugin, window: BrowserWindow) => {
+    if (view === null || view === undefined) {
+      createView(plugin, window);
     }
   };
 
-  const createWindow = (plugin) => {
-    win = new BrowserWindow({
-      autoHideMenuBar: true,
-      width: 850,
-      height: 700,
-      alwaysOnTop: true,
-      focusable: true,
-      show: false,
+  const createView = (plugin, window: BrowserWindow) => {
+    const preload = commonConst.dev()
+      ? `http://localhost:8080/preload.js`
+      : path.resolve(plugin.indexPath, `../`, plugin.preload);
+
+    const ses = session.fromPartition("<" + plugin.name + ">");
+    ses.setPreloads([`${__static}/preload.js`]);
+
+    view = new BrowserView({
       webPreferences: {
         enableRemoteModule: true,
         webSecurity: false,
@@ -24,24 +27,32 @@ export default () => {
         contextIsolation: false,
         devTools: true,
         webviewTag: true,
-        preload: `${__static}/preload.js`,
+        preload,
+        session: ses,
       },
     });
-    win.loadURL(plugin.indexPath);
-
-    win.once("ready-to-show", () => {
-      win.show();
-    });
-
-    win.on("closed", () => {
-      win = undefined;
+    window.setBrowserView(view);
+    view.webContents.loadURL(plugin.indexPath);
+    window.once("ready-to-show", () => {
+      view.setBounds({ x: 0, y: 60, width: 800, height: 600 });
+      view.setAutoResize({ width: true });
+      window.setSize(800, 660);
+      view.webContents.openDevTools();
     });
   };
 
-  const getWindow = () => win;
+  const removeView = (window: BrowserWindow) => {
+    if (!view) return;
+    window.removeBrowserView(view);
+    window.setSize(800, 60);
+    view = undefined;
+  };
+
+  const getView = () => view;
 
   return {
     init,
-    getWindow,
+    getView,
+    removeView,
   };
 };

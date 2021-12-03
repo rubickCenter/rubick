@@ -34,7 +34,6 @@ class AdapterHandler {
       );
     }
     this.baseDir = options.baseDir;
-    console.log(this.baseDir);
     this.registry = options.registry || "https://registry.npm.taobao.org";
   }
 

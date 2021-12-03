@@ -35,7 +35,6 @@ export default createStore({
           origin.isloading = false;
         }
       );
-
       commit("commonUpdate", {
         localPlugins,
         totalPlugins,
@@ -64,8 +63,17 @@ export default createStore({
           }
         }
       );
+      const localPlugins = (window as any).rubick.getLocalPlugins();
+
       commit("commonUpdate", {
         totalPlugins,
+        localPlugins,
+      });
+    },
+    updateLocalPlugin({ commit }) {
+      const localPlugins = (window as any).rubick.getLocalPlugins();
+      commit("commonUpdate", {
+        localPlugins,
       });
     },
   },

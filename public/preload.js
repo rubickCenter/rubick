@@ -7,4 +7,7 @@ window.rubick = {
   downloadPlugin(plugin) {
     return remote.getGlobal("LOCAL_PLUGINS").downloadPlugin(plugin);
   },
+  deletePlugin(plugin) {
+    return remote.getGlobal("LOCAL_PLUGINS").deletePlugin(plugin);
+  },
 };

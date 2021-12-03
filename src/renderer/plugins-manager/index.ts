@@ -28,6 +28,7 @@ const createPluginManager = (): any => {
     options: [],
     searchValue: "",
     localPlugins: [],
+    currentPlugin: {},
   });
 
   const initPlugins = async () => {
@@ -67,16 +68,15 @@ const createPluginManager = (): any => {
                 "node_modules",
                 plugin.name
               );
-              ipcRenderer.sendSync("msg-trigger", {
-                type: "openPlugin",
-                plugin: {
-                  ...toRaw(plugin),
-                  indexPath: `file://${path.join(
-                    pluginPath,
-                    "./",
-                    plugin.main
-                  )}`,
-                },
+              openPlugin({
+                ...toRaw(plugin),
+                indexPath: `file://${path.join(
+                  pluginPath,
+                  "./",
+                  plugin.main
+                )}`,
+                cmd,
+                feature: fe,
               });
             },
           })),
@@ -111,7 +111,7 @@ const createPluginManager = (): any => {
         })
         .map((plugin) => {
           plugin.click = () => {
-            _openPlugin({ plugin });
+            openPlugin(plugin);
           };
           return plugin;
         }),
@@ -129,8 +129,18 @@ const createPluginManager = (): any => {
     };
   };
 
-  const _openPlugin = ({ plugin }) => {
-    //
+  const openPlugin = (plugin) => {
+    if (plugin.pluginType === "ui") {
+      state.currentPlugin = plugin;
+      ipcRenderer.sendSync("msg-trigger", {
+        type: "openPlugin",
+        plugin: JSON.parse(JSON.stringify(plugin)),
+      });
+    }
+  };
+
+  const changeSelect = (select) => {
+    state.currentPlugin = select;
   };
 
   return {
@@ -140,6 +150,8 @@ const createPluginManager = (): any => {
     removePlugin,
     onSearch,
     getPluginInfo,
+    openPlugin,
+    changeSelect,
   };
 };
 

@@ -7,8 +7,12 @@ const API: any = {
   setExpendHeight({ height }: { height: number }, win: BrowserWindow): void {
     win.setSize(800, height || 60);
   },
-  openPlugin({plugin}) {
-    runnerInstance.init(plugin);
+  openPlugin({ plugin }, window) {
+    runnerInstance.removeView(window);
+    runnerInstance.init(plugin, window);
+  },
+  removePlugin(e, window) {
+    runnerInstance.removeView(window);
   },
 };
 

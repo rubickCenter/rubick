@@ -1,14 +1,16 @@
 <template>
   <div class="rubick-select">
+    <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
     <a-input
       class="main-input"
       placeholder="Hi, Rubick2"
-      @change="(e) => emit('onSearch', e)"
+      @change="(e) => changeValue(e)"
       @keydown.down="() => emit('changeCurrent', 1)"
       @keydown.up="() => emit('changeCurrent', -1)"
+      @keydown="checkNeedInit"
     >
       <template #suffix>
-        <div @click="openMenu" class="suffix-tool" >
+        <div @click="() => emit('openMenu')" class="suffix-tool" >
           <div class="rubick-logo">
             <img src="../assets/logo.png" />
           </div>
@@ -19,19 +21,33 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, toRaw } from "vue";
+import { defineProps, defineEmits, ref } from "vue";
 import { ipcRenderer } from "electron";
 
-const props = defineProps({
-  menuPluginInfo: {},
+defineProps({
+  currentPlugin: {},
 });
 
-const emit = defineEmits(["onSearch", "changeCurrent"]);
+const searchValue = ref("");
 
-const openMenu = async () => {
-  ipcRenderer.sendSync("msg-trigger", {
-    type: "openPlugin",
-    plugin: toRaw(props.menuPluginInfo),
+const changeValue = (e) => {
+  emit("onSearch", e);
+  searchValue.value = e.target.value;
+};
+
+const emit = defineEmits(["onSearch", "changeCurrent", "openMenu", "changeSelect"]);
+
+const checkNeedInit = (e) => {
+  console.log(e.keyCode);
+  if (searchValue.value === "" && e.keyCode === 8) {
+    closeTag();
+  }
+};
+
+const closeTag = () => {
+  emit("changeSelect", {});
+  ipcRenderer.send("msg-trigger", {
+    type: "removePlugin",
   });
 };
 </script>
@@ -45,6 +61,21 @@ const openMenu = async () => {
   top: 0;
   left: 0;
   width: 100%;
+  align-items: center;
+  .select-tag {
+    white-space: pre;
+    user-select: none;
+    font-size: 18px;
+    border-radius: 16px;
+    height: 32px;
+    position: relative;
+    color: #fff;
+    background-color: rgba(255, 78, 164, 0.8);
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1px;
+    padding: 0 10px;
+  }
   .main-input {
     height: 60px !important;
     box-sizing: border-box;

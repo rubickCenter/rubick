@@ -1,21 +1,36 @@
 <template>
   <div id="components-layout">
     <div class="rubick-select">
-      <Search @changeCurrent="changeIndex" :menuPluginInfo="menuPluginInfo" @onSearch="onSearch" />
+      <Search
+        :currentPlugin="currentPlugin"
+        @changeCurrent="changeIndex"
+        @onSearch="onSearch"
+        @openMenu="openMenu"
+        @changeSelect="changeSelect"
+      />
     </div>
     <Result :searchValue="searchValue" :currentSelect="currentSelect" :options="options" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick } from "vue";
+import { watch, ref, nextTick, toRaw } from "vue";
 import { ipcRenderer } from "electron";
 import Result from "./components/result.vue";
 import Search from "./components/search.vue";
 import getWindowHeight from "../common/utils/getWindowHeight";
 import createPluginManager from "./plugins-manager";
 
-const { initPlugins, getPluginInfo, options, onSearch, searchValue } = createPluginManager();
+const {
+  initPlugins,
+  getPluginInfo,
+  options,
+  onSearch,
+  searchValue,
+  changeSelect,
+  openPlugin,
+  currentPlugin,
+} = createPluginManager();
 
 initPlugins();
 
@@ -48,6 +63,13 @@ const changeIndex = (index) => {
   )
     return;
   currentSelect.value = currentSelect.value + index;
+};
+
+const openMenu = () => {
+  openPlugin({
+    ...toRaw(menuPluginInfo.value),
+    cmd: "插件市场",
+  });
 };
 </script>
 

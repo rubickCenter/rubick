@@ -5,6 +5,7 @@
   "logo": "logo.jpg",
   "version": "0.0.0",
   "preload":"preload.js",
+  "pluginType": "ui",
   "features": [
     {
       "code": "market",

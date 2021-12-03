@@ -78,8 +78,7 @@ const state = reactive({
 });
 
 const store = useStore();
-const init = () => store.dispatch("init");
-init();
+
 const totalPlugins = computed(() => store.state.totalPlugins);
 
 const { searchValue, current } = toRefs(state);
@@ -93,6 +92,7 @@ const { searchValue, current } = toRefs(state);
   width: 100%;
   overflow: hidden;
   background: #F3EFEF;
+  height: calc(~"100vh - 46px");
   .left-menu {
     width: 200px;
     height: 100vh;
@@ -116,7 +116,7 @@ const { searchValue, current } = toRefs(state);
   .container {
     background: #fff;
     width: calc(~'100% - 200px');
-    height: 100vh;
+    height: 100%;
     box-sizing: border-box;
     padding: 10px 20px;
     position: relative;
