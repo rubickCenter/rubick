@@ -83,7 +83,7 @@ const readme = computed(() => {
 });
 
 const deletePlugin = async (plugin) => {
-  await window.rubick.deletePlugin(plugin);
+  await window.market.deletePlugin(plugin);
   updateLocalPlugin();
 };
 </script>

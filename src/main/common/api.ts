@@ -1,18 +1,31 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, ipcMain, dialog } from "electron";
 import { runner } from "../browsers";
 
 const runnerInstance = runner();
 
 const API: any = {
-  setExpendHeight({ height }: { height: number }, win: BrowserWindow): void {
-    win.setSize(800, height || 60);
-  },
   openPlugin({ plugin }, window) {
     runnerInstance.removeView(window);
     runnerInstance.init(plugin, window);
   },
   removePlugin(e, window) {
     runnerInstance.removeView(window);
+  },
+  hideMainWindow(arg, window) {
+    window.hide();
+  },
+  showMainWindow(arg, window) {
+    window.show();
+  },
+  showOpenDialog({ data }, window) {
+    dialog.showOpenDialogSync(window, data);
+  },
+  setExpendHeight({ data: height }, window: BrowserWindow) {
+    const targetHeight = height;
+    window.setSize(window.getSize()[0], targetHeight);
+  },
+  setSubInput() {
+
   },
 };
 

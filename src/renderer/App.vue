@@ -7,9 +7,15 @@
         @onSearch="onSearch"
         @openMenu="openMenu"
         @changeSelect="changeSelect"
+        :searchValue="searchValue"
       />
     </div>
-    <Result :searchValue="searchValue" :currentSelect="currentSelect" :options="options" />
+    <Result
+      :currentPlugin="currentPlugin"
+      :searchValue="searchValue"
+      :currentSelect="currentSelect"
+      :options="options"
+    />
   </div>
 </template>
 
@@ -40,7 +46,7 @@ const menuPluginInfo = ref({});
 getPluginInfo({
   pluginName: "feature",
   // eslint-disable-next-line no-undef
-  pluginPath: `${__static}/feature/plugin.json`,
+  pluginPath: `${__static}/feature/package.json`,
 }).then((res) => {
   menuPluginInfo.value = res;
 });
@@ -50,7 +56,7 @@ watch([searchValue], () => {
   nextTick(() => {
     ipcRenderer.sendSync("msg-trigger", {
       type: "setExpendHeight",
-      height: getWindowHeight(searchValue.value ? options.value : []),
+      data: getWindowHeight(searchValue.value ? options.value : []),
     });
   });
 });
@@ -68,6 +74,7 @@ const changeIndex = (index) => {
 const openMenu = () => {
   openPlugin({
     ...toRaw(menuPluginInfo.value),
+    feature: menuPluginInfo.value.features[0],
     cmd: "插件市场",
   });
 };

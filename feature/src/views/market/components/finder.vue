@@ -15,8 +15,17 @@
         <img @click="jumpTo(banner.link)" width="100%" :src="banner.src" />
       </div>
     </a-carousel>
-    <PluginList @downloadSuccess="downloadSuccess" title="推荐" :list="recommend || []" />
-    <PluginList title="最近更新" :list="newList || []" />
+    <PluginList
+      v-if="recommend && !!recommend.length"
+      @downloadSuccess="downloadSuccess"
+      title="推荐"
+      :list="recommend"
+    />
+    <PluginList
+      v-if="newList && !!newList.length"
+      title="最近更新"
+      :list="newList"
+    />
   </div>
 </template>
 
@@ -25,7 +34,7 @@ import {
   LeftCircleOutlined,
   RightCircleOutlined,
 } from "@ant-design/icons-vue";
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import request from "../../../assets/request/index";
 import PluginList from "./plugin-list.vue";
 
@@ -35,8 +44,9 @@ const totalPlugins = computed(() => store.state.totalPlugins);
 
 const data = ref([]);
 
-request.getFinderDetail().then(res => {
-  data.value = res;
+onBeforeMount(async () => {
+  console.log(12312);
+  data.value = await request.getFinderDetail();
 });
 
 const recommend = computed(() => {

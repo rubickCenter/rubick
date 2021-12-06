@@ -2,12 +2,14 @@
   <div class="rubick-select">
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
     <a-input
+      id="search"
       class="main-input"
       placeholder="Hi, Rubick2"
-      @change="(e) => changeValue(e)"
+      @input="(e) => changeValue(e)"
       @keydown.down="() => emit('changeCurrent', 1)"
       @keydown.up="() => emit('changeCurrent', -1)"
       @keydown="checkNeedInit"
+      :value="searchValue"
     >
       <template #suffix>
         <div @click="() => emit('openMenu')" class="suffix-tool" >
@@ -24,22 +26,22 @@
 import { defineProps, defineEmits, ref } from "vue";
 import { ipcRenderer } from "electron";
 
-defineProps({
+const props = defineProps({
+  searchValue: {
+    type: [String, Number],
+    default: "",
+  },
   currentPlugin: {},
 });
 
-const searchValue = ref("");
-
 const changeValue = (e) => {
   emit("onSearch", e);
-  searchValue.value = e.target.value;
 };
 
 const emit = defineEmits(["onSearch", "changeCurrent", "openMenu", "changeSelect"]);
 
 const checkNeedInit = (e) => {
-  console.log(e.keyCode);
-  if (searchValue.value === "" && e.keyCode === 8) {
+  if (props.searchValue === "" && e.keyCode === 8) {
     closeTag();
   }
 };

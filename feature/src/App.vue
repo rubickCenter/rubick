@@ -51,6 +51,10 @@ const changeMenu = (key: any) => {
 const store = useStore();
 const init = () => store.dispatch("init");
 init();
+
+(window as any).rubick.onPluginEnter((res) => {
+  console.log(res);
+})
 </script>
 <style lang="less">
 * {

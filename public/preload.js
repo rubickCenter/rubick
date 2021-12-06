@@ -1,13 +1,46 @@
-const {remote} = require("electron");
-console.log(remote)
+const {ipcRenderer} = require("electron");
+
+const ipcSendSync = (type, data) => {
+  const returnValue = ipcRenderer.sendSync("msg-trigger", {
+    type,
+    data,
+  });
+  if (returnValue instanceof Error) throw returnValue;
+  return returnValue;
+};
+
 window.rubick = {
-  getLocalPlugins() {
-    return remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
+  hooks: {},
+  // 事件
+  onPluginEnter(cb) {
+    console.log(window.rubick.hooks)
+    typeof cb === "function" && (window.rubick.hooks.onPluginEnter = cb);
   },
-  downloadPlugin(plugin) {
-    return remote.getGlobal("LOCAL_PLUGINS").downloadPlugin(plugin);
+  onPluginReady(cb) {
+    typeof cb === "function" && (window.rubick.hooks.onPluginReady = cb);
   },
-  deletePlugin(plugin) {
-    return remote.getGlobal("LOCAL_PLUGINS").deletePlugin(plugin);
+  onPluginOut(cb) {
+    typeof cb === "function" && (window.rubick.hooks.onPluginOut = cb);
+  },
+
+  // 窗口交互
+  hideMainWindow() {
+    ipcSendSync("hideMainWindow");
+  },
+  showMainWindow() {
+    ipcSendSync("showMainWindow");
+  },
+  showOpenDialog(options) {
+    ipcSendSync("showOpenDialog", options);
+  },
+  setExpendHeight(height) {
+    ipcSendSync("setExpendHeight", height);
+  },
+  setSubInput(onChange, placeholder = "", isFocus) {
+    typeof cb === "function" && (window.rubick.hooks.onSubInputChange = onChange);
+    ipcSendSync("setSubInput", {
+      placeholder,
+      isFocus,
+    });
   },
 };

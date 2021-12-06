@@ -13,7 +13,7 @@ export default () => {
 
   const createView = (plugin, window: BrowserWindow) => {
     const preload = commonConst.dev()
-      ? `http://localhost:8080/preload.js`
+      ? path.resolve(__static, `../feature/public/preload.js`)
       : path.resolve(plugin.indexPath, `../`, plugin.preload);
 
     const ses = session.fromPartition("<" + plugin.name + ">");
@@ -38,6 +38,8 @@ export default () => {
       view.setAutoResize({ width: true });
       window.setSize(800, 660);
       view.webContents.openDevTools();
+      executeHooks(plugin.ext, "PluginEnter");
+      executeHooks(plugin.ext, "PluginReady");
     });
   };
 
@@ -45,10 +47,21 @@ export default () => {
     if (!view) return;
     window.removeBrowserView(view);
     window.setSize(800, 60);
+    executeHooks("PluginOut", null);
     view = undefined;
   };
 
   const getView = () => view;
+
+  const executeHooks = (hook, data) => {
+    const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {     
+          try { 
+            window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ""});
+          } catch(e) {} 
+        }
+      `;
+    view.webContents.executeJavaScript(evalJs);
+  };
 
   return {
     init,

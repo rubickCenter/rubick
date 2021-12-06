@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!!options.length && searchValue" class="options" ref="scrollDom">
+  <div v-show="!!options.length && searchValue && !currentPlugin.name" class="options" ref="scrollDom">
     <a-list item-layout="horizontal" :dataSource="options">
       <template #renderItem="{ item, index }">
         <a-list-item
@@ -45,6 +45,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  currentPlugin: {},
 });
 
 const renderTitle = (title) => {

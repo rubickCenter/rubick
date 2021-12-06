@@ -27,7 +27,7 @@ export default createStore({
   actions: {
     async init({ commit }) {
       const totalPlugins = await request.getTotalPlugins();
-      const localPlugins = (window as any).rubick.getLocalPlugins();
+      const localPlugins = (window as any).market.getLocalPlugins();
 
       totalPlugins.forEach(
         (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
@@ -63,7 +63,7 @@ export default createStore({
           }
         }
       );
-      const localPlugins = (window as any).rubick.getLocalPlugins();
+      const localPlugins = (window as any).market.getLocalPlugins();
 
       commit("commonUpdate", {
         totalPlugins,
@@ -71,7 +71,7 @@ export default createStore({
       });
     },
     updateLocalPlugin({ commit }) {
-      const localPlugins = (window as any).rubick.getLocalPlugins();
+      const localPlugins = (window as any).market.getLocalPlugins();
       commit("commonUpdate", {
         localPlugins,
       });

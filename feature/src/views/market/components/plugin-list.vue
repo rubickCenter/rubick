@@ -73,7 +73,7 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons-vue";
 
-import { computed, defineProps, ref } from "vue";
+import { defineProps, ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -91,7 +91,7 @@ defineProps({
 
 const downloadPlugin = async (plugin) => {
   startDownload(plugin.name);
-  await window.rubick.downloadPlugin(plugin);
+  await window.market.downloadPlugin(plugin);
   successDownload(plugin.name);
 };
 
