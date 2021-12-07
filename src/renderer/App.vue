@@ -8,6 +8,7 @@
         @openMenu="openMenu"
         @changeSelect="changeSelect"
         :searchValue="searchValue"
+        :placeholder="placeholder"
       />
     </div>
     <Result
@@ -36,6 +37,7 @@ const {
   changeSelect,
   openPlugin,
   currentPlugin,
+  placeholder,
 } = createPluginManager();
 
 initPlugins();
@@ -89,5 +91,4 @@ const openMenu = () => {
     width: 0;
   }
 }
-
 </style>

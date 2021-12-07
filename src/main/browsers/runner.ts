@@ -38,8 +38,8 @@ export default () => {
       view.setAutoResize({ width: true });
       window.setSize(800, 660);
       view.webContents.openDevTools();
-      executeHooks(plugin.ext, "PluginEnter");
-      executeHooks(plugin.ext, "PluginReady");
+      executeHooks("PluginEnter", plugin.ext);
+      executeHooks("PluginReady", plugin.ext);
     });
   };
 
@@ -67,5 +67,6 @@ export default () => {
     init,
     getView,
     removeView,
+    executeHooks,
   };
 };

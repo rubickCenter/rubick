@@ -47,10 +47,11 @@ const createPluginManager = (): any => {
       // @ts-ignore
       // document.getElementById("search").value = "";
       // state.searchValue = "";
+      setSearchValue("");
     }
   };
 
-  const { searchValue, onSearch } = searchManager();
+  const { searchValue, onSearch, setSearchValue, placeholder } = searchManager();
   const { options } = optionsManager({
     searchValue,
     baseDir,
@@ -91,6 +92,7 @@ const createPluginManager = (): any => {
     changeSelect,
     options,
     searchValue,
+    placeholder,
   };
 };
 

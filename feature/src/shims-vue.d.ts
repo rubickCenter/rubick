@@ -6,3 +6,7 @@ declare module '*.vue' {
 }
 
 declare module 'axios'
+
+interface Window {
+  rubick: any
+}

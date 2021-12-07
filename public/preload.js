@@ -37,7 +37,8 @@ window.rubick = {
     ipcSendSync("setExpendHeight", height);
   },
   setSubInput(onChange, placeholder = "", isFocus) {
-    typeof cb === "function" && (window.rubick.hooks.onSubInputChange = onChange);
+    typeof onChange === "function" &&
+      (window.rubick.hooks.onSubInputChange = onChange);
     ipcSendSync("setSubInput", {
       placeholder,
       isFocus,

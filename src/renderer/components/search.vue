@@ -4,12 +4,12 @@
     <a-input
       id="search"
       class="main-input"
-      placeholder="Hi, Rubick2"
       @input="(e) => changeValue(e)"
       @keydown.down="() => emit('changeCurrent', 1)"
       @keydown.up="() => emit('changeCurrent', -1)"
       @keydown="checkNeedInit"
       :value="searchValue"
+      :placeholder="placeholder || 'Hi, Rubick2'"
     >
       <template #suffix>
         <div @click="() => emit('openMenu')" class="suffix-tool" >
@@ -29,6 +29,10 @@ import { ipcRenderer } from "electron";
 const props = defineProps({
   searchValue: {
     type: [String, Number],
+    default: "",
+  },
+  placeholder: {
+    type: String,
     default: "",
   },
   currentPlugin: {},
