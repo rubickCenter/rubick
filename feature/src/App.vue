@@ -52,9 +52,6 @@ const store = useStore();
 const init = () => store.dispatch("init");
 init();
 
-window.rubick.setSubInput((data: any) => {
-  console.log(data);
-}, "插件市场");
 </script>
 <style lang="less">
 * {

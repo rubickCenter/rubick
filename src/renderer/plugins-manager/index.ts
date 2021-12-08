@@ -80,6 +80,10 @@ const createPluginManager = (): any => {
   const removePlugin = (plugin: any) => {
     // todo
   };
+  window.updatePlugin = ({ currentPlugin }: any) => {
+    state.currentPlugin = currentPlugin;
+    remote.getGlobal("LOCAL_PLUGINS").updatePlugin(currentPlugin);
+  };
 
   return {
     ...toRefs(state),

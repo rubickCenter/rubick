@@ -11,4 +11,7 @@ declare module "@ts-type/package-dts/package-json" {
     IDependency
   };
 };
+
+declare module "pouchdb";
+
 declare module "*.types";

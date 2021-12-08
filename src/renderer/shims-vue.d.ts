@@ -15,4 +15,7 @@ declare module 'lodash.throttle'
 
 interface Window {
   setSubInput: ({ placeholder }: { placeholder: string }) => void;
+  setSubInputValue: ({ value }: { value: string }) => void;
+  removeSubInput: () => void;
+  updatePlugin: (plugin: any) => void;
 }

@@ -12,9 +12,10 @@ export default () => {
   };
 
   const createView = (plugin, window: BrowserWindow) => {
-    const preload = commonConst.dev()
-      ? path.resolve(__static, `../feature/public/preload.js`)
-      : path.resolve(plugin.indexPath, `../`, plugin.preload);
+    const preload =
+      commonConst.dev() && plugin.name === "rubick-system-feature"
+        ? path.resolve(__static, `../feature/public/preload.js`)
+        : path.resolve(plugin.indexPath.replace("file:", ""), `../`, plugin.preload);
 
     const ses = session.fromPartition("<" + plugin.name + ">");
     ses.setPreloads([`${__static}/preload.js`]);
@@ -54,6 +55,7 @@ export default () => {
   const getView = () => view;
 
   const executeHooks = (hook, data) => {
+    if (!view) return;
     const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {     
           try { 
             window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ""});

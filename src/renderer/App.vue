@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { watch, ref, nextTick, toRaw } from "vue";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import Result from "./components/result.vue";
 import Search from "./components/search.vue";
 import getWindowHeight from "../common/utils/getWindowHeight";
@@ -51,6 +51,7 @@ getPluginInfo({
   pluginPath: `${__static}/feature/package.json`,
 }).then((res) => {
   menuPluginInfo.value = res;
+  remote.getGlobal("LOCAL_PLUGINS").addPlugin(res);
 });
 
 watch([searchValue], () => {

@@ -1,4 +1,5 @@
 {
+  "name": "rubick-system-feature",
   "pluginName": "rubick 系统菜单",
   "description": "rubick 系统菜单",
   "main": "index.html",

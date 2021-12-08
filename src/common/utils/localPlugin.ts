@@ -40,8 +40,22 @@ global.LOCAL_PLUGINS = {
     });
     if (!has) {
       global.LOCAL_PLUGINS.PLUGINS.unshift(plugin);
-      fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
+      fs.writeFileSync(
+        configPath,
+        JSON.stringify(global.LOCAL_PLUGINS.PLUGINS)
+      );
     }
+  },
+  updatePlugin(plugin) {
+    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.map(
+      (origin) => {
+        if (origin.name === plugin.name) {
+          return plugin;
+        }
+        return origin;
+      }
+    );
+    fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
   },
   async deletePlugin(plugin) {
     await pluginInstance.uninstall([plugin.name]);
