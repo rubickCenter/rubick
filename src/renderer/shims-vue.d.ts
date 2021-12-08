@@ -18,4 +18,5 @@ interface Window {
   setSubInputValue: ({ value }: { value: string }) => void;
   removeSubInput: () => void;
   updatePlugin: (plugin: any) => void;
+  initRubick: () => void;
 }

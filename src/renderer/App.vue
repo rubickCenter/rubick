@@ -9,6 +9,7 @@
         @changeSelect="changeSelect"
         :searchValue="searchValue"
         :placeholder="placeholder"
+        @choosePlugin="choosePlugin"
       />
     </div>
     <Result
@@ -56,6 +57,7 @@ getPluginInfo({
 
 watch([searchValue], () => {
   currentSelect.value = 0;
+  if (currentPlugin.value.name) return;
   nextTick(() => {
     ipcRenderer.sendSync("msg-trigger", {
       type: "setExpendHeight",
@@ -80,6 +82,12 @@ const openMenu = () => {
     feature: menuPluginInfo.value.features[0],
     cmd: "插件市场",
   });
+};
+
+const choosePlugin = () => {
+  const currentChoose = options.value[currentSelect.value];
+  console.log(currentChoose);
+  currentChoose.click();
 };
 </script>
 

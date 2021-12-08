@@ -7,13 +7,22 @@
       @input="(e) => changeValue(e)"
       @keydown.down="() => emit('changeCurrent', 1)"
       @keydown.up="() => emit('changeCurrent', -1)"
-      @keydown="checkNeedInit"
+      @keydown="e => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
+      @keypress.enter="
+        (e) => targetSearch({ value: e.target.value, type: 'enter' })
+      "
+      @keypress.space="
+        (e) => targetSearch({ value: e.target.value, type: 'space' })
+      "
     >
       <template #suffix>
         <div @click="() => emit('openMenu')" class="suffix-tool" >
-          <div class="rubick-logo">
+          <div v-if="currentPlugin && currentPlugin.logo" style="position: relative">
+            <img class="icon-tool" :src="currentPlugin.logo" />
+          </div>
+          <div v-else class="rubick-logo">
             <img src="../assets/logo.png" />
           </div>
         </div>
@@ -42,11 +51,28 @@ const changeValue = (e) => {
   emit("onSearch", e);
 };
 
-const emit = defineEmits(["onSearch", "changeCurrent", "openMenu", "changeSelect"]);
+const emit = defineEmits([
+  "onSearch",
+  "changeCurrent",
+  "openMenu",
+  "changeSelect",
+  "choosePlugin",
+]);
 
 const checkNeedInit = (e) => {
-  if (props.searchValue === "" && e.keyCode === 8) {
+  if (e.target.value === "" && e.keyCode === 8) {
     closeTag();
+  }
+};
+
+const targetSearch = ({ value, type }) => {
+  if (props.currentPlugin.name) {
+    return ipcRenderer.sendSync("msg-trigger", {
+      type: "sendSubInputChangeEvent",
+      data: { text: value },
+    });
+  } else {
+    emit("choosePlugin");
   }
 };
 
@@ -95,7 +121,7 @@ const closeTag = () => {
       border: none !important;
     }
   }
-  .rubick-logo {
+  .rubick-logo, .icon-tool {
     width: 40px;
     height: 40px;
     background: #574778;
@@ -106,6 +132,9 @@ const closeTag = () => {
     img {
       width: 32px;
     }
+  }
+  .icon-tool {
+    background: #fff;
   }
   .ant-input:focus {
     border: none;

@@ -12,12 +12,13 @@ function searchKeyValues(lists, value) {
   });
 }
 
-const optionsManager = ({ searchValue, baseDir, appList, openPlugin }) => {
+const optionsManager = ({ searchValue, baseDir, appList, openPlugin, currentPlugin }) => {
   const optionsRef = ref([]);
 
   watch(searchValue, () => search(searchValue.value));
   // search Input operation
   const search = throttle((value) => {
+    if (currentPlugin.value.name) return;
     if (!value) return;
     const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
     let options: any = [];

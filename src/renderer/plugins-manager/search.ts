@@ -11,10 +11,6 @@ const searchManager = () => {
   const onSearch = (e) => {
     const value = e.target.value;
     state.searchValue = value;
-    ipcRenderer.sendSync("msg-trigger", {
-      type: "sendSubInputChangeEvent",
-      data: value,
-    });
   };
 
   const setSearchValue = (value: string) => {

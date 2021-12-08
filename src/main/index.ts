@@ -5,7 +5,11 @@ import commonConst from "../common/utils/commonConst";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import API from "./common/api";
+import createTray from "./common/tray";
+import registerHotKey from "./common/registerHotKey";
+
 import "../common/utils/localPlugin";
+import "../common/utils/localConfig";
 
 class App {
   private windowCreator: { init: () => void; getWindow: () => BrowserWindow };
@@ -48,8 +52,8 @@ class App {
       this.createWindow();
       API(this.windowCreator.getWindow());
       // this.init()
-      // createTray(this.windowCreator.getWindow())
-      // autoUpdate()
+      createTray(this.windowCreator.getWindow());
+      registerHotKey(this.windowCreator.getWindow());
     };
     if (!app.isReady()) {
       app.on("ready", readyFunction);

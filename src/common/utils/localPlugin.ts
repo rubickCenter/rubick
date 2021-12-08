@@ -34,15 +34,17 @@ global.LOCAL_PLUGINS = {
   },
   addPlugin(plugin) {
     let has = false;
-    global.LOCAL_PLUGINS.PLUGINS.some((p) => {
+    const currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
+    currentPlugins.some((p) => {
       has = p.name === plugin.name;
       return has;
     });
     if (!has) {
-      global.LOCAL_PLUGINS.PLUGINS.unshift(plugin);
+      currentPlugins.unshift(plugin);
+      global.LOCAL_PLUGINS.PLUGINS = currentPlugins;
       fs.writeFileSync(
         configPath,
-        JSON.stringify(global.LOCAL_PLUGINS.PLUGINS)
+        JSON.stringify(currentPlugins)
       );
     }
   },

@@ -32,9 +32,9 @@ window.rubick = {
   },
 
   // 窗口交互
-  // hideMainWindow() {
-  //   ipcSendSync("hideMainWindow");
-  // },
+  hideMainWindow() {
+    ipcSendSync("hideMainWindow");
+  },
   showMainWindow() {
     ipcSendSync("showMainWindow");
   },

@@ -3,6 +3,7 @@ import { nativeImage, remote, ipcRenderer } from "electron";
 import { appSearch, PluginHandler } from "@/core";
 import path from "path";
 import commonConst from "@/common/utils/commonConst";
+import { execSync } from "child_process";
 import searchManager from "./search";
 import optionsManager from "./options";
 
@@ -43,11 +44,10 @@ const createPluginManager = (): any => {
           })
         ),
       });
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      // document.getElementById("search").value = "";
-      // state.searchValue = "";
       setSearchValue("");
+    }
+    if (plugin.pluginType === "app") {
+      execSync(plugin.action);
     }
   };
 
@@ -57,6 +57,7 @@ const createPluginManager = (): any => {
     baseDir,
     appList,
     openPlugin,
+    currentPlugin: toRefs(state).currentPlugin,
   });
   // plugin operation
   const getPluginInfo = async ({ pluginName, pluginPath }) => {
@@ -83,6 +84,12 @@ const createPluginManager = (): any => {
   window.updatePlugin = ({ currentPlugin }: any) => {
     state.currentPlugin = currentPlugin;
     remote.getGlobal("LOCAL_PLUGINS").updatePlugin(currentPlugin);
+  };
+
+  window.initRubick = () => {
+    state.currentPlugin = {};
+    setSearchValue("");
+    window.setSubInput({ placeholder: "" });
   };
 
   return {

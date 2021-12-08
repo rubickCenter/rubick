@@ -49,6 +49,7 @@ export default () => {
     window.removeBrowserView(view);
     window.setSize(800, 60);
     executeHooks("PluginOut", null);
+    window.webContents.executeJavaScript(`window.initRubick()`);
     view = undefined;
   };
 
