@@ -25,6 +25,8 @@ const optionsManager = ({ searchValue, baseDir, appList, openPlugin, currentPlug
     // todo 先搜索 plugin
     localPlugins.forEach((plugin) => {
       const feature = plugin.features;
+      // 系统插件无 features 的情况，不需要再搜索
+      if (!feature) return;
       feature.forEach((fe) => {
         const cmds = searchKeyValues(fe.cmds, value);
         options = [

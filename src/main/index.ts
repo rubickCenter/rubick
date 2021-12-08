@@ -1,5 +1,10 @@
 "use strict";
-import { app, globalShortcut, protocol, BrowserWindow } from "electron";
+import electron, {
+  app,
+  globalShortcut,
+  protocol,
+  BrowserWindow,
+} from "electron";
 import { main } from "./browsers";
 import commonConst from "../common/utils/commonConst";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -11,8 +16,11 @@ import registerHotKey from "./common/registerHotKey";
 import "../common/utils/localPlugin";
 import "../common/utils/localConfig";
 
+import registerySystemPlugin from "./common/registerySystemPlugin";
+
 class App {
   private windowCreator: { init: () => void; getWindow: () => BrowserWindow };
+  private systemPlugins: any;
 
   constructor() {
     protocol.registerSchemesAsPrivileged([
@@ -23,6 +31,7 @@ class App {
     if (!gotTheLock) {
       app.quit();
     } else {
+      this.systemPlugins = registerySystemPlugin();
       this.beforeReady();
       this.onReady();
       this.onRunning();
@@ -54,6 +63,9 @@ class App {
       // this.init()
       createTray(this.windowCreator.getWindow());
       registerHotKey(this.windowCreator.getWindow());
+      this.systemPlugins.triggerReadyHooks(
+        Object.assign(electron, { mainWindow: this.windowCreator.getWindow() })
+      );
     };
     if (!app.isReady()) {
       app.on("ready", readyFunction);
