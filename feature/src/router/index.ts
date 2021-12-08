@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Market from "../views/market/index.vue";
 import Installed from "../views/installed/index.vue";
+import Account from "../views/account/index.vue";
+import Settings from "../views/settings/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +14,16 @@ const routes: Array<RouteRecordRaw> = [
     path: "/installed",
     name: "installed",
     component: Installed,
+  },
+  {
+    path: "/account",
+    name: "account",
+    component: Account,
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: Settings,
   },
   {
     path: "/:catchAll(.*)",

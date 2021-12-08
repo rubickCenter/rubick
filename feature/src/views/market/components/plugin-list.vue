@@ -14,11 +14,12 @@
                 />
               </a-button>
             </template>
-            <a-list-item-meta
-              :description="item.description"
-            >
+            <a-list-item-meta>
+              <template #description>
+                <span class="ellipse">{{ item.description }}</span>
+              </template>
               <template #title>
-                <span>{{ item.pluginName }}</span>
+                <span class="ellipse">{{ item.pluginName }}</span>
               </template>
               <template #avatar>
                 <a-avatar :src="item.logo" />
@@ -45,8 +46,10 @@
           <ArrowLeftOutlined />
         </div>
         <div class="info">
-          <img src="https://static.91jkys.com/activity/img/2adb63c2e5d54dc1b26001958fcdb044.jpg"
-               class="plugin-icon" />
+          <img
+            src="https://static.91jkys.com/activity/img/2adb63c2e5d54dc1b26001958fcdb044.jpg"
+            class="plugin-icon"
+          />
           <div class="plugin-desc">
             <div class="title">
               备忘快贴
@@ -103,6 +106,13 @@ const visible = ref(false);
   margin: 20px 0;
   .title {
     margin-bottom: 30px;
+  }
+  .ellipse {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
   &:after{
     content: " ";

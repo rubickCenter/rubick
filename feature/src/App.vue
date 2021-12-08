@@ -20,7 +20,7 @@
           </template>
           设置
         </a-menu-item>
-        <a-menu-item key="user">
+        <a-menu-item key="account">
           <template #icon>
             <UserOutlined />
           </template>

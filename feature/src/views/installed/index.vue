@@ -1,10 +1,17 @@
 <template>
   <div class="installed">
     <div class="installed-list">
-      <div :class="currentSelect === index ? 'item active' : 'item'" :key="index" v-for="(plugin, index) in localPlugins">
+      <div
+        :class="currentSelect === index ? 'item active' : 'item'"
+        :key="index"
+        v-for="(plugin, index) in localPlugins"
+      >
         <img :src="plugin.logo" />
         <div class="info">
-          <div class="title">{{ plugin.pluginName }} <span class="desc">v{{ plugin.version }}</span></div>
+          <div class="title">
+            {{ plugin.pluginName }}
+            <span class="desc">v{{ plugin.version }}</span>
+          </div>
           <div class="desc">{{ plugin.description }}</div>
         </div>
       </div>
@@ -17,27 +24,44 @@
             <a-tag>{{ pluginDetail.version }}</a-tag>
           </div>
           <div class="desc">
-            开发者：{{`${pluginDetail.author || '未知'}`}}
+            开发者：{{ `${pluginDetail.author || "未知"}` }}
           </div>
           <div class="desc">
-            {{pluginDetail.description}}
+            {{ pluginDetail.description }}
           </div>
         </div>
         <div class="right">
-          <a-button type="danger" size="small" shape="round" @click="deletePlugin(pluginDetail)">移除</a-button>
+          <a-button
+            type="danger"
+            size="small"
+            shape="round"
+            @click="deletePlugin(pluginDetail)"
+            >移除</a-button
+          >
         </div>
       </div>
       <a-tabs default-active-key="1">
         <a-tab-pane key="1" tab="功能关键字">
           <div class="feature-container">
-            <div class="desc-item" :key="index" v-for="(item, index) in pluginDetail.features">
-              <div>{{item.explain}}</div>
+            <div
+              class="desc-item"
+              :key="index"
+              v-for="(item, index) in pluginDetail.features"
+            >
+              <div>{{ item.explain }}</div>
               <a-tag
                 :key="cmd"
-                @click="openPlugin({cmd, plugin: pluginDetail, feature: item, router: $router})"
+                @click="
+                  openPlugin({
+                    cmd,
+                    plugin: pluginDetail,
+                    feature: item,
+                    router: $router,
+                  })
+                "
                 v-for="cmd in item.cmds"
               >
-                {{cmd}}
+                {{ cmd }}
               </a-tag>
             </div>
           </div>
@@ -74,12 +98,18 @@ const pluginDetail = computed(() => {
 });
 
 const readme = computed(() => {
-  if(!pluginDetail.value.name) return "";
-  const str = fs.readFileSync(
-    path.resolve(baseDir, "node_modules", pluginDetail.value.name, "readme.md"),
-    "utf-8"
+  if (!pluginDetail.value.name) return "";
+  const readmePath = path.resolve(
+    baseDir,
+    "node_modules",
+    pluginDetail.value.name,
+    "readme.md"
   );
-  return md.render(str);
+  if (fs.existsSync(readmePath)) {
+    const str = fs.readFileSync(readmePath, "utf-8");
+    return md.render(str);
+  }
+  return "";
 });
 
 const deletePlugin = async (plugin) => {
@@ -93,7 +123,7 @@ const deletePlugin = async (plugin) => {
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  background: #F3EFEF;
+  background: #f3efef;
   height: calc(~"100vh - 46px");
   display: flex;
   .installed-list {
@@ -139,7 +169,8 @@ const deletePlugin = async (plugin) => {
         color: #999;
       }
     }
-    .detail-container, .feature-container {
+    .detail-container,
+    .feature-container {
       height: 380px;
       overflow: auto;
       img {
