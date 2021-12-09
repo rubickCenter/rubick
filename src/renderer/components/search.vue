@@ -48,6 +48,7 @@ const props = defineProps({
 });
 
 const changeValue = (e) => {
+  if (props.currentPlugin.name === "rubick-system-feature") return;
   emit("onSearch", e);
 };
 

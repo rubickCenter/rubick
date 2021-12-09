@@ -1,57 +1,61 @@
 <template>
   <div class="installed">
-    <div class="installed-list">
-      <div
-        :class="currentSelect === index ? 'item active' : 'item'"
-        :key="index"
-        v-for="(plugin, index) in localPlugins"
-      >
-        <img :src="plugin.logo" />
-        <div class="info">
-          <div class="title">
-            {{ plugin.pluginName }}
-            <span class="desc">v{{ plugin.version }}</span>
-          </div>
-          <div class="desc">{{ plugin.description }}</div>
-        </div>
-      </div>
+    <div v-if="!localPlugins.length">
+      <a-result status="404" title="暂无任何插件" sub-title="去插件市场选择安装合适的插件吧！" />
     </div>
-    <div class="plugin-detail">
-      <div class="plugin-top">
-        <div class="left">
-          <div class="title">
-            {{ pluginDetail.pluginName }}
-            <a-tag>{{ pluginDetail.version }}</a-tag>
+    <div class="container" v-else>
+      <div class="installed-list">
+        <div
+          :class="currentSelect === index ? 'item active' : 'item'"
+          :key="index"
+          v-for="(plugin, index) in localPlugins"
+        >
+          <img :src="plugin.logo" />
+          <div class="info">
+            <div class="title">
+              {{ plugin.pluginName }}
+              <span class="desc">v{{ plugin.version }}</span>
+            </div>
+            <div class="desc">{{ plugin.description }}</div>
           </div>
-          <div class="desc">
-            开发者：{{ `${pluginDetail.author || "未知"}` }}
-          </div>
-          <div class="desc">
-            {{ pluginDetail.description }}
-          </div>
-        </div>
-        <div class="right">
-          <a-button
-            type="danger"
-            size="small"
-            shape="round"
-            @click="deletePlugin(pluginDetail)"
-            >移除</a-button
-          >
         </div>
       </div>
-      <a-tabs default-active-key="1">
-        <a-tab-pane key="1" tab="功能关键字">
-          <div class="feature-container">
-            <div
-              class="desc-item"
-              :key="index"
-              v-for="(item, index) in pluginDetail.features"
+      <div class="plugin-detail">
+        <div class="plugin-top">
+          <div class="left">
+            <div class="title">
+              {{ pluginDetail.pluginName }}
+              <a-tag>{{ pluginDetail.version }}</a-tag>
+            </div>
+            <div class="desc">
+              开发者：{{ `${pluginDetail.author || "未知"}` }}
+            </div>
+            <div class="desc">
+              {{ pluginDetail.description }}
+            </div>
+          </div>
+          <div class="right">
+            <a-button
+              type="danger"
+              size="small"
+              shape="round"
+              @click="deletePlugin(pluginDetail)"
+            >移除</a-button
             >
-              <div>{{ item.explain }}</div>
-              <a-tag
-                :key="cmd"
-                @click="
+          </div>
+        </div>
+        <a-tabs default-active-key="1">
+          <a-tab-pane key="1" tab="功能关键字">
+            <div class="feature-container">
+              <div
+                class="desc-item"
+                :key="index"
+                v-for="(item, index) in pluginDetail.features"
+              >
+                <div>{{ item.explain }}</div>
+                <a-tag
+                  :key="cmd"
+                  @click="
                   openPlugin({
                     cmd,
                     plugin: pluginDetail,
@@ -59,18 +63,20 @@
                     router: $router,
                   })
                 "
-                v-for="cmd in item.cmds"
-              >
-                {{ cmd }}
-              </a-tag>
+                  v-for="cmd in item.cmds"
+                >
+                  {{ cmd }}
+                </a-tag>
+              </div>
             </div>
-          </div>
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="详情介绍">
-          <div class="detail-container" v-html="readme"></div>
-        </a-tab-pane>
-      </a-tabs>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="详情介绍">
+            <div class="detail-container" v-html="readme"></div>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -88,7 +94,11 @@ const appPath = remote.app.getPath("cache");
 const baseDir = path.join(appPath, "./rubick-plugins");
 
 const store = useStore();
-const localPlugins = computed(() => store.state.localPlugins);
+const localPlugins = computed(() =>
+  store.state.localPlugins.filter(
+    (plugin) => plugin.name !== "rubick-system-feature"
+  )
+);
 const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
 
 const currentSelect = ref(0);
@@ -125,7 +135,14 @@ const deletePlugin = async (plugin) => {
   overflow: hidden;
   background: #f3efef;
   height: calc(~"100vh - 46px");
-  display: flex;
+  .container {
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    background: #f3efef;
+    height: 100%;
+    display: flex;
+  }
   .installed-list {
     width: 40%;
     background: #fff;

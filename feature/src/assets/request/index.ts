@@ -14,4 +14,11 @@ export default {
     );
     return res.data;
   },
+
+  async getSystemDetail() {
+    const res = await axios.get(
+      "https://gitee.com/monkeyWang/rubick-database/raw/master/plugins/system.json"
+    );
+    return res.data;
+  },
 };

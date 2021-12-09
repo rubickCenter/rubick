@@ -22,11 +22,13 @@ const API: any = {
   currentPlugin: null,
   DBKEY: "RUBICK_DB_DEFAULT",
   openPlugin({ plugin }, window) {
+    if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
     runnerInstance.removeView(window);
     runnerInstance.init(plugin, window);
     API.currentPlugin = plugin;
   },
   removePlugin(e, window) {
+    API.currentPlugin = null;
     runnerInstance.removeView(window);
   },
   hideMainWindow(arg, window) {

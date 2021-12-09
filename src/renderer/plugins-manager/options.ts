@@ -2,6 +2,7 @@ import { ref, toRaw, toRefs, watch } from "vue";
 import throttle from "lodash.throttle";
 import { remote } from "electron";
 import path from "path";
+import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
 
 function searchKeyValues(lists, value) {
   return lists.filter((item) => {
@@ -12,7 +13,7 @@ function searchKeyValues(lists, value) {
   });
 }
 
-const optionsManager = ({ searchValue, baseDir, appList, openPlugin, currentPlugin }) => {
+const optionsManager = ({ searchValue, appList, openPlugin, currentPlugin }) => {
   const optionsRef = ref([]);
 
   watch(searchValue, () => search(searchValue.value));

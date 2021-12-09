@@ -26,6 +26,12 @@
           </template>
           账户
         </a-menu-item>
+        <a-menu-item key="dev">
+          <template #icon>
+            <BugOutlined />
+          </template>
+          开发者
+        </a-menu-item>
       </a-menu>
     </div>
     <router-view />
@@ -40,6 +46,7 @@ import {
   UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
+  BugOutlined,
 } from "@ant-design/icons-vue";
 import { useStore } from "vuex";
 const router = useRouter();

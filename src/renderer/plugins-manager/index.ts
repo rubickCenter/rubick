@@ -6,13 +6,11 @@ import commonConst from "@/common/utils/commonConst";
 import { execSync } from "child_process";
 import searchManager from "./search";
 import optionsManager from "./options";
-
-const appPath = remote.app.getPath("cache");
+import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
 
 const createPluginManager = (): any => {
-  const baseDir = path.join(appPath, "./rubick-plugins");
   const pluginInstance = new PluginHandler({
-    baseDir: baseDir,
+    baseDir,
   });
 
   const state: any = reactive({
@@ -54,7 +52,6 @@ const createPluginManager = (): any => {
   const { searchValue, onSearch, setSearchValue, placeholder } = searchManager();
   const { options } = optionsManager({
     searchValue,
-    baseDir,
     appList,
     openPlugin,
     currentPlugin: toRefs(state).currentPlugin,

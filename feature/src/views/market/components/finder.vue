@@ -45,7 +45,6 @@ const totalPlugins = computed(() => store.state.totalPlugins);
 const data = ref([]);
 
 onBeforeMount(async () => {
-  console.log(12312);
   data.value = await request.getFinderDetail();
 });
 

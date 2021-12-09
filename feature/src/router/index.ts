@@ -3,6 +3,7 @@ import Market from "../views/market/index.vue";
 import Installed from "../views/installed/index.vue";
 import Account from "../views/account/index.vue";
 import Settings from "../views/settings/index.vue";
+import Dev from "../views/dev/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/settings",
     name: "settings",
     component: Settings,
+  },
+  {
+    path: "/dev",
+    name: "dev",
+    component: Dev,
   },
   {
     path: "/:catchAll(.*)",
