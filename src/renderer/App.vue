@@ -86,7 +86,6 @@ const openMenu = () => {
 
 const choosePlugin = () => {
   const currentChoose = options.value[currentSelect.value];
-  console.log(currentChoose);
   currentChoose.click();
 };
 </script>

@@ -78,6 +78,7 @@ import {
 
 import { defineProps, ref } from "vue";
 import { useStore } from "vuex";
+import { message } from "ant-design-vue";
 
 const store = useStore();
 
@@ -95,6 +96,7 @@ defineProps({
 const downloadPlugin = async (plugin) => {
   startDownload(plugin.name);
   await window.market.downloadPlugin(plugin);
+  message.success(`${plugin.name}安装成功！`);
   successDownload(plugin.name);
 };
 

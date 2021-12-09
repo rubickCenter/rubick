@@ -6,8 +6,9 @@
     <div class="container" v-else>
       <div class="installed-list">
         <div
-          :class="currentSelect === index ? 'item active' : 'item'"
+          :class="currentSelect[0] === index ? 'item active' : 'item'"
           :key="index"
+          @click="currentSelect = [index]"
           v-for="(plugin, index) in localPlugins"
         >
           <img :src="plugin.logo" />
@@ -101,7 +102,7 @@ const localPlugins = computed(() =>
 );
 const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
 
-const currentSelect = ref(0);
+const currentSelect = ref([0]);
 
 const pluginDetail = computed(() => {
   return localPlugins.value[currentSelect.value] || {};

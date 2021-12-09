@@ -13,7 +13,6 @@ const pluginInstance = new PluginHandler({
 global.LOCAL_PLUGINS = {
   PLUGINS: [],
   async downloadPlugin(plugin) {
-    console.log(plugin);
     await pluginInstance.install([plugin.name], { isDev: plugin.isDev });
     if (plugin.isDev) {
       // 获取 dev 插件信息
@@ -30,7 +29,6 @@ global.LOCAL_PLUGINS = {
         ...pluginInfo,
       };
     }
-    console.log(plugin);
     global.LOCAL_PLUGINS.addPlugin(plugin);
     return global.LOCAL_PLUGINS.PLUGINS;
   },

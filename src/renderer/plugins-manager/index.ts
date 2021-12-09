@@ -83,6 +83,12 @@ const createPluginManager = (): any => {
     remote.getGlobal("LOCAL_PLUGINS").updatePlugin(currentPlugin);
   };
 
+  window.setCurrentPlugin = ({ currentPlugin }) => {
+    console.log(currentPlugin);
+    state.currentPlugin = currentPlugin;
+    setSearchValue("");
+  };
+
   window.initRubick = () => {
     state.currentPlugin = {};
     setSearchValue("");

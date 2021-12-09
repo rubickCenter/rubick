@@ -21,6 +21,7 @@
 
 <script setup>
 import { reactive, ref } from "vue";
+import { message } from "ant-design-vue";
 
 const formRef = ref();
 const formState = reactive({
@@ -45,6 +46,7 @@ const downloadPlugin = async (pluginName) => {
     name: pluginName,
     isDev: true,
   });
+  message.success(`${pluginName}安装成功！`);
   loading.value = false;
 };
 

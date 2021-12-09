@@ -19,4 +19,5 @@ interface Window {
   removeSubInput: () => void;
   updatePlugin: (plugin: any) => void;
   initRubick: () => void;
+  setCurrentPlugin: (plugin: any) => void;
 }

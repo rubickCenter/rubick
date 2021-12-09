@@ -81,10 +81,12 @@ const newList = computed(() => {
 <style lang="less">
 .finder {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
-
+  &::-webkit-scrollbar {
+    width: 0;
+  }
   .ant-carousel .slick-slide {
     text-align: center;
     height: 235px;

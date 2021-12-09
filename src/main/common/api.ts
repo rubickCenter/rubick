@@ -26,6 +26,11 @@ const API: any = {
     runnerInstance.removeView(window);
     runnerInstance.init(plugin, window);
     API.currentPlugin = plugin;
+    window.webContents.executeJavaScript(
+      `window.setCurrentPlugin(${JSON.stringify({
+        currentPlugin: API.currentPlugin,
+      })})`
+    );
   },
   removePlugin(e, window) {
     API.currentPlugin = null;
