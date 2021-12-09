@@ -58,4 +58,4 @@
 
 扫码关注 Rubick 官微, 与我们保持联系：
 
-![wechat](https://z3.ax1x.com/2021/09/26/4yRpN9.jpg)
+![wechat](https://user-images.githubusercontent.com/53158137/135377195-7fc4bb2f-e456-4d95-b2ec-2585417e600b.jpg)
