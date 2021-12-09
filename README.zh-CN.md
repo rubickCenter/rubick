@@ -101,7 +101,7 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 扫码关注 Rubick 官微, 获取最新动态：
 
-![wechat](https://z3.ax1x.com/2021/09/26/4yRpN9.jpg)
+![wechat](https://user-images.githubusercontent.com/53158137/135377195-7fc4bb2f-e456-4d95-b2ec-2585417e600b.jpg)
 
 ## 更新日志
 [ChangeLog](https://github.com/clouDr-f2e/rubick/blob/master/CHANGELOG.md)
