@@ -71,7 +71,6 @@ export default class {
       result._id = this.replaceDocId(name, result._id);
       return result;
     } catch (e) {
-      console.log(e);
       return null;
     }
   }

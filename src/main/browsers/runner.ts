@@ -51,6 +51,7 @@ export default () => {
       view.webContents.openDevTools();
       executeHooks("PluginEnter", plugin.ext);
       executeHooks("PluginReady", plugin.ext);
+      window.webContents.executeJavaScript(`window.pluginLoaded()`);
     });
   };
 

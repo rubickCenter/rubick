@@ -9,6 +9,7 @@
         @changeSelect="changeSelect"
         :searchValue="searchValue"
         :placeholder="placeholder"
+        :pluginLoading="pluginLoading"
         @choosePlugin="choosePlugin"
       />
     </div>
@@ -39,6 +40,7 @@ const {
   openPlugin,
   currentPlugin,
   placeholder,
+  pluginLoading,
 } = createPluginManager();
 
 initPlugins();

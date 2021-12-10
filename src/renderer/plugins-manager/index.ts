@@ -18,6 +18,7 @@ const createPluginManager = (): any => {
     plugins: [],
     localPlugins: [],
     currentPlugin: {},
+    pluginLoading: false,
   });
 
   const appList = ref([]);
@@ -28,6 +29,10 @@ const createPluginManager = (): any => {
 
   const openPlugin = (plugin) => {
     if (plugin.pluginType === "ui") {
+      if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
+        return;
+      }
+      state.pluginLoading = true;
       state.currentPlugin = plugin;
       ipcRenderer.sendSync("msg-trigger", {
         type: "openPlugin",
@@ -84,7 +89,6 @@ const createPluginManager = (): any => {
   };
 
   window.setCurrentPlugin = ({ currentPlugin }) => {
-    console.log(currentPlugin);
     state.currentPlugin = currentPlugin;
     setSearchValue("");
   };
@@ -93,6 +97,10 @@ const createPluginManager = (): any => {
     state.currentPlugin = {};
     setSearchValue("");
     window.setSubInput({ placeholder: "" });
+  };
+
+  window.pluginLoaded = () => {
+    state.pluginLoading = false;
   };
 
   return {

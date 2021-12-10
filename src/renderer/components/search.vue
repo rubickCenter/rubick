@@ -18,11 +18,20 @@
       "
     >
       <template #suffix>
-        <div @click="() => emit('openMenu')" class="suffix-tool" >
+        <div class="suffix-tool" >
+          <MoreOutlined
+            @click="showSeparate()"
+            class="icon-more"
+          />
           <div v-if="currentPlugin && currentPlugin.logo" style="position: relative">
+            <a-spin v-show="pluginLoading" class="loading">
+              <template #indicator>
+                <LoadingOutlined style="font-size: 42px" />
+              </template>
+            </a-spin>
             <img class="icon-tool" :src="currentPlugin.logo" />
           </div>
-          <div v-else class="rubick-logo">
+          <div @click="() => emit('openMenu')" v-else class="rubick-logo">
             <img src="../assets/logo.png" />
           </div>
         </div>
@@ -33,7 +42,12 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from "vue";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
+import { LoadingOutlined, MoreOutlined } from "@ant-design/icons-vue";
+const opConfig = remote.getGlobal("OP_CONFIG");
+const { Menu } = remote;
+
+const config = ref(opConfig.get());
 
 const props = defineProps({
   searchValue: {
@@ -45,6 +59,7 @@ const props = defineProps({
     default: "",
   },
   currentPlugin: {},
+  pluginLoading: Boolean,
 });
 
 const changeValue = (e) => {
@@ -82,6 +97,53 @@ const closeTag = () => {
   ipcRenderer.send("msg-trigger", {
     type: "removePlugin",
   });
+};
+
+const showSeparate = () => {
+  let pluginMenu = [
+    {
+      label: config.value.perf.common.hideOnBlur ? "钉住" : "自动隐藏",
+      click: changeHideOnBlur,
+    },
+  ];
+  if (props.currentPlugin && props.currentPlugin.logo) {
+    pluginMenu = pluginMenu.concat([
+      {
+        label: "开发者工具",
+        click: () => {
+          // todo
+        },
+      },
+      {
+        label: "当前插件信息",
+        submenu: [
+          {
+            label: "简介",
+          },
+          {
+            label: "功能",
+          },
+        ],
+      },
+      {
+        label: "分离窗口",
+        click: newWindow,
+      },
+    ]);
+  }
+  let menu = Menu.buildFromTemplate(pluginMenu);
+  menu.popup();
+};
+
+const changeHideOnBlur = () => {
+  let cfg = { ...config.value };
+  cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
+  opConfig.set("perf", cfg.perf);
+  config.value = cfg;
+};
+
+const newWindow = () => {
+  // todo
 };
 </script>
 
@@ -140,6 +202,21 @@ const closeTag = () => {
   .ant-input:focus {
     border: none;
     box-shadow: none;
+  }
+  .suffix-tool {
+    display: flex;
+    align-items: center;
+    .icon-more {
+      font-size: 26px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .loading {
+      color: #ff4ea4;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 }
 </style>

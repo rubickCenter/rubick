@@ -20,4 +20,5 @@ interface Window {
   updatePlugin: (plugin: any) => void;
   initRubick: () => void;
   setCurrentPlugin: (plugin: any) => void;
+  pluginLoaded: () => void;
 }

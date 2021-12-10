@@ -53,7 +53,10 @@ export default () => {
 
     // 判断失焦是否隐藏
     win.on("blur", () => {
-      app.isPackaged && win.hide();
+      const config = { ...global.OP_CONFIG.get() };
+      if (config.perf.common.hideOnBlur) {
+        win.hide();
+      }
     });
   };
 
