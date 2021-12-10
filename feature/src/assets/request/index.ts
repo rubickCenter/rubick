@@ -21,4 +21,15 @@ export default {
     );
     return res.data;
   },
+  async getWorkerDetail() {
+    const res = await axios.get(
+      "https://gitee.com/monkeyWang/rubick-database/raw/master/plugins/worker.json"
+    );
+    return res.data;
+  },
+
+  async getPluginDetail(url: string) {
+    const res = await axios.get(url);
+    return res.data;
+  },
 };

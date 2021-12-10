@@ -4,7 +4,7 @@
     <div class="list-item">
       <a-list :grid="{ gutter: 16, column: 2 }" :data-source="list">
         <template #renderItem="{ item, index }">
-          <a-list-item @click="visible=true">
+          <a-list-item @click="showDetail(item)">
             <template #actions>
               <a-button style="color: #ff4ea4;" type="text" :loading="item.isloading">
                 <CloudDownloadOutlined
@@ -47,15 +47,15 @@
         </div>
         <div class="info">
           <img
-            src="https://static.91jkys.com/activity/img/2adb63c2e5d54dc1b26001958fcdb044.jpg"
+            :src="detail.logo"
             class="plugin-icon"
           />
           <div class="plugin-desc">
             <div class="title">
-              备忘快贴
+              {{ detail.pluginName }}
             </div>
             <div class="desc">
-              适合每个人的专业图像编辑软件
+              {{ detail.description }}
             </div>
             <a-button shape="round" type="primary">
               <template #icon>
@@ -67,6 +67,7 @@
         </div>
       </div>
     </template>
+    <div v-html="content" class="home-page-container"></div>
   </a-drawer>
 </template>
 
@@ -79,6 +80,8 @@ import {
 import { defineProps, ref } from "vue";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
+import MarkdownIt from "markdown-it";
+import request from "../../../assets/request/index";
 
 const store = useStore();
 
@@ -101,9 +104,25 @@ const downloadPlugin = async (plugin) => {
 };
 
 const visible = ref(false);
+const detail = ref({});
+const markdown = new MarkdownIt();
+const content = ref("");
+
+const showDetail = async (item) => {
+  visible.value = true;
+  detail.value = item;
+  let mdContent = "暂无内容";
+  if (item.homePage) {
+    mdContent = await request.getPluginDetail(item.homePage);
+  }
+  content.value = markdown.render(mdContent);
+};
 </script>
 
 <style lang="less">
+&::-webkit-scrollbar {
+  width: 0;
+}
 .panel-item {
   margin: 20px 0;
   .title {
@@ -172,6 +191,11 @@ const visible = ref(false);
         margin-bottom: 20px;
       }
     }
+  }
+}
+.home-page-container {
+  img {
+    width: 100%;
   }
 }
 </style>
