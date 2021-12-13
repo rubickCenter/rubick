@@ -18,7 +18,7 @@
     "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
     "cross-spawn": "^7.0.3",
-    "fix-path": "^4.0.0",
+    "fix-path": "^3.0.0",
     "get-mac-apps": "^1.0.2",
     "got": "^11.8.3",
     "libnpmsearch": "^3.1.2",
