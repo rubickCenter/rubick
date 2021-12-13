@@ -2,6 +2,7 @@
 const path = require("path");
 
 module.exports = {
+  transpileDependencies: ["fix-path"],
   configureWebpack: {
     resolve: {
       alias: {
@@ -30,7 +31,7 @@ module.exports = {
         directories: {
           output: "build",
         },
-        files: ["dist/electron/**/*"],
+        // files: ["dist_electron/**/*"],
         dmg: {
           contents: [
             {
@@ -47,14 +48,14 @@ module.exports = {
           ],
         },
         mac: {
-          icon: "build/icons/icon.icns",
+          icon: "public/icons/icon.icns",
           target: "pkg",
           extendInfo: {
             LSUIElement: 1,
           },
         },
         win: {
-          icon: "build/icons/icon.ico",
+          icon: "public/icons/icon.ico",
           target: "nsis",
         },
         nsis: {
@@ -62,7 +63,7 @@ module.exports = {
           allowToChangeInstallationDirectory: true,
         },
         linux: {
-          icon: "build/icons/",
+          icon: "public/icons/",
           publish: ["github"],
         },
       },

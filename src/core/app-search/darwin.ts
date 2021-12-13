@@ -1,4 +1,6 @@
-import getMacApps from "get-mac-apps";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import getMacApps from "./get-mac-app";
 import fs from "fs";
 import path from "path";
 
@@ -84,7 +86,7 @@ async function getAppIcon(
 }
 
 export default async (nativeImage: any) => {
-  let apps = await getMacApps.getApps();
+  let apps: any = await getMacApps.getApps();
 
   apps = apps.filter((app: any) => {
     const extname = path.extname(app.path);

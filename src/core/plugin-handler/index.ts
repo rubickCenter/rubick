@@ -6,8 +6,11 @@ import fs from "fs-extra";
 import search, { Result } from "libnpmsearch";
 import path from "path";
 import got from "got";
+import fixPath from "fix-path";
 
-import spwan from "cross-spawn";
+import spawn from "cross-spawn";
+
+fixPath();
 
 /**
  * 系统插件管理器
@@ -146,7 +149,7 @@ class AdapterHandler {
         .concat("--save");
       if (cmd !== "uninstall")
         args = args.concat(`--registry=${this.registry}`);
-      const npm = spwan("npm", args, {
+      const npm = spawn("npm", args, {
         cwd: this.baseDir,
       });
 

@@ -8,11 +8,14 @@ function createTray(window: BrowserWindow): Promise<Tray> {
   return new Promise((resolve) => {
     let icon;
     if (commonConst.macOS()) {
-      icon = "./icon@3x.png";
+      icon = "./icons/icon@3x.png";
     } else if (commonConst.windows()) {
-      icon = parseInt(os.release()) < 10 ? "./icon@2x.png" : "./icon.ico";
+      icon =
+        parseInt(os.release()) < 10
+          ? "./icons/icon@2x.png"
+          : "./icons/icon.ico";
     } else {
-      icon = "icon@2x.png";
+      icon = "./icons/icon@2x.png";
     }
     const appIcon = new Tray(path.join(__static, icon));
     const contextMenu = Menu.buildFromTemplate([
