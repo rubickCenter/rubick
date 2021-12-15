@@ -48,7 +48,7 @@ export default () => {
       view.setBounds({ x: 0, y: 60, width: 800, height: 600 });
       view.setAutoResize({ width: true });
       window.setSize(800, 660);
-      view.webContents.openDevTools();
+      commonConst.dev() && view.webContents.openDevTools();
       executeHooks("PluginEnter", plugin.ext);
       executeHooks("PluginReady", plugin.ext);
       window.webContents.executeJavaScript(`window.pluginLoaded()`);
