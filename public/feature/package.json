@@ -1,0 +1,31 @@
+{
+  "name": "rubick-system-feature",
+  "pluginName": "rubick 系统菜单",
+  "description": "rubick 系统菜单",
+  "main": "index.html",
+  "logo": "https://static.91jkys.com/upload/202112/08/8a1abbb051bf4b05bbc9bbf66ade63f2.png",
+  "version": "0.0.0",
+  "preload":"preload.js",
+  "pluginType": "ui",
+  "features": [
+    {
+      "code": "market",
+      "explain": "rubick 插件市场",
+      "cmds":[
+        "插件市场"
+      ]
+    },{
+      "code": "plugins",
+      "explain": "rubick 已安装插件",
+      "cmds":[
+        "已安装插件"
+      ]
+    },{
+      "code": "settings",
+      "explain": "rubick 偏好设置",
+      "cmds":[
+        "偏好设置"
+      ]
+    }
+  ]
+}
