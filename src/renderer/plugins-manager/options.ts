@@ -3,6 +3,7 @@ import throttle from "lodash.throttle";
 import { remote } from "electron";
 import path from "path";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
+import commonConst from "@/common/utils/commonConst";
 
 function searchKeyValues(lists, value) {
   return lists.filter((item) => {
@@ -44,16 +45,23 @@ const optionsManager = ({ searchValue, appList, openPlugin, currentPlugin }) => 
                 "node_modules",
                 plugin.name
               );
-              openPlugin({
+              const pluginDist = {
                 ...toRaw(plugin),
                 indexPath: `file://${path.join(
                   pluginPath,
                   "./",
-                  plugin.main
+                  plugin.main || ""
                 )}`,
                 cmd,
                 feature: fe,
-              });
+              };
+              // 模板文件
+              if (!plugin.main) {
+                pluginDist.tplPath = commonConst.dev()
+                  ? "http://localhost:8082/#/"
+                  : `file://${__static}/tpl/index.html`;
+              }
+              openPlugin(pluginDist);
             },
           })),
         ];

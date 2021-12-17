@@ -67,7 +67,7 @@ const createPluginManager = (): any => {
     return {
       ...pluginInfo,
       indexPath: commonConst.dev()
-        ? "http://localhost:8080/#/"
+        ? "http://localhost:8081/#/"
         : `file://${path.join(pluginPath, "../", pluginInfo.main)}`,
     };
   };

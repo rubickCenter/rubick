@@ -8,10 +8,10 @@ import {
   clipboard,
 } from "electron";
 import { runner } from "../browsers";
-import path from "path";
 import fs from "fs";
 import { LocalDb } from "@/core";
 import plist from "plist";
+import { DECODE_KEY } from "@/common/constans/main";
 
 const runnerInstance = runner();
 const dbInstance = new LocalDb(app.getPath("userData"));
@@ -155,6 +155,22 @@ const API: any = {
       })})`
     );
     return true;
+  },
+  sendPluginSomeKeyDownEvent({ data: { modifiers, keyCode } }) {
+    const code = DECODE_KEY[keyCode];
+    if (!code || !runnerInstance.getView()) return;
+    if (modifiers.length > 0) {
+      runnerInstance.getView().webContents.sendInputEvent({
+        type: "keyDown",
+        modifiers,
+        keyCode: code,
+      });
+    } else {
+      runnerInstance.getView().webContents.sendInputEvent({
+        type: "keyDown",
+        keyCode: code,
+      });
+    }
   },
 };
 

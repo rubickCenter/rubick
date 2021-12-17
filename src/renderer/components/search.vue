@@ -5,17 +5,12 @@
       id="search"
       class="main-input"
       @input="(e) => changeValue(e)"
-      @keydown.down="() => emit('changeCurrent', 1)"
-      @keydown.up="() => emit('changeCurrent', -1)"
+      @keydown.down="(e) => keydownEvent(e, 1)"
+      @keydown.up="(e) => keydownEvent(e, -1)"
       @keydown="e => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
-      @keypress.enter="
-        (e) => targetSearch({ value: e.target.value, type: 'enter' })
-      "
-      @keypress.space="
-        (e) => targetSearch({ value: e.target.value, type: 'space' })
-      "
+      @keypress.enter="(e) => keydownEvent(e)"
     >
       <template #suffix>
         <div class="suffix-tool" >
@@ -64,6 +59,7 @@ const props = defineProps({
 
 const changeValue = (e) => {
   if (props.currentPlugin.name === "rubick-system-feature") return;
+  targetSearch({ value: e.target.value });
   emit("onSearch", e);
 };
 
@@ -74,6 +70,27 @@ const emit = defineEmits([
   "changeSelect",
   "choosePlugin",
 ]);
+
+const keydownEvent = (e, index) => {
+  const { ctrlKey, shiftKey, altKey, metaKey } = e;
+  const modifiers = [];
+  ctrlKey && modifiers.push("control");
+  shiftKey && modifiers.push("shift");
+  altKey && modifiers.push("alt");
+  metaKey && modifiers.push("meta");
+  ipcRenderer.send("msg-trigger", {
+    type: "sendPluginSomeKeyDownEvent",
+    data: {
+      keyCode: e.code,
+      modifiers,
+    },
+  });
+  if(index) {
+    emit("changeCurrent", index);
+  } else {
+    !props.currentPlugin.name && emit("choosePlugin");
+  }
+};
 
 const checkNeedInit = (e) => {
   if (e.target.value === "" && e.keyCode === 8) {
@@ -87,8 +104,6 @@ const targetSearch = ({ value, type }) => {
       type: "sendSubInputChangeEvent",
       data: { text: value },
     });
-  } else {
-    emit("choosePlugin");
   }
 };
 
