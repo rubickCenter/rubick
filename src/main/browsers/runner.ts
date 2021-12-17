@@ -14,7 +14,9 @@ const getPreloadPath = (plugin, pluginIndexPath) => {
     }
     return path.resolve(pluginIndexPath.replace("file:", ""), `../`, preload);
   }
-
+  if (tplPath) {
+    return path.resolve(indexPath.replace("file:", ""), `./`, preload);
+  }
   return path.resolve(pluginIndexPath.replace("file:", ""), `../`, preload);
 };
 
