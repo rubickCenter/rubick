@@ -32,4 +32,11 @@ export default {
     const res = await axios.get(url);
     return res.data;
   },
+
+  async getSearchDetail(url: string) {
+    const res = await axios.get(
+      "https://gitee.com/monkeyWang/rubick-database/raw/master/plugins/search.json"
+    );
+    return res.data;
+  },
 };

@@ -69,11 +69,13 @@ import { useStore } from "vuex";
 import Finder from "./components/finder.vue";
 import System from "./components/system.vue";
 import Worker from "./components/worker.vue";
+import Tools from "./components/tools.vue";
 
 const Components = {
   finder: Finder,
   system: System,
   worker: Worker,
+  tools: Tools,
 };
 
 const state = reactive({
