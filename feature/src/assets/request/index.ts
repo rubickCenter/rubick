@@ -39,4 +39,10 @@ export default {
     );
     return res.data;
   },
+  async getDevDetail(url: string) {
+    const res = await axios.get(
+      "https://gitee.com/monkeyWang/rubick-database/raw/master/plugins/dev.json"
+    );
+    return res.data;
+  },
 };

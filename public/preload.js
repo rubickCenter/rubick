@@ -81,6 +81,24 @@ window.rubick = {
     bulkDocs: (docs) => ipcSendSync("dbBulkDocs", { docs }),
     allDocs: (key) => ipcSendSync("dbAllDocs", { key }),
   },
+  dbStorage: {
+    setItem: (key, value) => {
+      const target = { _id: String(key) };
+      const result = ipcSendSync("dbGet", { id: target._id });
+      result && (target._rev = result._rev);
+      target.value = value;
+      const res = ipcSendSync("dbPut", { data: target });
+      if (res.error) throw new Error(res.message);
+    },
+    getItem: (key) => {
+      const res = ipcSendSync("dbGet", { id: key });
+      return res && "value" in res ? res.value : null;
+    },
+    removeItem: (key) => {
+      const res = ipcSendSync("dbGet", { id: key });
+      res && ipcSendSync("dbRemove", { doc: res });
+    },
+  },
   isDarkColors() {
     return false;
   },

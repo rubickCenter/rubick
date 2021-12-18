@@ -5,6 +5,7 @@ import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
 
 const getPreloadPath = (plugin, pluginIndexPath) => {
   const { name, preload, tplPath, indexPath } = plugin;
+  if (!preload) return;
   if (commonConst.dev()) {
     if (name === "rubick-system-feature") {
       return path.resolve(__static, `../feature/public/preload.js`);

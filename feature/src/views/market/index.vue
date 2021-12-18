@@ -70,12 +70,14 @@ import Finder from "./components/finder.vue";
 import System from "./components/system.vue";
 import Worker from "./components/worker.vue";
 import Tools from "./components/tools.vue";
+import Dev from "./components/devlopment.vue";
 
 const Components = {
   finder: Finder,
   system: System,
   worker: Worker,
   tools: Tools,
+  dev: Dev,
 };
 
 const state = reactive({
