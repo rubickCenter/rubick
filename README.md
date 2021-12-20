@@ -16,6 +16,8 @@
 - [ ] 支持 Windows
 - [ ] 支持 Linux
 
+![example](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/24d1bc95eac9451db26e4312e099bd01~tplv-k3u1fbpfcp-watermark.image)
+
 ## 反馈
 对本项目有兴趣或者想要交流学习的同学可以扫码加下面的微信，备注 rubick，帮助我们更好的成长：
 
