@@ -26,7 +26,7 @@ English | [简体中文](https://github.com/clouDr-f2e/rubick/blob/master/README
 </a>
 </div>
 
-** rubick 由于本人囊中羞涩，服务器已欠费。目前已基于 npm 重新设计了一套插件管理体系，另外为了减少按照包的大小，把超级面板抽离成了系统插件支持。欢迎前往体验 [Rubick 2.0](https://github.com/rubickCenter/rubick2) **
+**rubick 由于本人囊中羞涩，服务器已欠费。目前已基于 npm 重新设计了一套插件管理体系，另外为了减少按照包的大小，把超级面板抽离成了系统插件支持。欢迎前往体验 [Rubick 2.0](https://github.com/rubickCenter/rubick2)**
 
 Based on electron open source toolbox, free integration of rich plug-ins, to create the ultimate desktop efficiency tool。Rubick is one of the heroes of Dota ，The core skill is the ability to use other heroes as plug-ins，Finished the walk 。Very consistent with the design concept of this tool，So named Rubick。
 
