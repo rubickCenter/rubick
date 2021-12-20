@@ -7,7 +7,7 @@
         v-for="(item, index) in lists"
         @click="select(item)"
       >
-        <img class="icon" :src="item.icon" />
+        <img v-if="item.icon" class="icon" :src="item.icon" />
         <div class="content">
           <div class="title">{{ item.title }}</div>
           <div class="desc">{{ decodeURIComponent(item.description) }}</div>
@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { ref, onBeforeUnmount } from "vue";
+import { ref, onBeforeUnmount, watch } from "vue";
 const { ipcRenderer } = window.require("electron");
 
 const route = useRoute();
@@ -27,14 +27,18 @@ const itemHeight = 60;
 const itemMaxNum = 10;
 const defaultHeight = 60;
 
-const code = route.params.code;
+const { code, type, payload } = route.params;
 const current = window.exports[code];
 window.rubick.setExpendHeight(defaultHeight);
 
 const lists = ref([]);
+watch([lists], () => {
+  const height = lists.value.length > itemMaxNum ? itemMaxNum * itemHeight : itemHeight * lists.value.length
+  window.rubick.setExpendHeight(defaultHeight + height);
+});
 current.args.enter &&
-  current.args.enter({ code: code, type: "", payload: [] }, (lists) => {
-    lists.value = lists;
+  current.args.enter({ code: code, type, payload }, (result) => {
+    lists.value = result;
   });
 
 const currentSelect = ref(0);
@@ -51,8 +55,6 @@ window.rubick.setSubInput(({ text }) => {
   current.args.search &&
     current.args.search({ code, type: "", payload: [] }, text, (result) => {
       lists.value = result || [];
-      const height = lists.value.length > itemMaxNum ? itemMaxNum * itemHeight : itemHeight * lists.value.length
-      window.rubick.setExpendHeight(defaultHeight + height);
     });
 }, "搜索");
 

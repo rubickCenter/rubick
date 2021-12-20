@@ -1,6 +1,10 @@
 <template>
   <div class="rubick-select">
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
+    <div class="clipboard-tag" v-if="!!clipboardFile.length">
+      <img :src="clipboardFile[0].isFile ? require('../assets/file.png') : require('../assets/folder.png')" />
+      {{ clipboardFile[0].name }}
+    </div>
     <a-input
       id="search"
       class="main-input"
@@ -11,6 +15,7 @@
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
       @keypress.enter="(e) => keydownEvent(e)"
+      @focus="emit('focus')"
     >
       <template #suffix>
         <div class="suffix-tool" >
@@ -36,15 +41,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from "vue";
+import { defineProps, defineEmits, ref, computed } from "vue";
 import { ipcRenderer, remote } from "electron";
 import { LoadingOutlined, MoreOutlined } from "@ant-design/icons-vue";
+
 const opConfig = remote.getGlobal("OP_CONFIG");
 const { Menu } = remote;
 
 const config = ref(opConfig.get());
 
-const props = defineProps({
+const props: any = defineProps({
   searchValue: {
     type: [String, Number],
     default: "",
@@ -55,6 +61,7 @@ const props = defineProps({
   },
   currentPlugin: {},
   pluginLoading: Boolean,
+  clipboardFile: () => [],
 });
 
 const changeValue = (e) => {
@@ -69,11 +76,12 @@ const emit = defineEmits([
   "openMenu",
   "changeSelect",
   "choosePlugin",
+  "focus",
 ]);
 
 const keydownEvent = (e, index) => {
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
-  const modifiers = [];
+  const modifiers: Array<string> = [];
   ctrlKey && modifiers.push("control");
   shiftKey && modifiers.push("shift");
   altKey && modifiers.push("alt");
@@ -98,7 +106,7 @@ const checkNeedInit = (e) => {
   }
 };
 
-const targetSearch = ({ value, type }) => {
+const targetSearch = ({ value }) => {
   if (props.currentPlugin.name) {
     return ipcRenderer.sendSync("msg-trigger", {
       type: "sendSubInputChangeEvent",
@@ -109,13 +117,14 @@ const targetSearch = ({ value, type }) => {
 
 const closeTag = () => {
   emit("changeSelect", {});
+  emit("clearClipbord");
   ipcRenderer.send("msg-trigger", {
     type: "removePlugin",
   });
 };
 
 const showSeparate = () => {
-  let pluginMenu = [
+  let pluginMenu: any = [
     {
       label: config.value.perf.common.hideOnBlur ? "钉住" : "自动隐藏",
       click: changeHideOnBlur,
@@ -231,6 +240,23 @@ const newWindow = () => {
       position: absolute;
       top: 0;
       left: 0;
+    }
+  }
+  .clipboard-tag {
+    white-space: pre;
+    user-select: none;
+    font-size: 16px;
+    height: 32px;
+    position: relative;
+    align-items: center;
+    display: flex;
+    border: 1px solid #e6e6e6;
+    padding: 0 8px;
+    margin-right: 12px;
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 6px;
     }
   }
 }

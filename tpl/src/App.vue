@@ -6,12 +6,12 @@
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-window.rubick.onPluginEnter(({ code }) => {
+window.rubick.onPluginEnter(({ code, type, payload }) => {
   const current = window.exports[code];
   router.push({
     name: current.mode,
     params: {
-      code,
+      code, type, payload
     },
   });
 });

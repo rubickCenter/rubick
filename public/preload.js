@@ -132,4 +132,6 @@ window.rubick = {
   shellOpenPath(path) {
     shell.openPath(path);
   },
+
+  getLocalId: () => ipcSendSync("getLocalId"),
 };

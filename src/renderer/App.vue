@@ -10,7 +10,10 @@
         :searchValue="searchValue"
         :placeholder="placeholder"
         :pluginLoading="pluginLoading"
+        :clipboardFile="clipboardFile || []"
         @choosePlugin="choosePlugin"
+        @focus="searchFocus"
+        @clearClipbord="clearClipboardFile"
       />
     </div>
     <Result
@@ -18,6 +21,7 @@
       :searchValue="searchValue"
       :currentSelect="currentSelect"
       :options="options"
+      :clipboardFile="clipboardFile || []"
     />
   </div>
 </template>
@@ -41,6 +45,9 @@ const {
   currentPlugin,
   placeholder,
   pluginLoading,
+  searchFocus,
+  clipboardFile,
+  clearClipboardFile,
 } = createPluginManager();
 
 initPlugins();
@@ -57,13 +64,13 @@ getPluginInfo({
   remote.getGlobal("LOCAL_PLUGINS").addPlugin(res);
 });
 
-watch([searchValue], () => {
+watch([options], () => {
   currentSelect.value = 0;
   if (currentPlugin.value.name) return;
   nextTick(() => {
     ipcRenderer.sendSync("msg-trigger", {
       type: "setExpendHeight",
-      data: getWindowHeight(searchValue.value ? options.value : []),
+      data: getWindowHeight(options.value),
     });
   });
 });

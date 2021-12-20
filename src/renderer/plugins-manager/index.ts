@@ -39,7 +39,7 @@ const createPluginManager = (): any => {
         plugin: JSON.parse(
           JSON.stringify({
             ...plugin,
-            ext: {
+            ext: plugin.ext || {
               code: plugin.feature.code,
               type: plugin.cmd.type || "text",
               payload: null,
@@ -54,16 +54,21 @@ const createPluginManager = (): any => {
     }
   };
 
-  const { searchValue, onSearch, setSearchValue, placeholder } = searchManager();
-  const { options } = optionsManager({
-    searchValue,
-    appList,
-    openPlugin,
-    currentPlugin: toRefs(state).currentPlugin,
-  });
+  const { searchValue, onSearch, setSearchValue, placeholder } =
+    searchManager();
+  const { options, searchFocus, clipboardFile, clearClipboardFile } =
+    optionsManager({
+      searchValue,
+      appList,
+      openPlugin,
+      currentPlugin: toRefs(state).currentPlugin,
+    });
   // plugin operation
   const getPluginInfo = async ({ pluginName, pluginPath }) => {
-    const pluginInfo = await pluginInstance.getAdapterInfo(pluginName, pluginPath);
+    const pluginInfo = await pluginInstance.getAdapterInfo(
+      pluginName,
+      pluginPath
+    );
     return {
       ...pluginInfo,
       indexPath: commonConst.dev()
@@ -115,6 +120,9 @@ const createPluginManager = (): any => {
     options,
     searchValue,
     placeholder,
+    searchFocus,
+    clipboardFile,
+    clearClipboardFile,
   };
 };
 

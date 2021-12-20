@@ -1,27 +1,44 @@
-import { ref, toRaw, toRefs, watch } from "vue";
+import { ref, watch } from "vue";
 import throttle from "lodash.throttle";
 import { remote } from "electron";
-import path from "path";
-import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
-import commonConst from "@/common/utils/commonConst";
+import pluginClickEvent from "./pluginClickEvent";
+import useFocus from "./clipboardWatch";
+
+function formatReg(regStr) {
+  const flags = regStr.replace(/.*\/([gimy]*)$/, "$1");
+  const pattern = flags.replace(new RegExp("^/(.*?)/" + flags + "$"), "$1");
+  return new RegExp(pattern, flags);
+}
 
 function searchKeyValues(lists, value) {
   return lists.filter((item) => {
     if (typeof item === "string") {
       return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
     }
-    return item.type.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    if (item.type === "regex") {
+      return formatReg(item.match).test(value);
+    }
+    return false;
   });
 }
 
-const optionsManager = ({ searchValue, appList, openPlugin, currentPlugin }) => {
+const optionsManager = ({
+  searchValue,
+  appList,
+  openPlugin,
+  currentPlugin,
+}) => {
   const optionsRef = ref([]);
 
   watch(searchValue, () => search(searchValue.value));
   // search Input operation
   const search = throttle((value) => {
     if (currentPlugin.value.name) return;
-    if (!value) return;
+    if (clipboardFile.value.length) return;
+    if (!value) {
+      optionsRef.value = [];
+      return;
+    }
     const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
     let options: any = [];
     // todo 先搜索 plugin
@@ -34,34 +51,25 @@ const optionsManager = ({ searchValue, appList, openPlugin, currentPlugin }) => 
         options = [
           ...options,
           ...cmds.map((cmd) => ({
-            name: cmd,
+            name: cmd.label || cmd,
             value: "plugin",
             icon: plugin.logo,
             desc: fe.explain,
             type: plugin.pluginType,
             click: () => {
-              const pluginPath = path.resolve(
-                baseDir,
-                "node_modules",
-                plugin.name
-              );
-              const pluginDist = {
-                ...toRaw(plugin),
-                indexPath: `file://${path.join(
-                  pluginPath,
-                  "./",
-                  plugin.main || ""
-                )}`,
+              pluginClickEvent({
+                plugin,
+                fe,
                 cmd,
-                feature: fe,
-              };
-              // 模板文件
-              if (!plugin.main) {
-                pluginDist.tplPath = commonConst.dev()
-                  ? "http://localhost:8082/#/"
-                  : `file://${__static}/tpl/index.html`;
-              }
-              openPlugin(pluginDist);
+                ext: cmd.type
+                  ? {
+                      code: fe.code,
+                      type: cmd.type || "text",
+                      payload: searchValue.value,
+                    }
+                  : null,
+                openPlugin,
+              });
             },
           })),
         ];
@@ -104,8 +112,22 @@ const optionsManager = ({ searchValue, appList, openPlugin, currentPlugin }) => 
     optionsRef.value = options;
   }, 500);
 
+  const setOptionsRef = (options) => {
+    optionsRef.value = options;
+  };
+
+  const { searchFocus, clipboardFile, clearClipboardFile } = useFocus({
+    currentPlugin,
+    optionsRef,
+    openPlugin,
+    setOptionsRef,
+  });
+
   return {
     options: optionsRef,
+    searchFocus,
+    clipboardFile,
+    clearClipboardFile,
   };
 };
 

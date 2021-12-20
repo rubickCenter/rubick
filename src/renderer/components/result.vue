@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!!options.length && searchValue && !currentPlugin.name" class="options" ref="scrollDom">
+  <div v-show="!!options.length && (searchValue || !!clipboardFile.length) && !currentPlugin.name" class="options" ref="scrollDom">
     <a-list item-layout="horizontal" :dataSource="options">
       <template #renderItem="{ item, index }">
         <a-list-item
@@ -46,10 +46,12 @@ const props = defineProps({
     default: 0,
   },
   currentPlugin: {},
+  clipboardFile: () => [],
 });
 
 const renderTitle = (title) => {
   if (typeof title !== "string") return;
+  if (!props.searchValue) return title;
   const result = title.toLowerCase().split(props.searchValue.toLowerCase());
   if (result && result.length > 1) {
     return `<div>${result[0]}<span style="color: red">${props.searchValue}</span>${result[1]}</div>`;
