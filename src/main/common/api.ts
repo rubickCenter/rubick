@@ -31,6 +31,7 @@ const API: any = {
         currentPlugin: API.currentPlugin,
       })})`
     );
+    window.show();
   },
   removePlugin(e, window) {
     API.currentPlugin = null;

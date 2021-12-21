@@ -3,6 +3,10 @@ import path from "path";
 import commonConst from "../../common/utils/commonConst";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
 
+const getRelativePath = (indexPath) => {
+  return commonConst.windows() ? indexPath.replace("file://", "") : indexPath.replace("file:", "");
+}
+
 const getPreloadPath = (plugin, pluginIndexPath) => {
   const { name, preload, tplPath, indexPath } = plugin;
   if (!preload) return;

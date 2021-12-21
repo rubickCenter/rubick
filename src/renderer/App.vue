@@ -1,5 +1,6 @@
 <template>
-  <div id="components-layout">
+  <div v-if="commonConst.windows()" class="drag-bar"></div>
+  <div :class="!commonConst.windows() && 'drag'" id="components-layout">
     <div class="rubick-select">
       <Search
         :currentPlugin="currentPlugin"
@@ -33,6 +34,7 @@ import Result from "./components/result.vue";
 import Search from "./components/search.vue";
 import getWindowHeight from "../common/utils/getWindowHeight";
 import createPluginManager from "./plugins-manager";
+import commonConst from "@/common/utils/commonConst";
 
 const {
   initPlugins,
@@ -100,12 +102,23 @@ const choosePlugin = () => {
 </script>
 
 <style lang="less">
+.drag-bar {
+  -webkit-app-region: drag;
+  width: 100%;
+  height: 20px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
 #components-layout {
   height: 100vh;
   overflow: hidden;
-  -webkit-app-region: drag;
   ::-webkit-scrollbar {
     width: 0;
   }
+}
+.drag {
+  -webkit-app-region: drag;
 }
 </style>
