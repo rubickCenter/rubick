@@ -15,14 +15,14 @@ const getPreloadPath = (plugin, pluginIndexPath) => {
       return path.resolve(__static, `../feature/public/preload.js`);
     }
     if (tplPath) {
-      return path.resolve(indexPath.replace("file:", ""), `./`, preload);
+      return path.resolve(getRelativePath(indexPath), `./`, preload);
     }
-    return path.resolve(pluginIndexPath.replace("file:", ""), `../`, preload);
+    return path.resolve(getRelativePath(pluginIndexPath), `../`, preload);
   }
   if (tplPath) {
-    return path.resolve(indexPath.replace("file:", ""), `./`, preload);
+    return path.resolve(getRelativePath(indexPath), `./`, preload);
   }
-  return path.resolve(pluginIndexPath.replace("file:", ""), `../`, preload);
+  return path.resolve(getRelativePath(pluginIndexPath), `../`, preload);
 };
 
 export default () => {
