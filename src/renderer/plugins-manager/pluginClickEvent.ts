@@ -26,5 +26,11 @@ export default function pluginClickEvent({ plugin, fe, cmd, ext, openPlugin }) {
       ? "http://localhost:8082/#/"
       : `file://${__static}/tpl/index.html`;
   }
+  // 插件市场
+  if (plugin.name === "rubick-system-feature") {
+    pluginDist.indexPath = commonConst.dev()
+      ? "http://localhost:8081/#/"
+      : `file://${__static}/feature/index.html`;
+  }
   openPlugin(pluginDist);
 }

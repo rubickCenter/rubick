@@ -23,6 +23,7 @@ const API: any = {
   DBKEY: "RUBICK_DB_DEFAULT",
   openPlugin({ plugin }, window) {
     if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
+    window.setSize(window.getSize()[0], 60);
     runnerInstance.removeView(window);
     runnerInstance.init(plugin, window);
     API.currentPlugin = plugin;

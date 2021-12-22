@@ -55,6 +55,11 @@ const changeMenu = (key: any) => {
   router.push(key);
 };
 
+window.rubick.onPluginEnter(({ code }: { code: string }) => {
+  changeMenu(code);
+  active.value = [code];
+});
+
 const store = useStore();
 const init = () => store.dispatch("init");
 init();

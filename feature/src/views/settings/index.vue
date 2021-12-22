@@ -56,6 +56,14 @@
         <div class="setting-item">
           <div class="title">通用</div>
           <div class="settings-item-li">
+            <div class="label">输入框自动粘贴</div>
+            <a-switch
+              v-model:checked="config.perf.common.autoPast"
+              checked-children="开"
+              un-checked-children="关"
+            ></a-switch>
+          </div>
+          <div class="settings-item-li">
             <div class="label">开机启动</div>
             <a-switch
               v-model:checked="config.perf.common.start"

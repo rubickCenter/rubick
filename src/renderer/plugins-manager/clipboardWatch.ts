@@ -12,6 +12,10 @@ export default ({
 }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
+    const config = remote.getGlobal("OP_CONFIG").get();
+    // 未开启自动粘贴
+    if (!config.perf.common.autoPast) return;
+
     if (currentPlugin.value.name) return;
     const fileList = getCopyFiles();
     // 拷贝的是文件

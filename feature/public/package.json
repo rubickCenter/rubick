@@ -15,7 +15,7 @@
         "插件市场"
       ]
     },{
-      "code": "plugins",
+      "code": "installed",
       "explain": "rubick 已安装插件",
       "cmds":[
         "已安装插件"

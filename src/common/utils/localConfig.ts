@@ -1,16 +1,15 @@
 import path from "path";
 import fs from "fs";
 import getLocalDataFile from "./getLocalDataFile";
-import { app } from "electron";
 import commonConst from "./commonConst";
 
 const configPath = path.join(getLocalDataFile(), "./rubick-config.json");
 
 const defaultConfigForAnyPlatform = {
-  version: 1,
+  version: 2,
   perf: {
     shortCut: {
-      showAndHidden: "Option+R",
+      showAndHidden: "OptionOrAlt+R",
       separate: "Ctrl+D",
       quit: "Shift+Escape",
     },
@@ -19,6 +18,7 @@ const defaultConfigForAnyPlatform = {
       space: true,
       // 是否失焦隐藏。默认在dev环境不隐藏，在打包后隐藏。
       hideOnBlur: commonConst.production(),
+      autoPast: false,
     },
     local: {
       search: true,
