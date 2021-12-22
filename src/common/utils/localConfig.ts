@@ -9,7 +9,7 @@ const defaultConfigForAnyPlatform = {
   version: 2,
   perf: {
     shortCut: {
-      showAndHidden: "OptionOrAlt+R",
+      showAndHidden: "Option+R",
       separate: "Ctrl+D",
       quit: "Shift+Escape",
     },
