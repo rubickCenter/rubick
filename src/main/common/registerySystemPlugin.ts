@@ -37,7 +37,13 @@ export default () => {
 
   const triggerReadyHooks = (ctx) => {
     // @ts-ignore
-    hooks.onReady.forEach(hook => hook(ctx));
+    hooks.onReady.forEach((hook: any) => {
+      try {
+        hook(ctx);
+      } catch (e) {
+        console.log(e);
+      }
+    });
   }
 
   return {
