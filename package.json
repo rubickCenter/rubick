@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.0.1-beta.5",
+  "version": "2.0.1-beta.6",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -19,6 +19,7 @@
     "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
     "cross-spawn": "^7.0.3",
+    "extract-file-icon": "^0.3.2",
     "fix-path": "^3.0.0",
     "get-mac-apps": "^1.0.2",
     "got": "^11.8.3",

@@ -21,7 +21,8 @@ module.exports = {
       mainProcessFile: "src/main/index.ts",
       mainProcessWatch: ["src/main"],
       externals: [
-        'pouchdb'
+        'pouchdb',
+        'extract-file-icon'
       ],
       // Use this to change the entry point of your app's render process. default src/[main|index].[js|ts]
       builderOptions: {
