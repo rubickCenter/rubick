@@ -1,4 +1,4 @@
-[English](https://github.com/rubickCenter/rubick/blob/master/README.md) | 简体中文
+[English](./README.md) | 简体中文
 
 
 <div align= "center">
@@ -38,6 +38,7 @@
 - [x] 基于 npm 包模式的插件管理，安装插件和安装 npm 包一样简单
 - [x] 支持系统插件，只要在 rubick 运行时，插件可以随时使用
 - [x] 支持全局快捷键设置
+- [x] 支持剪贴板文件搜索
 - [x] 支持搜索本地已安装 app 或 偏好设置
 - [x] 支持 MacOS
 - [x] 支持 Windows
