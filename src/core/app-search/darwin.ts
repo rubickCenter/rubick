@@ -115,7 +115,7 @@ export default async (nativeImage: any) => {
       value: "plugin",
       desc: app.path,
       pluginType: "app",
-      action: `open ${app.path.replace(" ", "\\ ") as string}`,
+      action: `open ${app.path.replace(/ /g, "\\ ") as string}`,
       keyWords: [appSubStr],
     };
 
