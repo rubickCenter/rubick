@@ -10,7 +10,7 @@ rubick 之前的插件管理，依托于云服务器存储，我们需要为服�
 [windows 下安装 nodejs 方法](https://juejin.cn/post/6892790243687137287)
 
 ## 下载 rubick
-[rubick 下载安装地址](https://github.com/rubickCenter/rubick2/releases)
+[rubick 下载安装地址](https://github.com/rubickCenter/rubick/releases)
 
 macos 选择 `pkg` 文件，windows 选择 `exe` 文件。
 安装完成后打开 rubick 即可看到主搜索界面：
@@ -45,5 +45,5 @@ macos 选择 `pkg` 文件，windows 选择 `exe` 文件。
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01ef50fbfa064ba9a88bebe1531eacd4~tplv-k3u1fbpfcp-watermark.image)
 
 ### 更多功能
-如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/rubickCenter/rubick2/issues) 。
+如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/rubickCenter/rubick/issues) 。
 有价值的想法我们会加入到后期的开发当中。同时也欢迎一起加入共建。
