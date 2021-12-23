@@ -55,6 +55,8 @@
     "prettier": "^2.2.1",
     "typescript": "~4.1.5",
     "vue-cli-plugin-electron-builder": "~2.1.1",
-    "worker-plugin": "^5.0.1"
-  }
+    "worker-plugin": "^5.0.1",
+    "electron-builder": "22.13.1"
+  },
+  "__npminstall_done": false
 }
