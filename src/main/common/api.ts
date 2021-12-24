@@ -21,6 +21,15 @@ dbInstance.init();
 const API: any = {
   currentPlugin: null,
   DBKEY: "RUBICK_DB_DEFAULT",
+  __EscapeKeyDown: (event, input, window) => {
+    if (input.type !== "keyDown") return;
+    if (!(input.meta || input.control || input.shift || input.alt)) {
+      if (input.key === "Escape") {
+        API.removePlugin(null, window);
+      }
+      return;
+    }
+  },
   openPlugin({ plugin }, window) {
     if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
     window.setSize(window.getSize()[0], 60);
@@ -33,6 +42,9 @@ const API: any = {
       })})`
     );
     window.show();
+    // 按 ESC 退出插件
+    window.webContents.on("before-input-event", (event, input) => API.__EscapeKeyDown(event, input, window));
+    runnerInstance.getView().webContents.on("before-input-event", (event, input) => API.__EscapeKeyDown(event, input, window));
   },
   removePlugin(e, window) {
     API.currentPlugin = null;
