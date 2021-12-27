@@ -10,4 +10,7 @@ window.market = {
   deletePlugin(plugin) {
     return remote.getGlobal("LOCAL_PLUGINS").deletePlugin(plugin);
   },
+  refreshPlugin(plugin) {
+    return remote.getGlobal("LOCAL_PLUGINS").refreshPlugin(plugin);
+  },
 }
