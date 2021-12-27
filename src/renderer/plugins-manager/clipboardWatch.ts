@@ -128,10 +128,63 @@ export default ({
     clipboardFile.value = [];
     optionsRef.value = [];
   };
+  // 触发 ctrl + v 主动粘贴时
+  const readClipboardContent = () => {
+    // read image
+    const img = clipboard.readImage();
+    const dataUrl = img.toDataURL();
+    if (!dataUrl.replace("data:image/png;base64,", "")) return;
+    clipboardFile.value = [
+      {
+        isFile: true,
+        isDirectory: false,
+        path: null,
+        dataUrl,
+      }
+    ];
+    const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
+    const options: any = [];
+    // 再正则插件
+    localPlugins.forEach((plugin) => {
+      const feature = plugin.features;
+      // 系统插件无 features 的情况，不需要再搜索
+      if (!feature) return;
+      feature.forEach((fe) => {
+        fe.cmds.forEach((cmd) => {
+          if (cmd.type === "img") {
+            options.push({
+              name: cmd.label,
+              value: "plugin",
+              icon: plugin.logo,
+              desc: fe.explain,
+              type: plugin.pluginType,
+              click: () => {
+                pluginClickEvent({
+                  plugin,
+                  fe,
+                  cmd,
+                  ext: {
+                    code: fe.code,
+                    type: cmd.type || "text",
+                    payload: dataUrl,
+                  },
+                  openPlugin,
+                });
+                clearClipboardFile();
+              },
+            });
+          }
+        });
+      });
+
+      setOptionsRef(options);
+    });
+  };
 
   return {
     searchFocus,
     clipboardFile,
     clearClipboardFile,
+    readClipboardContent,
   };
 };

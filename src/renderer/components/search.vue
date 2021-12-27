@@ -1,8 +1,8 @@
 <template>
   <div class="rubick-select">
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
-    <div class="clipboard-tag" v-if="!!clipboardFile.length">
-      <img :src="clipboardFile[0].isFile ? require('../assets/file.png') : require('../assets/folder.png')" />
+    <div :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'" v-if="!!clipboardFile.length">
+      <img :src="getIcon()" />
       {{ clipboardFile[0].name }}
     </div>
     <a-input
@@ -77,6 +77,7 @@ const emit = defineEmits([
   "changeSelect",
   "choosePlugin",
   "focus",
+  "readClipboardContent",
 ]);
 
 const keydownEvent = (e, index) => {
@@ -101,8 +102,14 @@ const keydownEvent = (e, index) => {
 };
 
 const checkNeedInit = (e) => {
+  const { ctrlKey, metaKey } = e;
+
   if (e.target.value === "" && e.keyCode === 8) {
     closeTag();
+  }
+  // 手动粘贴
+  if ((ctrlKey || metaKey) && e.key === "v") {
+    emit("readClipboardContent");
   }
 };
 
@@ -165,6 +172,11 @@ const changeHideOnBlur = () => {
   opConfig.set("perf", cfg.perf);
   config.value = cfg;
 };
+
+const getIcon = () => {
+  if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
+  return props.clipboardFile[0].isFile ? require("../assets/file.png") : require("../assets/folder.png")
+}
 
 const newWindow = () => {
   // todo
@@ -257,6 +269,19 @@ const newWindow = () => {
       width: 24px;
       height: 24px;
       margin-right: 6px;
+    }
+  }
+  .clipboard-img {
+    white-space: pre;
+    user-select: none;
+    font-size: 16px;
+    height: 32px;
+    position: relative;
+    align-items: center;
+    display: flex;
+    img {
+      width: 32px;
+      height: 32px;
     }
   }
 }

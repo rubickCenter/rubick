@@ -15,6 +15,7 @@
         @choosePlugin="choosePlugin"
         @focus="searchFocus"
         @clearClipbord="clearClipboardFile"
+        @readClipboardContent="readClipboardContent"
       />
     </div>
     <Result
@@ -50,6 +51,7 @@ const {
   searchFocus,
   clipboardFile,
   clearClipboardFile,
+  readClipboardContent,
 } = createPluginManager();
 
 initPlugins();

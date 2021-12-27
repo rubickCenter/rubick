@@ -116,7 +116,7 @@ const optionsManager = ({
     optionsRef.value = options;
   };
 
-  const { searchFocus, clipboardFile, clearClipboardFile } = useFocus({
+  const { searchFocus, clipboardFile, clearClipboardFile, readClipboardContent } = useFocus({
     currentPlugin,
     optionsRef,
     openPlugin,
@@ -128,6 +128,7 @@ const optionsManager = ({
     searchFocus,
     clipboardFile,
     clearClipboardFile,
+    readClipboardContent,
   };
 };
 

@@ -56,7 +56,7 @@ const createPluginManager = (): any => {
 
   const { searchValue, onSearch, setSearchValue, placeholder } =
     searchManager();
-  const { options, searchFocus, clipboardFile, clearClipboardFile } =
+  const { options, searchFocus, clipboardFile, clearClipboardFile, readClipboardContent } =
     optionsManager({
       searchValue,
       appList,
@@ -124,6 +124,7 @@ const createPluginManager = (): any => {
     searchFocus,
     clipboardFile,
     clearClipboardFile,
+    readClipboardContent,
   };
 };
 
