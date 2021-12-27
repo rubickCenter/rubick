@@ -14,6 +14,7 @@
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button :loading="loading" type="primary" @click="onSubmit">安装</a-button>
+        <a-button @click="refresh" style="margin-left: 10px;">刷新插件</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -48,6 +49,15 @@ const downloadPlugin = async (pluginName) => {
   });
   message.success(`${pluginName}安装成功！`);
   loading.value = false;
+};
+
+const refresh = () => {
+  formRef.value.validate().then(() => {
+    window.market.refreshPlugin({
+      name: formState.name,
+    });
+    message.success(`${formState.name}刷新成功！`);
+  });
 };
 
 const labelCol = { span: 4 };

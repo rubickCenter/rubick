@@ -32,6 +32,38 @@ global.LOCAL_PLUGINS = {
     global.LOCAL_PLUGINS.addPlugin(plugin);
     return global.LOCAL_PLUGINS.PLUGINS;
   },
+  refreshPlugin(plugin) {
+    // 获取 dev 插件信息
+    const pluginPath = path.resolve(
+      baseDir,
+      "node_modules",
+      plugin.name
+    );
+    const pluginInfo = JSON.parse(
+      fs.readFileSync(path.join(pluginPath, "./package.json"), "utf8")
+    );
+    plugin = {
+      ...plugin,
+      ...pluginInfo,
+    };
+    // 刷新
+    let currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
+
+    currentPlugins = currentPlugins.map((p) => {
+      if (p.name === plugin.name) {
+        return plugin;
+      }
+      return p;
+    });
+
+    // 存入
+    global.LOCAL_PLUGINS.PLUGINS = currentPlugins;
+    fs.writeFileSync(
+      configPath,
+      JSON.stringify(currentPlugins)
+    );
+    return global.LOCAL_PLUGINS.PLUGINS;
+  },
   getLocalPlugins() {
     try {
       if (!global.LOCAL_PLUGINS.PLUGINS.length) {
