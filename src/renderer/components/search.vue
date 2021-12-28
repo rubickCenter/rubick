@@ -169,7 +169,7 @@ const showSeparate = () => {
 const changeHideOnBlur = () => {
   let cfg = { ...config.value };
   cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
-  opConfig.set("perf", cfg.perf);
+  opConfig.set(cfg.perf);
   config.value = cfg;
 };
 

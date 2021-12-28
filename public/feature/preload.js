@@ -13,4 +13,4 @@ window.market = {
   refreshPlugin(plugin) {
     return remote.getGlobal("LOCAL_PLUGINS").refreshPlugin(plugin);
   },
-}
+};

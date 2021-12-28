@@ -2,30 +2,9 @@ import path from "path";
 import fs from "fs";
 import getLocalDataFile from "./getLocalDataFile";
 import commonConst from "./commonConst";
+import defaultConfigForAnyPlatform from "../constans/defaultConfig";
 
 const configPath = path.join(getLocalDataFile(), "./rubick-config.json");
-
-const defaultConfigForAnyPlatform = {
-  version: 2,
-  perf: {
-    shortCut: {
-      showAndHidden: "Option+R",
-      separate: "Ctrl+D",
-      quit: "Shift+Escape",
-    },
-    common: {
-      start: true,
-      space: true,
-      // 是否失焦隐藏。默认在dev环境不隐藏，在打包后隐藏。
-      hideOnBlur: commonConst.production(),
-      autoPast: false,
-    },
-    local: {
-      search: true,
-    },
-  },
-  global: [],
-};
 
 global.OP_CONFIG = {
   config: null,
@@ -54,8 +33,11 @@ global.OP_CONFIG = {
       return global.config;
     }
   },
-  set(key, value) {
-    global.config[key] = value;
+  set(value) {
+    global.config = {
+      ...global.config,
+      ...value,
+    };
     fs.writeFileSync(configPath, JSON.stringify(global.config));
   },
 };

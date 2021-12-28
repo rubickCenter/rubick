@@ -29,36 +29,36 @@
               tabIndex="-1"
               @keyup="(e) => changeShortCut(e, 'showAndHidden')"
             >
-              {{ config.perf.shortCut.showAndHidden }}
+              {{ shortCut.showAndHidden }}
             </div>
           </div>
-          <div class="settings-item-li">
-            <div class="label">插件分离快捷键</div>
-            <div
-              class="value"
-              tabIndex="-1"
-              @keyup="(e) => changeShortCut(e, 'separate')"
-            >
-              {{ config.perf.shortCut.separate }}
-            </div>
-          </div>
-          <div class="settings-item-li">
-            <div class="label">返回主界面</div>
-            <div
-              class="value"
-              tabIndex="-1"
-              @keyup="(e) => changeShortCut(e, 'quit')"
-            >
-              {{ config.perf.shortCut.quit }}
-            </div>
-          </div>
+<!--          <div class="settings-item-li">-->
+<!--            <div class="label">插件分离快捷键</div>-->
+<!--            <div-->
+<!--              class="value"-->
+<!--              tabIndex="-1"-->
+<!--              @keyup="(e) => changeShortCut(e, 'separate')"-->
+<!--            >-->
+<!--              {{ shortCut.separate }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="settings-item-li">-->
+<!--            <div class="label">返回主界面</div>-->
+<!--            <div-->
+<!--              class="value"-->
+<!--              tabIndex="-1"-->
+<!--              @keyup="(e) => changeShortCut(e, 'quit')"-->
+<!--            >-->
+<!--              {{ shortCut.quit }}-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
         <div class="setting-item">
           <div class="title">通用</div>
           <div class="settings-item-li">
             <div class="label">输入框自动粘贴</div>
             <a-switch
-              v-model:checked="config.perf.common.autoPast"
+              v-model:checked="common.autoPast"
               checked-children="开"
               un-checked-children="关"
             ></a-switch>
@@ -66,7 +66,7 @@
           <div class="settings-item-li">
             <div class="label">开机启动</div>
             <a-switch
-              v-model:checked="config.perf.common.start"
+              v-model:checked="common.start"
               checked-children="开"
               un-checked-children="关"
             ></a-switch>
@@ -74,23 +74,23 @@
           <div class="settings-item-li">
             <div class="label">空格执行</div>
             <a-switch
-              v-model:checked="config.perf.common.space"
+              v-model:checked="common.space"
               checked-children="开"
               un-checked-children="关"
             ></a-switch>
           </div>
         </div>
-        <div class="setting-item">
-          <div class="title">本地搜索启动</div>
-          <div class="settings-item-li">
-            <div class="label">搜索启动应用&文件</div>
-            <a-switch
-              v-model:checked="config.perf.local.search"
-              checked-children="开"
-              un-checked-children="关"
-            ></a-switch>
-          </div>
-        </div>
+<!--        <div class="setting-item">-->
+<!--          <div class="title">本地搜索启动</div>-->
+<!--          <div class="settings-item-li">-->
+<!--            <div class="label">搜索启动应用&文件</div>-->
+<!--            <a-switch-->
+<!--              v-model:checked="local.search"-->
+<!--              checked-children="开"-->
+<!--              un-checked-children="关"-->
+<!--            ></a-switch>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
       <div v-if="currentSelect[0] === 'global'">
         <a-collapse>
@@ -124,9 +124,9 @@
               </template>
               <div
                 :key="index"
-                v-for="(item, index) in config.global"
+                v-for="(item, index) in global"
                 class="value"
-                tabIndex="-1"
+                tabIndex="2"
                 @keyup="(e) => changeGlobalKey(e, index)"
               >
                 {{ item.key }}
@@ -138,7 +138,7 @@
             <a-input
               :key="index"
               :value="item.value"
-              v-for="(item, index) in config.global"
+              v-for="(item, index) in global"
               class="value"
               :disabled="!item.key"
               @change="(e) => changeGlobalValue(index, e.target.value)"
@@ -153,7 +153,8 @@
 
 <script setup>
 import { ToolOutlined, LaptopOutlined } from "@ant-design/icons-vue";
-import { ref, watch } from "vue";
+import debounce from "lodash.debounce";
+import { ref, reactive, watch, toRefs, toRaw } from "vue";
 import keycodes from "./keycode";
 
 const { remote, ipcRenderer } = window.require("electron");
@@ -169,27 +170,52 @@ const examples = [
   },
 ];
 
-const currentSelect = ref(["normal"]);
-const config = ref({});
+const state = reactive({
+  shortCut: {},
+  common: {},
+  local: {},
+  global: [],
+});
 
-config.value = remote.getGlobal("OP_CONFIG").get();
+const currentSelect = ref(["normal"]);
+
+const {perf, global: defaultGlobal} = remote.getGlobal("OP_CONFIG").get();
+
+state.shortCut = perf.shortCut;
+state.common = perf.common;
+state.local = perf.local;
+state.global = defaultGlobal;
+
+const setConfig = debounce(() => {
+  remote.getGlobal("OP_CONFIG").set(JSON.parse(JSON.stringify({
+    perf: {
+      shortCut: state.shortCut,
+      common: state.common,
+      local: state.local,
+    },
+    global: state.global,
+  })));
+  ipcRenderer.send("re-register");
+}, 2000);
+
+watch(state, setConfig);
 
 const changeShortCut = (e, key) => {
   if (e.altKey && e.keyCode !== 18) {
     const compose = `Option+${keycodes[e.keyCode].toUpperCase()}`;
-    config.value.perf.shortCut[key] = compose;
+    state.shortCut[key] = compose;
   }
   if (e.ctrlKey && e.keyCode !== 17) {
     const compose = `Ctrl+${keycodes[e.keyCode].toUpperCase()}`;
-    config.value.config.perf.shortCut[key] = compose;
+    state.perf.shortCut[key] = compose;
   }
   if (e.shiftKey && e.keyCode !== 16) {
     const compose = `Shift+${keycodes[e.keyCode].toUpperCase()}`;
-    config.value.config.perf.shortCut[key] = compose;
+    state.perf.shortCut[key] = compose;
   }
   if (e.metaKey && e.keyCode !== 93) {
     const compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
-    config.value.config.perf.shortCut[key] = compose;
+    state.perf.shortCut[key] = compose;
   }
 };
 
@@ -208,44 +234,29 @@ const changeGlobalKey = (e, index) => {
     compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
   }
   if (compose) {
-    config.value.global[index].key = compose;
+    state.global[index].key = compose;
   }
   // f1 - f12
   if (e.keyCode >= 112 && e.keyCode <= 123) {
     compose = keycodes[e.keyCode].toUpperCase();
   }
   if (compose) {
-    config.value.global[index].key = compose;
+    state.global[index].key = compose;
   }
 };
+
+const changeGlobalValue = (index, value) => {
+  state.global[index].value = value;
+}
 
 const addConfig = () => {
-  console.log(config.value);
-  config.value = {
-    ...config.value,
-    global: [
-      ...config.value.global,
-      {
-        key: "",
-        value: "",
-      }
-    ]
-  };
+  state.global.push({
+    key: "",
+    value: "",
+  });
 };
 
-watch(
-  config,
-  () => {
-    console.log(config.value);
-    // remote.getGlobal("OP_CONFIG").set("perf", config.value.perf);
-    // remote.getGlobal("OP_CONFIG").set("superPanel", config.value.superPanel);
-    // remote.getGlobal("OP_CONFIG").set("global", config.value.global);
-    ipcRenderer.send("re-register");
-  },
-  {
-    deep: true,
-  }
-);
+const {shortCut, common, local, global} = toRefs(state);
 </script>
 
 <style lang="less">

@@ -12,6 +12,8 @@
     "ant-design-vue": "^2.2.8",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "markdown-it": "^12.2.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

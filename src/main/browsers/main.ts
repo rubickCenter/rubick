@@ -39,14 +39,6 @@ export default () => {
       const url = req.url.substr(8);
       callback(decodeURI(url));
     });
-
-    win.once("ready-to-show", () => {
-      win.show();
-      // 非隐藏式启动需要显示主窗口
-      if (!app.getLoginItemSettings().wasOpenedAsHidden) {
-        win.show();
-      }
-    });
     win.on("closed", () => {
       win = undefined;
     });
