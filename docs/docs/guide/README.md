@@ -1,3 +1,9 @@
+## 赞助
+`rubick` 是非盈利项目，开源不容易，如果该项目对你有用的话，可以打赏我们喝杯 coffee ☕️.
+
+<img width=200 src=https://pic1.zhimg.com/80/v2-688385687a37e962fe32daf136139feb_720w.png />
+<img width=200 src=https://pica.zhimg.com/80/v2-1ba296fd2cece45ee1094ee7c259035c_720w.png />
+
 ## 前言
 rubick 之前的插件管理，依托于云服务器存储，我们需要为服务器存储支付一笔不小的开销。
 由于项目完全开源，所以几乎无任何收入，所以为了让 rubick 先生存下去，我们再三抉择把插件包管理方式托管到了`npm` 上。

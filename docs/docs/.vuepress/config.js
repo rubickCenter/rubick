@@ -21,12 +21,16 @@ module.exports = {
         sidebarDepth: 1,    // 可选的, 默认值是 1
       },
       {
-        title: '开发者',
+        title: '插件开发',
         path: '/dev/',
       },
       {
         title: 'API',
         path: '/api/',
+      },
+      {
+        title: '贡献 rubick',
+        path: '/run/',
       }
     ],
     // 假定是 GitHub. 同时也可以是一个完整的 GitLab URL
