@@ -70,6 +70,9 @@ const API: any = {
       })})`
     );
   },
+  subInputBlur() {
+    runnerInstance.getView().webContents.focus()
+  },
   sendSubInputChangeEvent({ data }) {
     runnerInstance.executeHooks("SubInputChange", data);
   },

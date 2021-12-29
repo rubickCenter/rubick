@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.0.1-beta.9",
+  "version": "2.0.1-beta.10",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

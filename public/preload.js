@@ -59,6 +59,9 @@ window.rubick = {
   setSubInputValue(text) {
     ipcSendSync("setSubInputValue", { text });
   },
+  subInputBlur() {
+    ipcSendSync("subInputBlur");
+  },
   getPath(name) {
     return ipcSendSync("getPath", { name });
   },
