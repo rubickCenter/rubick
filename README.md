@@ -76,6 +76,12 @@ Search for `Preferences` in `rubick`, and then turn on the `Auto Paste` function
 If you need more features, please come here to give us suggestions：[issues](https://github.com/rubickCenter/rubick/issues) 。
 We will add valuable ideas to the later development. At the same time, welcome to join and build together。
 
+## Sponsor
+开源不容易，如果该项目对你有用的话，可以打赏我们喝杯 coffee ☕️.
+
+<img width=200 src=https://pic1.zhimg.com/80/v2-688385687a37e962fe32daf136139feb_720w.png />
+<img width=200 src=https://pica.zhimg.com/80/v2-1ba296fd2cece45ee1094ee7c259035c_720w.png />
+
 ## 贡献
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 

@@ -77,6 +77,12 @@
 如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/rubickCenter/rubick/issues) 。
 有价值的想法我们会加入到后期的开发当中。同时也欢迎一起加入共建。
 
+## 赞助
+开源不容易，如果该项目对你有用的话，可以打赏我们喝杯 coffee ☕️.
+
+<img width=200 src=https://pic1.zhimg.com/80/v2-688385687a37e962fe32daf136139feb_720w.png />
+<img width=200 src=https://pica.zhimg.com/80/v2-1ba296fd2cece45ee1094ee7c259035c_720w.png />
+
 ## 贡献
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 
