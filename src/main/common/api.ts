@@ -7,13 +7,14 @@ import {
   nativeImage,
   clipboard,
 } from "electron";
-import { runner } from "../browsers";
+import { runner, detach } from "../browsers";
 import fs from "fs";
 import { LocalDb } from "@/core";
 import plist from "plist";
 import { DECODE_KEY } from "@/common/constans/main";
 
 const runnerInstance = runner();
+const detachInstance = detach();
 const dbInstance = new LocalDb(app.getPath("userData"));
 
 dbInstance.init();
@@ -21,6 +22,11 @@ dbInstance.init();
 const API: any = {
   currentPlugin: null,
   DBKEY: "RUBICK_DB_DEFAULT",
+  getCurrentWindow: (window, e) => {
+    let originWindow = BrowserWindow.fromWebContents(e.sender);
+    if (originWindow !== window) originWindow = detachInstance.getWindow();
+    return originWindow;
+  },
   __EscapeKeyDown: (event, input, window) => {
     if (input.type !== "keyDown") return;
     if (!(input.meta || input.control || input.shift || input.alt)) {
@@ -43,12 +49,21 @@ const API: any = {
     );
     window.show();
     // 按 ESC 退出插件
-    window.webContents.on("before-input-event", (event, input) => API.__EscapeKeyDown(event, input, window));
-    runnerInstance.getView().webContents.on("before-input-event", (event, input) => API.__EscapeKeyDown(event, input, window));
+    window.webContents.on("before-input-event", (event, input) =>
+      API.__EscapeKeyDown(event, input, window)
+    );
+    runnerInstance
+      .getView()
+      .webContents.on("before-input-event", (event, input) =>
+        API.__EscapeKeyDown(event, input, window)
+      );
   },
   removePlugin(e, window) {
     API.currentPlugin = null;
     runnerInstance.removeView(window);
+  },
+  openPluginDevTools() {
+    runnerInstance.getView().webContents.openDevTools({ mode: "detach" });
   },
   hideMainWindow(arg, window) {
     window.hide();
@@ -59,28 +74,36 @@ const API: any = {
   showOpenDialog({ data }, window) {
     dialog.showOpenDialogSync(window, data);
   },
-  setExpendHeight({ data: height }, window: BrowserWindow) {
+  setExpendHeight({ data: height }, window: BrowserWindow, e) {
+    const originWindow = API.getCurrentWindow(window, e);
+    if (!originWindow) return;
     const targetHeight = height;
-    window.setSize(window.getSize()[0], targetHeight);
+    originWindow.setSize(originWindow.getSize()[0], targetHeight);
   },
-  setSubInput({ data }, window) {
-    window.webContents.executeJavaScript(
+  setSubInput({ data }, window, e) {
+    const originWindow = API.getCurrentWindow(window, e);
+    if (!originWindow) return;
+    originWindow.webContents.executeJavaScript(
       `window.setSubInput(${JSON.stringify({
         placeholder: data.placeholder,
       })})`
     );
   },
   subInputBlur() {
-    runnerInstance.getView().webContents.focus()
+    runnerInstance.getView().webContents.focus();
   },
   sendSubInputChangeEvent({ data }) {
     runnerInstance.executeHooks("SubInputChange", data);
   },
-  removeSubInput(e, window) {
-    window.webContents.executeJavaScript(`window.removeSubInput()`);
+  removeSubInput(data, window, e) {
+    const originWindow = API.getCurrentWindow(window, e);
+    if (!originWindow) return;
+    originWindow.webContents.executeJavaScript(`window.removeSubInput()`);
   },
-  setSubInputValue({ data }, window) {
-    window.webContents.executeJavaScript(
+  setSubInputValue({ data }, window, e) {
+    const originWindow = API.getCurrentWindow(window, e);
+    if (!originWindow) return;
+    originWindow.webContents.executeJavaScript(
       `window.setSubInputValue(${JSON.stringify({
         value: data.text,
       })})`
@@ -188,6 +211,30 @@ const API: any = {
         keyCode: code,
       });
     }
+  },
+
+  detachPlugin(e, window) {
+    if (!API.currentPlugin) return;
+    const view = window.getBrowserView();
+    window.setBrowserView(null);
+    window.webContents
+      .executeJavaScript(`window.getMainInputInfo()`)
+      .then((res) => {
+        detachInstance.init(
+          {
+            ...API.currentPlugin,
+            subInput: res,
+          },
+          window.getBounds(),
+          view
+        );
+        window.webContents.executeJavaScript(`window.initRubick()`);
+        window.setSize(window.getSize()[0], 60);
+        API.currentPlugin = null;
+      });
+  },
+  detachInputChange({ data }) {
+    API.sendSubInputChangeEvent({ data });
   },
 };
 

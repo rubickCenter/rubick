@@ -27,6 +27,13 @@ const searchManager = () => {
     state.searchValue = value;
   };
 
+  window.getMainInputInfo = () => {
+    return {
+      value: state.searchValue,
+      placeholder: state.placeholder,
+    };
+  };
+
   return {
     ...toRefs(state),
     onSearch,

@@ -21,4 +21,5 @@ interface Window {
   initRubick: () => void;
   setCurrentPlugin: (plugin: any) => void;
   pluginLoaded: () => void;
+  getMainInputInfo: () => any;
 }

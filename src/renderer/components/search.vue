@@ -142,6 +142,7 @@ const showSeparate = () => {
       {
         label: "开发者工具",
         click: () => {
+          ipcRenderer.send("msg-trigger", { type: "openPluginDevTools" });
           // todo
         },
       },
@@ -179,6 +180,9 @@ const getIcon = () => {
 }
 
 const newWindow = () => {
+  ipcRenderer.send("msg-trigger", {
+    type: "detachPlugin",
+  });
   // todo
 };
 </script>
