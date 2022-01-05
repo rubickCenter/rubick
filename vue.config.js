@@ -15,6 +15,7 @@ module.exports = {
       entry: "src/renderer/main.ts",
     },
   },
+  productionSourceMap: false,
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,

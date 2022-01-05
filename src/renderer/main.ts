@@ -1,6 +1,11 @@
 import { createApp } from "vue";
-import Antd from "ant-design-vue";
+import { Button, List, Spin, Input, Avatar } from "ant-design-vue";
 import App from "./App.vue";
-import "ant-design-vue/dist/antd.css";
 
-createApp(App).use(Antd).mount("#app");
+createApp(App)
+  .use(Button)
+  .use(List)
+  .use(Spin)
+  .use(Input)
+  .use(Avatar)
+  .mount("#app");

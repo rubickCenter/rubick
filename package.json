@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.0.1-beta.11",
+  "version": "2.0.1-beta.12",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -45,7 +45,9 @@
     "@vue/compiler-sfc": "^3.0.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "babel-plugin-import": "^1.13.3",
     "electron": "^13.0.0",
+    "electron-builder": "22.13.1",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
@@ -55,8 +57,7 @@
     "prettier": "^2.2.1",
     "typescript": "~4.1.5",
     "vue-cli-plugin-electron-builder": "~2.1.1",
-    "worker-plugin": "^5.0.1",
-    "electron-builder": "22.13.1"
+    "worker-plugin": "^5.0.1"
   },
   "__npminstall_done": false
 }
