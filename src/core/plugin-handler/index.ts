@@ -9,6 +9,7 @@ import got from "got";
 import fixPath from "fix-path";
 
 import spawn from "cross-spawn";
+import { ipcRenderer } from "electron";
 
 fixPath();
 
@@ -37,7 +38,19 @@ class AdapterHandler {
       );
     }
     this.baseDir = options.baseDir;
-    this.registry = options.registry || "https://registry.npm.taobao.org";
+
+    let register = options.registry || "https://registry.npm.taobao.org";
+
+    try {
+      const dbdata = ipcRenderer.sendSync("msg-trigger", {
+        type: "dbGet",
+        data: { id: "rubick-localhost-config" },
+      });
+      register = dbdata.data.register;
+    } catch (e) {
+      // ignore
+    }
+    this.registry = register || "https://registry.npm.taobao.org";
   }
 
   /**

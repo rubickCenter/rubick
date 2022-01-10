@@ -19,7 +19,7 @@ const dbInstance = new LocalDb(app.getPath("userData"));
 
 dbInstance.init();
 
-const API: any = {
+export const API: any = {
   currentPlugin: null,
   DBKEY: "RUBICK_DB_DEFAULT",
   getCurrentWindow: (window, e) => {

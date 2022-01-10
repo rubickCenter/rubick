@@ -14,6 +14,12 @@
           </template>
           全局快捷键
         </a-menu-item>
+        <a-menu-item key="localhost">
+          <template #icon>
+            <DatabaseOutlined />
+          </template>
+          内网部署配置
+        </a-menu-item>
       </a-menu>
     </div>
     <div class="settings-detail">
@@ -32,26 +38,6 @@
               {{ shortCut.showAndHidden }}
             </div>
           </div>
-<!--          <div class="settings-item-li">-->
-<!--            <div class="label">插件分离快捷键</div>-->
-<!--            <div-->
-<!--              class="value"-->
-<!--              tabIndex="-1"-->
-<!--              @keyup="(e) => changeShortCut(e, 'separate')"-->
-<!--            >-->
-<!--              {{ shortCut.separate }}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="settings-item-li">-->
-<!--            <div class="label">返回主界面</div>-->
-<!--            <div-->
-<!--              class="value"-->
-<!--              tabIndex="-1"-->
-<!--              @keyup="(e) => changeShortCut(e, 'quit')"-->
-<!--            >-->
-<!--              {{ shortCut.quit }}-->
-<!--            </div>-->
-<!--          </div>-->
         </div>
         <div class="setting-item">
           <div class="title">通用</div>
@@ -80,17 +66,6 @@
             ></a-switch>
           </div>
         </div>
-<!--        <div class="setting-item">-->
-<!--          <div class="title">本地搜索启动</div>-->
-<!--          <div class="settings-item-li">-->
-<!--            <div class="label">搜索启动应用&文件</div>-->
-<!--            <a-switch-->
-<!--              v-model:checked="local.search"-->
-<!--              checked-children="开"-->
-<!--              un-checked-children="关"-->
-<!--            ></a-switch>-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
       <div v-if="currentSelect[0] === 'global'">
         <a-collapse>
@@ -147,15 +122,17 @@
         </div>
         <div @click="addConfig" class="add-global">+ 新增全局快捷功能</div>
       </div>
+      <Localhost v-if="currentSelect[0] === 'localhost'" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ToolOutlined, LaptopOutlined } from "@ant-design/icons-vue";
+import { ToolOutlined, LaptopOutlined, DatabaseOutlined } from "@ant-design/icons-vue";
 import debounce from "lodash.debounce";
 import { ref, reactive, watch, toRefs, toRaw } from "vue";
 import keycodes from "./keycode";
+import Localhost from "./localhost.vue";
 
 const { remote, ipcRenderer } = window.require("electron");
 

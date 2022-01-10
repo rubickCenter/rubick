@@ -3,12 +3,27 @@ import fs from "fs";
 import getLocalDataFile from "./getLocalDataFile";
 import { PluginHandler } from "@/core";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
+import { API } from "@/main/common/api";
 
 const configPath = path.join(getLocalDataFile(), "./rubick-local-plugin.json");
 
-const pluginInstance = new PluginHandler({
-  baseDir,
-});
+let registry;
+let pluginInstance;
+(async () => {
+  try {
+    registry = (await API.dbGet({ data: { id: "rubick-localhost-config" } })).data.register;
+    console.log(registry);
+    pluginInstance = new PluginHandler({
+      baseDir,
+      registry,
+    });
+  } catch (e) {
+    pluginInstance = new PluginHandler({
+      baseDir,
+      registry,
+    });
+  }
+})();
 
 global.LOCAL_PLUGINS = {
   PLUGINS: [],
