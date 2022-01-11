@@ -6,7 +6,13 @@ import { shell } from "electron";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fileIcon = require("extract-file-icon");
+
 const filePath = path.resolve("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs");
+
+
+const appData = path.join(os.homedir(), "./AppData/Roaming");
+
+const startMenu = path.join(appData, "Microsoft\\Windows\\Start Menu\\Programs");
 
 const fileLists: any = [];
 const isZhRegex = /[\u4e00-\u9fa5]/;
@@ -58,7 +64,10 @@ function fileDisplay(filePath) {
               } catch(e) {
                 //
               }
-              if (!appDetail.target || appDetail.target.toLowerCase().indexOf("unin") >= 0) return;
+              if (!appDetail.target || appDetail.target.toLowerCase().indexOf("unin") >= 0 || appDetail.args) return;
+              
+              // C:/program/cmd.exe => cmd
+              keyWords.push(path.basename(appDetail.target, ".exe"));
 
               if (isZhRegex.test(appName)) {
                 const py = translate(appName);
@@ -101,5 +110,6 @@ function fileDisplay(filePath) {
 
 export default () => {
   fileDisplay(filePath);
+  fileDisplay(startMenu);
   return fileLists;
 };
