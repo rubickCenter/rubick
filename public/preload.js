@@ -137,4 +137,8 @@ window.rubick = {
   },
 
   getLocalId: () => ipcSendSync("getLocalId"),
+
+  removePlugin() {
+    ipcSend("removePlugin");
+  },
 };

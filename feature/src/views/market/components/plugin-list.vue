@@ -4,7 +4,7 @@
     <div class="list-item">
       <a-list :grid="{ gutter: 16, column: 2 }" :data-source="list">
         <template #renderItem="{ item, index }">
-          <a-list-item @click="showDetail(item)">
+          <a-list-item v-if="item" @click="showDetail(item)">
             <template #actions>
               <a-button style="color: #ff4ea4;" type="text" :loading="item.isloading">
                 <CloudDownloadOutlined
