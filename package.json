@@ -7,9 +7,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "feature:dev": "cd feature & npm run serve",
-    "electron:build": "npx vue-cli-service electron:build",
-    "electron:serve": "npx vue-cli-service electron:serve",
-    "release": "npx vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "release": "vue-cli-service electron:build",
+    "release_win": ".\\node_modules\\.bin\\vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
