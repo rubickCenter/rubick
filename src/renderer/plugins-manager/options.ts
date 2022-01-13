@@ -54,6 +54,7 @@ const optionsManager = ({
             icon: plugin.logo,
             desc: fe.explain,
             type: plugin.pluginType,
+            zIndex: cmd.label ? 0 : 1, // 排序权重
             click: () => {
               pluginClickEvent({
                 plugin,
@@ -61,10 +62,10 @@ const optionsManager = ({
                 cmd,
                 ext: cmd.type
                   ? {
-                    code: fe.code,
-                    type: cmd.type || "text",
-                    payload: searchValue.value,
-                  }
+                      code: fe.code,
+                      type: cmd.type || "text",
+                      payload: searchValue.value,
+                    }
                   : null,
                 openPlugin,
               });
@@ -101,14 +102,17 @@ const optionsManager = ({
           }
         })
         .map((plugin) => {
-          plugin.click = () => {
-            openPlugin(plugin);
+          return {
+            ...plugin,
+            zIndex: 1,
+            click: () => {
+              openPlugin(plugin);
+            },
           };
-          return plugin;
         }),
     ];
     return options;
-  }
+  };
 
   watch(searchValue, () => search(searchValue.value));
   // search Input operation
@@ -126,7 +130,12 @@ const optionsManager = ({
     optionsRef.value = options;
   };
 
-  const { searchFocus, clipboardFile, clearClipboardFile, readClipboardContent } = useFocus({
+  const {
+    searchFocus,
+    clipboardFile,
+    clearClipboardFile,
+    readClipboardContent,
+  } = useFocus({
     currentPlugin,
     optionsRef,
     openPlugin,

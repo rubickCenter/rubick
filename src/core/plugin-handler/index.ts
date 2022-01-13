@@ -3,7 +3,6 @@ import {
   AdapterInfo,
 } from "@/core/plugin-handler/types";
 import fs from "fs-extra";
-import search, { Result } from "libnpmsearch";
 import path from "path";
 import got from "got";
 import fixPath from "fix-path";
@@ -88,30 +87,6 @@ class AdapterHandler {
     const installCmd = options.isDev ? "link" : "install";
     // 安装
     await this.execCommand(installCmd, adapters);
-  }
-
-  /**
-   * 从 npm 搜索插件
-   * 传入 streamFunc 可以流式处理
-   * @param {string} adapter 插件名称
-   * @param {(data: Result) => void} [streamFunc] 流式处理钩子
-   * @memberof AdapterHandler
-   */
-  async search(adapter: string, streamFunc?: (data: Result) => void) {
-    return await new Promise<Result[]>((resolve, reject) => {
-      const result: Result[] = [];
-      const stream = search.stream(adapter);
-      stream.on("data", (data: Result) => {
-        result.push(data);
-        if (streamFunc !== undefined) streamFunc(data);
-      });
-      stream.on("end", () => {
-        resolve(result);
-      });
-      stream.on("error", (e: any) => {
-        reject(e);
-      });
-    });
   }
 
   /**

@@ -3,7 +3,8 @@
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
     <div :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'" v-if="!!clipboardFile.length">
       <img :src="getIcon()" />
-      {{ clipboardFile[0].name }}
+      <div class="ellipse">{{ clipboardFile[0].name }}</div>
+      <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{ clipboardFile.length }}</a-tag>
     </div>
     <a-input
       id="search"
@@ -177,7 +178,7 @@ const changeHideOnBlur = () => {
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
   return props.clipboardFile[0].isFile ? require("../assets/file.png") : require("../assets/folder.png")
-}
+};
 
 const newWindow = () => {
   ipcRenderer.send("msg-trigger", {
@@ -197,6 +198,12 @@ const newWindow = () => {
   left: 0;
   width: 100%;
   align-items: center;
+  .ellipse {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+  }
   .select-tag {
     white-space: pre;
     user-select: none;

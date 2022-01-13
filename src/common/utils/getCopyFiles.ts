@@ -17,8 +17,9 @@ export default function getCopyFiles(): Array<any> | null {
       return null;
     }
   } else if (commonConst.windows()) {
-    const filePath = clipboard.readBuffer('FileNameW').toString('ucs2').replace(RegExp(String.fromCharCode(0), 'g'), '');
-    fileInfo = [filePath];
+    /* eslint-disable */
+    const clipboardEx = require("electron-clipboard-ex");
+    fileInfo = clipboardEx.readFilePaths();
     // todo
   } else {
     if (!commonConst.linux()) return null;
