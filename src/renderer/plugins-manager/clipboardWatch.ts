@@ -120,8 +120,8 @@ export default ({
         clearClipboardFile();
         window.setSubInputValue({ value: contentText });
       }
+      clipboard.clear();
     }
-    clipboard.clear();
   };
 
   const clearClipboardFile = () => {

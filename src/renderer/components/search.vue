@@ -3,7 +3,8 @@
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
     <div :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'" v-if="!!clipboardFile.length">
       <img :src="getIcon()" />
-      {{ clipboardFile[0].name }}
+      <div class="ellipse">{{ clipboardFile[0].name }}</div>
+      <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{ clipboardFile.length }}</a-tag>
     </div>
     <a-input
       id="search"
@@ -197,6 +198,12 @@ const newWindow = () => {
   left: 0;
   width: 100%;
   align-items: center;
+  .ellipse {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+  }
   .select-tag {
     white-space: pre;
     user-select: none;

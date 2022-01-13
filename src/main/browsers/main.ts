@@ -35,6 +35,8 @@ export default () => {
       win.loadURL("app://./index.html");
     }
 
+    win.webContents.openDevTools();
+
     protocol.interceptFileProtocol("image", (req, callback) => {
       const url = req.url.substr(8);
       callback(decodeURI(url));
