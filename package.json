@@ -19,6 +19,7 @@
     "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
     "cross-spawn": "^7.0.3",
+    "electron-clipboard-ex": "^1.3.3",
     "extract-file-icon": "^0.3.2",
     "fix-path": "^3.0.0",
     "get-mac-apps": "^1.0.2",
