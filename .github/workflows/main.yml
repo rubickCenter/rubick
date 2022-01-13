@@ -49,15 +49,7 @@ jobs:
           yarn global add xvfb-maybe
 
       - name: Build  & release app
-        if: matrix.os == 'macos-latest'
         run: |
           npm run release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Build  & release app
-        if: matrix.os == 'windows-2022'
-        run: |
-          npm run release_win
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
