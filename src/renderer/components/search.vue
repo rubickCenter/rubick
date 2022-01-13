@@ -178,7 +178,7 @@ const changeHideOnBlur = () => {
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
   return props.clipboardFile[0].isFile ? require("../assets/file.png") : require("../assets/folder.png")
-}
+};
 
 const newWindow = () => {
   ipcRenderer.send("msg-trigger", {
