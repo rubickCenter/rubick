@@ -55,9 +55,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-        - name: Build  & release app
-            if: matrix.os == 'windows-2019'
-            run: |
-              npm run release_win
-            env:
-              GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Build  & release app
+        if: matrix.os == 'windows-2019'
+        run: |
+          npm run release_win
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
