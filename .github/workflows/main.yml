@@ -47,6 +47,7 @@ jobs:
         run: |
           yarn
           yarn global add xvfb-maybe
+          yarn global add @vue/cli
 
       - name: Build  & release app
         run: |
