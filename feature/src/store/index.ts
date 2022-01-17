@@ -53,6 +53,21 @@ export default createStore({
         totalPlugins,
       });
     },
+
+    startUnDownload({ commit, state }, name) {
+      const localPlugins = (window as any).market.getLocalPlugins();
+      localPlugins.forEach(
+        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
+          if (origin.name === name) {
+            origin.isloading = true;
+          }
+        }
+      );
+      commit("commonUpdate", {
+        localPlugins,
+      });
+    },
+
     successDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
       totalPlugins.forEach(
@@ -70,10 +85,20 @@ export default createStore({
         localPlugins,
       });
     },
-    updateLocalPlugin({ commit }) {
+    async updateLocalPlugin({ commit }) {
       const localPlugins = (window as any).market.getLocalPlugins();
+      const totalPlugins = await request.getTotalPlugins();
+
+      totalPlugins.forEach(
+        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
+          origin.isdwonload = isDownload(origin, localPlugins);
+          origin.isloading = false;
+        }
+      );
+
       commit("commonUpdate", {
         localPlugins,
+        totalPlugins,
       });
     },
   },

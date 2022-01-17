@@ -57,9 +57,9 @@
             <div class="desc">
               {{ detail.description }}
             </div>
-            <a-button shape="round" type="primary">
+            <a-button v-if="!detail.isdwonload" @click.stop="downloadPlugin(detail)" shape="round" type="primary" :loading="detail.isloading">
               <template #icon>
-                <CloudDownloadOutlined />
+                <CloudDownloadOutlined v-show="!detail.isloading && !detail.isdwonload" />
               </template>
               获取
             </a-button>

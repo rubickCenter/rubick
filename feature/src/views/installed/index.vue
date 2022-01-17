@@ -40,8 +40,11 @@
               type="danger"
               size="small"
               shape="round"
+              :loading="pluginDetail.isloading"
               @click="deletePlugin(pluginDetail)"
-            >移除</a-button
+            >
+              移除
+            </a-button
             >
           </div>
         </div>
@@ -56,17 +59,11 @@
                 <div>{{ item.explain }}</div>
                 <a-tag
                   :key="cmd"
-                  @click="
-                  openPlugin({
-                    cmd,
-                    plugin: pluginDetail,
-                    feature: item,
-                    router: $router,
-                  })
-                "
                   v-for="cmd in item.cmds"
+                  @close="removeFeature(cmd)"
+                  :color="!cmd.label && '#87d068'"
                 >
-                  {{ cmd }}
+                  {{ cmd.label || cmd }}
                 </a-tag>
               </div>
             </div>
@@ -101,6 +98,7 @@ const localPlugins = computed(() =>
   )
 );
 const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
+const startUnDownload = (name) => store.dispatch("startUnDownload", name);
 
 const currentSelect = ref([0]);
 
@@ -124,6 +122,7 @@ const readme = computed(() => {
 });
 
 const deletePlugin = async (plugin) => {
+  startUnDownload(plugin.name);
   await window.market.deletePlugin(plugin);
   updateLocalPlugin();
 };

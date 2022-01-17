@@ -185,9 +185,12 @@ export const API: any = {
   removeFeature({ data }, window) {
     API.currentPlugin = {
       ...API.currentPlugin,
-      features: API.currentPlugin.features.filter(
-        (feature) => feature.code !== data.code
-      ),
+      features: API.currentPlugin.features.filter((feature) => {
+        if (data.code.type) {
+          return feature.code.type !== data.code.type;
+        }
+        return feature.code !== data.code;
+      }),
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
