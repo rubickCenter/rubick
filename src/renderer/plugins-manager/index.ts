@@ -28,7 +28,7 @@ const createPluginManager = (): any => {
   };
 
   const openPlugin = (plugin) => {
-    if (plugin.pluginType === "ui") {
+    if (plugin.pluginType === "ui" || plugin.pluginType === "system") {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
         return;
       }
