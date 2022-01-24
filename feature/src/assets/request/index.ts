@@ -35,7 +35,7 @@ export default {
   },
 
   async getSystemDetail() {
-    let targetPath = "/plugins/system.json";
+    let targetPath = "plugins/system.json";
     if (access_token) {
       targetPath = `${encodeURIComponent(targetPath)}/raw?access_token=${access_token}&ref=master`
     }
@@ -43,7 +43,7 @@ export default {
     return res.data;
   },
   async getWorkerDetail() {
-    let targetPath = "/plugins/worker.json";
+    let targetPath = "plugins/worker.json";
     if (access_token) {
       targetPath = `${encodeURIComponent(targetPath)}/raw?access_token=${access_token}&ref=master`
     }
@@ -57,7 +57,7 @@ export default {
   },
 
   async getSearchDetail() {
-    let targetPath = "/plugins/search.json";
+    let targetPath = "plugins/search.json";
     if (access_token) {
       targetPath = `${encodeURIComponent(targetPath)}/raw?access_token=${access_token}&ref=master`
     }
@@ -65,7 +65,7 @@ export default {
     return res.data;
   },
   async getDevDetail() {
-    let targetPath = "/plugins/dev.json";
+    let targetPath = "plugins/dev.json";
     if (access_token) {
       targetPath = `${encodeURIComponent(targetPath)}/raw?access_token=${access_token}&ref=master`
     }

@@ -149,6 +149,7 @@ const deletePlugin = async (plugin) => {
     height: 100%;
     padding: 10px 0;
     border-right: 1px solid #eee;
+    overflow: auto;
     .item {
       padding: 10px 20px;
       display: flex;
