@@ -1,6 +1,7 @@
 import { reactive, toRefs, ref } from "vue";
 import { nativeImage, remote, ipcRenderer } from "electron";
-import { appSearch, PluginHandler } from "@/core";
+import appSearch from "@/core/app-search";
+import { PluginHandler } from "@/core";
 import path from "path";
 import commonConst from "@/common/utils/commonConst";
 import { execSync } from "child_process";
