@@ -51,7 +51,9 @@ module.exports = {
         },
         mac: {
           icon: "public/icons/icon.icns",
-          target: "pkg",
+         "target": [
+            "dmg"
+          ],
           extendInfo: {
             LSUIElement: 1,
           },
