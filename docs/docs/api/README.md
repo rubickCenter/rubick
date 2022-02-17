@@ -23,7 +23,7 @@
 #### 示例
 
 ```js
-rubcik.onPluginReady(({ code, type, payload }) => {
+rubick.onPluginReady(({ code, type, payload }) => {
   console.log('插件装配完成，已准备好')
 })
 /* 
