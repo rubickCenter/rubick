@@ -32,6 +32,8 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 ## Installation package
 * [Rubick Mac OS](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Windows](https://github.com/rubickCenter/rubick/releases)
+* [Rubick Linux](https://github.com/rubickCenter/rubick/releases)
+
 
 ## Feature list
 - [x] Plug-in management based on npm package mode, installing plugins is as easy as installing npm packages.
@@ -41,6 +43,8 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 - [x] Support searching for locally installed apps or preferences
 - [x] Support MacOS
 - [x] Support Windows
+- [x] Support Linux
+
 
 
 ## Docs
