@@ -141,4 +141,8 @@ window.rubick = {
   removePlugin() {
     ipcSend("removePlugin");
   },
+
+  shellShowItemInFolder: path => {
+    ipcSend("shellShowItemInFolder", { path });
+  },
 };

@@ -6,6 +6,7 @@ import {
   Notification,
   nativeImage,
   clipboard,
+  shell,
 } from "electron";
 import { runner, detach } from "../browsers";
 import fs from "fs";
@@ -155,7 +156,7 @@ export const API: any = {
     return dbInstance.bulkDocs(API.DBKEY, data.docs);
   },
   dbAllDocs({ data }) {
-    return dbInstance.bulkDocs(API.DBKEY, data.key);
+    return dbInstance.allDocs(API.DBKEY, data.key);
   },
   getFeatures() {
     return API.currentPlugin.features;
@@ -239,13 +240,21 @@ export const API: any = {
   detachInputChange({ data }) {
     API.sendSubInputChangeEvent({ data });
   },
+
+  getLocalId() {
+    return encodeURIComponent(app.getPath("home"));
+  },
+
+  shellShowItemInFolder({ data }) {
+    shell.showItemInFolder(data.path);
+    return true;
+  },
 };
 
 export default (mainWindow: BrowserWindow) => {
   // 响应 preload.js 事件
   ipcMain.on("msg-trigger", async (event, arg) => {
     const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow;
-
     const data = await API[arg.type](arg, window, event);
     event.returnValue = data;
     // event.sender.send(`msg-back-${arg.type}`, data);
