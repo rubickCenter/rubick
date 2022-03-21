@@ -8,5 +8,14 @@ declare module '*.vue' {
 declare module 'axios'
 
 interface Window {
-  rubick: any
+  rubick: any;
+  market: any
+}
+
+namespace Market {
+  interface Plugin {
+    isdownload?: boolean;
+    name?: string;
+    isloading: boolean
+  }
 }
