@@ -92,7 +92,8 @@ const totalPlugins = computed(() => store.state.totalPlugins);
 const { searchValue, current } = toRefs(state);
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+@import '~@/assets/common.less';
 .market {
   display: flex;
   box-sizing: border-box;
@@ -101,26 +102,6 @@ const { searchValue, current } = toRefs(state);
   overflow: hidden;
   background: #F3EFEF;
   height: calc(~"100vh - 46px");
-  .left-menu {
-    width: 200px;
-    height: 100vh;
-    .search-container {
-      padding: 10px;
-    }
-    .ant-input-affix-wrapper {
-      border: none;
-    }
-    .ant-menu {
-      background: #F3EFEF;
-      .ant-menu-item-selected {
-        background-color: #E2E2E2;
-        color: #141414;
-        &:after {
-          display: none;
-        }
-      }
-    }
-  }
   .container {
     background: #fff;
     width: calc(~'100% - 200px');
