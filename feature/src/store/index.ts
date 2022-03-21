@@ -30,8 +30,8 @@ export default createStore({
       const localPlugins = (window as any).market.getLocalPlugins();
 
       totalPlugins.forEach(
-        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
-          origin.isdwonload = isDownload(origin, localPlugins);
+        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+          origin.isdownload = isDownload(origin, localPlugins);
           origin.isloading = false;
         }
       );
@@ -43,7 +43,7 @@ export default createStore({
     startDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
       totalPlugins.forEach(
-        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
+        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
           if (origin.name === name) {
             origin.isloading = true;
           }
@@ -57,7 +57,7 @@ export default createStore({
     startUnDownload({ commit, state }, name) {
       const localPlugins = (window as any).market.getLocalPlugins();
       localPlugins.forEach(
-        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
+        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
           if (origin.name === name) {
             origin.isloading = true;
           }
@@ -71,10 +71,10 @@ export default createStore({
     successDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
       totalPlugins.forEach(
-        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
+        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
           if (origin.name === name) {
             origin.isloading = false;
-            origin.isdwonload = true;
+            origin.isdownload = true;
           }
         }
       );
@@ -90,8 +90,8 @@ export default createStore({
       const totalPlugins = await request.getTotalPlugins();
 
       totalPlugins.forEach(
-        (origin: { isdwonload?: any; name?: any; isloading: boolean }) => {
-          origin.isdwonload = isDownload(origin, localPlugins);
+        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+          origin.isdownload = isDownload(origin, localPlugins);
           origin.isloading = false;
         }
       );

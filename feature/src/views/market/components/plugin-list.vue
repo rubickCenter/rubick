@@ -8,7 +8,7 @@
             <template #actions>
               <a-button style="color: #ff4ea4;" type="text" :loading="item.isloading">
                 <CloudDownloadOutlined
-                  v-show="!item.isloading && !item.isdwonload"
+                  v-show="!item.isloading && !item.isdownload"
                   @click.stop="downloadPlugin(item, index)"
                   style="font-size: 20px; cursor: pointer"
                 />
@@ -57,9 +57,9 @@
             <div class="desc">
               {{ detail.description }}
             </div>
-            <a-button v-if="!detail.isdwonload" @click.stop="downloadPlugin(detail)" shape="round" type="primary" :loading="detail.isloading">
+            <a-button v-if="!detail.isdownload" @click.stop="downloadPlugin(detail)" shape="round" type="primary" :loading="detail.isloading">
               <template #icon>
-                <CloudDownloadOutlined v-show="!detail.isloading && !detail.isdwonload" />
+                <CloudDownloadOutlined v-show="!detail.isloading && !detail.isdownload" />
               </template>
               获取
             </a-button>
