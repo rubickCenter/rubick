@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import request from "@/assets/request";
 
-const isDownload = (item: any, targets: any[]) => {
+const isDownload = (item: Market.Plugin, targets: any[]) => {
   let isDownload = false;
   targets.some((plugin) => {
     if (plugin.name === item.name) {
@@ -27,10 +27,10 @@ export default createStore({
   actions: {
     async init({ commit }) {
       const totalPlugins = await request.getTotalPlugins();
-      const localPlugins = (window as any).market.getLocalPlugins();
+      const localPlugins = window.market.getLocalPlugins();
 
       totalPlugins.forEach(
-        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+        (origin: Market.Plugin) => {
           origin.isdownload = isDownload(origin, localPlugins);
           origin.isloading = false;
         }
@@ -43,7 +43,7 @@ export default createStore({
     startDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
       totalPlugins.forEach(
-        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+        (origin: Market.Plugin) => {
           if (origin.name === name) {
             origin.isloading = true;
           }
@@ -55,9 +55,9 @@ export default createStore({
     },
 
     startUnDownload({ commit, state }, name) {
-      const localPlugins = (window as any).market.getLocalPlugins();
+      const localPlugins = window.market.getLocalPlugins();
       localPlugins.forEach(
-        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+        (origin: Market.Plugin) => {
           if (origin.name === name) {
             origin.isloading = true;
           }
@@ -71,14 +71,14 @@ export default createStore({
     successDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
       totalPlugins.forEach(
-        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+        (origin: Market.Plugin) => {
           if (origin.name === name) {
             origin.isloading = false;
             origin.isdownload = true;
           }
         }
       );
-      const localPlugins = (window as any).market.getLocalPlugins();
+      const localPlugins = window.market.getLocalPlugins();
 
       commit("commonUpdate", {
         totalPlugins,
@@ -86,11 +86,11 @@ export default createStore({
       });
     },
     async updateLocalPlugin({ commit }) {
-      const localPlugins = (window as any).market.getLocalPlugins();
+      const localPlugins = window.market.getLocalPlugins();
       const totalPlugins = await request.getTotalPlugins();
 
       totalPlugins.forEach(
-        (origin: { isdownload?: any; name?: any; isloading: boolean }) => {
+        (origin: Market.Plugin) => {
           origin.isdownload = isDownload(origin, localPlugins);
           origin.isloading = false;
         }
