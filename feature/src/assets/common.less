@@ -1,0 +1,20 @@
+.left-menu {
+  width: 200px;
+  height: 100vh;
+  .search-container {
+    padding: 10px;
+  }
+  .ant-input-affix-wrapper {
+    border: none;
+  }
+  :deep(.ant-menu) {
+    background: #F3EFEF;
+    .ant-menu-item-selected {
+      background-color: #E2E2E2;
+      color: #141414;
+      &:after {
+        display: none;
+      }
+    }
+  }
+}

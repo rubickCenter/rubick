@@ -236,7 +236,8 @@ const addConfig = () => {
 const {shortCut, common, local, global} = toRefs(state);
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+@import '~@/assets/common.less';
 .settings {
   box-sizing: border-box;
   width: 100%;
@@ -244,26 +245,6 @@ const {shortCut, common, local, global} = toRefs(state);
   background: #f3efef;
   height: calc(~"100vh - 46px");
   display: flex;
-  .left-menu {
-    width: 200px;
-    height: 100%;
-    .search-container {
-      padding: 10px;
-    }
-    .ant-input-affix-wrapper {
-      border: none;
-    }
-    .ant-menu {
-      background: #F3EFEF;
-      .ant-menu-item-selected {
-        background-color: #E2E2E2;
-        color: #141414;
-        &:after {
-          display: none;
-        }
-      }
-    }
-  }
   .settings-detail {
     padding: 20px;
     box-sizing: border-box;
