@@ -18,7 +18,13 @@ function createTray(window: BrowserWindow): Promise<Tray> {
       icon = "./icons/icon@2x.png";
     }
     const appIcon = new Tray(path.join(__static, icon));
-    const contextMenu = Menu.buildFromTemplate([
+
+    const getShowAndHiddenHotKey = (): string => {
+      const config = global.OP_CONFIG.get();
+      return config.perf.shortCut.showAndHidden;
+    }
+
+    const createContextMenu = () => Menu.buildFromTemplate([
       {
         label: "帮助文档",
         click: () => {
@@ -38,7 +44,7 @@ function createTray(window: BrowserWindow): Promise<Tray> {
       { type: "separator" },
       {
         label: "显示窗口",
-        accelerator: "Alt+R",
+        accelerator: getShowAndHiddenHotKey(),
         click() {
           window.show();
         },
@@ -67,9 +73,10 @@ function createTray(window: BrowserWindow): Promise<Tray> {
       },
     ]);
     appIcon.on("click", () => {
-      appIcon.popUpContextMenu(contextMenu);
+      appIcon.setContextMenu(createContextMenu());
+      appIcon.popUpContextMenu();
     });
-    appIcon.setContextMenu(contextMenu);
+    appIcon.setContextMenu(createContextMenu());
 
     resolve(appIcon);
   });
