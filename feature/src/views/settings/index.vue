@@ -184,15 +184,15 @@ const changeShortCut = (e, key) => {
   }
   if (e.ctrlKey && e.keyCode !== 17) {
     const compose = `Ctrl+${keycodes[e.keyCode].toUpperCase()}`;
-    state.perf.shortCut[key] = compose;
+    state.shortCut[key] = compose;
   }
   if (e.shiftKey && e.keyCode !== 16) {
     const compose = `Shift+${keycodes[e.keyCode].toUpperCase()}`;
-    state.perf.shortCut[key] = compose;
+    state.shortCut[key] = compose;
   }
   if (e.metaKey && e.keyCode !== 93) {
     const compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
-    state.perf.shortCut[key] = compose;
+    state.shortCut[key] = compose;
   }
 };
 
