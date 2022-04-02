@@ -113,7 +113,7 @@ rubick-system-plugin-demo
   "version": "0.0.0",
   "description": "rubick 系统插件demo",
   "entry": "index.js",
-  "logo": "httpss://static.91jkys.com/upload/202112/08/5bac90649c5343cabb63930b131cf8e6.png",
+  "logo": "https://xxxx/upload/202112/08/5bac90649c5343cabb63930b131cf8e6.png",
   "pluginType": "system",
   "author": "muwoo",
   "homepage": ""
