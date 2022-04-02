@@ -25,18 +25,21 @@
     <div class="settings-detail">
       <div v-if="currentSelect[0] === 'normal'">
         <div class="setting-item">
-          <div class="title">
-            快捷键(需要使用 option/ctrl/shift/command 键修饰)
-          </div>
+          <div class="title">快捷键</div>
           <div class="settings-item-li">
             <div class="label">显示/隐藏快捷键</div>
-            <div
-              class="value"
-              tabIndex="-1"
-              @keyup="(e) => changeShortCut(e, 'showAndHidden')"
-            >
-              {{ shortCut.showAndHidden }}
-            </div>
+            <a-tooltip placement="top" trigger="click">
+              <template #title>
+                <span>{{ tipText }} </span>
+              </template>
+              <div
+                class="value"
+                tabIndex="-1"
+                @keyup="(e) => changeShortCut(e, 'showAndHidden')"
+              >
+                {{ shortCut.showAndHidden }}
+              </div>
+            </a-tooltip>
           </div>
         </div>
         <div class="setting-item">
@@ -73,8 +76,8 @@
             <div>
               按下快捷键，自动搜索对应关键字，当关键字结果完全匹配，且结果唯一时，会直接指向该功能。
             </div>
-            <h3 style="margin-top: 10px;">示例</h3>
-            <a-divider style="margin: 5px 0;" />
+            <h3 style="margin-top: 10px">示例</h3>
+            <a-divider style="margin: 5px 0" />
             <a-list item-layout="horizontal" :data-source="examples">
               <template #renderItem="{ item }">
                 <a-list-item>
@@ -93,9 +96,7 @@
             <div>快捷键</div>
             <a-tooltip placement="top" trigger="click">
               <template #title>
-                  <span>先按功能键（Ctrl、Shift、Alt、Option、Command），再按其他普通键。或按
-                    F1-F12 单键
-                  </span>
+                <span>{{ tipText }}或按 F1-F12 单键 </span>
               </template>
               <div
                 :key="index"
@@ -128,9 +129,13 @@
 </template>
 
 <script setup>
-import { ToolOutlined, LaptopOutlined, DatabaseOutlined } from "@ant-design/icons-vue";
+import {
+  ToolOutlined,
+  LaptopOutlined,
+  DatabaseOutlined,
+} from "@ant-design/icons-vue";
 import debounce from "lodash.debounce";
-import { ref, reactive, watch, toRefs, toRaw } from "vue";
+import { ref, reactive, watch, toRefs, computed, toRaw } from "vue";
 import keycodes from "./keycode";
 import Localhost from "./localhost.vue";
 
@@ -154,9 +159,14 @@ const state = reactive({
   global: [],
 });
 
+const tipText = computed(() => {
+  const optionKeyName = window.rubick.isMacOs() ? "Option、Command" : "Alt";
+  return `先按功能键（Ctrl、Shift、${optionKeyName}），再按其他普通键。`;
+});
+
 const currentSelect = ref(["normal"]);
 
-const {perf, global: defaultGlobal} = remote.getGlobal("OP_CONFIG").get();
+const { perf, global: defaultGlobal } = remote.getGlobal("OP_CONFIG").get();
 
 state.shortCut = perf.shortCut;
 state.common = perf.common;
@@ -164,14 +174,18 @@ state.local = perf.local;
 state.global = defaultGlobal;
 
 const setConfig = debounce(() => {
-  remote.getGlobal("OP_CONFIG").set(JSON.parse(JSON.stringify({
-    perf: {
-      shortCut: state.shortCut,
-      common: state.common,
-      local: state.local,
-    },
-    global: state.global,
-  })));
+  remote.getGlobal("OP_CONFIG").set(
+    JSON.parse(
+      JSON.stringify({
+        perf: {
+          shortCut: state.shortCut,
+          common: state.common,
+          local: state.local,
+        },
+        global: state.global,
+      })
+    )
+  );
   ipcRenderer.send("re-register");
 }, 2000);
 
@@ -224,7 +238,7 @@ const changeGlobalKey = (e, index) => {
 
 const changeGlobalValue = (index, value) => {
   state.global[index].value = value;
-}
+};
 
 const addConfig = () => {
   state.global.push({
@@ -233,11 +247,11 @@ const addConfig = () => {
   });
 };
 
-const {shortCut, common, local, global} = toRefs(state);
+const { shortCut, common, local, global } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
-@import '~@/assets/common.less';
+@import "~@/assets/common.less";
 .settings {
   box-sizing: border-box;
   width: 100%;
