@@ -101,5 +101,3 @@ $ npm run electron:build
 5. Make sure that running npm run prepublish outputs the correct files.
 6. Rebase before creating a PR to keep commit history clear. (Merge request to branch dev)
 7. Provide some description about your PR.
-
-
