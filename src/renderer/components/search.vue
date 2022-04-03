@@ -1,7 +1,10 @@
 <template>
   <div class="rubick-select">
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
-    <div :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'" v-if="!!clipboardFile.length">
+    <div
+      :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'"
+      v-if="!!clipboardFile.length"
+    >
       <img :src="getIcon()" />
       <div class="ellipse">{{ clipboardFile[0].name }}</div>
       <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{ clipboardFile.length }}</a-tag>
@@ -20,11 +23,8 @@
       @focus="emit('focus')"
     >
       <template #suffix>
-        <div class="suffix-tool" >
-          <MoreOutlined
-            @click="showSeparate()"
-            class="icon-more"
-          />
+        <div class="suffix-tool">
+          <MoreOutlined @click="showSeparate()" class="icon-more" />
           <div v-if="currentPlugin && currentPlugin.logo" style="position: relative">
             <a-spin v-show="pluginLoading" class="loading">
               <template #indicator>
@@ -96,7 +96,8 @@ const keydownEvent = (e, key: string) => {
       modifiers,
     },
   });
-   switch (key) {
+  const runPluginDisable = e.target.value === "" || props.currentPlugin.name
+  switch (key) {
     case "up":
       emit("changeCurrent", -1);
       break;
@@ -104,15 +105,13 @@ const keydownEvent = (e, key: string) => {
       emit("changeCurrent", 1);
       break;
     case "enter":
-      if (e.target.value === "" || props.currentPlugin.name) return;
+      if (runPluginDisable) return;
       emit("choosePlugin");
       break;
     case "space":
-      if (e.target.value === "" || props.currentPlugin.name) return;
-      if (!opConfig.get().perf.common.space) return;
+      if (runPluginDisable || !opConfig.get().perf.common.space) return;
       emit("choosePlugin");
       break;
-
     default:
       break;
   }
@@ -241,13 +240,16 @@ const newWindow = () => {
     border: none;
     outline: none;
     box-shadow: none !important;
-    .ant-select-selection, .ant-input, .ant-select-selection__rendered {
+    .ant-select-selection,
+    .ant-input,
+    .ant-select-selection__rendered {
       height: 100% !important;
       font-size: 22px;
       border: none !important;
     }
   }
-  .rubick-logo, .icon-tool {
+  .rubick-logo,
+  .icon-tool {
     width: 40px;
     height: 40px;
     background: #574778;
