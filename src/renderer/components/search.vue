@@ -10,12 +10,13 @@
       id="search"
       class="main-input"
       @input="(e) => changeValue(e)"
-      @keydown.down="(e) => keydownEvent(e, 1)"
-      @keydown.up="(e) => keydownEvent(e, -1)"
+      @keydown.down="(e) => keydownEvent(e, 'down')"
+      @keydown.up="(e) => keydownEvent(e, 'up')"
       @keydown="e => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
-      @keypress.enter="(e) => keydownEvent(e)"
+      @keypress.enter="(e) => keydownEvent(e, 'enter')"
+      @keypress.space="(e) => keydownEvent(e, 'space')"
       @focus="emit('focus')"
     >
       <template #suffix>
@@ -81,7 +82,7 @@ const emit = defineEmits([
   "readClipboardContent",
 ]);
 
-const keydownEvent = (e, index) => {
+const keydownEvent = (e, key: string) => {
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
   const modifiers: Array<string> = [];
   ctrlKey && modifiers.push("control");
@@ -95,10 +96,25 @@ const keydownEvent = (e, index) => {
       modifiers,
     },
   });
-  if(index) {
-    emit("changeCurrent", index);
-  } else {
-    !props.currentPlugin.name && emit("choosePlugin");
+   switch (key) {
+    case "up":
+      emit("changeCurrent", -1);
+      break;
+    case "down":
+      emit("changeCurrent", 1);
+      break;
+    case "enter":
+      if (e.target.value === "" || props.currentPlugin.name) return;
+      emit("choosePlugin");
+      break;
+    case "space":
+      if (e.target.value === "" || props.currentPlugin.name) return;
+      if (!opConfig.get().perf.common.space) return;
+      emit("choosePlugin");
+      break;
+
+    default:
+      break;
   }
 };
 
