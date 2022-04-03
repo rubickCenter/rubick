@@ -1,7 +1,10 @@
 <template>
   <div class="rubick-select">
     <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
-    <div :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'" v-if="!!clipboardFile.length">
+    <div
+      :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'"
+      v-if="!!clipboardFile.length"
+    >
       <img :src="getIcon()" />
       <div class="ellipse">{{ clipboardFile[0].name }}</div>
       <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{ clipboardFile.length }}</a-tag>
@@ -10,20 +13,18 @@
       id="search"
       class="main-input"
       @input="(e) => changeValue(e)"
-      @keydown.down="(e) => keydownEvent(e, 1)"
-      @keydown.up="(e) => keydownEvent(e, -1)"
+      @keydown.down="(e) => keydownEvent(e, 'down')"
+      @keydown.up="(e) => keydownEvent(e, 'up')"
       @keydown="e => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
-      @keypress.enter="(e) => keydownEvent(e)"
+      @keypress.enter="(e) => keydownEvent(e, 'enter')"
+      @keypress.space="(e) => keydownEvent(e, 'space')"
       @focus="emit('focus')"
     >
       <template #suffix>
-        <div class="suffix-tool" >
-          <MoreOutlined
-            @click="showSeparate()"
-            class="icon-more"
-          />
+        <div class="suffix-tool">
+          <MoreOutlined @click="showSeparate()" class="icon-more" />
           <div v-if="currentPlugin && currentPlugin.logo" style="position: relative">
             <a-spin v-show="pluginLoading" class="loading">
               <template #indicator>
@@ -81,7 +82,7 @@ const emit = defineEmits([
   "readClipboardContent",
 ]);
 
-const keydownEvent = (e, index) => {
+const keydownEvent = (e, key: string) => {
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
   const modifiers: Array<string> = [];
   ctrlKey && modifiers.push("control");
@@ -95,10 +96,24 @@ const keydownEvent = (e, index) => {
       modifiers,
     },
   });
-  if(index) {
-    emit("changeCurrent", index);
-  } else {
-    !props.currentPlugin.name && emit("choosePlugin");
+  const runPluginDisable = e.target.value === "" || props.currentPlugin.name
+  switch (key) {
+    case "up":
+      emit("changeCurrent", -1);
+      break;
+    case "down":
+      emit("changeCurrent", 1);
+      break;
+    case "enter":
+      if (runPluginDisable) return;
+      emit("choosePlugin");
+      break;
+    case "space":
+      if (runPluginDisable || !opConfig.get().perf.common.space) return;
+      emit("choosePlugin");
+      break;
+    default:
+      break;
   }
 };
 
@@ -225,13 +240,16 @@ const newWindow = () => {
     border: none;
     outline: none;
     box-shadow: none !important;
-    .ant-select-selection, .ant-input, .ant-select-selection__rendered {
+    .ant-select-selection,
+    .ant-input,
+    .ant-select-selection__rendered {
       height: 100% !important;
       font-size: 22px;
       border: none !important;
     }
   }
-  .rubick-logo, .icon-tool {
+  .rubick-logo,
+  .icon-tool {
     width: 40px;
     height: 40px;
     background: #574778;
