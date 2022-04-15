@@ -102,14 +102,11 @@
                 <div
                   class="value"
                   tabIndex="2"
-                  @mouseover="item.showDelete = true"
-                  @mouseout="item.showDelete = false"
                   @keyup="e => changeGlobalKey(e, index)"
                 >
                   {{ item.key }}
                   <MinusCircleOutlined
                     @click.stop="deleteGlobalKey(e, index)"
-                    v-show="item.showDelete"
                   />
                 </div>
               </a-tooltip>
@@ -122,6 +119,7 @@
               :value="item.value"
               v-for="(item, index) in global"
               class="value"
+              allowClear
               :disabled="!item.key"
               @change="e => changeGlobalValue(index, e.target.value)"
             />
@@ -335,8 +333,14 @@ const { shortCut, common, local, global } = toRefs(state);
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
+      &:hover {
+        .anticon {
+          display: block;
+        }
+      }
       .anticon {
         position: absolute;
+        display: none;
         right: 4px;
         top: 50%;
         transform: translateY(-50%);
