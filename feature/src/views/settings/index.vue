@@ -35,7 +35,7 @@
               <div
                 class="value"
                 tabIndex="-1"
-                @keyup="(e) => changeShortCut(e, 'showAndHidden')"
+                @keyup="e => changeShortCut(e, 'showAndHidden')"
               >
                 {{ shortCut.showAndHidden }}
               </div>
@@ -94,20 +94,26 @@
         <div class="feature-container">
           <div class="keywords item">
             <div>快捷键</div>
-            <a-tooltip placement="top" trigger="click">
-              <template #title>
-                <span>{{ tipText }}或按 F1-F12 单键 </span>
-              </template>
-              <div
-                :key="index"
-                v-for="(item, index) in global"
-                class="value"
-                tabIndex="2"
-                @keyup="(e) => changeGlobalKey(e, index)"
-              >
-                {{ item.key }}
-              </div>
-            </a-tooltip>
+            <template :key="index" v-for="(item, index) in global">
+              <a-tooltip placement="top" trigger="click">
+                <template #title>
+                  <span>{{ tipText }}或按 F1-F12 单键 </span>
+                </template>
+                <div
+                  class="value"
+                  tabIndex="2"
+                  @mouseover="item.showDelete = true"
+                  @mouseout="item.showDelete = false"
+                  @keyup="e => changeGlobalKey(e, index)"
+                >
+                  {{ item.key }}
+                  <MinusCircleOutlined
+                    @click.stop="deleteGlobalKey(e, index)"
+                    v-show="item.showDelete"
+                  />
+                </div>
+              </a-tooltip>
+            </template>
           </div>
           <div class="short-cut item">
             <div>功能关键字</div>
@@ -117,11 +123,14 @@
               v-for="(item, index) in global"
               class="value"
               :disabled="!item.key"
-              @change="(e) => changeGlobalValue(index, e.target.value)"
+              @change="e => changeGlobalValue(index, e.target.value)"
             />
           </div>
         </div>
-        <div @click="addConfig" class="add-global">+ 新增全局快捷功能</div>
+        <div @click="addConfig" class="add-global">
+          <PlusCircleOutlined />
+          新增全局快捷功能
+        </div>
       </div>
       <Localhost v-if="currentSelect[0] === 'localhost'" />
     </div>
@@ -133,6 +142,8 @@ import {
   ToolOutlined,
   LaptopOutlined,
   DatabaseOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined
 } from "@ant-design/icons-vue";
 import debounce from "lodash.debounce";
 import { ref, reactive, watch, toRefs, computed, toRaw } from "vue";
@@ -144,19 +155,19 @@ const { remote, ipcRenderer } = window.require("electron");
 const examples = [
   {
     title: "快捷键 「 Alt + W」 关键字 「 微信」",
-    desc: "按下Alt + W 直接打开本地微信应用",
+    desc: "按下Alt + W 直接打开本地微信应用"
   },
   {
     title: "快捷键 「 Alt + Q」 关键字 「 取色」",
-    desc: "按下Alt + Q 直接打开屏幕取色功能",
-  },
+    desc: "按下Alt + Q 直接打开屏幕取色功能"
+  }
 ];
 
 const state = reactive({
   shortCut: {},
   common: {},
   local: {},
-  global: [],
+  global: []
 });
 
 const tipText = computed(() => {
@@ -180,9 +191,9 @@ const setConfig = debounce(() => {
         perf: {
           shortCut: state.shortCut,
           common: state.common,
-          local: state.local,
+          local: state.local
         },
-        global: state.global,
+        global: state.global
       })
     )
   );
@@ -240,10 +251,15 @@ const changeGlobalValue = (index, value) => {
   state.global[index].value = value;
 };
 
+const deleteGlobalKey = (e, index) => {
+  state.global.splice(index, 1);
+  // delete state.global[index];
+};
+
 const addConfig = () => {
   state.global.push({
     key: "",
-    value: "",
+    value: ""
   });
 };
 
@@ -318,6 +334,13 @@ const { shortCut, common, local, global } = toRefs(state);
       height: 24px;
       font-weight: lighter;
       margin-top: 10px;
+      position: relative;
+      .anticon {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
   }
   .add-global {
