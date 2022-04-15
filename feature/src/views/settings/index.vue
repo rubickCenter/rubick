@@ -333,7 +333,9 @@ const { shortCut, common, local, global } = toRefs(state);
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
-      display: block;
+      &.ant-input-affix-wrapper {
+        display: flex;
+      }
       &:hover {
         .anticon {
           display: block;
