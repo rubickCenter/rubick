@@ -114,15 +114,15 @@
           </div>
           <div class="short-cut item">
             <div>功能关键字</div>
-            <a-input
-              :key="index"
-              :value="item.value"
-              v-for="(item, index) in global"
-              class="value"
-              allowClear
-              :disabled="!item.key"
-              @change="e => changeGlobalValue(index, e.target.value)"
-            />
+            <template v-for="(item, index) in global" :key="index">
+              <a-input
+                :value="item.value"
+                class="value"
+                allowClear
+                :disabled="!item.key"
+                @change="e => changeGlobalValue(index, e.target.value)"
+              />
+            </template>
           </div>
         </div>
         <div @click="addConfig" class="add-global">
@@ -333,6 +333,7 @@ const { shortCut, common, local, global } = toRefs(state);
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
+      display: block;
       &:hover {
         .anticon {
           display: block;
