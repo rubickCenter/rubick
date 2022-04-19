@@ -6,7 +6,7 @@ import {
   Notification,
   nativeImage,
   clipboard,
-  shell,
+  shell
 } from "electron";
 import { runner, detach } from "../browsers";
 import fs from "fs";
@@ -37,7 +37,15 @@ export const API: any = {
       return;
     }
   },
-  openPlugin({ plugin }, window) {
+
+  loadPlugin({ data: plugin }, window) {
+    window.webContents.executeJavaScript(
+      `window.loadPlugin(${JSON.stringify(plugin)})`
+    );
+    API.openPlugin({ data: plugin }, window);
+  },
+
+  openPlugin({ data: plugin }, window) {
     if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
     window.setSize(window.getSize()[0], 60);
     runnerInstance.removeView(window);
@@ -45,7 +53,7 @@ export const API: any = {
     API.currentPlugin = plugin;
     window.webContents.executeJavaScript(
       `window.setCurrentPlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: API.currentPlugin
       })})`
     );
     window.show();
@@ -86,7 +94,7 @@ export const API: any = {
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInput(${JSON.stringify({
-        placeholder: data.placeholder,
+        placeholder: data.placeholder
       })})`
     );
   },
@@ -106,7 +114,7 @@ export const API: any = {
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInputValue(${JSON.stringify({
-        value: data.text,
+        value: data.text
       })})`
     );
   },
@@ -121,7 +129,7 @@ export const API: any = {
     const notify = new Notification({
       title: plugin.pluginName,
       body,
-      icon: plugin.logo,
+      icon: plugin.logo
     });
     notify.show();
   },
@@ -166,7 +174,7 @@ export const API: any = {
       ...API.currentPlugin,
       features: (() => {
         let has = false;
-        API.currentPlugin.features.some((feature) => {
+        API.currentPlugin.features.some(feature => {
           has = feature.code === data.feature.code;
           return has;
         });
@@ -174,11 +182,11 @@ export const API: any = {
           return [...API.currentPlugin.features, data.feature];
         }
         return API.currentPlugin.features;
-      })(),
+      })()
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: API.currentPlugin
       })})`
     );
     return true;
@@ -186,16 +194,16 @@ export const API: any = {
   removeFeature({ data }, window) {
     API.currentPlugin = {
       ...API.currentPlugin,
-      features: API.currentPlugin.features.filter((feature) => {
+      features: API.currentPlugin.features.filter(feature => {
         if (data.code.type) {
           return feature.code.type !== data.code.type;
         }
         return feature.code !== data.code;
-      }),
+      })
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: API.currentPlugin
       })})`
     );
     return true;
@@ -207,12 +215,12 @@ export const API: any = {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
         modifiers,
-        keyCode: code,
+        keyCode: code
       });
     } else {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
-        keyCode: code,
+        keyCode: code
       });
     }
   },
@@ -223,11 +231,11 @@ export const API: any = {
     window.setBrowserView(null);
     window.webContents
       .executeJavaScript(`window.getMainInputInfo()`)
-      .then((res) => {
+      .then(res => {
         detachInstance.init(
           {
             ...API.currentPlugin,
-            subInput: res,
+            subInput: res
           },
           window.getBounds(),
           view
