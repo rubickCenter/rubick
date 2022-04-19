@@ -3,9 +3,11 @@ import path from "path";
 import commonConst from "../../common/utils/commonConst";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
 
-const getRelativePath = (indexPath) => {
-  return commonConst.windows() ? indexPath.replace("file://", "") : indexPath.replace("file:", "");
-}
+const getRelativePath = indexPath => {
+  return commonConst.windows()
+    ? indexPath.replace("file://", "")
+    : indexPath.replace("file:", "");
+};
 
 const getPreloadPath = (plugin, pluginIndexPath) => {
   const { name, preload, tplPath, indexPath } = plugin;
@@ -54,8 +56,8 @@ export default () => {
         devTools: true,
         webviewTag: true,
         preload,
-        session: ses,
-      },
+        session: ses
+      }
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
@@ -67,6 +69,25 @@ export default () => {
       executeHooks("PluginReady", plugin.ext);
       window.webContents.executeJavaScript(`window.pluginLoaded()`);
     });
+    // 修复请求跨域问题
+    view.webContents.session.webRequest.onBeforeSendHeaders(
+      (details, callback) => {
+        callback({
+          requestHeaders: { referer: "*", ...details.requestHeaders }
+        });
+      }
+    );
+
+    view.webContents.session.webRequest.onHeadersReceived(
+      (details, callback) => {
+        callback({
+          responseHeaders: {
+            "Access-Control-Allow-Origin": ["*"],
+            ...details.responseHeaders
+          }
+        });
+      }
+    );
   };
 
   const removeView = (window: BrowserWindow) => {
@@ -95,6 +116,6 @@ export default () => {
     init,
     getView,
     removeView,
-    executeHooks,
+    executeHooks
   };
 };

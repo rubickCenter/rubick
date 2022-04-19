@@ -333,6 +333,10 @@ const { shortCut, common, local, global } = toRefs(state);
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
+      :deep(.ant-input) {
+        color: #6c9fe2;
+        font-weight: lighter;
+      }
       &.ant-input-affix-wrapper {
         display: flex;
       }
