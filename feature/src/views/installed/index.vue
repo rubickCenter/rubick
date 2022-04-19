@@ -1,7 +1,11 @@
 <template>
   <div class="installed">
     <div v-if="!localPlugins.length">
-      <a-result status="404" title="暂无任何插件" sub-title="去插件市场选择安装合适的插件吧！" />
+      <a-result
+        status="404"
+        title="暂无任何插件"
+        sub-title="去插件市场选择安装合适的插件吧！"
+      />
     </div>
     <div class="container" v-else>
       <div class="installed-list">
@@ -44,8 +48,7 @@
               @click="deletePlugin(pluginDetail)"
             >
               移除
-            </a-button
-            >
+            </a-button>
           </div>
         </div>
         <a-tabs default-active-key="1">
@@ -61,6 +64,14 @@
                   :key="cmd"
                   v-for="cmd in item.cmds"
                   @close="removeFeature(cmd)"
+                  @click="
+                    !cmd.label &&
+                      openPlugin({
+                        code: item.code,
+                        cmd
+                      })
+                  "
+                  :class="{ executable: !cmd.label }"
                   :color="!cmd.label && '#87d068'"
                 >
                   {{ cmd.label || cmd }}
@@ -74,7 +85,6 @@
         </a-tabs>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -83,6 +93,7 @@ import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import path from "path";
 import MarkdownIt from "markdown-it";
+const { ipcRenderer } = window.require("electron");
 
 const { remote } = window.require("electron");
 const fs = window.require("fs");
@@ -94,17 +105,34 @@ const baseDir = path.join(appPath, "./rubick-plugins");
 const store = useStore();
 const localPlugins = computed(() =>
   store.state.localPlugins.filter(
-    (plugin) => plugin.name !== "rubick-system-feature"
+    plugin => plugin.name !== "rubick-system-feature"
   )
 );
 const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
-const startUnDownload = (name) => store.dispatch("startUnDownload", name);
+const startUnDownload = name => store.dispatch("startUnDownload", name);
 
 const currentSelect = ref([0]);
 
 const pluginDetail = computed(() => {
   return localPlugins.value[currentSelect.value] || {};
 });
+
+const openPlugin = ({ cmd, code }) => {
+  console.log(pluginDetail.value);
+  window.rubick.openPlugin(
+    JSON.parse(
+      JSON.stringify({
+        ...pluginDetail.value,
+        cmd,
+        ext: {
+          code,
+          type: "text",
+          payload: null
+        }
+      })
+    )
+  );
+};
 
 const readme = computed(() => {
   if (!pluginDetail.value.name) return "";
@@ -121,7 +149,7 @@ const readme = computed(() => {
   return "";
 });
 
-const deletePlugin = async (plugin) => {
+const deletePlugin = async plugin => {
   startUnDownload(plugin.name);
   await window.market.deletePlugin(plugin);
   updateLocalPlugin();
@@ -198,6 +226,15 @@ const deletePlugin = async (plugin) => {
     .desc-item {
       border-bottom: 1px solid #ddd;
       padding: 10px 0;
+      .ant-tag {
+        margin-top: 6px;
+        &.executable {
+          cursor: pointer;
+          &:hover {
+           transform: translateY(-2px);
+          }
+        }
+      }
       .desc-title {
         display: flex;
         align-items: center;

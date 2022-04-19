@@ -4,7 +4,7 @@ const os = require("os");
 const ipcSendSync = (type, data) => {
   const returnValue = ipcRenderer.sendSync("msg-trigger", {
     type,
-    data,
+    data
   });
   if (returnValue instanceof Error) throw returnValue;
   return returnValue;
@@ -13,7 +13,7 @@ const ipcSendSync = (type, data) => {
 const ipcSend = (type, data) => {
   ipcRenderer.send("msg-trigger", {
     type,
-    data,
+    data
   });
 };
 
@@ -30,7 +30,9 @@ window.rubick = {
   onPluginOut(cb) {
     typeof cb === "function" && (window.rubick.hooks.onPluginOut = cb);
   },
-
+  openPlugin(plugin) {
+    ipcSendSync("loadPlugin", plugin);
+  },
   // 窗口交互
   hideMainWindow() {
     ipcSendSync("hideMainWindow");
@@ -49,7 +51,7 @@ window.rubick = {
       (window.rubick.hooks.onSubInputChange = onChange);
     ipcSendSync("setSubInput", {
       placeholder,
-      isFocus,
+      isFocus
     });
   },
   removeSubInput() {
@@ -74,15 +76,15 @@ window.rubick = {
   copyText(text) {
     return ipcSendSync("copyText", { text });
   },
-  copyFile: (file) => {
-    return ipcSendSync("copyFile", { file })
+  copyFile: file => {
+    return ipcSendSync("copyFile", { file });
   },
   db: {
-    put: (data) => ipcSendSync("dbPut", { data }),
-    get: (id) => ipcSendSync("dbGet", { id }),
-    remove: (doc) => ipcSendSync("dbRemove", { doc }),
-    bulkDocs: (docs) => ipcSendSync("dbBulkDocs", { docs }),
-    allDocs: (key) => ipcSendSync("dbAllDocs", { key }),
+    put: data => ipcSendSync("dbPut", { data }),
+    get: id => ipcSendSync("dbGet", { id }),
+    remove: doc => ipcSendSync("dbRemove", { doc }),
+    bulkDocs: docs => ipcSendSync("dbBulkDocs", { docs }),
+    allDocs: key => ipcSendSync("dbAllDocs", { key })
   },
   dbStorage: {
     setItem: (key, value) => {
@@ -93,14 +95,14 @@ window.rubick = {
       const res = ipcSendSync("dbPut", { data: target });
       if (res.error) throw new Error(res.message);
     },
-    getItem: (key) => {
+    getItem: key => {
       const res = ipcSendSync("dbGet", { id: key });
       return res && "value" in res ? res.value : null;
     },
-    removeItem: (key) => {
+    removeItem: key => {
       const res = ipcSendSync("dbGet", { id: key });
       res && ipcSendSync("dbRemove", { doc: res });
-    },
+    }
   },
   isDarkColors() {
     return false;
@@ -144,5 +146,5 @@ window.rubick = {
 
   shellShowItemInFolder: path => {
     ipcSend("shellShowItemInFolder", { path });
-  },
+  }
 };
