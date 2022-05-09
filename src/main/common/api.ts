@@ -249,6 +249,11 @@ export const API: any = {
     shell.showItemInFolder(data.path);
     return true;
   },
+
+  shellBeep() {
+    shell.beep();
+    return true;
+  },
 };
 
 export default (mainWindow: BrowserWindow) => {

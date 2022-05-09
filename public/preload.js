@@ -145,4 +145,12 @@ window.rubick = {
   shellShowItemInFolder: path => {
     ipcSend("shellShowItemInFolder", { path });
   },
+
+  redirect: (label, payload) => {
+    // todo
+  },
+
+  shellBeep: () => {
+    ipcSend("shellBeep")
+  },
 };
