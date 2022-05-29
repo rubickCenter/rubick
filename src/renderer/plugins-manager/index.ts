@@ -11,7 +11,7 @@ import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
 
 const createPluginManager = (): any => {
   const pluginInstance = new PluginHandler({
-    baseDir,
+    baseDir
   });
 
   const state: any = reactive({
@@ -19,7 +19,7 @@ const createPluginManager = (): any => {
     plugins: [],
     localPlugins: [],
     currentPlugin: {},
-    pluginLoading: false,
+    pluginLoading: false
   });
 
   const appList = ref([]);
@@ -28,25 +28,29 @@ const createPluginManager = (): any => {
     appList.value = await appSearch(nativeImage);
   };
 
-  const openPlugin = (plugin) => {
+  const loadPlugin = plugin => {
+    state.pluginLoading = true;
+    state.currentPlugin = plugin;
+  };
+
+  const openPlugin = plugin => {
     if (plugin.pluginType === "ui" || plugin.pluginType === "system") {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
         return;
       }
-      state.pluginLoading = true;
-      state.currentPlugin = plugin;
+      loadPlugin(plugin);
       ipcRenderer.sendSync("msg-trigger", {
         type: "openPlugin",
-        plugin: JSON.parse(
+        data: JSON.parse(
           JSON.stringify({
             ...plugin,
             ext: plugin.ext || {
               code: plugin.feature.code,
               type: plugin.cmd.type || "text",
-              payload: null,
-            },
+              payload: null
+            }
           })
-        ),
+        )
       });
       setSearchValue("");
     }
@@ -57,13 +61,18 @@ const createPluginManager = (): any => {
 
   const { searchValue, onSearch, setSearchValue, placeholder } =
     searchManager();
-  const { options, searchFocus, clipboardFile, clearClipboardFile, readClipboardContent } =
-    optionsManager({
-      searchValue,
-      appList,
-      openPlugin,
-      currentPlugin: toRefs(state).currentPlugin,
-    });
+  const {
+    options,
+    searchFocus,
+    clipboardFile,
+    clearClipboardFile,
+    readClipboardContent
+  } = optionsManager({
+    searchValue,
+    appList,
+    openPlugin,
+    currentPlugin: toRefs(state).currentPlugin
+  });
   // plugin operation
   const getPluginInfo = async ({ pluginName, pluginPath }) => {
     const pluginInfo = await pluginInstance.getAdapterInfo(
@@ -75,11 +84,11 @@ const createPluginManager = (): any => {
       icon: pluginInfo.logo,
       indexPath: commonConst.dev()
         ? "http://localhost:8081/#/"
-        : `file://${path.join(pluginPath, "../", pluginInfo.main)}`,
+        : `file://${path.join(pluginPath, "../", pluginInfo.main)}`
     };
   };
 
-  const changeSelect = (select) => {
+  const changeSelect = select => {
     state.currentPlugin = select;
   };
 
@@ -90,6 +99,9 @@ const createPluginManager = (): any => {
   const removePlugin = (plugin: any) => {
     // todo
   };
+  
+  window.loadPlugin = plugin => loadPlugin(plugin);
+
   window.updatePlugin = ({ currentPlugin }: any) => {
     state.currentPlugin = currentPlugin;
     remote.getGlobal("LOCAL_PLUGINS").updatePlugin(currentPlugin);
@@ -125,7 +137,7 @@ const createPluginManager = (): any => {
     searchFocus,
     clipboardFile,
     clearClipboardFile,
-    readClipboardContent,
+    readClipboardContent
   };
 };
 
