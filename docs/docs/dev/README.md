@@ -171,6 +171,6 @@ $ npm link
 $ npm publish
 ```
 
-然后再给 [rubick-database/plugins/total-plugins.json](https://gitee.com/monkeyWang/rubick-database/blob/master/plugins/total-plugins.json) 仓库提个 `pull request`, 把你的 `package.json` 信息加入 `json` 文件内，等我们 merge 了您的提交，插件将会自动上架。
+然后再给 [rubick-database/plugins/total-plugins.json](https://gitcode.net/rubickcenter/rubick-database/-/blob/master/plugins/total-plugins.json) 仓库提个 `pull request`, 把你的 `package.json` 信息加入 `json` 文件内，等我们 merge 了您的提交，插件将会自动上架。
 
 

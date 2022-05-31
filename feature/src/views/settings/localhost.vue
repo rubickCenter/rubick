@@ -19,7 +19,7 @@
     </a-form-item>
     <a-form-item has-feedback label="database url" name="database">
       <a-input
-        placeholder="https://gitee.com/monkeyWang/rubick-database/raw/master"
+        placeholder="https://gitcode.net/rubickcenter/rubick-database/-/raw/master"
         v-model:value="formState.database"
       />
     </a-form-item>
@@ -43,7 +43,7 @@ let _rev: any;
 
 let defaultConfig = {
   register: "https://registry.npm.taobao.org",
-  database: "https://gitee.com/monkeyWang/rubick-database/raw/master",
+  database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
   access_token: "",
 };
 
@@ -69,7 +69,7 @@ const layout = {
 const resetForm = () => {
   formState.value = {
     register: "https://registry.npm.taobao.org",
-    database: "https://gitee.com/monkeyWang/rubick-database/raw/master",
+    database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
     access_token: "",
   };
 };

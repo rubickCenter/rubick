@@ -54,7 +54,7 @@ macos 选择 `pkg` 文件，windows 选择 `exe` 文件。
 ::: tip
 如果把插件发布到公网 `npm` 如果不符合您的公司安全要求，`rubick` 支持内网私有源和私有插件库，如果您需要内网部署使用，可以自行配置以下规则。
 :::
-`rubick` 依赖 `npm` 仓库做插件管理，依赖 `gitee` 做插件数据存储，所以如果要进行内网部署，主要需要替换这2个设置。详细设置：
+`rubick` 依赖 `npm` 仓库做插件管理，依赖 `gitcode` 做插件数据存储，所以如果要进行内网部署，主要需要替换这2个设置。详细设置：
 `插件市场 -> 设置 -> 内网部署设置`
 
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1319b177fb544017ae10b4a703e8efa6~tplv-k3u1fbpfcp-watermark.image?)
@@ -62,9 +62,9 @@ macos 选择 `pkg` 文件，windows 选择 `exe` 文件。
 #### 1. 替换 npm 源
 插件发布到私有 `npm` 源即可。
 
-#### 2. 替换 `gitee` 源为内网 `gitlab`: database url
+#### 2. 替换 `gitcode` 源为内网 `gitlab`: database url
 
-* clone 下载 rubick 插件库：[https://gitee.com/monkeyWang/rubick-database](https://gitee.com/monkeyWang/rubick-database)
+* clone 下载 rubick 插件库：[https://gitcode.net/rubickcenter/rubick-database](https://gitcode.net/rubickcenter/rubick-database)
 * 提交仓库到私有 `gitlab` 库。
 
 替换格式：`https://gitlab.xxx.com/api/v4/projects/{projectId}/repository/files/` 。因为接口为 `gitlab openAPI`，所以需要填写仓库 `access_token`
