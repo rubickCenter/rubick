@@ -37,9 +37,9 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       mainWindow.show();
     });
 
-    globalShortcut.register(config.perf.shortCut.separate, () => {
-      // todo
-    });
+    // globalShortcut.register(config.perf.shortCut.separate, () => {
+    //
+    // });
 
     globalShortcut.register(config.perf.shortCut.quit, () => {
       // mainWindow.webContents.send('init-rubick');
