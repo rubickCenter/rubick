@@ -39,14 +39,14 @@ const props = defineProps({
   },
   options: {
     type: Array,
-    default: () => [],
+    default: (() => [])(),
   },
   currentSelect: {
     type: Number,
     default: 0,
   },
   currentPlugin: {},
-  clipboardFile: () => [],
+  clipboardFile: (() => [])(),
 });
 
 const renderTitle = (title) => {

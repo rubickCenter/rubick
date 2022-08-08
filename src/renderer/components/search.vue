@@ -63,7 +63,7 @@ const props: any = defineProps({
   },
   currentPlugin: {},
   pluginLoading: Boolean,
-  clipboardFile: () => [],
+  clipboardFile: (() => [])(),
 });
 
 const changeValue = (e) => {
