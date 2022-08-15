@@ -33,6 +33,7 @@
 ## 安装包
 * [Rubick Mac OS](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Windows](https://github.com/rubickCenter/rubick/releases)
+* [Rubick Linux](https://github.com/rubickCenter/rubick/releases)
 
 ## 支持能力
 - [x] 基于 npm 包模式的插件管理，安装插件和安装 npm 包一样简单
@@ -42,7 +43,7 @@
 - [x] 支持搜索本地已安装 app 或 偏好设置
 - [x] 支持 MacOS
 - [x] 支持 Windows
-
+- [x] 支持 Linux
 
 ## 使用文档
 
