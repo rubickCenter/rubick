@@ -4,12 +4,7 @@ import path from "path";
 import pluginClickEvent from "./pluginClickEvent";
 import { ref } from "vue";
 
-export default ({
-  currentPlugin,
-  optionsRef,
-  openPlugin,
-  setOptionsRef,
-}) => {
+export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
     const config = remote.getGlobal("OP_CONFIG").get();
@@ -30,7 +25,7 @@ export default ({
           icon: require("../assets/link.png"),
           desc: "复制路径到剪切板",
           click: () => {
-            clipboard.writeText(fileList.map(file => file.path).join(","));
+            clipboard.writeText(fileList.map((file) => file.path).join(","));
             ipcRenderer.send("msg-trigger", { type: "hideMainWindow" });
           },
         },
@@ -54,7 +49,11 @@ export default ({
           const ext = path.extname(fileList[0].path);
           fe.cmds.forEach((cmd) => {
             const regImg = /\.(png|jpg|gif|jpeg|webp)$/;
-            if (cmd.type === "img" && regImg.test(ext) && fileList.length === 1) {
+            if (
+              cmd.type === "img" &&
+              regImg.test(ext) &&
+              fileList.length === 1
+            ) {
               options.push({
                 name: cmd.label,
                 value: "plugin",
@@ -69,7 +68,9 @@ export default ({
                     ext: {
                       code: fe.code,
                       type: cmd.type || "text",
-                      payload: nativeImage.createFromPath(fileList[0].path).toDataURL(),
+                      payload: nativeImage
+                        .createFromPath(fileList[0].path)
+                        .toDataURL(),
                     },
                     openPlugin,
                   });
@@ -140,7 +141,7 @@ export default ({
         isDirectory: false,
         path: null,
         dataUrl,
-      }
+      },
     ];
     const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
     const options: any = [];

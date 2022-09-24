@@ -1,6 +1,12 @@
 <template>
-  <div v-if="commonConst.windows() || commonConst.linux()" class="drag-bar"></div>
-  <div :class="!commonConst.windows() && !commonConst.linux() && 'drag'" id="components-layout">
+  <div
+    v-if="commonConst.windows() || commonConst.linux()"
+    class="drag-bar"
+  ></div>
+  <div
+    :class="!commonConst.windows() && !commonConst.linux() && 'drag'"
+    id="components-layout"
+  >
     <div class="rubick-select">
       <Search
         :currentPlugin="currentPlugin"

@@ -1,3 +1,3 @@
 declare module "main" {
-  export function main(): any
+  export function main(): any;
 }

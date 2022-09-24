@@ -1,5 +1,13 @@
 <template>
-  <div v-show="!!options.length && (searchValue || !!clipboardFile.length) && !currentPlugin.name" class="options" ref="scrollDom">
+  <div
+    v-show="
+      !!options.length &&
+      (searchValue || !!clipboardFile.length) &&
+      !currentPlugin.name
+    "
+    class="options"
+    ref="scrollDom"
+  >
     <a-list item-layout="horizontal" :dataSource="sort(options)">
       <template #renderItem="{ item, index }">
         <a-list-item
@@ -11,10 +19,7 @@
               <span v-html="renderTitle(item.name)"></span>
             </template>
             <template #avatar>
-              <a-avatar
-                style="border-radius: 0"
-                :src="item.icon"
-              />
+              <a-avatar style="border-radius: 0" :src="item.icon" />
             </template>
           </a-list-item-meta>
         </a-list-item>
@@ -62,7 +67,10 @@ const renderTitle = (title) => {
 
 const renderDesc = (desc) => {
   if (desc.length > 80) {
-    return `${desc.substr(0, 63)}...${desc.substr(desc.length - 14, desc.length)}`
+    return `${desc.substr(0, 63)}...${desc.substr(
+      desc.length - 14,
+      desc.length
+    )}`;
   }
   return desc;
 };
@@ -79,7 +87,6 @@ const sort = (options) => {
   }
   return options;
 };
-
 </script>
 
 <style lang="less">

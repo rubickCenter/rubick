@@ -21,10 +21,7 @@ module.exports = {
       nodeIntegration: true,
       mainProcessFile: "src/main/index.ts",
       mainProcessWatch: ["src/main"],
-      externals: [
-        'pouchdb',
-        'extract-file-icon'
-      ],
+      externals: ["pouchdb", "extract-file-icon"],
       // Use this to change the entry point of your app's render process. default src/[main|index].[js|ts]
       builderOptions: {
         productName: "rubick2",
@@ -51,10 +48,7 @@ module.exports = {
         },
         mac: {
           icon: "public/icons/icon.icns",
-          target: [
-            "dmg",
-            "pkg"
-          ],
+          target: ["dmg", "pkg"],
           extendInfo: {
             LSUIElement: 1,
           },

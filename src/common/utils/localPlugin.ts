@@ -11,7 +11,8 @@ let registry;
 let pluginInstance;
 (async () => {
   try {
-    registry = (await API.dbGet({ data: { id: "rubick-localhost-config" } })).data.register;
+    registry = (await API.dbGet({ data: { id: "rubick-localhost-config" } }))
+      .data.register;
     console.log(registry);
     pluginInstance = new PluginHandler({
       baseDir,
@@ -31,11 +32,7 @@ global.LOCAL_PLUGINS = {
     await pluginInstance.install([plugin.name], { isDev: plugin.isDev });
     if (plugin.isDev) {
       // 获取 dev 插件信息
-      const pluginPath = path.resolve(
-        baseDir,
-        "node_modules",
-        plugin.name
-      );
+      const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
       const pluginInfo = JSON.parse(
         fs.readFileSync(path.join(pluginPath, "./package.json"), "utf8")
       );
@@ -49,11 +46,7 @@ global.LOCAL_PLUGINS = {
   },
   refreshPlugin(plugin) {
     // 获取 dev 插件信息
-    const pluginPath = path.resolve(
-      baseDir,
-      "node_modules",
-      plugin.name
-    );
+    const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
     const pluginInfo = JSON.parse(
       fs.readFileSync(path.join(pluginPath, "./package.json"), "utf8")
     );
@@ -73,10 +66,7 @@ global.LOCAL_PLUGINS = {
 
     // 存入
     global.LOCAL_PLUGINS.PLUGINS = currentPlugins;
-    fs.writeFileSync(
-      configPath,
-      JSON.stringify(currentPlugins)
-    );
+    fs.writeFileSync(configPath, JSON.stringify(currentPlugins));
     return global.LOCAL_PLUGINS.PLUGINS;
   },
   getLocalPlugins() {
@@ -102,10 +92,7 @@ global.LOCAL_PLUGINS = {
     if (!has) {
       currentPlugins.unshift(plugin);
       global.LOCAL_PLUGINS.PLUGINS = currentPlugins;
-      fs.writeFileSync(
-        configPath,
-        JSON.stringify(currentPlugins)
-      );
+      fs.writeFileSync(configPath, JSON.stringify(currentPlugins));
     }
   },
   updatePlugin(plugin) {
@@ -121,7 +108,9 @@ global.LOCAL_PLUGINS = {
   },
   async deletePlugin(plugin) {
     await pluginInstance.uninstall([plugin.name], { isDev: plugin.isDev });
-    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.filter((p) => plugin.name !== p.name);
+    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.filter(
+      (p) => plugin.name !== p.name
+    );
     fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
     return global.LOCAL_PLUGINS.PLUGINS;
   },

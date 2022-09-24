@@ -10,14 +10,14 @@ export default function getApps(resolve, reject, filterByAppName = false) {
     "-xml",
     "-detailLevel",
     "mini",
-    "SPApplicationsDataType"
+    "SPApplicationsDataType",
   ]);
 
-  profileInstalledApps.stdout.on("data", chunckBuffer => {
+  profileInstalledApps.stdout.on("data", (chunckBuffer) => {
     resultBuffer = Buffer.concat([resultBuffer, chunckBuffer]);
   });
 
-  profileInstalledApps.on("exit", exitCode => {
+  profileInstalledApps.on("exit", (exitCode) => {
     if (exitCode !== 0) {
       reject([]);
       return;
@@ -29,7 +29,7 @@ export default function getApps(resolve, reject, filterByAppName = false) {
       const [installedApps] = plist.parse(resultBuffer.toString());
       if (!filterByAppName) return resolve(installedApps._items);
       return resolve(
-        installedApps._items.filter(apps => apps._name === filterByAppName)
+        installedApps._items.filter((apps) => apps._name === filterByAppName)
           .length !== 0
       );
     } catch (err) {
@@ -37,7 +37,7 @@ export default function getApps(resolve, reject, filterByAppName = false) {
     }
   });
 
-  profileInstalledApps.on("error", err => {
+  profileInstalledApps.on("error", (err) => {
     reject(err);
   });
-};
+}
