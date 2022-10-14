@@ -6,11 +6,8 @@ declare module "@ts-type/package-dts/package-json" {
   const IPackageJson: any;
   const IDependency: any;
 
-  export {
-    IPackageJson,
-    IDependency
-  };
-};
+  export { IPackageJson, IDependency };
+}
 
 declare module "pouchdb";
 

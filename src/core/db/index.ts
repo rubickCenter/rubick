@@ -101,7 +101,10 @@ export default class {
     }
   }
 
-  async bulkDocs(name: string, docs: Array<Doc<any>>): Promise<DBError | Array<DocRes>> {
+  async bulkDocs(
+    name: string,
+    docs: Array<Doc<any>>
+  ): Promise<DBError | Array<DocRes>> {
     let result;
     try {
       if (!Array.isArray(docs)) return this.errorInfo("exception", "not array");
@@ -112,7 +115,7 @@ export default class {
       for (const doc of docs) {
         const err = this.checkDocSize(doc);
         if (err) return err;
-        doc._id = this.getDocId(name, doc._id)
+        doc._id = this.getDocId(name, doc._id);
       }
       result = await this.pouchDB.bulkDocs(docs);
       result = result.map((res: any) => {
@@ -122,12 +125,12 @@ export default class {
               id: res.id,
               name: res.name,
               error: true,
-              message: res.message
+              message: res.message,
             }
           : res;
       });
       docs.forEach((doc) => {
-        doc._id = this.replaceDocId(name, doc._id)
+        doc._id = this.replaceDocId(name, doc._id);
       });
     } catch (e) {
       //
@@ -135,7 +138,10 @@ export default class {
     return result;
   }
 
-  async allDocs(name: string, key: string | Array<string>): Promise<DBError | Array<DocRes>> {
+  async allDocs(
+    name: string,
+    key: string | Array<string>
+  ): Promise<DBError | Array<DocRes>> {
     const config: any = { include_docs: true };
     if (key) {
       if ("string" == typeof key) {

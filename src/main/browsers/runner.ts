@@ -3,7 +3,7 @@ import path from "path";
 import commonConst from "../../common/utils/commonConst";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
 
-const getRelativePath = indexPath => {
+const getRelativePath = (indexPath) => {
   return commonConst.windows()
     ? indexPath.replace("file://", "")
     : indexPath.replace("file:", "");
@@ -56,8 +56,8 @@ export default () => {
         devTools: true,
         webviewTag: true,
         preload,
-        session: ses
-      }
+        session: ses,
+      },
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
@@ -73,7 +73,7 @@ export default () => {
     view.webContents.session.webRequest.onBeforeSendHeaders(
       (details, callback) => {
         callback({
-          requestHeaders: { referer: "*", ...details.requestHeaders }
+          requestHeaders: { referer: "*", ...details.requestHeaders },
         });
       }
     );
@@ -83,8 +83,8 @@ export default () => {
         callback({
           responseHeaders: {
             "Access-Control-Allow-Origin": ["*"],
-            ...details.responseHeaders
-          }
+            ...details.responseHeaders,
+          },
         });
       }
     );
@@ -116,6 +116,6 @@ export default () => {
     init,
     getView,
     removeView,
-    executeHooks
+    executeHooks,
   };
 };

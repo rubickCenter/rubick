@@ -43,7 +43,9 @@ export default () => {
 
     win.once("ready-to-show", () => {
       win.setBrowserView(view);
-      win.webContents.executeJavaScript(`window.initDetach(${JSON.stringify(pluginInfo)})`)
+      win.webContents.executeJavaScript(
+        `window.initDetach(${JSON.stringify(pluginInfo)})`
+      );
       win.show();
     });
   };

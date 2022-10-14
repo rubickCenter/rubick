@@ -1,13 +1,17 @@
 <template>
   <div class="rubick-select">
-    <div class="select-tag" v-show="currentPlugin.cmd">{{ currentPlugin.cmd }}</div>
+    <div class="select-tag" v-show="currentPlugin.cmd">
+      {{ currentPlugin.cmd }}
+    </div>
     <div
       :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'"
       v-if="!!clipboardFile.length"
     >
       <img :src="getIcon()" />
       <div class="ellipse">{{ clipboardFile[0].name }}</div>
-      <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{ clipboardFile.length }}</a-tag>
+      <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{
+        clipboardFile.length
+      }}</a-tag>
     </div>
     <a-input
       id="search"
@@ -15,7 +19,7 @@
       @input="(e) => changeValue(e)"
       @keydown.down="(e) => keydownEvent(e, 'down')"
       @keydown.up="(e) => keydownEvent(e, 'up')"
-      @keydown="e => checkNeedInit(e)"
+      @keydown="(e) => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
       @keypress.enter="(e) => keydownEvent(e, 'enter')"
@@ -25,7 +29,10 @@
       <template #suffix>
         <div class="suffix-tool">
           <MoreOutlined @click="showSeparate()" class="icon-more" />
-          <div v-if="currentPlugin && currentPlugin.logo" style="position: relative">
+          <div
+            v-if="currentPlugin && currentPlugin.logo"
+            style="position: relative"
+          >
             <a-spin v-show="pluginLoading" class="loading">
               <template #indicator>
                 <LoadingOutlined style="font-size: 42px" />
@@ -96,7 +103,7 @@ const keydownEvent = (e, key: string) => {
       modifiers,
     },
   });
-  const runPluginDisable = e.target.value === "" || props.currentPlugin.name
+  const runPluginDisable = e.target.value === "" || props.currentPlugin.name;
   switch (key) {
     case "up":
       emit("changeCurrent", -1);
@@ -192,7 +199,9 @@ const changeHideOnBlur = () => {
 
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
-  return props.clipboardFile[0].isFile ? require("../assets/file.png") : require("../assets/folder.png")
+  return props.clipboardFile[0].isFile
+    ? require("../assets/file.png")
+    : require("../assets/folder.png");
 };
 
 const newWindow = () => {

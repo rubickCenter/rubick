@@ -6,7 +6,7 @@ import {
   Notification,
   nativeImage,
   clipboard,
-  shell
+  shell,
 } from "electron";
 import { runner, detach } from "../browsers";
 import fs from "fs";
@@ -20,15 +20,17 @@ const dbInstance = new LocalDb(app.getPath("userData"));
 
 dbInstance.init();
 
-export const API: any = {
-  currentPlugin: null,
-  DBKEY: "RUBICK_DB_DEFAULT",
-  getCurrentWindow: (window, e) => {
+class API {
+  static currentPlugin: null | any = null;
+  static DBKEY = "RUBICK_DB_DEFAULT";
+
+  static getCurrentWindow = (window, e) => {
     let originWindow = BrowserWindow.fromWebContents(e.sender);
     if (originWindow !== window) originWindow = detachInstance.getWindow();
     return originWindow;
-  },
-  __EscapeKeyDown: (event, input, window) => {
+  };
+
+  static __EscapeKeyDown = (event, input, window) => {
     if (input.type !== "keyDown") return;
     if (!(input.meta || input.control || input.shift || input.alt)) {
       if (input.key === "Escape") {
@@ -36,16 +38,16 @@ export const API: any = {
       }
       return;
     }
-  },
+  };
 
-  loadPlugin({ data: plugin }, window) {
+  static loadPlugin({ data: plugin }, window) {
     window.webContents.executeJavaScript(
       `window.loadPlugin(${JSON.stringify(plugin)})`
     );
     API.openPlugin({ data: plugin }, window);
-  },
+  }
 
-  openPlugin({ data: plugin }, window) {
+  static openPlugin({ data: plugin }, window) {
     if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
     window.setSize(window.getSize()[0], 60);
     runnerInstance.removeView(window);
@@ -53,7 +55,7 @@ export const API: any = {
     API.currentPlugin = plugin;
     window.webContents.executeJavaScript(
       `window.setCurrentPlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin
+        currentPlugin: API.currentPlugin,
       })})`
     );
     window.show();
@@ -66,62 +68,75 @@ export const API: any = {
       .webContents.on("before-input-event", (event, input) =>
         API.__EscapeKeyDown(event, input, window)
       );
-  },
-  removePlugin(e, window) {
+  }
+
+  static removePlugin(e, window) {
     API.currentPlugin = null;
     runnerInstance.removeView(window);
-  },
-  openPluginDevTools() {
+  }
+
+  static openPluginDevTools() {
     runnerInstance.getView().webContents.openDevTools({ mode: "detach" });
-  },
-  hideMainWindow(arg, window) {
+  }
+
+  static hideMainWindow(arg, window) {
     window.hide();
-  },
-  showMainWindow(arg, window) {
+  }
+
+  static showMainWindow(arg, window) {
     window.show();
-  },
-  showOpenDialog({ data }, window) {
+  }
+
+  static showOpenDialog({ data }, window) {
     dialog.showOpenDialogSync(window, data);
-  },
-  setExpendHeight({ data: height }, window: BrowserWindow, e) {
+  }
+
+  static setExpendHeight({ data: height }, window: BrowserWindow, e) {
     const originWindow = API.getCurrentWindow(window, e);
     if (!originWindow) return;
     const targetHeight = height;
     originWindow.setSize(originWindow.getSize()[0], targetHeight);
-  },
-  setSubInput({ data }, window, e) {
+  }
+
+  static setSubInput({ data }, window, e) {
     const originWindow = API.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInput(${JSON.stringify({
-        placeholder: data.placeholder
+        placeholder: data.placeholder,
       })})`
     );
-  },
-  subInputBlur() {
+  }
+
+  static subInputBlur() {
     runnerInstance.getView().webContents.focus();
-  },
-  sendSubInputChangeEvent({ data }) {
+  }
+
+  static sendSubInputChangeEvent({ data }) {
     runnerInstance.executeHooks("SubInputChange", data);
-  },
-  removeSubInput(data, window, e) {
+  }
+
+  static removeSubInput(data, window, e) {
     const originWindow = API.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(`window.removeSubInput()`);
-  },
-  setSubInputValue({ data }, window, e) {
+  }
+
+  static setSubInputValue({ data }, window, e) {
     const originWindow = API.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInputValue(${JSON.stringify({
-        value: data.text
+        value: data.text,
       })})`
     );
-  },
-  getPath({ data }) {
+  }
+
+  static getPath({ data }) {
     return app.getPath(data.name);
-  },
-  showNotification({ data: { body } }) {
+  }
+
+  static showNotification({ data: { body } }) {
     if (!Notification.isSupported()) return;
     "string" != typeof body && (body = String(body));
     const plugin = API.currentPlugin;
@@ -129,19 +144,22 @@ export const API: any = {
     const notify = new Notification({
       title: plugin.pluginName,
       body,
-      icon: plugin.logo
+      icon: plugin.logo,
     });
     notify.show();
-  },
-  copyImage: ({ data }) => {
+  }
+
+  static copyImage = ({ data }) => {
     const image = nativeImage.createFromDataURL(data.img);
     clipboard.writeImage(image);
-  },
-  copyText({ data }) {
+  };
+
+  static copyText({ data }) {
     clipboard.writeText(String(data.text));
     return true;
-  },
-  copyFile: ({ data }) => {
+  }
+
+  static copyFile({ data }) {
     if (data.file && fs.existsSync(data.file)) {
       clipboard.writeBuffer(
         "NSFilenamesPboardType",
@@ -150,31 +168,38 @@ export const API: any = {
       return true;
     }
     return false;
-  },
-  dbPut({ data }) {
+  }
+
+  static dbPut({ data }) {
     return dbInstance.put(API.DBKEY, data.data);
-  },
-  dbGet({ data }) {
+  }
+
+  static dbGet({ data }) {
     return dbInstance.get(API.DBKEY, data.id);
-  },
-  dbRemove({ data }) {
+  }
+
+  static dbRemove({ data }) {
     return dbInstance.remove(API.DBKEY, data.doc);
-  },
-  dbBulkDocs({ data }) {
+  }
+
+  static dbBulkDocs({ data }) {
     return dbInstance.bulkDocs(API.DBKEY, data.docs);
-  },
-  dbAllDocs({ data }) {
+  }
+
+  static dbAllDocs({ data }) {
     return dbInstance.allDocs(API.DBKEY, data.key);
-  },
-  getFeatures() {
+  }
+
+  static getFeatures() {
     return API.currentPlugin.features;
-  },
-  setFeature({ data }, window) {
+  }
+
+  static setFeature({ data }, window) {
     API.currentPlugin = {
       ...API.currentPlugin,
       features: (() => {
         let has = false;
-        API.currentPlugin.features.some(feature => {
+        API.currentPlugin.features.some((feature) => {
           has = feature.code === data.feature.code;
           return has;
         });
@@ -182,60 +207,62 @@ export const API: any = {
           return [...API.currentPlugin.features, data.feature];
         }
         return API.currentPlugin.features;
-      })()
+      })(),
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin
+        currentPlugin: API.currentPlugin,
       })})`
     );
     return true;
-  },
-  removeFeature({ data }, window) {
+  }
+
+  static removeFeature({ data }, window) {
     API.currentPlugin = {
       ...API.currentPlugin,
-      features: API.currentPlugin.features.filter(feature => {
+      features: API.currentPlugin.features.filter((feature) => {
         if (data.code.type) {
           return feature.code.type !== data.code.type;
         }
         return feature.code !== data.code;
-      })
+      }),
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin
+        currentPlugin: API.currentPlugin,
       })})`
     );
     return true;
-  },
-  sendPluginSomeKeyDownEvent({ data: { modifiers, keyCode } }) {
+  }
+
+  static sendPluginSomeKeyDownEvent({ data: { modifiers, keyCode } }) {
     const code = DECODE_KEY[keyCode];
     if (!code || !runnerInstance.getView()) return;
     if (modifiers.length > 0) {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
         modifiers,
-        keyCode: code
+        keyCode: code,
       });
     } else {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
-        keyCode: code
+        keyCode: code,
       });
     }
-  },
+  }
 
-  detachPlugin(e, window) {
+  static detachPlugin(e, window) {
     if (!API.currentPlugin) return;
     const view = window.getBrowserView();
     window.setBrowserView(null);
     window.webContents
       .executeJavaScript(`window.getMainInputInfo()`)
-      .then(res => {
+      .then((res) => {
         detachInstance.init(
           {
             ...API.currentPlugin,
-            subInput: res
+            subInput: res,
           },
           window.getBounds(),
           view
@@ -244,25 +271,26 @@ export const API: any = {
         window.setSize(window.getSize()[0], 60);
         API.currentPlugin = null;
       });
-  },
-  detachInputChange({ data }) {
+  }
+
+  static detachInputChange({ data }) {
     API.sendSubInputChangeEvent({ data });
-  },
+  }
 
-  getLocalId() {
+  static getLocalId() {
     return encodeURIComponent(app.getPath("home"));
-  },
+  }
 
-  shellShowItemInFolder({ data }) {
+  static shellShowItemInFolder({ data }) {
     shell.showItemInFolder(data.path);
     return true;
-  },
+  }
 
-  shellBeep() {
+  static shellBeep() {
     shell.beep();
     return true;
-  },
-};
+  }
+}
 
 export default (mainWindow: BrowserWindow) => {
   // 响应 preload.js 事件

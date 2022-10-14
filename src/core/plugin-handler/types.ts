@@ -35,4 +35,4 @@ export interface AdapterInfo {
 }
 
 // 插件运行状态
-export type AdapterStatus = 'RUNNING' | 'STOPED' | 'ERROR'
+export type AdapterStatus = "RUNNING" | "STOPED" | "ERROR";

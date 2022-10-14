@@ -61,7 +61,7 @@ async function getAppIcon(
         (file) => path.extname(file) === ".icns"
       )[0];
       if (!iconName) {
-        fs.writeFileSync(iconnone, "")
+        fs.writeFileSync(iconnone, "");
         return false;
       }
       iconPath = path.join(appPath, `/Contents/Resources/${iconName}`);
