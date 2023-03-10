@@ -15,15 +15,16 @@
     </div>
     <a-input
       id="search"
+      ref="mainInput"
       class="main-input"
-      @input="(e) => changeValue(e)"
-      @keydown.down="(e) => keydownEvent(e, 'down')"
-      @keydown.up="(e) => keydownEvent(e, 'up')"
-      @keydown="(e) => checkNeedInit(e)"
+      @input="e => changeValue(e)"
+      @keydown.down="e => keydownEvent(e, 'down')"
+      @keydown.up="e => keydownEvent(e, 'up')"
+      @keydown="e => checkNeedInit(e)"
       :value="searchValue"
       :placeholder="placeholder || 'Hi, Rubick2'"
-      @keypress.enter="(e) => keydownEvent(e, 'enter')"
-      @keypress.space="(e) => keydownEvent(e, 'space')"
+      @keypress.enter="e => keydownEvent(e, 'enter')"
+      @keypress.space="e => keydownEvent(e, 'space')"
       @focus="emit('focus')"
     >
       <template #suffix>
@@ -53,7 +54,6 @@
 import { defineProps, defineEmits, ref, computed } from "vue";
 import { ipcRenderer, remote } from "electron";
 import { LoadingOutlined, MoreOutlined } from "@ant-design/icons-vue";
-
 const opConfig = remote.getGlobal("OP_CONFIG");
 const { Menu } = remote;
 
@@ -62,18 +62,18 @@ const config = ref(opConfig.get());
 const props: any = defineProps({
   searchValue: {
     type: [String, Number],
-    default: "",
+    default: ""
   },
   placeholder: {
     type: String,
-    default: "",
+    default: ""
   },
   currentPlugin: {},
   pluginLoading: Boolean,
-  clipboardFile: (() => [])(),
+  clipboardFile: (() => [])()
 });
 
-const changeValue = (e) => {
+const changeValue = e => {
   if (props.currentPlugin.name === "rubick-system-feature") return;
   targetSearch({ value: e.target.value });
   emit("onSearch", e);
@@ -86,7 +86,8 @@ const emit = defineEmits([
   "changeSelect",
   "choosePlugin",
   "focus",
-  "readClipboardContent",
+  "clearSearchValue",
+  "readClipboardContent"
 ]);
 
 const keydownEvent = (e, key: string) => {
@@ -100,8 +101,8 @@ const keydownEvent = (e, key: string) => {
     type: "sendPluginSomeKeyDownEvent",
     data: {
       keyCode: e.code,
-      modifiers,
-    },
+      modifiers
+    }
   });
   const runPluginDisable = e.target.value === "" || props.currentPlugin.name;
   switch (key) {
@@ -124,7 +125,7 @@ const keydownEvent = (e, key: string) => {
   }
 };
 
-const checkNeedInit = (e) => {
+const checkNeedInit = e => {
   const { ctrlKey, metaKey } = e;
 
   if (e.target.value === "" && e.keyCode === 8) {
@@ -140,7 +141,7 @@ const targetSearch = ({ value }) => {
   if (props.currentPlugin.name) {
     return ipcRenderer.sendSync("msg-trigger", {
       type: "sendSubInputChangeEvent",
-      data: { text: value },
+      data: { text: value }
     });
   }
 };
@@ -149,7 +150,7 @@ const closeTag = () => {
   emit("changeSelect", {});
   emit("clearClipbord");
   ipcRenderer.send("msg-trigger", {
-    type: "removePlugin",
+    type: "removePlugin"
   });
 };
 
@@ -157,8 +158,8 @@ const showSeparate = () => {
   let pluginMenu: any = [
     {
       label: config.value.perf.common.hideOnBlur ? "钉住" : "自动隐藏",
-      click: changeHideOnBlur,
-    },
+      click: changeHideOnBlur
+    }
   ];
   if (props.currentPlugin && props.currentPlugin.logo) {
     pluginMenu = pluginMenu.concat([
@@ -167,23 +168,23 @@ const showSeparate = () => {
         click: () => {
           ipcRenderer.send("msg-trigger", { type: "openPluginDevTools" });
           // todo
-        },
+        }
       },
       {
         label: "当前插件信息",
         submenu: [
           {
-            label: "简介",
+            label: "简介"
           },
           {
-            label: "功能",
-          },
-        ],
+            label: "功能"
+          }
+        ]
       },
       {
         label: "分离窗口",
-        click: newWindow,
-      },
+        click: newWindow
+      }
     ]);
   }
   let menu = Menu.buildFromTemplate(pluginMenu);
@@ -206,9 +207,18 @@ const getIcon = () => {
 
 const newWindow = () => {
   ipcRenderer.send("msg-trigger", {
-    type: "detachPlugin",
+    type: "detachPlugin"
   });
   // todo
+};
+
+const mainInput = ref(null);
+window.rubick.hooks.onShow = () => {
+  (mainInput.value as unknown as HTMLDivElement).focus();
+};
+
+window.rubick.hooks.onHide = () => {
+  emit("clearSearchValue");
 };
 </script>
 

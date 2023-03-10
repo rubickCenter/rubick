@@ -3,7 +3,7 @@ import fs from "fs";
 import getLocalDataFile from "./getLocalDataFile";
 import { PluginHandler } from "@/core";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
-import { API } from "@/main/common/api";
+import API from "@/main/common/api";
 
 const configPath = path.join(getLocalDataFile(), "./rubick-local-plugin.json");
 
@@ -16,12 +16,12 @@ let pluginInstance;
     console.log(registry);
     pluginInstance = new PluginHandler({
       baseDir,
-      registry,
+      registry
     });
   } catch (e) {
     pluginInstance = new PluginHandler({
       baseDir,
-      registry,
+      registry
     });
   }
 })();
@@ -38,7 +38,7 @@ global.LOCAL_PLUGINS = {
       );
       plugin = {
         ...plugin,
-        ...pluginInfo,
+        ...pluginInfo
       };
     }
     global.LOCAL_PLUGINS.addPlugin(plugin);
@@ -52,12 +52,12 @@ global.LOCAL_PLUGINS = {
     );
     plugin = {
       ...plugin,
-      ...pluginInfo,
+      ...pluginInfo
     };
     // 刷新
     let currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
 
-    currentPlugins = currentPlugins.map((p) => {
+    currentPlugins = currentPlugins.map(p => {
       if (p.name === plugin.name) {
         return plugin;
       }
@@ -85,7 +85,7 @@ global.LOCAL_PLUGINS = {
   addPlugin(plugin) {
     let has = false;
     const currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
-    currentPlugins.some((p) => {
+    currentPlugins.some(p => {
       has = p.name === plugin.name;
       return has;
     });
@@ -96,22 +96,20 @@ global.LOCAL_PLUGINS = {
     }
   },
   updatePlugin(plugin) {
-    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.map(
-      (origin) => {
-        if (origin.name === plugin.name) {
-          return plugin;
-        }
-        return origin;
+    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.map(origin => {
+      if (origin.name === plugin.name) {
+        return plugin;
       }
-    );
+      return origin;
+    });
     fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
   },
   async deletePlugin(plugin) {
     await pluginInstance.uninstall([plugin.name], { isDev: plugin.isDev });
     global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.filter(
-      (p) => plugin.name !== p.name
+      p => plugin.name !== p.name
     );
     fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
     return global.LOCAL_PLUGINS.PLUGINS;
-  },
+  }
 };

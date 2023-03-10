@@ -14,6 +14,7 @@ declare const __static: string;
 declare module "lodash.throttle";
 
 interface Window {
+  rubick: any;
   setSubInput: ({ placeholder }: { placeholder: string }) => void;
   setSubInputValue: ({ value }: { value: string }) => void;
   removeSubInput: () => void;

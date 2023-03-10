@@ -1,4 +1,5 @@
 import { app, BrowserWindow, protocol } from "electron";
+import path from "path";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 export default () => {
   let win: any;
@@ -24,7 +25,8 @@ export default () => {
         contextIsolation: false,
         webviewTag: true,
         nodeIntegration: true,
-      },
+        preload: path.join(__static, "preload.js")
+      }
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
@@ -42,6 +44,19 @@ export default () => {
       win = undefined;
     });
 
+    win.on("show", () => {
+      win.webContents.executeJavaScript(
+        `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onShow === "function" && window.rubick.hooks.onShow()`
+      );
+      // win.webContents.openDevTools();
+    });
+
+    win.on("hide", () => {
+      win.webContents.executeJavaScript(
+        `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onHide === "function" && window.rubick.hooks.onHide()`
+      );
+    });
+
     // 判断失焦是否隐藏
     win.on("blur", () => {
       const config = { ...global.OP_CONFIG.get() };
@@ -55,6 +70,6 @@ export default () => {
 
   return {
     init,
-    getWindow,
+    getWindow
   };
 };

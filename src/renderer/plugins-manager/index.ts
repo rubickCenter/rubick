@@ -135,6 +135,7 @@ const createPluginManager = (): any => {
     searchValue,
     placeholder,
     searchFocus,
+    setSearchValue,
     clipboardFile,
     clearClipboardFile,
     readClipboardContent,

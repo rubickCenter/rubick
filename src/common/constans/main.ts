@@ -3,6 +3,9 @@ import path from "path";
 
 const appPath = app.getPath("cache");
 
+console.log(appPath);
+
+
 const PLUGIN_INSTALL_DIR = path.join(appPath, "./rubick-plugins");
 
 const DECODE_KEY = {

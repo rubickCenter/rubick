@@ -6,7 +6,7 @@ import {
   Notification,
   nativeImage,
   clipboard,
-  shell,
+  shell
 } from "electron";
 import { runner, detach } from "../browsers";
 import fs from "fs";
@@ -21,145 +21,155 @@ const dbInstance = new LocalDb(app.getPath("userData"));
 dbInstance.init();
 
 class API {
-  static currentPlugin: null | any = null;
-  static DBKEY = "RUBICK_DB_DEFAULT";
+  public currentPlugin: null | any = null;
+  private DBKEY = "RUBICK_DB_DEFAULT";
 
-  static getCurrentWindow = (window, e) => {
+  init(mainWindow: BrowserWindow) {
+    // 响应 preload.js 事件
+    ipcMain.on("msg-trigger", async (event, arg) => {
+      const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow;
+      const data = await this[arg.type](arg, window, event);
+      event.returnValue = data;
+      // event.sender.send(`msg-back-${arg.type}`, data);
+    });
+  }
+
+  public getCurrentWindow = (window, e) => {
     let originWindow = BrowserWindow.fromWebContents(e.sender);
     if (originWindow !== window) originWindow = detachInstance.getWindow();
     return originWindow;
   };
 
-  static __EscapeKeyDown = (event, input, window) => {
+  public __EscapeKeyDown = (event, input, window) => {
     if (input.type !== "keyDown") return;
     if (!(input.meta || input.control || input.shift || input.alt)) {
       if (input.key === "Escape") {
-        API.removePlugin(null, window);
+        this.removePlugin(null, window);
       }
       return;
     }
   };
 
-  static loadPlugin({ data: plugin }, window) {
+  public loadPlugin({ data: plugin }, window) {
     window.webContents.executeJavaScript(
       `window.loadPlugin(${JSON.stringify(plugin)})`
     );
-    API.openPlugin({ data: plugin }, window);
+    this.openPlugin({ data: plugin }, window);
   }
 
-  static openPlugin({ data: plugin }, window) {
-    if (API.currentPlugin && API.currentPlugin.name === plugin.name) return;
+  public openPlugin({ data: plugin }, window) {
+    if (this.currentPlugin && this.currentPlugin.name === plugin.name) return;
     window.setSize(window.getSize()[0], 60);
     runnerInstance.removeView(window);
     runnerInstance.init(plugin, window);
-    API.currentPlugin = plugin;
+    this.currentPlugin = plugin;
     window.webContents.executeJavaScript(
       `window.setCurrentPlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: this.currentPlugin
       })})`
     );
     window.show();
     // 按 ESC 退出插件
     window.webContents.on("before-input-event", (event, input) =>
-      API.__EscapeKeyDown(event, input, window)
+      this.__EscapeKeyDown(event, input, window)
     );
     runnerInstance
       .getView()
       .webContents.on("before-input-event", (event, input) =>
-        API.__EscapeKeyDown(event, input, window)
+        this.__EscapeKeyDown(event, input, window)
       );
   }
 
-  static removePlugin(e, window) {
-    API.currentPlugin = null;
+  public removePlugin(e, window) {
+    this.currentPlugin = null;
     runnerInstance.removeView(window);
   }
 
-  static openPluginDevTools() {
+  public openPluginDevTools() {
     runnerInstance.getView().webContents.openDevTools({ mode: "detach" });
   }
 
-  static hideMainWindow(arg, window) {
+  public hideMainWindow(arg, window) {
     window.hide();
   }
 
-  static showMainWindow(arg, window) {
+  public showMainWindow(arg, window) {
     window.show();
   }
 
-  static showOpenDialog({ data }, window) {
+  public showOpenDialog({ data }, window) {
     dialog.showOpenDialogSync(window, data);
   }
 
-  static setExpendHeight({ data: height }, window: BrowserWindow, e) {
-    const originWindow = API.getCurrentWindow(window, e);
+  public setExpendHeight({ data: height }, window: BrowserWindow, e) {
+    const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     const targetHeight = height;
     originWindow.setSize(originWindow.getSize()[0], targetHeight);
   }
 
-  static setSubInput({ data }, window, e) {
-    const originWindow = API.getCurrentWindow(window, e);
+  public setSubInput({ data }, window, e) {
+    const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInput(${JSON.stringify({
-        placeholder: data.placeholder,
+        placeholder: data.placeholder
       })})`
     );
   }
 
-  static subInputBlur() {
+  public subInputBlur() {
     runnerInstance.getView().webContents.focus();
   }
 
-  static sendSubInputChangeEvent({ data }) {
+  public sendSubInputChangeEvent({ data }) {
     runnerInstance.executeHooks("SubInputChange", data);
   }
 
-  static removeSubInput(data, window, e) {
-    const originWindow = API.getCurrentWindow(window, e);
+  public removeSubInput(data, window, e) {
+    const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(`window.removeSubInput()`);
   }
 
-  static setSubInputValue({ data }, window, e) {
-    const originWindow = API.getCurrentWindow(window, e);
+  public setSubInputValue({ data }, window, e) {
+    const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInputValue(${JSON.stringify({
-        value: data.text,
+        value: data.text
       })})`
     );
   }
 
-  static getPath({ data }) {
+  public getPath({ data }) {
     return app.getPath(data.name);
   }
 
-  static showNotification({ data: { body } }) {
+  public showNotification({ data: { body } }) {
     if (!Notification.isSupported()) return;
     "string" != typeof body && (body = String(body));
-    const plugin = API.currentPlugin;
+    const plugin = this.currentPlugin;
     if (!plugin) return;
     const notify = new Notification({
       title: plugin.pluginName,
       body,
-      icon: plugin.logo,
+      icon: plugin.logo
     });
     notify.show();
   }
 
-  static copyImage = ({ data }) => {
+  public copyImage = ({ data }) => {
     const image = nativeImage.createFromDataURL(data.img);
     clipboard.writeImage(image);
   };
 
-  static copyText({ data }) {
+  public copyText({ data }) {
     clipboard.writeText(String(data.text));
     return true;
   }
 
-  static copyFile({ data }) {
+  public copyFile({ data }) {
     if (data.file && fs.existsSync(data.file)) {
       clipboard.writeBuffer(
         "NSFilenamesPboardType",
@@ -170,134 +180,126 @@ class API {
     return false;
   }
 
-  static dbPut({ data }) {
-    return dbInstance.put(API.DBKEY, data.data);
+  public dbPut({ data }) {
+    return dbInstance.put(this.DBKEY, data.data);
   }
 
-  static dbGet({ data }) {
-    return dbInstance.get(API.DBKEY, data.id);
+  public dbGet({ data }) {
+    return dbInstance.get(this.DBKEY, data.id);
   }
 
-  static dbRemove({ data }) {
-    return dbInstance.remove(API.DBKEY, data.doc);
+  public dbRemove({ data }) {
+    return dbInstance.remove(this.DBKEY, data.doc);
   }
 
-  static dbBulkDocs({ data }) {
-    return dbInstance.bulkDocs(API.DBKEY, data.docs);
+  public dbBulkDocs({ data }) {
+    return dbInstance.bulkDocs(this.DBKEY, data.docs);
   }
 
-  static dbAllDocs({ data }) {
-    return dbInstance.allDocs(API.DBKEY, data.key);
+  public dbAllDocs({ data }) {
+    return dbInstance.allDocs(this.DBKEY, data.key);
   }
 
-  static getFeatures() {
-    return API.currentPlugin.features;
+  public getFeatures() {
+    return this.currentPlugin.features;
   }
 
-  static setFeature({ data }, window) {
-    API.currentPlugin = {
-      ...API.currentPlugin,
+  public setFeature({ data }, window) {
+    this.currentPlugin = {
+      ...this.currentPlugin,
       features: (() => {
         let has = false;
-        API.currentPlugin.features.some((feature) => {
+        this.currentPlugin.features.some(feature => {
           has = feature.code === data.feature.code;
           return has;
         });
         if (!has) {
-          return [...API.currentPlugin.features, data.feature];
+          return [...this.currentPlugin.features, data.feature];
         }
-        return API.currentPlugin.features;
-      })(),
+        return this.currentPlugin.features;
+      })()
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: this.currentPlugin
       })})`
     );
     return true;
   }
 
-  static removeFeature({ data }, window) {
-    API.currentPlugin = {
-      ...API.currentPlugin,
-      features: API.currentPlugin.features.filter((feature) => {
+  public removeFeature({ data }, window) {
+    this.currentPlugin = {
+      ...this.currentPlugin,
+      features: this.currentPlugin.features.filter(feature => {
         if (data.code.type) {
           return feature.code.type !== data.code.type;
         }
         return feature.code !== data.code;
-      }),
+      })
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: API.currentPlugin,
+        currentPlugin: this.currentPlugin
       })})`
     );
     return true;
   }
 
-  static sendPluginSomeKeyDownEvent({ data: { modifiers, keyCode } }) {
+  public sendPluginSomeKeyDownEvent({ data: { modifiers, keyCode } }) {
     const code = DECODE_KEY[keyCode];
     if (!code || !runnerInstance.getView()) return;
     if (modifiers.length > 0) {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
         modifiers,
-        keyCode: code,
+        keyCode: code
       });
     } else {
       runnerInstance.getView().webContents.sendInputEvent({
         type: "keyDown",
-        keyCode: code,
+        keyCode: code
       });
     }
   }
 
-  static detachPlugin(e, window) {
-    if (!API.currentPlugin) return;
+  public detachPlugin(e, window) {
+    if (!this.currentPlugin) return;
     const view = window.getBrowserView();
     window.setBrowserView(null);
     window.webContents
       .executeJavaScript(`window.getMainInputInfo()`)
-      .then((res) => {
+      .then(res => {
         detachInstance.init(
           {
-            ...API.currentPlugin,
-            subInput: res,
+            ...this.currentPlugin,
+            subInput: res
           },
           window.getBounds(),
           view
         );
         window.webContents.executeJavaScript(`window.initRubick()`);
         window.setSize(window.getSize()[0], 60);
-        API.currentPlugin = null;
+        this.currentPlugin = null;
       });
   }
 
-  static detachInputChange({ data }) {
-    API.sendSubInputChangeEvent({ data });
+  public detachInputChange({ data }) {
+    this.sendSubInputChangeEvent({ data });
   }
 
-  static getLocalId() {
+  public getLocalId() {
     return encodeURIComponent(app.getPath("home"));
   }
 
-  static shellShowItemInFolder({ data }) {
+  public shellShowItemInFolder({ data }) {
     shell.showItemInFolder(data.path);
     return true;
   }
 
-  static shellBeep() {
+  public shellBeep() {
     shell.beep();
     return true;
   }
 }
 
-export default (mainWindow: BrowserWindow) => {
-  // 响应 preload.js 事件
-  ipcMain.on("msg-trigger", async (event, arg) => {
-    const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow;
-    const data = await API[arg.type](arg, window, event);
-    event.returnValue = data;
-    // event.sender.send(`msg-back-${arg.type}`, data);
-  });
-};
+export default new API();
