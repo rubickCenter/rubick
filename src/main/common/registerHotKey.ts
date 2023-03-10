@@ -6,7 +6,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     const config = global.OP_CONFIG.get();
     app.setLoginItemSettings({
       openAtLogin: config.perf.common.start,
-      openAsHidden: true,
+      openAsHidden: true
     });
   };
 
@@ -16,6 +16,9 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     globalShortcut.unregisterAll();
     // 注册偏好快捷键
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+      const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
+      if (currentShow) return mainWindow.hide();
+
       const { x, y } = screen.getCursorScreenPoint();
       const currentDisplay = screen.getDisplayNearestPoint({ x, y });
       const wx = parseInt(
@@ -33,7 +36,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       mainWindow.focus();
       mainWindow.setVisibleOnAllWorkspaces(false, {
-        visibleOnFullScreen: true,
+        visibleOnFullScreen: true
       });
       mainWindow.setPosition(wx, wy);
       mainWindow.show();
@@ -49,7 +52,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     });
 
     // 注册自定义全局快捷键
-    config.global.forEach((sc) => {
+    config.global.forEach(sc => {
       if (!sc.key || !sc.value) return;
       globalShortcut.register(sc.key, () => {
         mainWindow.webContents.send("global-short-key", sc.value);
