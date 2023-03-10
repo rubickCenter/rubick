@@ -13,7 +13,7 @@ import fs from "fs";
 import { LocalDb } from "@/core";
 import plist from "plist";
 import { DECODE_KEY } from "@/common/constans/main";
-
+import mainInstance from "../index";
 const runnerInstance = runner();
 const detachInstance = detach();
 const dbInstance = new LocalDb(app.getPath("userData"));
@@ -44,8 +44,13 @@ class API {
     if (input.type !== "keyDown") return;
     if (!(input.meta || input.control || input.shift || input.alt)) {
       if (input.key === "Escape") {
-        this.removePlugin(null, window);
+        if (this.currentPlugin) {
+          this.removePlugin(null, window);
+        } else {
+          mainInstance.windowCreator.getWindow().hide();
+        }
       }
+
       return;
     }
   };

@@ -19,7 +19,7 @@ import "../common/utils/localConfig";
 import registerySystemPlugin from "./common/registerySystemPlugin";
 
 class App {
-  private windowCreator: { init: () => void; getWindow: () => BrowserWindow };
+  public windowCreator: { init: () => void; getWindow: () => BrowserWindow };
   private systemPlugins: any;
 
   constructor() {
@@ -122,4 +122,4 @@ class App {
   }
 }
 
-new App();
+export default new App();
