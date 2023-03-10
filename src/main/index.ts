@@ -3,7 +3,7 @@ import electron, {
   app,
   globalShortcut,
   protocol,
-  BrowserWindow,
+  BrowserWindow
 } from "electron";
 import { main } from "./browsers";
 import commonConst from "../common/utils/commonConst";
@@ -24,7 +24,7 @@ class App {
 
   constructor() {
     protocol.registerSchemesAsPrivileged([
-      { scheme: "app", privileges: { secure: true, standard: true } },
+      { scheme: "app", privileges: { secure: true, standard: true } }
     ]);
     this.windowCreator = main();
     const gotTheLock = app.requestSingleInstanceLock();
@@ -59,8 +59,8 @@ class App {
   onReady() {
     const readyFunction = () => {
       this.createWindow();
-      API(this.windowCreator.getWindow());
-      // this.init()
+      const mainWindow = this.windowCreator.getWindow();
+      API.init(mainWindow);
       createTray(this.windowCreator.getWindow());
       registerHotKey(this.windowCreator.getWindow());
       this.systemPlugins.triggerReadyHooks(
@@ -108,7 +108,7 @@ class App {
 
     if (commonConst.dev()) {
       if (process.platform === "win32") {
-        process.on("message", (data) => {
+        process.on("message", data => {
           if (data === "graceful-exit") {
             app.quit();
           }

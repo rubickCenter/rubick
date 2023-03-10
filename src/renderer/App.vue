@@ -20,6 +20,7 @@
         :clipboardFile="clipboardFile || []"
         @choosePlugin="choosePlugin"
         @focus="searchFocus"
+        @clear-search-value="clearSearchValue"
         @clearClipbord="clearClipboardFile"
         @readClipboardContent="readClipboardContent"
       />
@@ -56,8 +57,9 @@ const {
   pluginLoading,
   searchFocus,
   clipboardFile,
+  setSearchValue,
   clearClipboardFile,
-  readClipboardContent,
+  readClipboardContent
 } = createPluginManager();
 
 initPlugins();
@@ -68,8 +70,8 @@ const menuPluginInfo = ref({});
 getPluginInfo({
   pluginName: "feature",
   // eslint-disable-next-line no-undef
-  pluginPath: `${__static}/feature/package.json`,
-}).then((res) => {
+  pluginPath: `${__static}/feature/package.json`
+}).then(res => {
   menuPluginInfo.value = res;
   remote.getGlobal("LOCAL_PLUGINS").addPlugin(res);
 });
@@ -80,12 +82,12 @@ watch([options], () => {
   nextTick(() => {
     ipcRenderer.sendSync("msg-trigger", {
       type: "setExpendHeight",
-      data: getWindowHeight(options.value),
+      data: getWindowHeight(options.value)
     });
   });
 });
 
-const changeIndex = (index) => {
+const changeIndex = index => {
   if (!options.value.length) return;
   if (
     currentSelect.value + index > options.value.length - 1 ||
@@ -99,13 +101,17 @@ const openMenu = () => {
   openPlugin({
     ...toRaw(menuPluginInfo.value),
     feature: menuPluginInfo.value.features[0],
-    cmd: "插件市场",
+    cmd: "插件市场"
   });
 };
 
 const choosePlugin = () => {
   const currentChoose = options.value[currentSelect.value];
   currentChoose.click();
+};
+
+const clearSearchValue = () => {
+  setSearchValue("");
 };
 </script>
 
