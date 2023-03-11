@@ -2,10 +2,11 @@ import { dialog, Menu, Tray, app, shell, BrowserWindow } from "electron";
 import path from "path";
 import pkg from "../../../package.json";
 import os from "os";
+import API from "../common/api";
 import commonConst from "@/common/utils/commonConst";
 
 function createTray(window: BrowserWindow): Promise<Tray> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     let icon;
     if (commonConst.macOS()) {
       icon = "./icons/icon@3x.png";
@@ -24,6 +25,13 @@ function createTray(window: BrowserWindow): Promise<Tray> {
       return config.perf.shortCut.showAndHidden;
     };
 
+    const openSettings = () => {
+      window.webContents.executeJavaScript(
+        `window.rubick && window.rubick.openMenu && window.rubick.openMenu({ code: "settings" })`
+      );
+      window.show();
+    };
+
     const createContextMenu = () =>
       Menu.buildFromTemplate([
         {
@@ -32,7 +40,7 @@ function createTray(window: BrowserWindow): Promise<Tray> {
             process.nextTick(() => {
               shell.openExternal("https://github.com/clouDr-f2e/rubick");
             });
-          },
+          }
         },
         {
           label: "意见反馈",
@@ -40,7 +48,7 @@ function createTray(window: BrowserWindow): Promise<Tray> {
             process.nextTick(() => {
               shell.openExternal("https://github.com/clouDr-f2e/rubick/issues");
             });
-          },
+          }
         },
         { type: "separator" },
         {
@@ -48,19 +56,27 @@ function createTray(window: BrowserWindow): Promise<Tray> {
           accelerator: getShowAndHiddenHotKey(),
           click() {
             window.show();
-          },
+          }
         },
         {
+          label: "系统设置",
+          click() {
+            openSettings();
+          }
+        },
+        { type: "separator" },
+        {
           role: "quit",
-          label: "退出",
+          label: "退出"
         },
         {
           label: "重启",
           click() {
             app.relaunch();
             app.quit();
-          },
+          }
         },
+
         { type: "separator" },
         {
           label: "关于",
@@ -68,10 +84,10 @@ function createTray(window: BrowserWindow): Promise<Tray> {
             dialog.showMessageBox({
               title: "拉比克",
               message: "极简、插件化的现代桌面软件",
-              detail: `Version: ${pkg.version}\nAuthor: muwoo`,
+              detail: `Version: ${pkg.version}\nAuthor: muwoo`
             });
-          },
-        },
+          }
+        }
       ]);
     appIcon.on("click", () => {
       appIcon.setContextMenu(createContextMenu());

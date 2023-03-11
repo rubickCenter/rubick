@@ -1,7 +1,11 @@
 <template>
   <div class="main-container">
     <div class="slider-bar">
-      <a-menu v-model:selectedKeys="active" mode="horizontal" @select="({key}) => changeMenu(key)">
+      <a-menu
+        v-model:selectedKeys="active"
+        mode="horizontal"
+        @select="({ key }) => changeMenu(key)"
+      >
         <a-menu-item key="market">
           <template #icon>
             <AppstoreOutlined />
@@ -46,7 +50,7 @@ import {
   UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
-  BugOutlined,
+  BugOutlined
 } from "@ant-design/icons-vue";
 import { useStore } from "vuex";
 const router = useRouter();
@@ -63,7 +67,6 @@ window.rubick.onPluginEnter(({ code }: { code: string }) => {
 const store = useStore();
 const init = () => store.dispatch("init");
 init();
-
 </script>
 <style lang="less">
 * {
@@ -74,7 +77,7 @@ init();
 .main-container {
   display: flex;
   align-items: flex-start;
-  background: #F2EFEF;
+  background: #f2efef;
   flex-direction: column;
 
   .slider-bar {
