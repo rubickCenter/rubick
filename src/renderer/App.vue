@@ -97,13 +97,16 @@ const changeIndex = index => {
   currentSelect.value = currentSelect.value + index;
 };
 
-const openMenu = () => {
+const openMenu = (ext) => {
   openPlugin({
     ...toRaw(menuPluginInfo.value),
     feature: menuPluginInfo.value.features[0],
-    cmd: "插件市场"
+    cmd: "插件市场",
+    ext
   });
 };
+
+window.rubick.openMenu = openMenu
 
 const choosePlugin = () => {
   const currentChoose = options.value[currentSelect.value];
