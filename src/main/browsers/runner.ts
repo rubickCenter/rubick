@@ -38,6 +38,12 @@ export default () => {
 
   const createView = (plugin, window: BrowserWindow) => {
     let pluginIndexPath = plugin.tplPath || plugin.indexPath;
+    // 再尝试去找
+    if (plugin.name === "rubick-system-feature" && !pluginIndexPath) {
+      pluginIndexPath = commonConst.dev()
+        ? "http://localhost:8081/#/"
+        : `file://${__static}/feature/index.html`;
+    }
     if (!pluginIndexPath) {
       const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
       pluginIndexPath = `file://${path.join(pluginPath, "./", plugin.main)}`;

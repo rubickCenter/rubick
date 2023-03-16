@@ -28,9 +28,10 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import BScroll from "@better-scroll/core";
-import { defineProps, onMounted, ref } from "vue";
+<script lang='ts' setup>
+import BScroll from '@better-scroll/core';
+import { defineProps, onMounted, ref } from 'vue';
+
 const scrollDom = ref(null);
 
 onMounted(() => {
@@ -40,7 +41,7 @@ onMounted(() => {
 const props = defineProps({
   searchValue: {
     type: [String, Number],
-    default: "",
+    default: '',
   },
   options: {
     type: Array,
@@ -55,11 +56,11 @@ const props = defineProps({
 });
 
 const renderTitle = (title) => {
-  if (typeof title !== "string") return;
+  if (typeof title !== 'string') return;
   if (!props.searchValue) return title;
   const result = title.toLowerCase().split(props.searchValue.toLowerCase());
   if (result && result.length > 1) {
-    return `<div>${result[0]}<span style="color: red">${props.searchValue}</span>${result[1]}</div>`;
+    return `<div>${result[0]}<span style='color: red'>${props.searchValue}</span>${result[1]}</div>`;
   } else {
     return `<div>${result[0]}</div>`;
   }

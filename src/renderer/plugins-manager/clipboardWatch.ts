@@ -1,13 +1,13 @@
-import getCopyFiles from "@/common/utils/getCopyFiles";
-import { clipboard, nativeImage, remote, ipcRenderer } from "electron";
-import path from "path";
-import pluginClickEvent from "./pluginClickEvent";
-import { ref } from "vue";
+import getCopyFiles from '@/common/utils/getCopyFiles';
+import { clipboard, nativeImage, remote, ipcRenderer } from 'electron';
+import path from 'path';
+import pluginClickEvent from './pluginClickEvent';
+import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
-    const config = remote.getGlobal("OP_CONFIG").get();
+    const config = remote.getGlobal('OP_CONFIG').get();
     // 未开启自动粘贴
     if (!config.perf.common.autoPast) return;
 
@@ -15,18 +15,18 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
     const fileList = getCopyFiles();
     // 拷贝的是文件
     if (fileList) {
-      window.setSubInputValue({ value: "" });
+      window.setSubInputValue({ value: '' });
       clipboardFile.value = fileList;
-      const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
+      const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
       const options: any = [
         {
-          name: "复制路径",
-          value: "plugin",
-          icon: require("../assets/link.png"),
-          desc: "复制路径到剪切板",
+          name: '复制路径',
+          value: 'plugin',
+          icon: require('../assets/link.png'),
+          desc: '复制路径到剪切板',
           click: () => {
-            clipboard.writeText(fileList.map((file) => file.path).join(","));
-            ipcRenderer.send("msg-trigger", { type: "hideMainWindow" });
+            clipboard.writeText(fileList.map((file) => file.path).join(','));
+            ipcRenderer.send('msg-trigger', { type: 'hideMainWindow' });
           },
         },
       ];
@@ -50,13 +50,13 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
           fe.cmds.forEach((cmd) => {
             const regImg = /\.(png|jpg|gif|jpeg|webp)$/;
             if (
-              cmd.type === "img" &&
+              cmd.type === 'img' &&
               regImg.test(ext) &&
               fileList.length === 1
             ) {
               options.push({
                 name: cmd.label,
-                value: "plugin",
+                value: 'plugin',
                 icon: plugin.logo,
                 desc: fe.explain,
                 type: plugin.pluginType,
@@ -67,7 +67,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     cmd,
                     ext: {
                       code: fe.code,
-                      type: cmd.type || "text",
+                      type: cmd.type || 'text',
                       payload: nativeImage
                         .createFromPath(fileList[0].path)
                         .toDataURL(),
@@ -81,11 +81,11 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
             // 如果是文件，且符合文件正则类型
             if (
               fileList.length > 1 ||
-              (cmd.type === "file" && new RegExp(cmd.match).test(ext))
+              (cmd.type === 'file' && new RegExp(cmd.match).test(ext))
             ) {
               options.push({
                 name: cmd,
-                value: "plugin",
+                value: 'plugin',
                 icon: plugin.logo,
                 desc: fe.explain,
                 type: plugin.pluginType,
@@ -96,7 +96,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     cmd,
                     ext: {
                       code: fe.code,
-                      type: cmd.type || "text",
+                      type: cmd.type || 'text',
                       payload: fileList,
                     },
                     openPlugin,
@@ -115,7 +115,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
     }
     const clipboardType = clipboard.availableFormats();
     if (!clipboardType.length) return;
-    if ("text/plain" === clipboardType[0]) {
+    if ('text/plain' === clipboardType[0]) {
       const contentText = clipboard.readText();
       if (contentText.trim()) {
         clearClipboardFile();
@@ -134,7 +134,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
     // read image
     const img = clipboard.readImage();
     const dataUrl = img.toDataURL();
-    if (!dataUrl.replace("data:image/png;base64,", "")) return;
+    if (!dataUrl.replace('data:image/png;base64,', '')) return;
     clipboardFile.value = [
       {
         isFile: true,
@@ -143,7 +143,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
         dataUrl,
       },
     ];
-    const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
+    const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     const options: any = [];
     // 再正则插件
     localPlugins.forEach((plugin) => {
@@ -152,10 +152,10 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
       if (!feature) return;
       feature.forEach((fe) => {
         fe.cmds.forEach((cmd) => {
-          if (cmd.type === "img") {
+          if (cmd.type === 'img') {
             options.push({
               name: cmd.label,
-              value: "plugin",
+              value: 'plugin',
               icon: plugin.logo,
               desc: fe.explain,
               type: plugin.pluginType,
@@ -166,7 +166,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                   cmd,
                   ext: {
                     code: fe.code,
-                    type: cmd.type || "text",
+                    type: cmd.type || 'text',
                     payload: dataUrl,
                   },
                   openPlugin,

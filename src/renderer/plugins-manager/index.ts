@@ -1,13 +1,13 @@
-import { reactive, toRefs, ref } from "vue";
-import { nativeImage, remote, ipcRenderer } from "electron";
-import appSearch from "@/core/app-search";
-import { PluginHandler } from "@/core";
-import path from "path";
-import commonConst from "@/common/utils/commonConst";
-import { execSync } from "child_process";
-import searchManager from "./search";
-import optionsManager from "./options";
-import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/renderer";
+import { reactive, toRefs, ref } from 'vue';
+import { nativeImage, remote, ipcRenderer } from 'electron';
+import appSearch from '@/core/app-search';
+import { PluginHandler } from '@/core';
+import path from 'path';
+import commonConst from '@/common/utils/commonConst';
+import { execSync } from 'child_process';
+import searchManager from './search';
+import optionsManager from './options';
+import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/renderer';
 
 const createPluginManager = (): any => {
   const pluginInstance = new PluginHandler({
@@ -34,27 +34,27 @@ const createPluginManager = (): any => {
   };
 
   const openPlugin = (plugin) => {
-    if (plugin.pluginType === "ui" || plugin.pluginType === "system") {
+    if (plugin.pluginType === 'ui' || plugin.pluginType === 'system') {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
         return;
       }
       loadPlugin(plugin);
-      ipcRenderer.sendSync("msg-trigger", {
-        type: "openPlugin",
+      ipcRenderer.sendSync('msg-trigger', {
+        type: 'openPlugin',
         data: JSON.parse(
           JSON.stringify({
             ...plugin,
             ext: plugin.ext || {
               code: plugin.feature.code,
-              type: plugin.cmd.type || "text",
+              type: plugin.cmd.type || 'text',
               payload: null,
             },
           })
         ),
       });
-      setSearchValue("");
+      setSearchValue('');
     }
-    if (plugin.pluginType === "app") {
+    if (plugin.pluginType === 'app') {
       execSync(plugin.action);
     }
   };
@@ -83,8 +83,8 @@ const createPluginManager = (): any => {
       ...pluginInfo,
       icon: pluginInfo.logo,
       indexPath: commonConst.dev()
-        ? "http://localhost:8081/#/"
-        : `file://${path.join(pluginPath, "../", pluginInfo.main)}`,
+        ? 'http://localhost:8081/#/'
+        : `file://${path.join(pluginPath, '../', pluginInfo.main)}`,
     };
   };
 
@@ -104,18 +104,18 @@ const createPluginManager = (): any => {
 
   window.updatePlugin = ({ currentPlugin }: any) => {
     state.currentPlugin = currentPlugin;
-    remote.getGlobal("LOCAL_PLUGINS").updatePlugin(currentPlugin);
+    remote.getGlobal('LOCAL_PLUGINS').updatePlugin(currentPlugin);
   };
 
   window.setCurrentPlugin = ({ currentPlugin }) => {
     state.currentPlugin = currentPlugin;
-    setSearchValue("");
+    setSearchValue('');
   };
 
   window.initRubick = () => {
     state.currentPlugin = {};
-    setSearchValue("");
-    window.setSubInput({ placeholder: "" });
+    setSearchValue('');
+    window.setSubInput({ placeholder: '' });
   };
 
   window.pluginLoaded = () => {

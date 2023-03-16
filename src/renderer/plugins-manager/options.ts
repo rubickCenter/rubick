@@ -1,21 +1,21 @@
-import { ref, watch } from "vue";
-import throttle from "lodash.throttle";
-import { remote, ipcRenderer } from "electron";
-import pluginClickEvent from "./pluginClickEvent";
-import useFocus from "./clipboardWatch";
+import { ref, watch } from 'vue';
+import throttle from 'lodash.throttle';
+import { remote, ipcRenderer } from 'electron';
+import pluginClickEvent from './pluginClickEvent';
+import useFocus from './clipboardWatch';
 
 function formatReg(regStr) {
-  const flags = regStr.replace(/.*\/([gimy]*)$/, "$1");
-  const pattern = flags.replace(new RegExp("^/(.*?)/" + flags + "$"), "$1");
+  const flags = regStr.replace(/.*\/([gimy]*)$/, '$1');
+  const pattern = flags.replace(new RegExp('^/(.*?)/' + flags + '$'), '$1');
   return new RegExp(pattern, flags);
 }
 
 function searchKeyValues(lists, value, strict = false) {
   return lists.filter((item) => {
-    if (typeof item === "string") {
+    if (typeof item === 'string') {
       return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
     }
-    if (item.type === "regex" && !strict) {
+    if (item.type === 'regex' && !strict) {
       return formatReg(item.match).test(value);
     }
     return false;
@@ -31,13 +31,13 @@ const optionsManager = ({
   const optionsRef = ref([]);
 
   // 全局快捷键
-  ipcRenderer.on("global-short-key", (e, msg) => {
+  ipcRenderer.on('global-short-key', (e, msg) => {
     const options = getOptionsFromSearchValue(msg, true);
     options[0].click();
   });
 
   const getOptionsFromSearchValue = (value, strict = false) => {
-    const localPlugins = remote.getGlobal("LOCAL_PLUGINS").getLocalPlugins();
+    const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     let options: any = [];
     // todo 先搜索 plugin
     localPlugins.forEach((plugin) => {
@@ -50,7 +50,7 @@ const optionsManager = ({
           ...options,
           ...cmds.map((cmd) => ({
             name: cmd.label || cmd,
-            value: "plugin",
+            value: 'plugin',
             icon: plugin.logo,
             desc: fe.explain,
             type: plugin.pluginType,
@@ -63,7 +63,7 @@ const optionsManager = ({
                 ext: cmd.type
                   ? {
                       code: fe.code,
-                      type: cmd.type || "text",
+                      type: cmd.type || 'text',
                       payload: searchValue.value,
                     }
                   : null,

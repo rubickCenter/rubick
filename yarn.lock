@@ -4615,6 +4615,14 @@ electron-builder@^22.2.0:
     update-notifier "^5.1.0"
     yargs "^17.0.1"
 
+electron-clipboard-ex@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/electron-clipboard-ex/-/electron-clipboard-ex-1.3.3.tgz#d035716ba7fcadf6e1cd91507f1a127f11cbbc63"
+  integrity sha512-bny+IQhbLd7ur4NMKJ6P9+WRG2KTF6yGrbKem2N/zIdK64Yk3hCqVEiuyON6b2aOeEUDGkvS8LCkk4Q2IimehA==
+  dependencies:
+    node-addon-api "^4.0.0"
+    node-gyp-build "^4.2.3"
+
 electron-devtools-installer@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/electron-devtools-installer/-/electron-devtools-installer-3.2.0.tgz#acc48d24eb7033fe5af284a19667e73b78d406d0"
@@ -9008,10 +9016,15 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-"prettier@^1.18.2 || ^2.0.0", prettier@^2.2.1:
+"prettier@^1.18.2 || ^2.0.0":
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+
+prettier@^2.8.4:
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
+  integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
 
 pretty-error@^2.0.2:
   version "2.1.2"
