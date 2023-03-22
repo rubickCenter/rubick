@@ -1,14 +1,14 @@
 import {
   AdapterHandlerOptions,
   AdapterInfo,
-} from "@/core/plugin-handler/types";
-import fs from "fs-extra";
-import path from "path";
-import got from "got";
-import fixPath from "fix-path";
+} from '@/core/plugin-handler/types';
+import fs from 'fs-extra';
+import path from 'path';
+import got from 'got';
+import fixPath from 'fix-path';
 
-import spawn from "cross-spawn";
-import { ipcRenderer } from "electron";
+import spawn from 'cross-spawn';
+import { ipcRenderer } from 'electron';
 
 fixPath();
 
@@ -38,18 +38,18 @@ class AdapterHandler {
     }
     this.baseDir = options.baseDir;
 
-    let register = options.registry || "https://registry.npm.taobao.org";
+    let register = options.registry || 'https://registry.npm.taobao.org';
 
     try {
-      const dbdata = ipcRenderer.sendSync("msg-trigger", {
-        type: "dbGet",
-        data: { id: "rubick-localhost-config" },
+      const dbdata = ipcRenderer.sendSync('msg-trigger', {
+        type: 'dbGet',
+        data: { id: 'rubick-localhost-config' },
       });
       register = dbdata.data.register;
     } catch (e) {
       // ignore
     }
-    this.registry = register || "https://registry.npm.taobao.org";
+    this.registry = register || 'https://registry.npm.taobao.org';
   }
 
   /**
@@ -65,11 +65,11 @@ class AdapterHandler {
     let adapterInfo: AdapterInfo;
     const infoPath =
       adapterPath ||
-      path.resolve(this.baseDir, "node_modules", adapter, "plugin.json");
+      path.resolve(this.baseDir, 'node_modules', adapter, 'plugin.json');
     // 从本地获取
     if (await fs.pathExists(infoPath)) {
       adapterInfo = JSON.parse(
-        fs.readFileSync(infoPath, "utf-8")
+        fs.readFileSync(infoPath, 'utf-8')
       ) as AdapterInfo;
     } else {
       // 本地没有从远程获取
@@ -84,7 +84,7 @@ class AdapterHandler {
 
   // 安装并启动插件
   async install(adapters: Array<string>, options: { isDev: boolean }) {
-    const installCmd = options.isDev ? "link" : "install";
+    const installCmd = options.isDev ? 'link' : 'install';
     // 安装
     await this.execCommand(installCmd, adapters);
   }
@@ -95,7 +95,7 @@ class AdapterHandler {
    * @memberof AdapterHandler
    */
   async update(...adapters: string[]) {
-    await this.execCommand("update", adapters);
+    await this.execCommand('update', adapters);
   }
 
   /**
@@ -105,7 +105,7 @@ class AdapterHandler {
    * @memberof AdapterHandler
    */
   async uninstall(adapters: string[], options: { isDev: boolean }) {
-    const installCmd = options.isDev ? "unlink" : "uninstall";
+    const installCmd = options.isDev ? 'unlink' : 'uninstall';
     // 卸载插件
     await this.execCommand(installCmd, adapters);
   }
@@ -116,7 +116,7 @@ class AdapterHandler {
    */
   async list() {
     const installInfo = JSON.parse(
-      await fs.readFile(`${this.baseDir}/package.json`, "utf-8")
+      await fs.readFile(`${this.baseDir}/package.json`, 'utf-8')
     );
     const adapters: string[] = [];
     for (const adapter in installInfo.dependencies) {
@@ -124,37 +124,45 @@ class AdapterHandler {
     }
     return adapters;
   }
+  private cleanCache() {
+    spawn('npm', ['cache', 'clean', '-f'], {
+      cwd: this.baseDir,
+    });
+  }
 
   /**
    * 运行包管理器
    * @memberof AdapterHandler
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
+    this.cleanCache();
     return new Promise((resolve: any, reject: any) => {
       let args: string[] = [cmd]
-        .concat(modules)
-        .concat("--color=always")
-        .concat("--save");
-      if (cmd !== "uninstall")
+        .concat(
+          cmd !== 'uninstall' ? modules.map((m) => `${m}@latest`) : modules
+        )
+        .concat('--color=always')
+        .concat('--save');
+      if (cmd !== 'uninstall')
         args = args.concat(`--registry=${this.registry}`);
-      const npm = spawn("npm", args, {
+      const npm = spawn('npm', args, {
         cwd: this.baseDir,
       });
 
-      let output = "";
+      let output = '';
       npm.stdout
-        .on("data", (data: string) => {
+        .on('data', (data: string) => {
           output += data; // 获取输出日志
         })
         .pipe(process.stdout);
 
       npm.stderr
-        .on("data", (data: string) => {
+        .on('data', (data: string) => {
           output += data; // 获取报错日志
         })
         .pipe(process.stderr);
 
-      npm.on("close", (code: number) => {
+      npm.on('close', (code: number) => {
         if (!code) {
           resolve({ code: 0, data: output }); // 如果没有报错就输出正常日志
         } else {
