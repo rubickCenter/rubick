@@ -10,12 +10,18 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .account {
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
-  background: #f3efef;
+  background: var(--color-body-bg);
   height: calc(~"100vh - 46px");
+  :deep(.ant-result-title) {
+    color: var(--color-text-primary);
+  }
+  :deep(.ant-result-subtitle) {
+    color: var(--color-text-desc);
+  }
 }
 </style>

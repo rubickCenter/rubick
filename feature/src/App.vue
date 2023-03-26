@@ -68,7 +68,7 @@ const store = useStore();
 const init = () => store.dispatch("init");
 init();
 </script>
-<style lang="less">
+<style lang="less" scoped>
 * {
   margin: 0;
   padding: 0;
@@ -77,11 +77,20 @@ init();
 .main-container {
   display: flex;
   align-items: flex-start;
-  background: #f2efef;
+  background: var(--color-body-bg);
   flex-direction: column;
 
   .slider-bar {
     width: 100%;
+    .ant-menu {
+      background: var(--color-body-bg);
+      border-color: var(--color-border-light);
+      :deep(.ant-menu-item) {
+        &:not(.ant-menu-item-selected) {
+          color: var(--color-text-primary);
+        }
+      }
+    }
   }
 }
 </style>
