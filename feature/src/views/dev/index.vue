@@ -64,13 +64,20 @@ const labelCol = { span: 4 };
 const wrapperCol = { span: 14 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .dev {
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
-  background: #fff;
+  background: var(--color-body-bg);
   height: calc(~"100vh - 46px");
   padding: 20px;
+  :deep(label) {
+    color: var(--color-text-content);
+  }
+  :deep(.ant-input) {
+    background: var(--color-input-hover);
+    color: var(--color-text-content);
+  }
 }
 </style>
