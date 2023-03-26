@@ -100,10 +100,10 @@ const { searchValue, current } = toRefs(state);
   align-items: flex-start;
   width: 100%;
   overflow: hidden;
-  background: #F3EFEF;
+  background: var(--color-menu-bg);
   height: calc(~"100vh - 46px");
   .container {
-    background: #fff;
+    background: var(--color-body-bg);
     width: calc(~'100% - 200px');
     height: 100%;
     box-sizing: border-box;

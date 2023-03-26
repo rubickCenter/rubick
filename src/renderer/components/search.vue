@@ -227,7 +227,7 @@ window.rubick.hooks.onHide = () => {
 .rubick-select {
   display: flex;
   padding-left: 10px;
-  background: #fff;
+  background: var(--color-body-bg);
   position: fixed;
   top: 0;
   left: 0;
@@ -262,13 +262,15 @@ window.rubick.hooks.onHide = () => {
     border: none;
     outline: none;
     box-shadow: none !important;
-
+    background: var(--color-body-bg);
     .ant-select-selection,
     .ant-input,
     .ant-select-selection__rendered {
       height: 100% !important;
       font-size: 22px;
       border: none !important;
+      background: var(--color-body-bg);
+      color: var(--color-text-primary);
     }
   }
 
@@ -286,7 +288,7 @@ window.rubick.hooks.onHide = () => {
     }
   }
   .icon-tool {
-    background: #fff;
+    background: var(--color-input-hover);
   }
   .ant-input:focus {
     border: none;
@@ -299,6 +301,7 @@ window.rubick.hooks.onHide = () => {
       font-size: 26px;
       font-weight: bold;
       cursor: pointer;
+      color: var(--color-text-content);
     }
     .loading {
       color: #ff4ea4;
@@ -315,7 +318,7 @@ window.rubick.hooks.onHide = () => {
     position: relative;
     align-items: center;
     display: flex;
-    border: 1px solid #e6e6e6;
+    border: 1px solid var(--color-border-light);
     padding: 0 8px;
     margin-right: 12px;
     img {

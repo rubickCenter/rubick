@@ -44,7 +44,7 @@ let _rev: any;
 let defaultConfig = {
   register: "https://registry.npm.taobao.org",
   database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
-  access_token: "",
+  access_token: ""
 };
 
 try {
@@ -59,25 +59,25 @@ const formState = ref(JSON.parse(JSON.stringify(defaultConfig)));
 
 const rules = {
   register: [{ required: true, trigger: "change" }],
-  database: [{ required: true, trigger: "change" }],
+  database: [{ required: true, trigger: "change" }]
 };
 const layout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  wrapperCol: { span: 18 }
 };
 
 const resetForm = () => {
   formState.value = {
     register: "https://registry.npm.taobao.org",
     database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
-    access_token: "",
+    access_token: ""
   };
 };
 
 const submit = () => {
   const changeData: any = {
     _id: "rubick-localhost-config",
-    data: toRaw(formState.value),
+    data: toRaw(formState.value)
   };
 
   if (_rev) {
@@ -88,3 +88,13 @@ const submit = () => {
   message.success("设置成功！重启插件市场后生效！");
 };
 </script>
+
+<style lang="less" scoped>
+:deep(label) {
+  color: var(--color-text-content);
+}
+:deep(.ant-input) {
+  background: var(--color-input-hover);
+  color: var(--color-text-content);
+}
+</style>

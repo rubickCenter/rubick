@@ -41,6 +41,7 @@ export default () => {
       plugin;
     let pluginIndexPath = tplPath || indexPath;
     let preloadPath;
+    let darkMode;
     // 开发环境
     if (commonConst.dev() && development) {
       pluginIndexPath = development;
@@ -81,8 +82,13 @@ export default () => {
       window.setSize(800, height || 660);
       view.setBounds({ x: 0, y: 60, width: 800, height: height || 660 });
       view.setAutoResize({ width: true });
-      executeHooks('PluginEnter', ext);
-      executeHooks('PluginReady', ext);
+      executeHooks('PluginEnter', plugin.ext);
+      executeHooks('PluginReady', plugin.ext);
+      darkMode = global.OP_CONFIG.get().perf.common.darkMode;
+      darkMode &&
+        view.webContents.executeJavaScript(
+          `document.body.classList.add("dark");window.rubick.theme="dark"`
+        );
       window.webContents.executeJavaScript(`window.pluginLoaded()`);
     });
     // 修复请求跨域问题

@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang='ts' setup>
+<script lang="ts" setup>
 import BScroll from '@better-scroll/core';
 import { defineProps, onMounted, ref } from 'vue';
 
@@ -97,17 +97,26 @@ const sort = (options) => {
   left: 0;
   width: 100%;
   z-index: 99;
-  max-height: calc(~"100vh - 64px");
+  max-height: calc(~'100vh - 64px');
   overflow: auto;
+  background: var(--color-body-bg);
   .op-item {
     padding: 0 10px;
     height: 60px;
     line-height: 50px;
     max-height: 500px;
     overflow: auto;
-    background: #fafafa;
+    background: var(--color-body-bg);
+    color: var(--color-text-content);
+    border-color: var(--color-border-light);
     &.active {
-      background: #dee2e8;
+      background: var(--color-list-hover);
+    }
+    .ant-list-item-meta-title {
+      color: var(--color-text-content);
+    }
+    .ant-list-item-meta-description {
+      color: var(--color-text-desc);
     }
   }
 }

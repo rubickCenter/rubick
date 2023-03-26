@@ -75,6 +75,17 @@
             ></a-switch>
           </div>
         </div>
+        <div class="setting-item">
+          <div class="title">主题</div>
+          <div class="settings-item-li">
+            <div class="label">暗黑模式</div>
+            <a-switch
+              v-model:checked="common.darkMode"
+              checked-children="开"
+              un-checked-children="关"
+            ></a-switch>
+          </div>
+        </div>
       </div>
       <div v-if="currentSelect[0] === 'global'">
         <a-collapse>
@@ -205,7 +216,7 @@ const setConfig = debounce(() => {
     )
   );
   ipcRenderer.send("re-register");
-}, 2000);
+}, 500);
 
 watch(state, setConfig);
 
@@ -279,7 +290,7 @@ const { shortCut, common, local, global } = toRefs(state);
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
-  background: #f3efef;
+  background: var(--color-body-bg);
   height: calc(~"100vh - 46px");
   display: flex;
   .settings-detail {
@@ -288,7 +299,7 @@ const { shortCut, common, local, global } = toRefs(state);
     flex: 1;
     overflow: auto;
     height: 100%;
-    background: #fff;
+    background: var(--color-body-bg);
     .setting-item {
       margin-bottom: 20px;
       .ant-form-item {
@@ -307,16 +318,21 @@ const { shortCut, common, local, global } = toRefs(state);
         justify-content: space-between;
         margin-bottom: 10px;
         .label {
-          color: #646464;
+          color: var(--color-text-content);
         }
         .value {
           width: 300px;
           text-align: center;
-          border: 1px solid #ddd;
+          border: 1px solid var(--color-border-light);
           color: #6c9fe2;
           font-size: 14px;
           height: 24px;
           font-weight: lighter;
+        }
+        :deep(.ant-switch) {
+          &:not(.ant-switch-checked) {
+            background: var(--color-list-hover);
+          }
         }
       }
     }
@@ -329,29 +345,37 @@ const { shortCut, common, local, global } = toRefs(state);
     font-size: 14px;
     .item {
       flex: 1;
+      color: var(--color-text-content);
     }
     .short-cut {
       margin-left: 20px;
     }
     .value {
       text-align: center;
-      border: 1px solid #ddd;
+      border: 1px solid var(--color-border-light);
       color: #6c9fe2;
       font-size: 14px;
       height: 24px;
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
+      background: var(--color-input-hover);
       :deep(.ant-input) {
         color: #6c9fe2;
         font-weight: lighter;
+        background: none;
       }
+      :deep(.anticon) {
+        color: var(--color-text-desc);
+      }
+
       &.ant-input-affix-wrapper {
         display: flex;
       }
       &:hover {
         .anticon {
           display: block;
+          color: var(--color-text-content);
         }
       }
       .anticon {
@@ -369,6 +393,21 @@ const { shortCut, common, local, global } = toRefs(state);
     width: 100%;
     text-align: center;
     cursor: pointer;
+  }
+  :deep(.ant-collapse) {
+    background: var(--color-input-hover);
+    .ant-collapse-content {
+      background: var(--color-input-hover);
+      color: var(--color-text-content);
+    }
+    h3,
+    .ant-collapse-header,
+    .ant-list-item-meta-title {
+      color: var(--color-text-primary);
+    }
+    .ant-list-item-meta-description {
+      color: var(--color-text-desc);
+    }
   }
 }
 </style>

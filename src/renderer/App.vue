@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import { watch, ref, nextTick, toRaw } from 'vue';
 import { ipcRenderer, remote } from 'electron';
 import Result from './components/result.vue';
@@ -71,7 +71,7 @@ getPluginInfo({
   pluginName: 'feature',
   // eslint-disable-next-line no-undef
   pluginPath: `${__static}/feature/package.json`,
-}).then(res => {
+}).then((res) => {
   menuPluginInfo.value = res;
   remote.getGlobal('LOCAL_PLUGINS').addPlugin(res);
 });
@@ -87,7 +87,7 @@ watch([options], () => {
   });
 });
 
-const changeIndex = index => {
+const changeIndex = (index) => {
   if (!options.value.length) return;
   if (
     currentSelect.value + index > options.value.length - 1 ||
@@ -118,7 +118,8 @@ const clearSearchValue = () => {
 };
 </script>
 
-<style lang='less'>
+<style lang="less">
+@import './assets/var.less';
 .drag-bar {
   -webkit-app-region: drag;
   width: 100%;
@@ -132,6 +133,7 @@ const clearSearchValue = () => {
 #components-layout {
   height: 100vh;
   overflow: hidden;
+  background: var(--color-body-bg);
   ::-webkit-scrollbar {
     width: 0;
   }
