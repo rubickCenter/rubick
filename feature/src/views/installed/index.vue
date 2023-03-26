@@ -161,7 +161,7 @@ const deletePlugin = async plugin => {
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  background: #f3efef;
+  background: var(--color-body-bg);
   height: calc(~"100vh - 46px");
   .container {
     box-sizing: border-box;
@@ -173,25 +173,26 @@ const deletePlugin = async plugin => {
   }
   .installed-list {
     width: 40%;
-    background: #fff;
+    background: var(--color-body-bg);
     height: 100%;
     padding: 10px 0;
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--color-border-light);
     overflow: auto;
     .item {
       padding: 10px 20px;
       display: flex;
       align-items: center;
+      color: var(--color-text-content);
       img {
         width: 40px;
         height: 40px;
         margin-right: 20px;
       }
       .desc {
-        color: #999;
+        color: var(--color-text-desc);
       }
       &.active {
-        background: #eee;
+        background: var(--color-list-hover);
       }
     }
   }
@@ -200,7 +201,7 @@ const deletePlugin = async plugin => {
     box-sizing: border-box;
     width: 60%;
     height: 100%;
-    background: #fff;
+    background: var(--color-body-bg);
     .plugin-top {
       display: flex;
       align-items: flex-start;
@@ -209,29 +210,44 @@ const deletePlugin = async plugin => {
         font-size: 20px;
         display: flex;
         align-items: center;
+        color: var(--color-text-primary);
+        .ant-tag {
+          background: var(--color-input-hover);
+          border: 1px solid var(--color-border-light);
+          color: var(--color-text-content);
+          margin-left: 8px;
+        }
       }
       .desc {
         font-size: 13px;
-        color: #999;
+        color: var(--color-text-desc);
+      }
+    }
+    .ant-tabs {
+      .ant-tabs-bar {
+        color: var(--color-text-content);
+        border-bottom: 1px solid var(--color-border-light);
       }
     }
     .detail-container,
     .feature-container {
       height: 380px;
       overflow: auto;
+      color: var(--color-text-content);
       img {
         width: 100%;
       }
     }
     .desc-item {
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--color-border-light);
       padding: 10px 0;
+      color: var(--color-text-content);
       .ant-tag {
         margin-top: 6px;
         &.executable {
           cursor: pointer;
           &:hover {
-           transform: translateY(-2px);
+            transform: translateY(-2px);
           }
         }
       }
@@ -241,7 +257,7 @@ const deletePlugin = async plugin => {
         justify-content: space-between;
       }
       .desc-info {
-        color: #999;
+        color: var(--color-text-desc);
       }
     }
   }
