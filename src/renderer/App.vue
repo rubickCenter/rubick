@@ -119,6 +119,7 @@ const clearSearchValue = () => {
 </script>
 
 <style lang="less">
+@import "./assets/var.less";
 .drag-bar {
   -webkit-app-region: drag;
   width: 100%;
@@ -131,6 +132,7 @@ const clearSearchValue = () => {
 #components-layout {
   height: 100vh;
   overflow: hidden;
+  background: var(--color-body-bg);
   ::-webkit-scrollbar {
     width: 0;
   }

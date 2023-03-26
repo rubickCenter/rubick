@@ -1,4 +1,12 @@
-import { globalShortcut, BrowserWindow, screen, ipcMain, app } from "electron";
+import {
+  globalShortcut,
+  nativeTheme,
+  BrowserWindow,
+  BrowserView,
+  screen,
+  ipcMain,
+  app
+} from "electron";
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -9,9 +17,36 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       openAsHidden: true
     });
   };
+  // 设置暗黑模式
+  const setDarkMode = () => {
+    const config = global.OP_CONFIG.get();
+    const isDark = config.perf.common.darkMode;
+    if (isDark) {
+      nativeTheme.themeSource = "dark";
+      mainWindow.webContents.executeJavaScript(
+        `document.body.classList.add("dark");window.rubick.theme="dark"`
+      );
+      mainWindow.getBrowserViews().forEach((view: BrowserView) => {
+        view.webContents.executeJavaScript(
+          `document.body.classList.add("dark");window.rubick.theme="dark"`
+        );
+      });
+    } else {
+      nativeTheme.themeSource = "light";
+      mainWindow.webContents.executeJavaScript(
+        `document.body.classList.remove("dark");window.rubick.theme="light"`
+      );
+      mainWindow.getBrowserViews().forEach((view: BrowserView) => {
+        view.webContents.executeJavaScript(
+          `document.body.classList.remove("dark");window.rubick.theme="light"`
+        );
+      });
+    }
+  };
 
   const init = () => {
     setAutoLogin();
+    setDarkMode();
     const config = global.OP_CONFIG.get();
     globalShortcut.unregisterAll();
     // 注册偏好快捷键

@@ -3,7 +3,7 @@ import path from "path";
 import commonConst from "../../common/utils/commonConst";
 import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
 
-const getRelativePath = (indexPath) => {
+const getRelativePath = indexPath => {
   return commonConst.windows()
     ? indexPath.replace("file://", "")
     : indexPath.replace("file:", "");
@@ -38,6 +38,7 @@ export default () => {
 
   const createView = (plugin, window: BrowserWindow) => {
     let pluginIndexPath = plugin.tplPath || plugin.indexPath;
+    let darkMode;
     if (!pluginIndexPath) {
       const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
       pluginIndexPath = `file://${path.join(pluginPath, "./", plugin.main)}`;
@@ -56,8 +57,8 @@ export default () => {
         devTools: true,
         webviewTag: true,
         preload,
-        session: ses,
-      },
+        session: ses
+      }
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
@@ -67,13 +68,18 @@ export default () => {
       view.setAutoResize({ width: true });
       executeHooks("PluginEnter", plugin.ext);
       executeHooks("PluginReady", plugin.ext);
+      darkMode = global.OP_CONFIG.get().perf.common.darkMode;
+      darkMode &&
+        view.webContents.executeJavaScript(
+          `document.body.classList.add("dark");window.rubick.theme="dark"`
+        );
       window.webContents.executeJavaScript(`window.pluginLoaded()`);
     });
     // 修复请求跨域问题
     view.webContents.session.webRequest.onBeforeSendHeaders(
       (details, callback) => {
         callback({
-          requestHeaders: { referer: "*", ...details.requestHeaders },
+          requestHeaders: { referer: "*", ...details.requestHeaders }
         });
       }
     );
@@ -83,8 +89,8 @@ export default () => {
         callback({
           responseHeaders: {
             "Access-Control-Allow-Origin": ["*"],
-            ...details.responseHeaders,
-          },
+            ...details.responseHeaders
+          }
         });
       }
     );
@@ -116,6 +122,6 @@ export default () => {
     init,
     getView,
     removeView,
-    executeHooks,
+    executeHooks
   };
 };
