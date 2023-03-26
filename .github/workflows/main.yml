@@ -48,7 +48,12 @@ jobs:
           yarn
           yarn global add xvfb-maybe
           yarn global add @vue/cli
-
+      - name: Build feature
+        run: |
+          yarn
+          npm run build
+        with:
+          path: ./feature
       - name: Build  & release app
         run: |
           npm run release
