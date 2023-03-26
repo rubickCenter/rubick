@@ -40,21 +40,21 @@ onMounted(() => {
 const props = defineProps({
   searchValue: {
     type: [String, Number],
-    default: "",
+    default: ""
   },
   options: {
     type: Array,
-    default: (() => [])(),
+    default: (() => [])()
   },
   currentSelect: {
     type: Number,
-    default: 0,
+    default: 0
   },
   currentPlugin: {},
-  clipboardFile: (() => [])(),
+  clipboardFile: (() => [])()
 });
 
-const renderTitle = (title) => {
+const renderTitle = title => {
   if (typeof title !== "string") return;
   if (!props.searchValue) return title;
   const result = title.toLowerCase().split(props.searchValue.toLowerCase());
@@ -65,7 +65,7 @@ const renderTitle = (title) => {
   }
 };
 
-const renderDesc = (desc) => {
+const renderDesc = desc => {
   if (desc.length > 80) {
     return `${desc.substr(0, 63)}...${desc.substr(
       desc.length - 14,
@@ -75,7 +75,7 @@ const renderDesc = (desc) => {
   return desc;
 };
 
-const sort = (options) => {
+const sort = options => {
   for (let i = 0; i < options.length; i++) {
     for (let j = i + 1; j < options.length; j++) {
       if (options[j].zIndex > options[i].zIndex) {
@@ -98,15 +98,24 @@ const sort = (options) => {
   z-index: 99;
   max-height: calc(~"100vh - 64px");
   overflow: auto;
+  background: var(--color-body-bg);
   .op-item {
     padding: 0 10px;
     height: 60px;
     line-height: 50px;
     max-height: 500px;
     overflow: auto;
-    background: #fafafa;
+    background: var(--color-body-bg);
+    color: var(--color-text-content);
+    border-color: var(--color-border-light);
     &.active {
-      background: #dee2e8;
+      background: var(--color-list-hover);
+    }
+    .ant-list-item-meta-title {
+      color: var(--color-text-content);
+    }
+    .ant-list-item-meta-description {
+      color: var(--color-text-desc);
     }
   }
 }
