@@ -6,7 +6,11 @@
         <template #renderItem="{ item, index }">
           <a-list-item v-if="item" @click="showDetail(item)">
             <template #actions>
-              <a-button style="color: #ff4ea4;" type="text" :loading="item.isloading">
+              <a-button
+                style="color: #ff4ea4"
+                type="text"
+                :loading="item.isloading"
+              >
                 <CloudDownloadOutlined
                   v-show="!item.isloading && !item.isdownload"
                   @click.stop="downloadPlugin(item, index)"
@@ -16,7 +20,7 @@
             </template>
             <a-list-item-meta>
               <template #description>
-                <span class="ellipse">{{ item.description }}</span>
+                <span class="ellipse desc">{{ item.description }}</span>
               </template>
               <template #title>
                 <span class="ellipse">{{ item.pluginName }}</span>
@@ -38,18 +42,15 @@
     :get-container="false"
     class="plugin-info"
     :style="{ position: 'absolute' }"
-    @close="visible=false"
+    @close="visible = false"
   >
     <template #title>
       <div class="plugin-title-info">
-        <div class="back-icon" @click="visible=false">
+        <div class="back-icon" @click="visible = false">
           <ArrowLeftOutlined />
         </div>
         <div class="info">
-          <img
-            :src="detail.logo"
-            class="plugin-icon"
-          />
+          <img :src="detail.logo" class="plugin-icon" />
           <div class="plugin-desc">
             <div class="title">
               {{ detail.pluginName }}
@@ -57,9 +58,17 @@
             <div class="desc">
               {{ detail.description }}
             </div>
-            <a-button v-if="!detail.isdownload" @click.stop="downloadPlugin(detail)" shape="round" type="primary" :loading="detail.isloading">
+            <a-button
+              v-if="!detail.isdownload"
+              @click.stop="downloadPlugin(detail)"
+              shape="round"
+              type="primary"
+              :loading="detail.isloading"
+            >
               <template #icon>
-                <CloudDownloadOutlined v-show="!detail.isloading && !detail.isdownload" />
+                <CloudDownloadOutlined
+                  v-show="!detail.isloading && !detail.isdownload"
+                />
               </template>
               获取
             </a-button>
@@ -74,7 +83,7 @@
 <script setup>
 import {
   CloudDownloadOutlined,
-  ArrowLeftOutlined,
+  ArrowLeftOutlined
 } from "@ant-design/icons-vue";
 
 import { defineProps, ref } from "vue";
@@ -85,18 +94,18 @@ import request from "../../../assets/request/index";
 
 const store = useStore();
 
-const startDownload = (name) => store.dispatch("startDownload", name);
-const successDownload = (name) => store.dispatch("successDownload", name);
+const startDownload = name => store.dispatch("startDownload", name);
+const successDownload = name => store.dispatch("successDownload", name);
 
 defineProps({
   list: {
     type: [Array],
-    default: () => [],
+    default: () => []
   },
-  title: String,
+  title: String
 });
 
-const downloadPlugin = async (plugin) => {
+const downloadPlugin = async plugin => {
   startDownload(plugin.name);
   await window.market.downloadPlugin(plugin);
   message.success(`${plugin.name}安装成功！`);
@@ -108,7 +117,7 @@ const detail = ref({});
 const markdown = new MarkdownIt();
 const content = ref("");
 
-const showDetail = async (item) => {
+const showDetail = async item => {
   visible.value = true;
   detail.value = item;
   let mdContent = "暂无内容";
@@ -127,6 +136,7 @@ const showDetail = async (item) => {
   margin: 20px 0;
   .title {
     margin-bottom: 30px;
+    color: var(--color-text-primary);
   }
   .ellipse {
     display: inline-block;
@@ -134,13 +144,17 @@ const showDetail = async (item) => {
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    color: var(--color-text-content);
+    &.desc {
+      color: var(--color-text-desc);
+    }
   }
-  &:after{
+  &:after {
     content: " ";
     display: block;
     width: 100%;
     height: 1px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-border-light);
     transform: scaleY(0.5);
   }
   .ant-list-item {
@@ -156,6 +170,22 @@ const showDetail = async (item) => {
 
   .ant-drawer-content-wrapper {
     box-shadow: none !important;
+    .ant-drawer-content {
+      background: var(--color-body-bg);
+
+    }
+    .ant-drawer-header {
+      background: var(--color-body-bg);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+  }
+}
+
+.dark {
+  .plugin-title-info {
+    .back-icon {
+      filter: invert(1) brightness(200%);
+    }
   }
 }
 
@@ -182,6 +212,7 @@ const showDetail = async (item) => {
       .title {
         font-size: 18px;
         font-weight: bold;
+        color: var(--color-text-primary);
       }
 
       .desc {
@@ -189,11 +220,15 @@ const showDetail = async (item) => {
         font-weight: normal;
         margin-top: 5px;
         margin-bottom: 20px;
+        color: var(--color-text-desc);
       }
     }
   }
 }
 .home-page-container {
+  * {
+    color: var(--color-text-content);
+  }
   img {
     width: 100%;
   }
