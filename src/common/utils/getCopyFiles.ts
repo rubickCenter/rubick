@@ -16,7 +16,7 @@ export default function getCopyFiles(): Array<any> | null {
     } catch (e) {
       return null;
     }
-  } else if (commonConst.windows()) {
+  } else if (process.platform === "win32") {
     /* eslint-disable */
     const clipboardEx = require("electron-clipboard-ex");
     fileInfo = clipboardEx.readFilePaths();

@@ -1,5 +1,5 @@
-import { app, BrowserWindow, protocol } from "electron";
-import path from "path";
+import { app, BrowserWindow, protocol } from 'electron';
+import path from 'path';
 export default () => {
   let win: any;
 
@@ -12,7 +12,7 @@ export default () => {
       height: viewInfo.height,
       width: viewInfo.width,
       autoHideMenuBar: true,
-      titleBarStyle: "hidden",
+      titleBarStyle: 'hidden',
       trafficLightPosition: { x: 12, y: 21 },
       title: pluginInfo.pluginName,
       resizable: true,
@@ -32,22 +32,34 @@ export default () => {
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      win.loadURL("http://localhost:8082");
+      win.loadURL('http://localhost:8082');
     } else {
-      win.loadURL(`file://${path.join(__static, "./detach/index.html")}`);
+      win.loadURL(`file://${path.join(__static, './detach/index.html')}`);
     }
-
-    win.on("closed", () => {
+    win.on('close', () => {
+      executeHooks('PluginOut', null);
+    });
+    win.on('closed', () => {
       win = undefined;
     });
 
-    win.once("ready-to-show", () => {
+    win.once('ready-to-show', () => {
       win.setBrowserView(view);
       win.webContents.executeJavaScript(
         `window.initDetach(${JSON.stringify(pluginInfo)})`
       );
       win.show();
     });
+    const executeHooks = (hook, data) => {
+      if (!view) return;
+      const evalJs = `console.log(window.rubick);if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {
+          try {
+            window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ''});
+          } catch(e) {console.log(e)}
+        }
+      `;
+      view.webContents.executeJavaScript(evalJs);
+    };
   };
 
   const getWindow = () => win;

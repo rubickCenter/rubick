@@ -2,7 +2,7 @@
   <div class="panel-item">
     <h3 class="title">{{ title }}</h3>
     <div class="list-item">
-      <a-list :grid="{ gutter: 16, column: 2 }" :data-source="list">
+      <a-list :grid="{ gutter: 16, column: 2 }" :data-source="list.filter(item => !!item)">
         <template #renderItem="{ item, index }">
           <a-list-item v-if="item" @click="showDetail(item)">
             <template #actions>

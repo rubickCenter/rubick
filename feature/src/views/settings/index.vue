@@ -14,6 +14,12 @@
           </template>
           全局快捷键
         </a-menu-item>
+        <a-menu-item key="superpanel">
+          <template #icon>
+            <FileAddOutlined />
+          </template>
+          超级面板设置
+        </a-menu-item>
         <a-menu-item key="localhost">
           <template #icon>
             <DatabaseOutlined />
@@ -142,6 +148,7 @@
         </div>
       </div>
       <Localhost v-if="currentSelect[0] === 'localhost'" />
+      <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
     </div>
   </div>
 </template>
@@ -152,12 +159,14 @@ import {
   LaptopOutlined,
   DatabaseOutlined,
   MinusCircleOutlined,
-  PlusCircleOutlined
+  PlusCircleOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons-vue";
 import debounce from "lodash.debounce";
 import { ref, reactive, watch, toRefs, computed, toRaw } from "vue";
 import keycodes from "./keycode";
 import Localhost from "./localhost.vue";
+import SuperPanel from "./super-panel.vue";
 
 const { remote, ipcRenderer } = window.require("electron");
 

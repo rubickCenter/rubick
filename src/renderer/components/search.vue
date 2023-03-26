@@ -51,10 +51,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from "vue";
-import { ipcRenderer, remote } from "electron";
-import { LoadingOutlined, MoreOutlined } from "@ant-design/icons-vue";
-const opConfig = remote.getGlobal("OP_CONFIG");
+import { defineProps, defineEmits, ref } from 'vue';
+import { ipcRenderer, remote } from 'electron';
+import { LoadingOutlined, MoreOutlined } from '@ant-design/icons-vue';
+
+const opConfig = remote.getGlobal('OP_CONFIG');
 const { Menu } = remote;
 
 const config = ref(opConfig.get());
@@ -62,63 +63,63 @@ const config = ref(opConfig.get());
 const props: any = defineProps({
   searchValue: {
     type: [String, Number],
-    default: ""
+    default: '',
   },
   placeholder: {
     type: String,
-    default: ""
+    default: '',
   },
   currentPlugin: {},
   pluginLoading: Boolean,
-  clipboardFile: (() => [])()
+  clipboardFile: (() => [])(),
 });
 
 const changeValue = e => {
-  if (props.currentPlugin.name === "rubick-system-feature") return;
+  if (props.currentPlugin.name === 'rubick-system-feature') return;
   targetSearch({ value: e.target.value });
-  emit("onSearch", e);
+  emit('onSearch', e);
 };
 
 const emit = defineEmits([
-  "onSearch",
-  "changeCurrent",
-  "openMenu",
-  "changeSelect",
-  "choosePlugin",
-  "focus",
-  "clearSearchValue",
-  "readClipboardContent"
+  'onSearch',
+  'changeCurrent',
+  'openMenu',
+  'changeSelect',
+  'choosePlugin',
+  'focus',
+  'clearSearchValue',
+  'readClipboardContent',
 ]);
 
 const keydownEvent = (e, key: string) => {
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
   const modifiers: Array<string> = [];
-  ctrlKey && modifiers.push("control");
-  shiftKey && modifiers.push("shift");
-  altKey && modifiers.push("alt");
-  metaKey && modifiers.push("meta");
-  ipcRenderer.send("msg-trigger", {
-    type: "sendPluginSomeKeyDownEvent",
+  ctrlKey && modifiers.push('control');
+  shiftKey && modifiers.push('shift');
+  altKey && modifiers.push('alt');
+  metaKey && modifiers.push('meta');
+  ipcRenderer.send('msg-trigger', {
+    type: 'sendPluginSomeKeyDownEvent',
     data: {
       keyCode: e.code,
-      modifiers
-    }
+      modifiers,
+    },
   });
-  const runPluginDisable = e.target.value === "" || props.currentPlugin.name;
+  const runPluginDisable = e.target.value === '' || props.currentPlugin.name;
   switch (key) {
-    case "up":
-      emit("changeCurrent", -1);
+    case 'up':
+      emit('changeCurrent', -1);
       break;
-    case "down":
-      emit("changeCurrent", 1);
+    case 'down':
+      emit('changeCurrent', 1);
       break;
-    case "enter":
+    case 'enter':
       if (runPluginDisable) return;
-      emit("choosePlugin");
+      emit('choosePlugin');
       break;
-    case "space":
+    case 'space':
       if (runPluginDisable || !opConfig.get().perf.common.space) return;
-      emit("choosePlugin");
+      emit('choosePlugin');
       break;
     default:
       break;
@@ -128,63 +129,63 @@ const keydownEvent = (e, key: string) => {
 const checkNeedInit = e => {
   const { ctrlKey, metaKey } = e;
 
-  if (e.target.value === "" && e.keyCode === 8) {
+  if (e.target.value === '' && e.keyCode === 8) {
     closeTag();
   }
   // 手动粘贴
-  if ((ctrlKey || metaKey) && e.key === "v") {
-    emit("readClipboardContent");
+  if ((ctrlKey || metaKey) && e.key === 'v') {
+    emit('readClipboardContent');
   }
 };
 
 const targetSearch = ({ value }) => {
   if (props.currentPlugin.name) {
-    return ipcRenderer.sendSync("msg-trigger", {
-      type: "sendSubInputChangeEvent",
-      data: { text: value }
+    return ipcRenderer.sendSync('msg-trigger', {
+      type: 'sendSubInputChangeEvent',
+      data: { text: value },
     });
   }
 };
 
 const closeTag = () => {
-  emit("changeSelect", {});
-  emit("clearClipbord");
-  ipcRenderer.send("msg-trigger", {
-    type: "removePlugin"
+  emit('changeSelect', {});
+  emit('clearClipbord');
+  ipcRenderer.send('msg-trigger', {
+    type: 'removePlugin',
   });
 };
 
 const showSeparate = () => {
   let pluginMenu: any = [
     {
-      label: config.value.perf.common.hideOnBlur ? "钉住" : "自动隐藏",
-      click: changeHideOnBlur
-    }
+      label: config.value.perf.common.hideOnBlur ? '钉住' : '自动隐藏',
+      click: changeHideOnBlur,
+    },
   ];
   if (props.currentPlugin && props.currentPlugin.logo) {
     pluginMenu = pluginMenu.concat([
       {
-        label: "开发者工具",
+        label: '开发者工具',
         click: () => {
-          ipcRenderer.send("msg-trigger", { type: "openPluginDevTools" });
+          ipcRenderer.send('msg-trigger', { type: 'openPluginDevTools' });
           // todo
-        }
+        },
       },
       {
-        label: "当前插件信息",
+        label: '当前插件信息',
         submenu: [
           {
-            label: "简介"
+            label: '简介',
           },
           {
-            label: "功能"
-          }
-        ]
+            label: '功能',
+          },
+        ],
       },
       {
-        label: "分离窗口",
-        click: newWindow
-      }
+        label: '分离窗口',
+        click: newWindow,
+      },
     ]);
   }
   let menu = Menu.buildFromTemplate(pluginMenu);
@@ -201,13 +202,13 @@ const changeHideOnBlur = () => {
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
   return props.clipboardFile[0].isFile
-    ? require("../assets/file.png")
-    : require("../assets/folder.png");
+    ? require('../assets/file.png')
+    : require('../assets/folder.png');
 };
 
 const newWindow = () => {
-  ipcRenderer.send("msg-trigger", {
-    type: "detachPlugin"
+  ipcRenderer.send('msg-trigger', {
+    type: 'detachPlugin',
   });
   // todo
 };
@@ -218,7 +219,7 @@ window.rubick.hooks.onShow = () => {
 };
 
 window.rubick.hooks.onHide = () => {
-  emit("clearSearchValue");
+  emit('clearSearchValue');
 };
 </script>
 
@@ -238,6 +239,7 @@ window.rubick.hooks.onHide = () => {
     white-space: nowrap;
     max-width: 200px;
   }
+
   .select-tag {
     white-space: pre;
     user-select: none;
@@ -252,6 +254,7 @@ window.rubick.hooks.onHide = () => {
     margin-right: 1px;
     padding: 0 10px;
   }
+
   .main-input {
     height: 60px !important;
     box-sizing: border-box;
@@ -270,6 +273,7 @@ window.rubick.hooks.onHide = () => {
       color: var(--color-text-primary);
     }
   }
+
   .rubick-logo,
   .icon-tool {
     width: 40px;

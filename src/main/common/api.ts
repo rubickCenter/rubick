@@ -6,27 +6,27 @@ import {
   Notification,
   nativeImage,
   clipboard,
-  shell
-} from "electron";
-import { runner, detach } from "../browsers";
-import fs from "fs";
-import { LocalDb } from "@/core";
-import plist from "plist";
-import { DECODE_KEY } from "@/common/constans/main";
-import mainInstance from "../index";
+  shell,
+} from 'electron';
+import { runner, detach } from '../browsers';
+import fs from 'fs';
+import { LocalDb } from '@/core';
+import plist from 'plist';
+import { DECODE_KEY } from '@/common/constans/main';
+import mainInstance from '../index';
 const runnerInstance = runner();
 const detachInstance = detach();
-const dbInstance = new LocalDb(app.getPath("userData"));
+const dbInstance = new LocalDb(app.getPath('userData'));
 
 dbInstance.init();
 
 class API {
   public currentPlugin: null | any = null;
-  private DBKEY = "RUBICK_DB_DEFAULT";
+  private DBKEY = 'RUBICK_DB_DEFAULT';
 
   init(mainWindow: BrowserWindow) {
     // 响应 preload.js 事件
-    ipcMain.on("msg-trigger", async (event, arg) => {
+    ipcMain.on('msg-trigger', async (event, arg) => {
       const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow;
       const data = await this[arg.type](arg, window, event);
       event.returnValue = data;
@@ -41,9 +41,9 @@ class API {
   };
 
   public __EscapeKeyDown = (event, input, window) => {
-    if (input.type !== "keyDown") return;
+    if (input.type !== 'keyDown') return;
     if (!(input.meta || input.control || input.shift || input.alt)) {
-      if (input.key === "Escape") {
+      if (input.key === 'Escape') {
         if (this.currentPlugin) {
           this.removePlugin(null, window);
         } else {
@@ -70,17 +70,17 @@ class API {
     this.currentPlugin = plugin;
     window.webContents.executeJavaScript(
       `window.setCurrentPlugin(${JSON.stringify({
-        currentPlugin: this.currentPlugin
+        currentPlugin: this.currentPlugin,
       })})`
     );
     window.show();
     // 按 ESC 退出插件
-    window.webContents.on("before-input-event", (event, input) =>
+    window.webContents.on('before-input-event', (event, input) =>
       this.__EscapeKeyDown(event, input, window)
     );
     runnerInstance
       .getView()
-      .webContents.on("before-input-event", (event, input) =>
+      .webContents.on('before-input-event', (event, input) =>
         this.__EscapeKeyDown(event, input, window)
       );
   }
@@ -91,7 +91,7 @@ class API {
   }
 
   public openPluginDevTools() {
-    runnerInstance.getView().webContents.openDevTools({ mode: "detach" });
+    runnerInstance.getView().webContents.openDevTools({ mode: 'detach' });
   }
 
   public hideMainWindow(arg, window) {
@@ -118,7 +118,7 @@ class API {
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInput(${JSON.stringify({
-        placeholder: data.placeholder
+        placeholder: data.placeholder,
       })})`
     );
   }
@@ -128,7 +128,7 @@ class API {
   }
 
   public sendSubInputChangeEvent({ data }) {
-    runnerInstance.executeHooks("SubInputChange", data);
+    runnerInstance.executeHooks('SubInputChange', data);
   }
 
   public removeSubInput(data, window, e) {
@@ -142,7 +142,7 @@ class API {
     if (!originWindow) return;
     originWindow.webContents.executeJavaScript(
       `window.setSubInputValue(${JSON.stringify({
-        value: data.text
+        value: data.text,
       })})`
     );
   }
@@ -153,13 +153,13 @@ class API {
 
   public showNotification({ data: { body } }) {
     if (!Notification.isSupported()) return;
-    "string" != typeof body && (body = String(body));
+    'string' != typeof body && (body = String(body));
     const plugin = this.currentPlugin;
     if (!plugin) return;
     const notify = new Notification({
       title: plugin.pluginName,
       body,
-      icon: plugin.logo
+      icon: plugin.logo,
     });
     notify.show();
   }
@@ -177,7 +177,7 @@ class API {
   public copyFile({ data }) {
     if (data.file && fs.existsSync(data.file)) {
       clipboard.writeBuffer(
-        "NSFilenamesPboardType",
+        'NSFilenamesPboardType',
         Buffer.from(plist.build([data.file]))
       );
       return true;
@@ -214,7 +214,7 @@ class API {
       ...this.currentPlugin,
       features: (() => {
         let has = false;
-        this.currentPlugin.features.some(feature => {
+        this.currentPlugin.features.some((feature) => {
           has = feature.code === data.feature.code;
           return has;
         });
@@ -222,11 +222,11 @@ class API {
           return [...this.currentPlugin.features, data.feature];
         }
         return this.currentPlugin.features;
-      })()
+      })(),
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: this.currentPlugin
+        currentPlugin: this.currentPlugin,
       })})`
     );
     return true;
@@ -235,16 +235,16 @@ class API {
   public removeFeature({ data }, window) {
     this.currentPlugin = {
       ...this.currentPlugin,
-      features: this.currentPlugin.features.filter(feature => {
+      features: this.currentPlugin.features.filter((feature) => {
         if (data.code.type) {
           return feature.code.type !== data.code.type;
         }
         return feature.code !== data.code;
-      })
+      }),
     };
     window.webContents.executeJavaScript(
       `window.updatePlugin(${JSON.stringify({
-        currentPlugin: this.currentPlugin
+        currentPlugin: this.currentPlugin,
       })})`
     );
     return true;
@@ -255,14 +255,14 @@ class API {
     if (!code || !runnerInstance.getView()) return;
     if (modifiers.length > 0) {
       runnerInstance.getView().webContents.sendInputEvent({
-        type: "keyDown",
+        type: 'keyDown',
         modifiers,
-        keyCode: code
+        keyCode: code,
       });
     } else {
       runnerInstance.getView().webContents.sendInputEvent({
-        type: "keyDown",
-        keyCode: code
+        type: 'keyDown',
+        keyCode: code,
       });
     }
   }
@@ -273,11 +273,11 @@ class API {
     window.setBrowserView(null);
     window.webContents
       .executeJavaScript(`window.getMainInputInfo()`)
-      .then(res => {
+      .then((res) => {
         detachInstance.init(
           {
             ...this.currentPlugin,
-            subInput: res
+            subInput: res,
           },
           window.getBounds(),
           view
@@ -293,7 +293,7 @@ class API {
   }
 
   public getLocalId() {
-    return encodeURIComponent(app.getPath("home"));
+    return encodeURIComponent(app.getPath('home'));
   }
 
   public shellShowItemInFolder({ data }) {

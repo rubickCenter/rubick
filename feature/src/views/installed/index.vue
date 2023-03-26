@@ -33,7 +33,7 @@
               <a-tag>{{ pluginDetail.version }}</a-tag>
             </div>
             <div class="desc">
-              开发者：{{ `${pluginDetail.author || "未知"}` }}
+              开发者：{{ `${pluginDetail.author || '未知'}` }}
             </div>
             <div class="desc">
               {{ pluginDetail.description }}
@@ -63,18 +63,40 @@
                 <a-tag
                   :key="cmd"
                   v-for="cmd in item.cmds"
-                  @close="removeFeature(cmd)"
-                  @click="
-                    !cmd.label &&
-                      openPlugin({
-                        code: item.code,
-                        cmd
-                      })
-                  "
                   :class="{ executable: !cmd.label }"
                   :color="!cmd.label && '#87d068'"
                 >
-                  {{ cmd.label || cmd }}
+                  <span
+                    @click="
+                      !cmd.label &&
+                        openPlugin({
+                          code: item.code,
+                          cmd,
+                        })
+                    "
+                  >
+                    {{ cmd.label || cmd }}
+                  </span>
+                  <template v-if="!cmd.label" #icon>
+                    <a-tooltip
+                      v-if="!hasAdded(cmd)"
+                      placement="topLeft"
+                      title="点击+号，固定关键词到超级面板"
+                    >
+                      <PlusCircleOutlined
+                        @click="addCmdToSuperPanel({ code: item.code, cmd })"
+                      />
+                    </a-tooltip>
+                    <a-tooltip
+                      v-else
+                      placement="topLeft"
+                      title="点击-号，从超级面板移除关键词"
+                    >
+                      <MinusCircleOutlined
+                        @click="removePluginToSuperPanel(cmd)"
+                      />
+                    </a-tooltip>
+                  </template>
                 </a-tag>
               </div>
             </div>
@@ -89,27 +111,29 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
-import { computed, ref } from "vue";
-import path from "path";
-import MarkdownIt from "markdown-it";
-const { ipcRenderer } = window.require("electron");
+import { useStore } from 'vuex';
+import { computed, ref, toRaw } from 'vue';
+import path from 'path';
+import MarkdownIt from 'markdown-it';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons-vue';
 
-const { remote } = window.require("electron");
-const fs = window.require("fs");
+const { ipcRenderer } = window.require('electron');
+
+const { remote } = window.require('electron');
+const fs = window.require('fs');
 const md = new MarkdownIt();
 
-const appPath = remote.app.getPath("cache");
-const baseDir = path.join(appPath, "./rubick-plugins");
+const appPath = remote.app.getPath('cache');
+const baseDir = path.join(appPath, './rubick-plugins');
 
 const store = useStore();
 const localPlugins = computed(() =>
   store.state.localPlugins.filter(
-    plugin => plugin.name !== "rubick-system-feature"
+    (plugin) => plugin.name !== 'rubick-system-feature'
   )
 );
-const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
-const startUnDownload = name => store.dispatch("startUnDownload", name);
+const updateLocalPlugin = () => store.dispatch('updateLocalPlugin');
+const startUnDownload = (name) => store.dispatch('startUnDownload', name);
 
 const currentSelect = ref([0]);
 
@@ -117,8 +141,50 @@ const pluginDetail = computed(() => {
   return localPlugins.value[currentSelect.value] || {};
 });
 
+const superPanelPlugins = ref(
+  window.rubick.db.get('super-panel-plugins') || {
+    data: [],
+    _id: 'super-panel-plugins',
+  }
+);
+console.log(toRaw(superPanelPlugins.value.data));
+const addCmdToSuperPanel = ({ cmd, code }) => {
+  const plugin = {
+    ...toRaw(pluginDetail.value),
+    cmd,
+    ext: {
+      code,
+      type: 'text',
+      payload: null,
+    },
+  };
+  superPanelPlugins.value.data.push(plugin);
+  window.rubick.db.put(toRaw(superPanelPlugins.value));
+};
+
+const removePluginToSuperPanel = (cmd) => {
+  superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
+    (item) => {
+      return item.cmd !== cmd;
+    }
+  );
+  console.log(toRaw(superPanelPlugins.value));
+  window.rubick.db.put(toRaw(superPanelPlugins.value));
+};
+
+const hasAdded = (cmd) => {
+  let added = false;
+  superPanelPlugins.value.data.some((item) => {
+    if (item.cmd === cmd) {
+      added = true;
+      return true;
+    }
+    return false;
+  });
+  return added;
+};
+
 const openPlugin = ({ cmd, code }) => {
-  console.log(pluginDetail.value);
   window.rubick.openPlugin(
     JSON.parse(
       JSON.stringify({
@@ -126,30 +192,30 @@ const openPlugin = ({ cmd, code }) => {
         cmd,
         ext: {
           code,
-          type: "text",
-          payload: null
-        }
+          type: 'text',
+          payload: null,
+        },
       })
     )
   );
 };
 
 const readme = computed(() => {
-  if (!pluginDetail.value.name) return "";
+  if (!pluginDetail.value.name) return '';
   const readmePath = path.resolve(
     baseDir,
-    "node_modules",
+    'node_modules',
     pluginDetail.value.name,
-    "readme.md"
+    'readme.md'
   );
   if (fs.existsSync(readmePath)) {
-    const str = fs.readFileSync(readmePath, "utf-8");
+    const str = fs.readFileSync(readmePath, 'utf-8');
     return md.render(str);
   }
-  return "";
+  return '';
 });
 
-const deletePlugin = async plugin => {
+const deletePlugin = async (plugin) => {
   startUnDownload(plugin.name);
   await window.market.deletePlugin(plugin);
   updateLocalPlugin();
@@ -162,7 +228,8 @@ const deletePlugin = async plugin => {
   width: 100%;
   overflow: hidden;
   background: var(--color-body-bg);
-  height: calc(~"100vh - 46px");
+  height: calc(~'100vh - 46px');
+
   .container {
     box-sizing: border-box;
     width: 100%;
@@ -171,6 +238,7 @@ const deletePlugin = async plugin => {
     height: 100%;
     display: flex;
   }
+
   .installed-list {
     width: 40%;
     background: var(--color-body-bg);
@@ -178,6 +246,7 @@ const deletePlugin = async plugin => {
     padding: 10px 0;
     border-right: 1px solid var(--color-border-light);
     overflow: auto;
+
     .item {
       padding: 10px 20px;
       display: flex;
@@ -188,14 +257,17 @@ const deletePlugin = async plugin => {
         height: 40px;
         margin-right: 20px;
       }
+
       .desc {
         color: var(--color-text-desc);
       }
+
       &.active {
         background: var(--color-list-hover);
       }
     }
   }
+
   .plugin-detail {
     padding: 20px 20px 0 20px;
     box-sizing: border-box;
@@ -206,6 +278,7 @@ const deletePlugin = async plugin => {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
+
       .title {
         font-size: 20px;
         display: flex;
@@ -218,6 +291,7 @@ const deletePlugin = async plugin => {
           margin-left: 8px;
         }
       }
+
       .desc {
         font-size: 13px;
         color: var(--color-text-desc);
@@ -229,6 +303,7 @@ const deletePlugin = async plugin => {
         border-bottom: 1px solid var(--color-border-light);
       }
     }
+
     .detail-container,
     .feature-container {
       height: 380px;
@@ -238,24 +313,29 @@ const deletePlugin = async plugin => {
         width: 100%;
       }
     }
+
     .desc-item {
       border-bottom: 1px solid var(--color-border-light);
       padding: 10px 0;
       color: var(--color-text-content);
       .ant-tag {
         margin-top: 6px;
+
         &.executable {
           cursor: pointer;
+
           &:hover {
             transform: translateY(-2px);
           }
         }
       }
+
       .desc-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
+
       .desc-info {
         color: var(--color-text-desc);
       }

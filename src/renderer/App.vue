@@ -36,13 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick, toRaw } from "vue";
-import { ipcRenderer, remote } from "electron";
-import Result from "./components/result.vue";
-import Search from "./components/search.vue";
-import getWindowHeight from "../common/utils/getWindowHeight";
-import createPluginManager from "./plugins-manager";
-import commonConst from "@/common/utils/commonConst";
+import { watch, ref, nextTick, toRaw } from 'vue';
+import { ipcRenderer, remote } from 'electron';
+import Result from './components/result.vue';
+import Search from './components/search.vue';
+import getWindowHeight from '../common/utils/getWindowHeight';
+import createPluginManager from './plugins-manager';
+import commonConst from '@/common/utils/commonConst';
 
 const {
   initPlugins,
@@ -59,35 +59,35 @@ const {
   clipboardFile,
   setSearchValue,
   clearClipboardFile,
-  readClipboardContent
+  readClipboardContent,
 } = createPluginManager();
 
 initPlugins();
 
 const currentSelect = ref(0);
-const menuPluginInfo = ref({});
+const menuPluginInfo: any = ref({});
 
 getPluginInfo({
-  pluginName: "feature",
+  pluginName: 'feature',
   // eslint-disable-next-line no-undef
-  pluginPath: `${__static}/feature/package.json`
-}).then(res => {
+  pluginPath: `${__static}/feature/package.json`,
+}).then((res) => {
   menuPluginInfo.value = res;
-  remote.getGlobal("LOCAL_PLUGINS").addPlugin(res);
+  remote.getGlobal('LOCAL_PLUGINS').addPlugin(res);
 });
 
 watch([options], () => {
   currentSelect.value = 0;
   if (currentPlugin.value.name) return;
   nextTick(() => {
-    ipcRenderer.sendSync("msg-trigger", {
-      type: "setExpendHeight",
-      data: getWindowHeight(options.value)
+    ipcRenderer.sendSync('msg-trigger', {
+      type: 'setExpendHeight',
+      data: getWindowHeight(options.value),
     });
   });
 });
 
-const changeIndex = index => {
+const changeIndex = (index) => {
   if (!options.value.length) return;
   if (
     currentSelect.value + index > options.value.length - 1 ||
@@ -101,12 +101,12 @@ const openMenu = (ext) => {
   openPlugin({
     ...toRaw(menuPluginInfo.value),
     feature: menuPluginInfo.value.features[0],
-    cmd: "插件市场",
-    ext
+    cmd: '插件市场',
+    ext,
   });
 };
 
-window.rubick.openMenu = openMenu
+window.rubick.openMenu = openMenu;
 
 const choosePlugin = () => {
   const currentChoose = options.value[currentSelect.value];
@@ -114,12 +114,12 @@ const choosePlugin = () => {
 };
 
 const clearSearchValue = () => {
-  setSearchValue("");
+  setSearchValue('');
 };
 </script>
 
 <style lang="less">
-@import "./assets/var.less";
+@import './assets/var.less';
 .drag-bar {
   -webkit-app-region: drag;
   width: 100%;
@@ -129,6 +129,7 @@ const clearSearchValue = () => {
   top: 0;
   left: 0;
 }
+
 #components-layout {
   height: 100vh;
   overflow: hidden;
@@ -137,6 +138,7 @@ const clearSearchValue = () => {
     width: 0;
   }
 }
+
 .drag {
   -webkit-app-region: drag;
 }

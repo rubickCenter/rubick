@@ -1,19 +1,19 @@
-import { BrowserView, BrowserWindow, session } from "electron";
-import path from "path";
-import commonConst from "../../common/utils/commonConst";
-import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
+import { BrowserView, BrowserWindow, session } from 'electron';
+import path from 'path';
+import commonConst from '../../common/utils/commonConst';
+import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
 
-const getRelativePath = indexPath => {
+const getRelativePath = (indexPath) => {
   return commonConst.windows()
-    ? indexPath.replace("file://", "")
-    : indexPath.replace("file:", "");
+    ? indexPath.replace('file://', '')
+    : indexPath.replace('file:', '');
 };
 
 const getPreloadPath = (plugin, pluginIndexPath) => {
   const { name, preload, tplPath, indexPath } = plugin;
   if (!preload) return;
   if (commonConst.dev()) {
-    if (name === "rubick-system-feature") {
+    if (name === 'rubick-system-feature') {
       return path.resolve(__static, `../feature/public/preload.js`);
     }
     if (tplPath) {
@@ -37,15 +37,30 @@ export default () => {
   };
 
   const createView = (plugin, window: BrowserWindow) => {
-    let pluginIndexPath = plugin.tplPath || plugin.indexPath;
+    const { tplPath, indexPath, development, name, main, pluginSetting, ext } =
+      plugin;
+    let pluginIndexPath = tplPath || indexPath;
+    let preloadPath;
     let darkMode;
-    if (!pluginIndexPath) {
-      const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
-      pluginIndexPath = `file://${path.join(pluginPath, "./", plugin.main)}`;
+    // 开发环境
+    if (commonConst.dev() && development) {
+      pluginIndexPath = development;
+      const pluginPath = path.resolve(baseDir, 'node_modules', name);
+      preloadPath = `file://${path.join(pluginPath, './', main)}`;
     }
-    const preload = getPreloadPath(plugin, pluginIndexPath);
+    // 再尝试去找
+    if (plugin.name === 'rubick-system-feature' && !pluginIndexPath) {
+      pluginIndexPath = commonConst.dev()
+        ? 'http://localhost:8081/#/'
+        : `file://${__static}/feature/index.html`;
+    }
+    if (!pluginIndexPath) {
+      const pluginPath = path.resolve(baseDir, 'node_modules', name);
+      pluginIndexPath = `file://${path.join(pluginPath, './', main)}`;
+    }
+    const preload = getPreloadPath(plugin, preloadPath || pluginIndexPath);
 
-    const ses = session.fromPartition("<" + plugin.name + ">");
+    const ses = session.fromPartition('<' + name + '>');
     ses.setPreloads([`${__static}/preload.js`]);
 
     view = new BrowserView({
@@ -57,17 +72,18 @@ export default () => {
         devTools: true,
         webviewTag: true,
         preload,
-        session: ses
-      }
+        session: ses,
+      },
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
-    view.webContents.once("dom-ready", () => {
-      window.setSize(800, 660);
-      view.setBounds({ x: 0, y: 60, width: 800, height: 600 });
+    view.webContents.once('dom-ready', () => {
+      const height = pluginSetting && pluginSetting.height;
+      window.setSize(800, height || 660);
+      view.setBounds({ x: 0, y: 60, width: 800, height: height || 660 });
       view.setAutoResize({ width: true });
-      executeHooks("PluginEnter", plugin.ext);
-      executeHooks("PluginReady", plugin.ext);
+      executeHooks('PluginEnter', plugin.ext);
+      executeHooks('PluginReady', plugin.ext);
       darkMode = global.OP_CONFIG.get().perf.common.darkMode;
       darkMode &&
         view.webContents.executeJavaScript(
@@ -79,7 +95,7 @@ export default () => {
     view.webContents.session.webRequest.onBeforeSendHeaders(
       (details, callback) => {
         callback({
-          requestHeaders: { referer: "*", ...details.requestHeaders }
+          requestHeaders: { referer: '*', ...details.requestHeaders },
         });
       }
     );
@@ -88,9 +104,9 @@ export default () => {
       (details, callback) => {
         callback({
           responseHeaders: {
-            "Access-Control-Allow-Origin": ["*"],
-            ...details.responseHeaders
-          }
+            'Access-Control-Allow-Origin': ['*'],
+            ...details.responseHeaders,
+          },
         });
       }
     );
@@ -100,7 +116,7 @@ export default () => {
     if (!view) return;
     window.removeBrowserView(view);
     window.setSize(800, 60);
-    executeHooks("PluginOut", null);
+    executeHooks('PluginOut', null);
     window.webContents.executeJavaScript(`window.initRubick()`);
     view = undefined;
   };
@@ -111,7 +127,7 @@ export default () => {
     if (!view) return;
     const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {     
           try { 
-            window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ""});
+            window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ''});
           } catch(e) {} 
         }
       `;
@@ -122,6 +138,6 @@ export default () => {
     init,
     getView,
     removeView,
-    executeHooks
+    executeHooks,
   };
 };
