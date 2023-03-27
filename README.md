@@ -14,7 +14,7 @@ English | [简体中文](./README.zh-CN.md)
     <img alt="release" src="https://img.shields.io/github/package-json/v/rubickCenter/rubick" />
  </a>
  <a href="https://github.com/rubickCenter/rubick/actions">
-   <img alt=building src=https://img.shields.io/github/workflow/status/rubickCenter/rubick/Build>
+   <img alt=building src=https://img.shields.io/github/actions/workflow/status/rubickCenter/rubick/main.yml>
  </a>
  <a href="https://github.com/rubickCenter/rubick/blob/master/LICENSE">
     <img alt="npm" src="https://img.shields.io/github/license/rubickCenter/rubick" />
