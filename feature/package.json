@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vue/cli-service": "~4.5.0",
     "@ant-design/icons-vue": "^6.0.1",
     "ant-design-vue": "3.2.14",
     "axios": "^0.24.0",
