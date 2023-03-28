@@ -29,11 +29,12 @@
     >
       <template #suffix>
         <div class="suffix-tool">
-          <MoreOutlined @click="showSeparate()" class="icon-more" />
+          <MoreOutlined v-show="!pluginLoading" @click="showSeparate()" class="icon-more" />
           <div
             v-if="currentPlugin && currentPlugin.logo"
             style="position: relative"
           >
+            <div v-show="pluginLoading" class="update-tips">检测更新中...</div>
             <a-spin v-show="pluginLoading" class="loading">
               <template #indicator>
                 <LoadingOutlined style="font-size: 42px" />
@@ -308,6 +309,14 @@ window.rubick.hooks.onHide = () => {
       position: absolute;
       top: 0;
       left: 0;
+    }
+    .update-tips {
+      position: absolute;
+      right: 46px;
+      top: 50%;
+      font-size: 14px;
+      transform: translateY(-50%);
+      color: #aaa;
     }
   }
   .clipboard-tag {

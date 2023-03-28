@@ -9,6 +9,7 @@ import fixPath from 'fix-path';
 
 import spawn from 'cross-spawn';
 import { ipcRenderer } from 'electron';
+import axios from 'axios';
 
 fixPath();
 
@@ -21,6 +22,8 @@ class AdapterHandler {
   public baseDir: string;
   // 插件源地址
   readonly registry: string;
+
+  pluginCaches = {};
 
   /**
    * Creates an instance of AdapterHandler.
@@ -52,6 +55,29 @@ class AdapterHandler {
     this.registry = register || 'https://registry.npm.taobao.org';
   }
 
+  async upgrade(name: string): Promise<void> {
+    // 创建一个npm-registry-client实例
+    const packageJSON = JSON.parse(
+      fs.readFileSync(`${this.baseDir}/package.json`, 'utf-8')
+    );
+    const registryUrl = `https://registry.npm.taobao.org/${name}`;
+
+    // 从npm源中获取依赖包的最新版本
+    try {
+      const installedVersion = packageJSON.dependencies[name].replace('^', '');
+      let latestVersion = this.pluginCaches[name];
+      if (!latestVersion) {
+        const { data } = await axios.get(registryUrl, { timeout: 2000 });
+        latestVersion = data['dist-tags'].latest;
+        this.pluginCaches[name] = latestVersion;
+      }
+      if (latestVersion > installedVersion) {
+        await this.install([name], { isDev: false });
+      }
+    } catch (e) {
+      // ...
+    }
+  }
   /**
    * 获取插件信息
    * @param {string} adapter 插件名称

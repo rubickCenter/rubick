@@ -28,17 +28,25 @@ const createPluginManager = (): any => {
     appList.value = await appSearch(nativeImage);
   };
 
-  const loadPlugin = (plugin) => {
+  const loadPlugin = async (plugin) => {
+    setSearchValue('');
+    ipcRenderer.send('msg-trigger', {
+      type: 'setExpendHeight',
+      data: 60,
+    });
     state.pluginLoading = true;
     state.currentPlugin = plugin;
+    // 自带的插件不需要检测更新
+    if (plugin.name === 'rubick-system-feature') return;
+    await pluginInstance.upgrade(plugin.name);
   };
 
-  const openPlugin = (plugin) => {
+  const openPlugin = async (plugin) => {
     if (plugin.pluginType === 'ui' || plugin.pluginType === 'system') {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
         return;
       }
-      loadPlugin(plugin);
+      await loadPlugin(plugin);
       ipcRenderer.sendSync('msg-trigger', {
         type: 'openPlugin',
         data: JSON.parse(
@@ -52,7 +60,6 @@ const createPluginManager = (): any => {
           })
         ),
       });
-      setSearchValue('');
     }
     if (plugin.pluginType === 'app') {
       execSync(plugin.action);
