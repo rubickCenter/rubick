@@ -6,6 +6,7 @@ import {
   Notification,
   nativeImage,
   clipboard,
+  screen,
   shell,
 } from 'electron';
 import { runner, detach } from '../browsers';
@@ -54,6 +55,13 @@ class API {
       return;
     }
   };
+
+  public windowMoving({ data: { mouseX, mouseY, width, height } }, window, e) {
+    const { x, y } = screen.getCursorScreenPoint();
+    const originWindow = this.getCurrentWindow(window, e);
+    if (!originWindow) return;
+    originWindow.setBounds({ x: x - mouseX, y: y - mouseY });
+  }
 
   public loadPlugin({ data: plugin }, window) {
     window.webContents.executeJavaScript(
