@@ -60,7 +60,7 @@ class API {
     const { x, y } = screen.getCursorScreenPoint();
     const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
-    originWindow.setBounds({ x: x - mouseX, y: y - mouseY });
+    originWindow.setBounds({ x: x - mouseX, y: y - mouseY, width, height });
   }
 
   public loadPlugin({ data: plugin }, window) {
