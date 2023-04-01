@@ -1,30 +1,21 @@
 <template>
-  <div
-    v-if="commonConst.windows() || commonConst.linux()"
-    class="drag-bar"
-  ></div>
-  <div
-    :class="!commonConst.windows() && !commonConst.linux() && 'drag'"
-    id="components-layout"
-  >
-    <div class="rubick-select">
-      <Search
-        :currentPlugin="currentPlugin"
-        @changeCurrent="changeIndex"
-        @onSearch="onSearch"
-        @openMenu="openMenu"
-        @changeSelect="changeSelect"
-        :searchValue="searchValue"
-        :placeholder="placeholder"
-        :pluginLoading="pluginLoading"
-        :clipboardFile="clipboardFile || []"
-        @choosePlugin="choosePlugin"
-        @focus="searchFocus"
-        @clear-search-value="clearSearchValue"
-        @clearClipbord="clearClipboardFile"
-        @readClipboardContent="readClipboardContent"
-      />
-    </div>
+  <div id="components-layout" @mousedown="onMouseDown">
+    <Search
+      :currentPlugin="currentPlugin"
+      @changeCurrent="changeIndex"
+      @onSearch="onSearch"
+      @openMenu="openMenu"
+      @changeSelect="changeSelect"
+      :searchValue="searchValue"
+      :placeholder="placeholder"
+      :pluginLoading="pluginLoading"
+      :clipboardFile="clipboardFile || []"
+      @choosePlugin="choosePlugin"
+      @focus="searchFocus"
+      @clear-search-value="clearSearchValue"
+      @clearClipbord="clearClipboardFile"
+      @readClipboardContent="readClipboardContent"
+    />
     <Result
       :currentPlugin="currentPlugin"
       :searchValue="searchValue"
@@ -42,7 +33,9 @@ import Result from './components/result.vue';
 import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
 import createPluginManager from './plugins-manager';
-import commonConst from '@/common/utils/commonConst';
+import useDrag from '../common/utils/dragWindow';
+
+const { onMouseDown } = useDrag();
 
 const {
   initPlugins,
@@ -120,16 +113,6 @@ const clearSearchValue = () => {
 
 <style lang="less">
 @import './assets/var.less';
-.drag-bar {
-  -webkit-app-region: drag;
-  width: 100%;
-  height: 20px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-}
-
 #components-layout {
   height: 100vh;
   overflow: hidden;
@@ -137,9 +120,5 @@ const clearSearchValue = () => {
   ::-webkit-scrollbar {
     width: 0;
   }
-}
-
-.drag {
-  -webkit-app-region: drag;
 }
 </style>
