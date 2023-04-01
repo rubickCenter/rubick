@@ -71,11 +71,13 @@ import System from "./components/system.vue";
 import Worker from "./components/worker.vue";
 import Tools from "./components/tools.vue";
 import Dev from "./components/devlopment.vue";
+import Image from "./components/image.vue";
 
 const Components = {
   finder: Finder,
   system: System,
   worker: Worker,
+  image: Image,
   tools: Tools,
   dev: Dev,
 };
