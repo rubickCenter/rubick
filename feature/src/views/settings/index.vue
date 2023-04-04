@@ -47,6 +47,21 @@
               </div>
             </a-tooltip>
           </div>
+          <div class="settings-item-li">
+            <div class="label">截屏</div>
+            <a-tooltip placement="top" trigger="click">
+              <template #title>
+                <span>{{ tipText }} </span>
+              </template>
+              <div
+                class="value"
+                tabIndex="-1"
+                @keyup="e => changeShortCut(e, 'capture')"
+              >
+                {{ shortCut.capture }}
+              </div>
+            </a-tooltip>
+          </div>
         </div>
         <div class="setting-item">
           <div class="title">通用</div>

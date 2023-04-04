@@ -1,27 +1,31 @@
-import path from "path";
-import fs from "fs";
-import getLocalDataFile from "./getLocalDataFile";
-import { PluginHandler } from "@/core";
-import { PLUGIN_INSTALL_DIR as baseDir } from "@/common/constans/main";
-import API from "@/main/common/api";
+import path from 'path';
+import fs from 'fs';
+import getLocalDataFile from './getLocalDataFile';
+import { PluginHandler } from '@/core';
+import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
+import API from '@/main/common/api';
 
-const configPath = path.join(getLocalDataFile(), "./rubick-local-plugin.json");
+const configPath = path.join(getLocalDataFile(), './rubick-local-plugin.json');
 
 let registry;
 let pluginInstance;
 (async () => {
   try {
-    registry = (await API.dbGet({ data: { id: "rubick-localhost-config" } }))
-      .data.register;
-    console.log(registry);
+    const res = await API.dbGet({
+      data: {
+        id: 'rubick-localhost-config',
+      },
+    });
+
+    registry = res && res.data.register;
     pluginInstance = new PluginHandler({
       baseDir,
-      registry
+      registry,
     });
   } catch (e) {
     pluginInstance = new PluginHandler({
       baseDir,
-      registry
+      registry,
     });
   }
 })();
@@ -32,13 +36,13 @@ global.LOCAL_PLUGINS = {
     await pluginInstance.install([plugin.name], { isDev: plugin.isDev });
     if (plugin.isDev) {
       // 获取 dev 插件信息
-      const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
+      const pluginPath = path.resolve(baseDir, 'node_modules', plugin.name);
       const pluginInfo = JSON.parse(
-        fs.readFileSync(path.join(pluginPath, "./package.json"), "utf8")
+        fs.readFileSync(path.join(pluginPath, './package.json'), 'utf8')
       );
       plugin = {
         ...plugin,
-        ...pluginInfo
+        ...pluginInfo,
       };
     }
     global.LOCAL_PLUGINS.addPlugin(plugin);
@@ -46,18 +50,18 @@ global.LOCAL_PLUGINS = {
   },
   refreshPlugin(plugin) {
     // 获取 dev 插件信息
-    const pluginPath = path.resolve(baseDir, "node_modules", plugin.name);
+    const pluginPath = path.resolve(baseDir, 'node_modules', plugin.name);
     const pluginInfo = JSON.parse(
-      fs.readFileSync(path.join(pluginPath, "./package.json"), "utf8")
+      fs.readFileSync(path.join(pluginPath, './package.json'), 'utf8')
     );
     plugin = {
       ...plugin,
-      ...pluginInfo
+      ...pluginInfo,
     };
     // 刷新
     let currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
 
-    currentPlugins = currentPlugins.map(p => {
+    currentPlugins = currentPlugins.map((p) => {
       if (p.name === plugin.name) {
         return plugin;
       }
@@ -73,7 +77,7 @@ global.LOCAL_PLUGINS = {
     try {
       if (!global.LOCAL_PLUGINS.PLUGINS.length) {
         global.LOCAL_PLUGINS.PLUGINS = JSON.parse(
-          fs.readFileSync(configPath, "utf-8")
+          fs.readFileSync(configPath, 'utf-8')
         );
       }
       return global.LOCAL_PLUGINS.PLUGINS;
@@ -85,7 +89,7 @@ global.LOCAL_PLUGINS = {
   addPlugin(plugin) {
     let has = false;
     const currentPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
-    currentPlugins.some(p => {
+    currentPlugins.some((p) => {
       has = p.name === plugin.name;
       return has;
     });
@@ -96,20 +100,22 @@ global.LOCAL_PLUGINS = {
     }
   },
   updatePlugin(plugin) {
-    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.map(origin => {
-      if (origin.name === plugin.name) {
-        return plugin;
+    global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.map(
+      (origin) => {
+        if (origin.name === plugin.name) {
+          return plugin;
+        }
+        return origin;
       }
-      return origin;
-    });
+    );
     fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
   },
   async deletePlugin(plugin) {
     await pluginInstance.uninstall([plugin.name], { isDev: plugin.isDev });
     global.LOCAL_PLUGINS.PLUGINS = global.LOCAL_PLUGINS.PLUGINS.filter(
-      p => plugin.name !== p.name
+      (p) => plugin.name !== p.name
     );
     fs.writeFileSync(configPath, JSON.stringify(global.LOCAL_PLUGINS.PLUGINS));
     return global.LOCAL_PLUGINS.PLUGINS;
-  }
+  },
 };

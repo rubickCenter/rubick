@@ -15,6 +15,7 @@ import { LocalDb } from '@/core';
 import plist from 'plist';
 import { DECODE_KEY } from '@/common/constans/main';
 import mainInstance from '../index';
+import { screenshots } from './registerScreenshots';
 const runnerInstance = runner();
 const detachInstance = detach();
 const dbInstance = new LocalDb(app.getPath('userData'));
@@ -32,6 +33,14 @@ class API {
       const data = await this[arg.type](arg, window, event);
       event.returnValue = data;
       // event.sender.send(`msg-back-${arg.type}`, data);
+    });
+
+    // 注册截屏成功回调事件
+    screenshots.on('ok', (e, buffer) => {
+      const image = nativeImage.createFromBuffer(buffer);
+      runnerInstance.executeHooks('ScreenCapture', {
+        data: image.toDataURL(),
+      });
     });
   }
 
@@ -312,6 +321,10 @@ class API {
   public shellBeep() {
     shell.beep();
     return true;
+  }
+
+  public screenCapture() {
+    screenshots.startCapture();
   }
 }
 

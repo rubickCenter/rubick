@@ -5,8 +5,9 @@ import {
   BrowserView,
   screen,
   ipcMain,
-  app
-} from "electron";
+  app,
+} from 'electron';
+import { screenshots } from './registerScreenshots';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -14,7 +15,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     const config = global.OP_CONFIG.get();
     app.setLoginItemSettings({
       openAtLogin: config.perf.common.start,
-      openAsHidden: true
+      openAsHidden: true,
     });
   };
   // 设置暗黑模式
@@ -22,7 +23,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     const config = global.OP_CONFIG.get();
     const isDark = config.perf.common.darkMode;
     if (isDark) {
-      nativeTheme.themeSource = "dark";
+      nativeTheme.themeSource = 'dark';
       mainWindow.webContents.executeJavaScript(
         `document.body.classList.add("dark");window.rubick.theme="dark"`
       );
@@ -32,7 +33,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
         );
       });
     } else {
-      nativeTheme.themeSource = "light";
+      nativeTheme.themeSource = 'light';
       mainWindow.webContents.executeJavaScript(
         `document.body.classList.remove("dark");window.rubick.theme="light"`
       );
@@ -71,10 +72,14 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       mainWindow.focus();
       mainWindow.setVisibleOnAllWorkspaces(false, {
-        visibleOnFullScreen: true
+        visibleOnFullScreen: true,
       });
       mainWindow.setPosition(wx, wy);
       mainWindow.show();
+    });
+
+    globalShortcut.register(config.perf.shortCut.capture, () => {
+      screenshots.startCapture();
     });
 
     // globalShortcut.register(config.perf.shortCut.separate, () => {
@@ -87,15 +92,15 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     });
 
     // 注册自定义全局快捷键
-    config.global.forEach(sc => {
+    config.global.forEach((sc) => {
       if (!sc.key || !sc.value) return;
       globalShortcut.register(sc.key, () => {
-        mainWindow.webContents.send("global-short-key", sc.value);
+        mainWindow.webContents.send('global-short-key', sc.value);
       });
     });
   };
   init();
-  ipcMain.on("re-register", () => {
+  ipcMain.on('re-register', () => {
     init();
   });
 };

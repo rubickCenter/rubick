@@ -17,6 +17,7 @@ import '../common/utils/localPlugin';
 import '../common/utils/localConfig';
 
 import registerySystemPlugin from './common/registerySystemPlugin';
+import { initScreenShots } from './common/registerScreenshots';
 
 class App {
   public windowCreator: { init: () => void; getWindow: () => BrowserWindow };
@@ -58,6 +59,7 @@ class App {
     const readyFunction = () => {
       this.createWindow();
       const mainWindow = this.windowCreator.getWindow();
+      initScreenShots();
       API.init(mainWindow);
       createTray(this.windowCreator.getWindow());
       registerHotKey(this.windowCreator.getWindow());
