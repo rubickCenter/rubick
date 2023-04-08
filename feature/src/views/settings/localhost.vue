@@ -36,19 +36,19 @@
   </a-form>
 </template>
 <script lang="ts" setup>
-import { ref, toRaw } from "vue";
-import { message } from "ant-design-vue";
+import { ref, toRaw } from 'vue';
+import { message } from 'ant-design-vue';
 
 let _rev: any;
 
 let defaultConfig = {
-  register: "https://registry.npm.taobao.org",
-  database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
-  access_token: ""
+  register: 'https://registry.npm.taobao.org',
+  database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
+  access_token: '',
 };
 
 try {
-  const dbdata = window.rubick.db.get("rubick-localhost-config");
+  const dbdata = window.rubick.db.get('rubick-localhost-config');
   defaultConfig = dbdata.data;
   _rev = dbdata._rev;
 } catch (e) {
@@ -58,26 +58,26 @@ try {
 const formState = ref(JSON.parse(JSON.stringify(defaultConfig)));
 
 const rules = {
-  register: [{ required: true, trigger: "change" }],
-  database: [{ required: true, trigger: "change" }]
+  register: [{ required: true, trigger: 'change' }],
+  database: [{ required: true, trigger: 'change' }],
 };
 const layout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 18 },
 };
 
 const resetForm = () => {
   formState.value = {
-    register: "https://registry.npm.taobao.org",
-    database: "https://gitcode.net/rubickcenter/rubick-database/-/raw/master",
-    access_token: ""
+    register: 'https://registry.npm.taobao.org',
+    database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
+    access_token: '',
   };
 };
 
 const submit = () => {
   const changeData: any = {
-    _id: "rubick-localhost-config",
-    data: toRaw(formState.value)
+    _id: 'rubick-localhost-config',
+    data: toRaw(formState.value),
   };
 
   if (_rev) {
@@ -85,13 +85,17 @@ const submit = () => {
   }
 
   window.rubick.db.put(changeData);
-  message.success("设置成功！重启插件市场后生效！");
+  message.success('设置成功！重启插件市场后生效！');
 };
 </script>
 
 <style lang="less" scoped>
-:deep(label) {
-  color: var(--color-text-content);
+.ant-form {
+  :deep(.ant-form-item) {
+    label {
+      color: var(--color-text-content);
+    }
+  }
 }
 :deep(.ant-input) {
   background: var(--color-input-hover);

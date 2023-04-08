@@ -222,13 +222,19 @@ const deletePlugin = async (plugin) => {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .installed {
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   background: var(--color-body-bg);
   height: calc(~'100vh - 46px');
+  :deep(.ant-result-title) {
+    color: var(--color-text-primary);
+  }
+  :deep(.ant-result-subtitle) {
+    color: var(--color-text-desc);
+  }
 
   .container {
     box-sizing: border-box;
@@ -298,7 +304,7 @@ const deletePlugin = async (plugin) => {
       }
     }
     .ant-tabs {
-      .ant-tabs-bar {
+      :deep(.ant-tabs-bar) {
         color: var(--color-text-content);
         border-bottom: 1px solid var(--color-border-light);
       }
