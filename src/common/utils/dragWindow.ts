@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import commonConst from './commonConst';
 
 const useDrag = () => {
   let animationId: number;
@@ -9,6 +10,7 @@ const useDrag = () => {
   let draggable = true;
 
   const onMouseDown = (e) => {
+    if (commonConst.macOS()) return;
     draggable = true;
     mouseX = e.clientX;
     mouseY = e.clientY;

@@ -1,5 +1,9 @@
 <template>
-  <div id="components-layout" @mousedown="onMouseDown">
+  <div
+    id="components-layout"
+    :class="commonConst.macOS() && 'drag'"
+    @mousedown="onMouseDown"
+  >
     <Search
       :currentPlugin="currentPlugin"
       @changeCurrent="changeIndex"
@@ -34,6 +38,7 @@ import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
 import createPluginManager from './plugins-manager';
 import useDrag from '../common/utils/dragWindow';
+import commonConst from '@/common/utils/commonConst';
 
 const { onMouseDown } = useDrag();
 
@@ -119,6 +124,9 @@ const clearSearchValue = () => {
   background: var(--color-body-bg);
   ::-webkit-scrollbar {
     width: 0;
+  }
+  &.drag {
+    -webkit-app-region: drag;
   }
 }
 </style>
