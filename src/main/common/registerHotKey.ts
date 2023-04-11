@@ -6,8 +6,9 @@ import {
   screen,
   ipcMain,
   app,
+  Notification,
 } from 'electron';
-import { screenshots } from './registerScreenshots';
+import screenCapture from '@/core/screen-capture';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -79,7 +80,13 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     });
 
     globalShortcut.register(config.perf.shortCut.capture, () => {
-      screenshots.startCapture();
+      screenCapture(mainWindow, (data) => {
+        data &&
+          new Notification({
+            title: '截图完成',
+            body: '截图以存储到系统剪贴板中',
+          }).show();
+      });
     });
 
     // globalShortcut.register(config.perf.shortCut.separate, () => {

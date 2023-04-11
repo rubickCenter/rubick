@@ -11,11 +11,10 @@ import {
 } from 'electron';
 import { runner, detach } from '../browsers';
 import fs from 'fs';
-import { LocalDb } from '@/core';
+import { LocalDb, screenCapture } from '@/core';
 import plist from 'plist';
 import { DECODE_KEY } from '@/common/constans/main';
 import mainInstance from '../index';
-import { screenshots } from './registerScreenshots';
 const runnerInstance = runner();
 const detachInstance = detach();
 const dbInstance = new LocalDb(app.getPath('userData'));
@@ -33,14 +32,6 @@ class API {
       const data = await this[arg.type](arg, window, event);
       event.returnValue = data;
       // event.sender.send(`msg-back-${arg.type}`, data);
-    });
-
-    // 注册截屏成功回调事件
-    screenshots.on('ok', (e, buffer) => {
-      const image = nativeImage.createFromBuffer(buffer);
-      runnerInstance.executeHooks('ScreenCapture', {
-        data: image.toDataURL(),
-      });
     });
   }
 
@@ -323,8 +314,12 @@ class API {
     return true;
   }
 
-  public screenCapture() {
-    screenshots.startCapture();
+  public screenCapture(arg, window) {
+    screenCapture(window, (img) => {
+      runnerInstance.executeHooks('ScreenCapture', {
+        data: img,
+      });
+    });
   }
 }
 
