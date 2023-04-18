@@ -23,15 +23,24 @@ import { ref } from "vue";
 
 const { ipcRenderer } = window.require("electron");
 const platform = ref(window.process.platform);
-const plugInfo = ref({});
 const showInput = ref(false);
+
+const storeInfo = localStorage.getItem('rubick-system-detach') || '{}';
+const plugInfo = ref({});
+
 window.initDetach = (pluginInfo) => {
   plugInfo.value = pluginInfo;
   showInput.value =
     pluginInfo.subInput &&
     (!!pluginInfo.subInput.value || !!pluginInfo.subInput.placeholder);
-  console.log(showInput.value);
+  localStorage.setItem('rubick-system-detach', JSON.stringify(pluginInfo));
 };
+
+try {
+  window.initDetach(JSON.parse(storeInfo));
+} catch (e) {
+  // ...
+}
 
 const changeValue = throttle((e) => {
   ipcRenderer.send("msg-trigger", {
