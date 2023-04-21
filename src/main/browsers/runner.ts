@@ -80,7 +80,7 @@ export default () => {
     view.webContents.once('dom-ready', () => {
       const height = pluginSetting && pluginSetting.height;
       window.setSize(800, height || 660);
-      view.setBounds({ x: 0, y: 60, width: 800, height: height || 660 });
+      view.setBounds({ x: 0, y: 60, width: 800, height: height || 600 });
       view.setAutoResize({ width: true });
       executeHooks('PluginEnter', plugin.ext);
       executeHooks('PluginReady', plugin.ext);
