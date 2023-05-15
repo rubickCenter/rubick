@@ -62,7 +62,10 @@ class App {
       createTray(this.windowCreator.getWindow());
       registerHotKey(this.windowCreator.getWindow());
       this.systemPlugins.triggerReadyHooks(
-        Object.assign(electron, { mainWindow: this.windowCreator.getWindow() })
+        Object.assign(electron, {
+          mainWindow: this.windowCreator.getWindow(),
+          API,
+        })
       );
     };
     if (!app.isReady()) {
