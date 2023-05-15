@@ -71,9 +71,8 @@ class API {
   }
 
   public openPlugin({ data: plugin }, window) {
-    if (this.currentPlugin && this.currentPlugin.name === plugin.name) return;
     window.setSize(window.getSize()[0], 60);
-    runnerInstance.removeView(window);
+    this.removePlugin(null, window);
     runnerInstance.init(plugin, window);
     this.currentPlugin = plugin;
     window.webContents.executeJavaScript(
