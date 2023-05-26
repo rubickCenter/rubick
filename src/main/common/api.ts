@@ -110,7 +110,7 @@ class API {
   }
 
   public showOpenDialog({ data }, window) {
-    dialog.showOpenDialogSync(window, data);
+    return dialog.showOpenDialogSync(window, data);
   }
 
   public setExpendHeight({ data: height }, window: BrowserWindow, e) {
@@ -306,6 +306,10 @@ class API {
   public shellShowItemInFolder({ data }) {
     shell.showItemInFolder(data.path);
     return true;
+  }
+  public async getFileIcon({ data }) {
+    const nativeImage = await app.getFileIcon(data.path, { size: 'normal' });
+    return nativeImage.toDataURL();
   }
 
   public shellBeep() {

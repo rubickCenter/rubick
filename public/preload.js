@@ -41,7 +41,7 @@ window.rubick = {
     ipcSendSync('showMainWindow');
   },
   showOpenDialog(options) {
-    ipcSendSync('showOpenDialog', options);
+    return ipcSendSync('showOpenDialog', options);
   },
   setExpendHeight(height) {
     ipcSendSync('setExpendHeight', height);
@@ -161,5 +161,9 @@ window.rubick = {
 
   shellBeep: () => {
     ipcSend('shellBeep');
+  },
+  
+  getFileIcon: (path) => {
+    return ipcSendSync('getFileIcon', { path });
   },
 };
