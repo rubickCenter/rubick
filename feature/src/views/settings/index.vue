@@ -36,12 +36,31 @@
             <div class="label">显示/隐藏快捷键</div>
             <a-tooltip placement="top" trigger="click">
               <template #title>
-                <span>{{ tipText }} </span>
+                <span>{{ tipText }}</span>
+                <template v-if="isWindows">
+                  <br />
+                  <span
+                    style="cursor: pointer; text-decoration: underline"
+                    @click="resetDefault('Alt')"
+                  >
+                    Alt+Space
+                  </span>
+                  <span
+                    style="
+                      cursor: pointer;
+                      margin-left: 8px;
+                      text-decoration: underline;
+                    "
+                    @click="resetDefault('Ctrl')"
+                  >
+                    Ctrl+Space
+                  </span>
+                </template>
               </template>
               <div
                 class="value"
                 tabIndex="-1"
-                @keyup="e => changeShortCut(e, 'showAndHidden')"
+                @keyup="(e) => changeShortCut(e, 'showAndHidden')"
               >
                 {{ shortCut.showAndHidden }}
               </div>
@@ -51,12 +70,12 @@
             <div class="label">截屏</div>
             <a-tooltip placement="top" trigger="click">
               <template #title>
-                <span>{{ tipText }} </span>
+                <span>{{ tipText }}</span>
               </template>
               <div
                 class="value"
                 tabIndex="-1"
-                @keyup="e => changeShortCut(e, 'capture')"
+                @keyup="(e) => changeShortCut(e, 'capture')"
               >
                 {{ shortCut.capture }}
               </div>
@@ -129,12 +148,12 @@
             <template :key="index" v-for="(item, index) in global">
               <a-tooltip placement="top" trigger="click">
                 <template #title>
-                  <span>{{ tipText }}或按 F1-F12 单键 </span>
+                  <span>{{ tipText }}或按 F1-F12 单键</span>
                 </template>
                 <div
                   class="value"
                   tabIndex="2"
-                  @keyup="e => changeGlobalKey(e, index)"
+                  @keyup="(e) => changeGlobalKey(e, index)"
                 >
                   {{ item.key }}
                   <MinusCircleOutlined
@@ -152,7 +171,7 @@
                 class="value"
                 allowClear
                 :disabled="!item.key"
-                @change="e => changeGlobalValue(index, e.target.value)"
+                @change="(e) => changeGlobalValue(index, e.target.value)"
               />
             </template>
           </div>
@@ -176,41 +195,42 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   FileAddOutlined,
-} from "@ant-design/icons-vue";
-import debounce from "lodash.debounce";
-import { ref, reactive, watch, toRefs, computed, toRaw } from "vue";
-import keycodes from "./keycode";
-import Localhost from "./localhost.vue";
-import SuperPanel from "./super-panel.vue";
+} from '@ant-design/icons-vue';
+import debounce from 'lodash.debounce';
+import { ref, reactive, watch, toRefs, computed, toRaw } from 'vue';
+import keycodes from './keycode';
+import Localhost from './localhost.vue';
+import SuperPanel from './super-panel.vue';
 
-const { remote, ipcRenderer } = window.require("electron");
+const { remote, ipcRenderer } = window.require('electron');
 
 const examples = [
   {
-    title: "快捷键 「 Alt + W」 关键字 「 微信」",
-    desc: "按下Alt + W 直接打开本地微信应用"
+    title: '快捷键 「 Alt + W」 关键字 「 微信」',
+    desc: '按下Alt + W 直接打开本地微信应用',
   },
   {
-    title: "快捷键 「 Alt + Q」 关键字 「 取色」",
-    desc: "按下Alt + Q 直接打开屏幕取色功能"
-  }
+    title: '快捷键 「 Alt + Q」 关键字 「 取色」',
+    desc: '按下Alt + Q 直接打开屏幕取色功能',
+  },
 ];
 
 const state = reactive({
   shortCut: {},
   common: {},
   local: {},
-  global: []
+  global: [],
 });
 
+const isWindows = window?.rubick?.isWindows();
 const tipText = computed(() => {
-  const optionKeyName = window.rubick.isMacOs() ? "Option、Command" : "Alt";
+  const optionKeyName = isWindows ? 'Alt' : 'Option、Command';
   return `先按功能键（Ctrl、Shift、${optionKeyName}），再按其他普通键。`;
 });
 
-const currentSelect = ref(["normal"]);
+const currentSelect = ref(['normal']);
 
-const { perf, global: defaultGlobal } = remote.getGlobal("OP_CONFIG").get();
+const { perf, global: defaultGlobal } = remote.getGlobal('OP_CONFIG').get();
 
 state.shortCut = perf.shortCut;
 state.common = perf.common;
@@ -218,19 +238,19 @@ state.local = perf.local;
 state.global = defaultGlobal;
 
 const setConfig = debounce(() => {
-  remote.getGlobal("OP_CONFIG").set(
+  remote.getGlobal('OP_CONFIG').set(
     JSON.parse(
       JSON.stringify({
         perf: {
           shortCut: state.shortCut,
           common: state.common,
-          local: state.local
+          local: state.local,
         },
-        global: state.global
+        global: state.global,
       })
     )
   );
-  ipcRenderer.send("re-register");
+  ipcRenderer.send('re-register');
 }, 500);
 
 watch(state, setConfig);
@@ -280,6 +300,22 @@ const changeGlobalKey = (e, index) => {
   }
 };
 
+const resetDefault = (key) => {
+  switch (key) {
+    case 'Alt':
+      state.shortCut['showAndHidden'] = 'Option+SPACE';
+      // copyValue.value = "Option+SPACE";
+      break;
+    case 'Ctrl':
+      state.shortCut['showAndHidden'] = 'Ctrl+SPACE';
+      // copyValue.value = "Ctrl+SPACE";
+      break;
+    default:
+      break;
+  }
+  setConfig();
+};
+
 const changeGlobalValue = (index, value) => {
   state.global[index].value = value;
 };
@@ -291,8 +327,8 @@ const deleteGlobalKey = (e, index) => {
 
 const addConfig = () => {
   state.global.push({
-    key: "",
-    value: ""
+    key: '',
+    value: '',
   });
 };
 
@@ -300,13 +336,13 @@ const { shortCut, common, local, global } = toRefs(state);
 </script>
 
 <style lang="less" scoped>
-@import "~@/assets/common.less";
+@import '~@/assets/common.less';
 .settings {
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
   background: var(--color-body-bg);
-  height: calc(~"100vh - 46px");
+  height: calc(~'100vh - 46px');
   display: flex;
   .settings-detail {
     padding: 20px;
@@ -337,6 +373,7 @@ const { shortCut, common, local, global } = toRefs(state);
         }
         .value {
           width: 300px;
+          cursor: pointer;
           text-align: center;
           border: 1px solid var(--color-border-light);
           color: #6c9fe2;
@@ -366,6 +403,7 @@ const { shortCut, common, local, global } = toRefs(state);
       margin-left: 20px;
     }
     .value {
+      cursor: pointer;
       text-align: center;
       border: 1px solid var(--color-border-light);
       color: #6c9fe2;
