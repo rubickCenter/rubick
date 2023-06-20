@@ -255,7 +255,7 @@ const setConfig = debounce(() => {
 
 watch(state, setConfig);
 
-const changeShortCut = (e, key) => {
+const changeShortCutOld = (e, key) => {
   if (e.altKey && e.keyCode !== 18) {
     const compose = `Option+${keycodes[e.keyCode].toUpperCase()}`;
     state.shortCut[key] = compose;
@@ -271,6 +271,30 @@ const changeShortCut = (e, key) => {
   if (e.metaKey && e.keyCode !== 93) {
     const compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
     state.shortCut[key] = compose;
+  }
+};
+
+const changeShortCut = (e, key) => {
+  let compose = '';
+  if (e.ctrlKey && e.keyCode !== 17) {
+    compose += '+Ctrl';
+  }
+  if (e.shiftKey && e.keyCode !== 16) {
+    compose += '+Shift';
+  }
+  if (e.altKey && e.keyCode !== 18) {
+    compose += '+Option';
+  }
+  if (e.metaKey && e.keyCode !== 93) {
+    compose += '+Command';
+  }
+  compose += '+'+keycodes[e.keyCode].toUpperCase();
+  compose = compose.substring(1)
+  console.log(compose);
+  if(e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93){
+    state.shortCut[key] = compose;
+  }else{
+    // 不做处理
   }
 };
 
