@@ -18,6 +18,9 @@ function searchKeyValues(lists, value, strict = false) {
     if (item.type === 'regex' && !strict) {
       return formatReg(item.match).test(value);
     }
+    if (item.type === 'over') {
+      return true;
+    }
     return false;
   });
 }

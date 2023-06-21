@@ -25,6 +25,10 @@ module.exports = {
         path: '/dev/',
       },
       {
+        title: '特殊服务',
+        path: '/super/',
+      },
+      {
         title: 'API',
         path: '/api/',
       },
