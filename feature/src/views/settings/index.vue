@@ -213,6 +213,10 @@ const examples = [
     title: '快捷键 「 Alt + Q」 关键字 「 取色」',
     desc: '按下Alt + Q 直接打开屏幕取色功能',
   },
+  {
+    title: '快捷键 「 Ctrl + Alt + Q」 关键字 「 截屏」',
+    desc: '按下 Ctrl + Alt + Q 进行截屏',
+  },
 ];
 
 const state = reactive({
@@ -255,43 +259,29 @@ const setConfig = debounce(() => {
 
 watch(state, setConfig);
 
-const changeShortCutOld = (e, key) => {
-  if (e.altKey && e.keyCode !== 18) {
-    const compose = `Option+${keycodes[e.keyCode].toUpperCase()}`;
-    state.shortCut[key] = compose;
-  }
-  if (e.ctrlKey && e.keyCode !== 17) {
-    const compose = `Ctrl+${keycodes[e.keyCode].toUpperCase()}`;
-    state.shortCut[key] = compose;
-  }
-  if (e.shiftKey && e.keyCode !== 16) {
-    const compose = `Shift+${keycodes[e.keyCode].toUpperCase()}`;
-    state.shortCut[key] = compose;
-  }
-  if (e.metaKey && e.keyCode !== 93) {
-    const compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
-    state.shortCut[key] = compose;
-  }
-};
-
 const changeShortCut = (e, key) => {
   let compose = '';
+  // 添加是否包含功能键的判断
+  let incluFuncKeys = false;
   if (e.ctrlKey && e.keyCode !== 17) {
     compose += '+Ctrl';
+    incluFuncKeys = true;
   }
   if (e.shiftKey && e.keyCode !== 16) {
     compose += '+Shift';
+    incluFuncKeys = true;
   }
   if (e.altKey && e.keyCode !== 18) {
     compose += '+Option';
+    incluFuncKeys = true;
   }
   if (e.metaKey && e.keyCode !== 93) {
     compose += '+Command';
+    incluFuncKeys = true;
   }
   compose += '+'+keycodes[e.keyCode].toUpperCase();
   compose = compose.substring(1)
-  console.log(compose);
-  if(e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93){
+  if(incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93){
     state.shortCut[key] = compose;
   }else{
     // 不做处理
@@ -299,27 +289,35 @@ const changeShortCut = (e, key) => {
 };
 
 const changeGlobalKey = (e, index) => {
-  let compose;
-  if (e.altKey && e.keyCode !== 18) {
-    compose = `Alt+${keycodes[e.keyCode].toUpperCase()}`;
-  }
+  let compose = '';
+  // 添加是否包含功能键的判断
+  let incluFuncKeys = false;
   if (e.ctrlKey && e.keyCode !== 17) {
-    compose = `Ctrl+${keycodes[e.keyCode].toUpperCase()}`;
+    compose += '+Ctrl';
+    incluFuncKeys = true;
   }
   if (e.shiftKey && e.keyCode !== 16) {
-    compose = `Shift+${keycodes[e.keyCode].toUpperCase()}`;
+    compose += '+Shift';
+    incluFuncKeys = true;
+  }
+  if (e.altKey && e.keyCode !== 18) {
+    compose += '+Option';
+    incluFuncKeys = true;
   }
   if (e.metaKey && e.keyCode !== 93) {
-    compose = `Command+${keycodes[e.keyCode].toUpperCase()}`;
+    compose += '+Command';
+    incluFuncKeys = true;
   }
-  if (compose) {
+  compose += '+' + keycodes[e.keyCode].toUpperCase();
+  compose = compose.substring(1)
+  if (incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93) {
     state.global[index].key = compose;
+  } else {
+    // 不做处理
   }
   // f1 - f12
-  if (e.keyCode >= 112 && e.keyCode <= 123) {
+  if (!incluFuncKeys && e.keyCode >= 112 && e.keyCode <= 123) {
     compose = keycodes[e.keyCode].toUpperCase();
-  }
-  if (compose) {
     state.global[index].key = compose;
   }
 };
