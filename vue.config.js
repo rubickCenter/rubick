@@ -33,6 +33,17 @@ module.exports = {
         directories: {
           output: 'build',
         },
+        releaseInfo: {
+          releaseName: 'normal', // normal 弹窗 / major 强制更新
+          releaseNotesFile: './release/releaseNotes.md',
+        },
+        publish: [
+          {
+            provider: 'github',
+            owner: 'rubickCenter',
+            repo: 'rubick',
+          },
+        ],
         // files: ["dist_electron/**/*"],
         dmg: {
           contents: [

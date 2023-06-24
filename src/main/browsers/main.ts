@@ -1,6 +1,7 @@
-import { app, BrowserWindow, protocol } from "electron";
-import path from "path";
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+import { app, BrowserWindow, protocol } from 'electron';
+import path from 'path';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
+import versonHandler from '../common/versionHandler';
 export default () => {
   let win: any;
 
@@ -15,7 +16,7 @@ export default () => {
       resizable: true,
       width: 800,
       frame: false,
-      title: "拉比克",
+      title: '拉比克',
       show: false,
       skipTaskbar: true,
       webPreferences: {
@@ -25,40 +26,41 @@ export default () => {
         contextIsolation: false,
         webviewTag: true,
         nodeIntegration: true,
-        preload: path.join(__static, "preload.js")
-      }
+        preload: path.join(__static, 'preload.js'),
+      },
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
       win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
     } else {
-      createProtocol("app");
+      createProtocol('app');
       // Load the index.html when not in development
-      win.loadURL("app://./index.html");
+      win.loadURL('app://./index.html');
     }
-    protocol.interceptFileProtocol("image", (req, callback) => {
+    protocol.interceptFileProtocol('image', (req, callback) => {
       const url = req.url.substr(8);
       callback(decodeURI(url));
     });
-    win.on("closed", () => {
+    win.on('closed', () => {
       win = undefined;
     });
 
-    win.on("show", () => {
+    win.on('show', () => {
       win.webContents.executeJavaScript(
         `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onShow === "function" && window.rubick.hooks.onShow()`
       );
+      versonHandler.checkUpdate();
       // win.webContents.openDevTools();
     });
 
-    win.on("hide", () => {
+    win.on('hide', () => {
       win.webContents.executeJavaScript(
         `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onHide === "function" && window.rubick.hooks.onHide()`
       );
     });
 
     // 判断失焦是否隐藏
-    win.on("blur", () => {
+    win.on('blur', () => {
       const config = { ...global.OP_CONFIG.get() };
       if (config.perf.common.hideOnBlur) {
         win.hide();
@@ -70,6 +72,6 @@ export default () => {
 
   return {
     init,
-    getWindow
+    getWindow,
   };
 };
