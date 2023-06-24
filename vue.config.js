@@ -33,6 +33,13 @@ module.exports = {
         directories: {
           output: 'build',
         },
+        // publish: [
+        //   {
+        //     provider: 'github',
+        //     owner: 'rubickCenter',
+        //     repo: 'rubick',
+        //   },
+        // ],
         // files: ["dist_electron/**/*"],
         dmg: {
           contents: [
