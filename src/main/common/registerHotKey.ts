@@ -84,7 +84,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
         data &&
           new Notification({
             title: '截图完成',
-            body: '截图以存储到系统剪贴板中',
+            body: '截图已存储到系统剪贴板中',
           }).show();
       });
     });
