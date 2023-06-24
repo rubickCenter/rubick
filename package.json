@@ -26,6 +26,7 @@
     "cross-spawn": "^7.0.3",
     "extract-file-icon": "^0.3.2",
     "fix-path": "^3.0.0",
+    "electron-updater": "^4.6.5",
     "get-mac-apps": "^1.0.2",
     "got": "^11.8.3",
     "lodash.throttle": "^4.1.1",
