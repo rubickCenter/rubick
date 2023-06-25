@@ -6,12 +6,6 @@ import commonConst from '@/common/utils/commonConst';
 import { main } from '../browsers';
 import { app } from 'electron';
 
-// Object.defineProperty(app, 'isPackaged', {
-//   get() {
-//     return true;
-//   },
-// });
-
 class VersionHandler {
   private lastestVersion: string;
   private currentVersion: string;

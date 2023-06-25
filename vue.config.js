@@ -62,7 +62,12 @@ module.exports = {
         },
         mac: {
           icon: 'public/icons/icon.icns',
-          target: ['pkg'],
+          target: ['dmg', 'zip'],
+          gatekeeperAssess: false,
+          entitlementsInherit: './release/entitlements.mac.plist',
+          entitlements: './release/entitlements.mac.plist',
+          hardenedRuntime: true,
+          category: 'public.app-category.developer-tools',
           extendInfo: {
             LSUIElement: 1,
           },
