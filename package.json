@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.2.11",
+  "version": "2.2.12",
   "author": "muwoo <2424880409@qq.com>",
   "private": true,
   "scripts": {
@@ -63,5 +63,10 @@
     "typescript": "~4.1.5",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "worker-plugin": "^5.0.1"
+  },
+  "overrides": {
+    "vue-cli-plugin-electron-builder": {
+      "electron-builder": "^23.0.3"
+    }
   }
 }
