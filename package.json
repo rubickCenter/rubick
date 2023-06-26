@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.2.12",
+  "version": "2.2.13",
   "author": "muwoo <2424880409@qq.com>",
   "private": true,
   "scripts": {
@@ -64,9 +64,7 @@
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "worker-plugin": "^5.0.1"
   },
-  "overrides": {
-    "vue-cli-plugin-electron-builder": {
-      "electron-builder": "^23.0.3"
-    }
+  "resolutions": {
+    "vue-cli-plugin-electron-builder/electron-builder": "^23.0.3"
   }
 }
