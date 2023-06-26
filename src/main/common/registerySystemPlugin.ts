@@ -1,26 +1,24 @@
 /* eslint-disable */
-import path from "path";
-import fs from "fs";
-import { PLUGIN_INSTALL_DIR } from "@/common/constans/main";
+import path from 'path';
+import fs from 'fs';
+import { PLUGIN_INSTALL_DIR } from '@/common/constans/main';
 
 export default () => {
   // 读取所有插件
   const totalPlugins = global.LOCAL_PLUGINS.getLocalPlugins();
-  let systemPlugins = totalPlugins.filter((plugin) => plugin.pluginType === "system");
+  let systemPlugins = totalPlugins.filter(
+    (plugin) => plugin.pluginType === 'system'
+  );
   systemPlugins = systemPlugins.map((plugin) => {
     const pluginPath = path.resolve(
       PLUGIN_INSTALL_DIR,
-      "node_modules",
+      'node_modules',
       plugin.name
     );
     return {
       ...plugin,
-      indexPath: path.join(
-        pluginPath,
-        "./",
-        plugin.entry
-      ),
-    }
+      indexPath: path.join(pluginPath, './', plugin.entry),
+    };
   });
 
   const hooks = {
@@ -39,14 +37,14 @@ export default () => {
     // @ts-ignore
     hooks.onReady.forEach((hook: any) => {
       try {
-        hook(ctx);
+        hook && hook(ctx);
       } catch (e) {
         console.log(e);
       }
     });
-  }
+  };
 
   return {
-    triggerReadyHooks
+    triggerReadyHooks,
   };
-}
+};

@@ -78,6 +78,7 @@ export default () => {
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
     view.webContents.once('dom-ready', () => {
+      if (!view) return;
       const height = pluginSetting && pluginSetting.height;
       window.setSize(800, height || 660);
       view.setBounds({ x: 0, y: 60, width: 800, height: height || 600 });
