@@ -18,12 +18,10 @@ rubick 之前的插件管理，依托于云服务器存储，我们需要为服�
 ## 下载 rubick
 [rubick 下载安装地址](https://github.com/rubickCenter/rubick/releases)
 
-macos 选择 `pkg` 文件，windows 选择 `exe` 文件。
+macos 选择 `pkg` 文件，windows 选择 `exe` 文件，Debian/Ubuntu选择`deb`。
 安装完成后打开 rubick 即可看到主搜索界面：
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/26f0fbe2c69246b6a3ed139b0df1ca0b~tplv-k3u1fbpfcp-watermark.image)
-
-目前支持 windows 和 macos。linux 小伙伴正在开发中
 
 ## 功能说明
 接下来详细介绍 rubick 所包含和支持的功能
