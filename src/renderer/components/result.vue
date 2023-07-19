@@ -60,7 +60,7 @@ const renderTitle = (title) => {
   if (!props.searchValue) return title;
   const result = title.toLowerCase().split(props.searchValue.toLowerCase());
   if (result && result.length > 1) {
-    return `<div>${result[0]}<span style='color: red'>${props.searchValue}</span>${result[1]}</div>`;
+    return `<div>${result[0]}<span style='color: var(--ant-error-color)'>${props.searchValue}</span>${result[1]}</div>`;
   } else {
     return `<div>${result[0]}</div>`;
   }

@@ -1,17 +1,20 @@
-import path from "path";
-import fs from "fs";
-import getLocalDataFile from "./getLocalDataFile";
-import defaultConfigForAnyPlatform from "../constans/defaultConfig";
+import path from 'path';
+import fs from 'fs';
+import getLocalDataFile from './getLocalDataFile';
+import defaultConfigForAnyPlatform from '../constans/defaultConfig';
 
-const configPath = path.join(getLocalDataFile(), "./rubick-config.json");
+const configPath = path.join(getLocalDataFile(), './rubick-config.json');
 
 global.OP_CONFIG = {
   config: null,
+  getDefaultConfig() {
+    return defaultConfigForAnyPlatform;
+  },
   get() {
     try {
       if (!global.OP_CONFIG.config) {
         global.OP_CONFIG.config = JSON.parse(
-          fs.readFileSync(configPath, "utf8") ||
+          fs.readFileSync(configPath, 'utf8') ||
             JSON.stringify(defaultConfigForAnyPlatform)
         );
       }

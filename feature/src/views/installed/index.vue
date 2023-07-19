@@ -64,7 +64,6 @@
                   :key="cmd"
                   v-for="cmd in item.cmds"
                   :class="{ executable: !cmd.label }"
-                  :color="!cmd.label && '#87d068'"
                 >
                   <span
                     @click="
@@ -329,7 +328,7 @@ const deletePlugin = async (plugin) => {
 
         &.executable {
           cursor: pointer;
-
+          color: var(--ant-info-color);
           &:hover {
             transform: translateY(-2px);
           }

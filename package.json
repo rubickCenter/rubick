@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.2.13",
+  "version": "2.3.0",
   "author": "muwoo <2424880409@qq.com>",
   "private": true,
   "scripts": {
@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@better-scroll/core": "^2.4.2",
-    "ant-design-vue": "^2.2.8",
+    "ant-design-vue": "3.2.14",
     "axios": "^1.3.4",
     "core-js": "^3.6.5",
     "cross-spawn": "^7.0.3",
+    "electron-updater": "^4.6.5",
     "extract-file-icon": "^0.3.2",
     "fix-path": "^3.0.0",
-    "electron-updater": "^4.6.5",
     "get-mac-apps": "^1.0.2",
     "got": "^11.8.3",
     "lodash.throttle": "^4.1.1",

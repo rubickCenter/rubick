@@ -7,7 +7,7 @@
           <a-list-item v-if="item" @click="showDetail(item)">
             <template #actions>
               <a-button
-                style="color: #ff4ea4"
+                class="download-plugin-btn"
                 type="text"
                 :loading="item.isloading"
               >
@@ -134,6 +134,9 @@ const showDetail = async item => {
 }
 .panel-item {
   margin: 20px 0;
+  .download-plugin-btn {
+    color: var(--ant-primary-color);
+  }
   .title {
     margin-bottom: 30px;
     color: var(--color-text-primary);

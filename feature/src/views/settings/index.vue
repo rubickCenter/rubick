@@ -2,27 +2,33 @@
   <div class="settings">
     <div class="left-menu">
       <a-menu v-model:selectedKeys="currentSelect" mode="inline">
+        <a-menu-item key="userInfo">
+          <template #icon>
+            <UserOutlined/>
+          </template>
+          账户信息
+        </a-menu-item>
         <a-menu-item key="normal">
           <template #icon>
-            <ToolOutlined />
+            <ToolOutlined/>
           </template>
           基本设置
         </a-menu-item>
         <a-menu-item key="global">
           <template #icon>
-            <LaptopOutlined />
+            <LaptopOutlined/>
           </template>
           全局快捷键
         </a-menu-item>
         <a-menu-item key="superpanel">
           <template #icon>
-            <FileAddOutlined />
+            <FileAddOutlined/>
           </template>
           超级面板设置
         </a-menu-item>
         <a-menu-item key="localhost">
           <template #icon>
-            <DatabaseOutlined />
+            <DatabaseOutlined/>
           </template>
           内网部署配置
         </a-menu-item>
@@ -38,7 +44,7 @@
               <template #title>
                 <span>{{ tipText }}</span>
                 <template v-if="isWindows">
-                  <br />
+                  <br/>
                   <span
                     style="cursor: pointer; text-decoration: underline"
                     @click="resetDefault('Alt')"
@@ -128,7 +134,7 @@
               按下快捷键，自动搜索对应关键字，当关键字结果完全匹配，且结果唯一时，会直接指向该功能。
             </div>
             <h3 style="margin-top: 10px">示例</h3>
-            <a-divider style="margin: 5px 0" />
+            <a-divider style="margin: 5px 0"/>
             <a-list item-layout="horizontal" :data-source="examples">
               <template #renderItem="{ item }">
                 <a-list-item>
@@ -177,12 +183,13 @@
           </div>
         </div>
         <div @click="addConfig" class="add-global">
-          <PlusCircleOutlined />
+          <PlusCircleOutlined/>
           新增全局快捷功能
         </div>
       </div>
-      <Localhost v-if="currentSelect[0] === 'localhost'" />
-      <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
+      <Localhost v-if="currentSelect[0] === 'localhost'"/>
+      <SuperPanel v-if="currentSelect[0] === 'superpanel'"/>
+      <UserInfo v-if="currentSelect[0] === 'userInfo'"/>
     </div>
   </div>
 </template>
@@ -195,14 +202,16 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   FileAddOutlined,
+  UserOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
-import { ref, reactive, watch, toRefs, computed, toRaw } from 'vue';
+import {ref, reactive, watch, toRefs, computed, toRaw} from 'vue';
 import keycodes from './keycode';
 import Localhost from './localhost.vue';
 import SuperPanel from './super-panel.vue';
+import UserInfo from './user-info';
 
-const { remote, ipcRenderer } = window.require('electron');
+const {remote, ipcRenderer} = window.require('electron');
 
 const examples = [
   {
@@ -224,6 +233,7 @@ const state = reactive({
   common: {},
   local: {},
   global: [],
+  custom: {},
 });
 
 const isWindows = window?.rubick?.isWindows();
@@ -232,11 +242,12 @@ const tipText = computed(() => {
   return `先按功能键（Ctrl、Shift、${optionKeyName}），再按其他普通键。`;
 });
 
-const currentSelect = ref(['normal']);
+const currentSelect = ref(['userInfo']);
 
-const { perf, global: defaultGlobal } = remote.getGlobal('OP_CONFIG').get();
+const {perf, global: defaultGlobal} = remote.getGlobal('OP_CONFIG').get();
 
 state.shortCut = perf.shortCut;
+state.custom = perf.custom;
 state.common = perf.common;
 state.local = perf.local;
 state.global = defaultGlobal;
@@ -249,6 +260,7 @@ const setConfig = debounce(() => {
           shortCut: state.shortCut,
           common: state.common,
           local: state.local,
+          custom: state.custom,
         },
         global: state.global,
       })
@@ -279,11 +291,11 @@ const changeShortCut = (e, key) => {
     compose += '+Command';
     incluFuncKeys = true;
   }
-  compose += '+'+keycodes[e.keyCode].toUpperCase();
+  compose += '+' + keycodes[e.keyCode].toUpperCase();
   compose = compose.substring(1)
-  if(incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93){
+  if (incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93) {
     state.shortCut[key] = compose;
-  }else{
+  } else {
     // 不做处理
   }
 };
@@ -354,11 +366,12 @@ const addConfig = () => {
   });
 };
 
-const { shortCut, common, local, global } = toRefs(state);
+const {shortCut, common, local, global} = toRefs(state);
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import '~@/assets/common.less';
+
 .settings {
   box-sizing: border-box;
   width: 100%;
@@ -366,6 +379,12 @@ const { shortCut, common, local, global } = toRefs(state);
   background: var(--color-body-bg);
   height: calc(~'100vh - 46px');
   display: flex;
+  
+  .ant-menu {
+    background: var(--color-body-bg) !important;
+    color: var(--color-text-content) !important;
+  }
+  
   .settings-detail {
     padding: 20px;
     box-sizing: border-box;
@@ -373,16 +392,20 @@ const { shortCut, common, local, global } = toRefs(state);
     overflow: auto;
     height: 100%;
     background: var(--color-body-bg);
+    
     .setting-item {
       margin-bottom: 20px;
+      
       .ant-form-item {
         margin-bottom: 0;
       }
+      
       .title {
-        color: #6c9fe2;
+        color: var(--ant-primary-color);
         font-size: 15px;
         margin-bottom: 10px;
       }
+      
       .settings-item-li {
         padding-left: 20px;
         display: flex;
@@ -390,20 +413,30 @@ const { shortCut, common, local, global } = toRefs(state);
         align-items: center;
         justify-content: space-between;
         margin-bottom: 10px;
+        
         .label {
           color: var(--color-text-content);
         }
+        
         .value {
           width: 300px;
           cursor: pointer;
           text-align: center;
           border: 1px solid var(--color-border-light);
-          color: #6c9fe2;
+          color: var(--ant-primary-color);
           font-size: 14px;
           height: 24px;
           font-weight: lighter;
+          
+          .ant-input {
+            text-align: center;
+            color: var(--ant-primary-color);
+            font-size: 14px;
+            font-weight: lighter;
+          }
         }
-        :deep(.ant-switch) {
+        
+        .ant-switch {
           &:not(.ant-switch-checked) {
             background: var(--color-list-hover);
           }
@@ -411,48 +444,56 @@ const { shortCut, common, local, global } = toRefs(state);
       }
     }
   }
+  
   .feature-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 10px;
     font-size: 14px;
+    
     .item {
       flex: 1;
       color: var(--color-text-content);
     }
+    
     .short-cut {
       margin-left: 20px;
     }
+    
     .value {
       cursor: pointer;
       text-align: center;
       border: 1px solid var(--color-border-light);
-      color: #6c9fe2;
+      color: var(--ant-primary-color);
       font-size: 14px;
       height: 24px;
       font-weight: lighter;
       margin-top: 10px;
       position: relative;
       background: var(--color-input-hover);
-      :deep(.ant-input) {
-        color: #6c9fe2;
+      
+      .ant-input {
+        color: var(--ant-primary-color);
         font-weight: lighter;
         background: none;
       }
-      :deep(.anticon) {
+      
+      .anticon {
         color: var(--color-text-desc);
       }
-
+      
       &.ant-input-affix-wrapper {
         display: flex;
       }
+      
       &:hover {
         .anticon {
           display: block;
           color: var(--color-text-content);
         }
       }
+      
       .anticon {
         position: absolute;
         display: none;
@@ -462,24 +503,29 @@ const { shortCut, common, local, global } = toRefs(state);
       }
     }
   }
+  
   .add-global {
-    color: #6c9fe2;
+    color: var(--ant-primary-color);
     margin-top: 20px;
     width: 100%;
     text-align: center;
     cursor: pointer;
   }
-  :deep(.ant-collapse) {
+  
+  .ant-collapse {
     background: var(--color-input-hover);
+    
     .ant-collapse-content {
       background: var(--color-input-hover);
       color: var(--color-text-content);
     }
+    
     h3,
     .ant-collapse-header,
     .ant-list-item-meta-title {
       color: var(--color-text-primary);
     }
+    
     .ant-list-item-meta-description {
       color: var(--color-text-desc);
     }

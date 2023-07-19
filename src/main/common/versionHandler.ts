@@ -46,7 +46,7 @@ class VersionHandler {
         if (releaseName === 'major') {
           autoUpdater.quitAndInstall(true, true);
         }
-        const mainWindow = main().getWindow()
+        const mainWindow = main().getWindow();
         dialog
           .showMessageBox(mainWindow, {
             title: '版本更新',

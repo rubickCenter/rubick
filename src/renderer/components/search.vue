@@ -22,7 +22,7 @@
       @keydown.up="e => keydownEvent(e, 'up')"
       @keydown="e => checkNeedInit(e)"
       :value="searchValue"
-      :placeholder="placeholder || 'Hi, Rubick2'"
+      :placeholder="placeholder || config.perf.custom.placeholder"
       @keypress.enter="e => keydownEvent(e, 'enter')"
       @keypress.space="e => keydownEvent(e, 'space')"
       @focus="emit('focus')"
@@ -43,7 +43,7 @@
             <img class="icon-tool" :src="currentPlugin.logo" />
           </div>
           <div @click="() => emit('openMenu')" v-else class="rubick-logo">
-            <img src="../assets/logo.png" />
+            <img :src="config.perf.custom.logo" />
           </div>
         </div>
       </template>
@@ -249,7 +249,7 @@ window.rubick.hooks.onHide = () => {
     height: 32px;
     position: relative;
     color: #fff;
-    background-color: rgba(255, 78, 164, 0.8);
+    background-color: var(--ant-primary-color);
     display: inline-flex;
     align-items: center;
     margin-right: 1px;
@@ -305,7 +305,7 @@ window.rubick.hooks.onHide = () => {
       color: var(--color-text-content);
     }
     .loading {
-      color: #ff4ea4;
+      color: var(--ant-primary-color);
       position: absolute;
       top: 0;
       left: 0;

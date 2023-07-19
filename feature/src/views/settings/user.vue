@@ -3,7 +3,7 @@
     <a-result
       v-if="!userInfo"
       title="请先登录"
-      sub-title="用户暂未登录，无法体验更多设置"
+      sub-title="登录后可开启用户个性化设置"
     >
       <template #extra>
         <a-button @click="showModal" type="primary">
@@ -11,6 +11,7 @@
         </a-button>
       </template>
     </a-result>
+    <Index v-else />
     <a-modal :footer="null" v-model:visible="visible">
       <a-result
         title="请使用微信扫码登录!"
@@ -28,6 +29,7 @@
 import { nanoid } from 'nanoid';
 import { ref, watch } from 'vue';
 import { message } from 'ant-design-vue';
+import Index from './index';
 import service from '../../assets/service';
 
 const userInfo = ref(window.rubick.dbStorage.getItem('rubick-user-info'));

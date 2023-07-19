@@ -8,14 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@vue/cli-service": "~4.5.0",
     "@ant-design/icons-vue": "^6.0.1",
+    "@vue/cli-service": "~4.5.0",
     "ant-design-vue": "3.2.14",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "markdown-it": "^12.2.0",
+    "nanoid": "^4.0.2",
     "vue": "3.2.45",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

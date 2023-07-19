@@ -1,8 +1,15 @@
-import commonConst from '@/common/utils/commonConst';
-
 export default {
-  version: 5,
+  version: 9,
   perf: {
+    custom: {
+      primaryColor: '#106898',
+      errorColor: '#ed6d46',
+      warningColor: '#e5a84b',
+      successColor: '#c0d695',
+      infoColor: '#007175',
+      logo: `file://${__static}/logo.png`,
+      placeholder: '你好 rubick',
+    },
     shortCut: {
       showAndHidden: 'Option+R',
       separate: 'Ctrl+D',
@@ -12,8 +19,7 @@ export default {
     common: {
       start: true,
       space: true,
-      // 是否失焦隐藏。默认在dev环境不隐藏，在打包后隐藏。
-      hideOnBlur: commonConst.production(),
+      hideOnBlur: true,
       autoPast: false,
       darkMode: false,
     },

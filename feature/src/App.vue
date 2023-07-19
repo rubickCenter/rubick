@@ -22,13 +22,7 @@
           <template #icon>
             <SettingOutlined />
           </template>
-          设置
-        </a-menu-item>
-        <a-menu-item key="account">
-          <template #icon>
-            <UserOutlined />
-          </template>
-          账户
+          账户与设置
         </a-menu-item>
         <a-menu-item key="dev">
           <template #icon>
