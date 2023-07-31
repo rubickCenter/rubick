@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div :class="{'main-container': true, dark: darkMode}">
     <div class="slider-bar">
       <a-menu
         v-model:selectedKeys="active"
@@ -37,18 +37,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   HeartOutlined,
-  UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
-  BugOutlined
-} from "@ant-design/icons-vue";
-import { useStore } from "vuex";
+  BugOutlined,
+} from '@ant-design/icons-vue';
+import { useStore } from 'vuex';
+
+const { remote } = window.require('electron');
+
+const { perf } = remote.getGlobal('OP_CONFIG').get();
+
+const darkMode = ref(perf.common.darkMode);
+
 const router = useRouter();
-const active = ref(["market"]);
+const active = ref(['market']);
 const changeMenu = (key: any) => {
   router.push(key);
 };
@@ -59,7 +65,7 @@ window.rubick.onPluginEnter(({ code }: { code: string }) => {
 });
 
 const store = useStore();
-const init = () => store.dispatch("init");
+const init = () => store.dispatch('init');
 init();
 </script>
 <style lang="less" scoped>

@@ -427,12 +427,13 @@ const {shortCut, common, local, global} = toRefs(state);
           font-size: 14px;
           height: 24px;
           font-weight: lighter;
-          
+          background: var(--color-input-hover);
           .ant-input {
             text-align: center;
             color: var(--ant-primary-color);
             font-size: 14px;
             font-weight: lighter;
+            background: var(--color-input-hover);
           }
         }
         

@@ -13,6 +13,7 @@ export default () => {
       width: viewInfo.width,
       autoHideMenuBar: true,
       titleBarStyle: 'hidden',
+      titleBarOverlay: true,
       trafficLightPosition: { x: 12, y: 21 },
       title: pluginInfo.pluginName,
       resizable: true,
@@ -44,6 +45,11 @@ export default () => {
     });
 
     win.once('ready-to-show', () => {
+      const darkMode = global.OP_CONFIG.get().perf.common.darkMode;
+      darkMode &&
+        win.webContents.executeJavaScript(
+          `document.body.classList.add("dark");window.rubick.theme="dark"`
+        );
       win.setBrowserView(view);
       win.webContents.executeJavaScript(
         `window.initDetach(${JSON.stringify(pluginInfo)})`

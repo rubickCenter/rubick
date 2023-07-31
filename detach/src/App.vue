@@ -79,10 +79,11 @@ html, body {
 
 .detach {
   width: 100%;
-  height: 56px;
+  height: 60px;
   display: flex;
   align-items: center;
-  background: #eee;
+  background: var(--color-body-bg);
+  color: var(--color-text-primary);
 }
 
 .detach {
@@ -112,8 +113,8 @@ html, body {
 }
 
 .detach input {
-  background-color: #FFFFFF;
-  color: #333333;
+  background-color: var(--color-body-bg);
+  color: var(--color-text-primary);
   width: 360px;
   height: 36px;
   line-height: 36px;
