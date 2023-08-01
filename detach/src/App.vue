@@ -1,7 +1,7 @@
 <template>
   <div :class="[platform, 'detach']">
     <div class="info">
-      <img :src="plugInfo.logo" />
+      <img :src="plugInfo.logo"/>
       <input
         autofocus
         @input="changeValue"
@@ -11,17 +11,25 @@
       />
       <span v-else>{{ plugInfo.pluginName }}</span>
     </div>
-    <div class="handle">
-      <div class="devtool" @click="openDevTool" title="开发者工具"></div>
+    <div class="handle-container">
+      <div class="handle">
+        <div class="devtool" @click="openDevTool" title="开发者工具"></div>
+      </div>
+      <div class="window-handle" v-if="platform !== 'darwin'">
+        <div class="minimize" @click="minimize"></div>
+        <div class="maximize" @click="maximize"></div>
+        <div class="close" @click="close"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import throttle from "lodash.throttle";
-import { ref } from "vue";
+import throttle from 'lodash.throttle';
+import { ref } from 'vue';
 
-const { ipcRenderer } = window.require("electron");
+const { ipcRenderer } = window.require('electron');
+
 const platform = ref(window.process.platform);
 const showInput = ref(false);
 
@@ -43,8 +51,8 @@ try {
 }
 
 const changeValue = throttle((e) => {
-  ipcRenderer.send("msg-trigger", {
-    type: "detachInputChange",
+  ipcRenderer.send('msg-trigger', {
+    type: 'detachInputChange',
     data: {
       text: e.target.value,
     },
@@ -52,7 +60,19 @@ const changeValue = throttle((e) => {
 }, 500);
 
 const openDevTool = () => {
-  ipcRenderer.send("msg-trigger", { type: "openPluginDevTools" });
+  ipcRenderer.send('msg-trigger', { type: 'openPluginDevTools' });
+};
+
+const minimize = () => {
+  ipcRenderer.send('detach:service', { type: 'minimize' });
+};
+
+const maximize = () => {
+  ipcRenderer.send('detach:service', { type: 'maximize' });
+};
+
+const close = () => {
+  ipcRenderer.send('detach:service', { type: 'close' });
 };
 
 Object.assign(window, {
@@ -82,7 +102,6 @@ html, body {
   height: 60px;
   display: flex;
   align-items: center;
-  background: var(--color-body-bg);
   color: var(--color-text-primary);
 }
 
@@ -153,8 +172,49 @@ html, body {
   background-color: #dee2e6;
 }
 
-.detach .devtool {
-  background: center / 18px no-repeat url("./assets/devtool.svg");
+.handle .devtool {
+  background: center no-repeat url("./assets/tool.svg")
+}
+
+.handle-container {
+  display: flex;
+  align-items: center;
+}
+
+.window-handle {
+  display: flex;
+  align-items: center;
+}
+
+.window-handle > div {
+  width: 48px;
+  height: 56px;
+  cursor: pointer;
+}
+
+.window-handle > div:hover {
+  background-color: #dee2e6;
+}
+
+.window-handle .minimize {
+  background: center / 20px no-repeat url("./assets/minimize.svg");
+}
+
+.window-handle .maximize {
+  background: center / 20px no-repeat url("./assets/maximize.svg");
+}
+
+.window-handle .unmaximize {
+  background: center / 20px no-repeat url("./assets/unmaximize.svg");
+}
+
+.window-handle .close {
+  background: center / 20px no-repeat url("./assets/close.svg");
+}
+
+.window-handle .close:hover {
+  background-color: #e53935 !important;
+  background-image: url("./assets/close-hover.svg") !important;
 }
 
 </style>
