@@ -63,7 +63,7 @@ export default {
           darkMode: 'Dark Mode',
           language: 'Language',
           changeLang: 'Change Language',
-          cn: 'Simplified Chinese',
+          cn: '简体中文',
           en: 'English',
         },
         global: {

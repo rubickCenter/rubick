@@ -62,7 +62,7 @@ export default {
           language: '语言',
           changeLang: '切换语言',
           cn: '简体中文',
-          en: '英文',
+          en: 'English',
         },
         global: {
           title: '全局快捷键',
