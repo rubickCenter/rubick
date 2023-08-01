@@ -1,5 +1,5 @@
-import { createStore } from "vuex";
-import request from "@/assets/request";
+import { createStore } from 'vuex';
+import request from '@/assets/request';
 
 const isDownload = (item: Market.Plugin, targets: any[]) => {
   let isDownload = false;
@@ -29,74 +29,84 @@ export default createStore({
       const totalPlugins = await request.getTotalPlugins();
       const localPlugins = window.market.getLocalPlugins();
 
-      totalPlugins.forEach(
-        (origin: Market.Plugin) => {
-          origin.isdownload = isDownload(origin, localPlugins);
-          origin.isloading = false;
-        }
-      );
-      commit("commonUpdate", {
+      totalPlugins.forEach((origin: Market.Plugin) => {
+        origin.isdownload = isDownload(origin, localPlugins);
+        origin.isloading = false;
+      });
+      // 修复卸载失败，一直转圈的问题。
+      localPlugins.forEach((origin: Market.Plugin) => {
+        origin.isloading = false;
+      });
+
+      commit('commonUpdate', {
         localPlugins,
         totalPlugins,
       });
     },
     startDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
-      totalPlugins.forEach(
-        (origin: Market.Plugin) => {
-          if (origin.name === name) {
-            origin.isloading = true;
-          }
+      totalPlugins.forEach((origin: Market.Plugin) => {
+        if (origin.name === name) {
+          origin.isloading = true;
         }
-      );
-      commit("commonUpdate", {
+      });
+      commit('commonUpdate', {
         totalPlugins,
       });
     },
 
     startUnDownload({ commit, state }, name) {
       const localPlugins = window.market.getLocalPlugins();
-      localPlugins.forEach(
-        (origin: Market.Plugin) => {
-          if (origin.name === name) {
-            origin.isloading = true;
-          }
+      localPlugins.forEach((origin: Market.Plugin) => {
+        if (origin.name === name) {
+          origin.isloading = true;
         }
-      );
-      commit("commonUpdate", {
+      });
+      commit('commonUpdate', {
+        localPlugins,
+      });
+    },
+
+    errorUnDownload({ commit, state }, name) {
+      const localPlugins = window.market.getLocalPlugins();
+      // 修复卸载失败，一直转圈的问题。
+      localPlugins.forEach((origin: Market.Plugin) => {
+        if (origin.name === name) {
+          origin.isloading = false;
+        }
+      });
+
+      commit('commonUpdate', {
         localPlugins,
       });
     },
 
     successDownload({ commit, state }, name) {
       const totalPlugins = JSON.parse(JSON.stringify(state.totalPlugins));
-      totalPlugins.forEach(
-        (origin: Market.Plugin) => {
-          if (origin.name === name) {
-            origin.isloading = false;
-            origin.isdownload = true;
-          }
+      totalPlugins.forEach((origin: Market.Plugin) => {
+        if (origin.name === name) {
+          origin.isloading = false;
+          origin.isdownload = true;
         }
-      );
+      });
       const localPlugins = window.market.getLocalPlugins();
 
-      commit("commonUpdate", {
+      commit('commonUpdate', {
         totalPlugins,
         localPlugins,
       });
     },
+
     async updateLocalPlugin({ commit }) {
       const localPlugins = window.market.getLocalPlugins();
       const totalPlugins = await request.getTotalPlugins();
 
-      totalPlugins.forEach(
-        (origin: Market.Plugin) => {
-          origin.isdownload = isDownload(origin, localPlugins);
-          origin.isloading = false;
-        }
-      );
+      totalPlugins.forEach((origin: Market.Plugin) => {
+        origin.isdownload = isDownload(origin, localPlugins);
+        origin.isloading = false;
+      });
 
-      commit("commonUpdate", {
+      commit('commonUpdate', {
         localPlugins,
         totalPlugins,
       });
