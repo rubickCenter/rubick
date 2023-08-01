@@ -1,5 +1,5 @@
 <template>
-  <p>请选择需要添加到超级面板中的常用插件</p>
+  <p>{{ $t('feature.settings.superPanel.tips') }}</p>
   <div class="super-list-item panel-item">
     <a-list
       :grid="{ gutter: 16, column: 2 }"
@@ -14,7 +14,7 @@
               style="color: #7ec699"
               type="text"
             >
-              添加
+              {{ $t('feature.settings.superPanel.add') }}
             </a-button>
             <a-button
               v-else
@@ -22,7 +22,7 @@
               style="color: #ff4ea4"
               type="text"
             >
-              移除
+              {{ $t('feature.settings.superPanel.remove') }}
             </a-button>
           </template>
           <a-list-item-meta>

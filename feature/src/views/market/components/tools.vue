@@ -3,18 +3,18 @@
     <PluginList
       v-if="tools && !!tools.length"
       @downloadSuccess="downloadSuccess"
-      title="搜索工具"
+      :title="$t('feature.market.searchTool')"
       :list="tools"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
-import request from "../../../assets/request/index";
-import PluginList from "./plugin-list.vue";
+import { ref, computed, onBeforeMount } from 'vue';
+import request from '../../../assets/request/index';
+import PluginList from './plugin-list.vue';
 
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 const store = useStore();
 const totalPlugins = computed(() => store.state.totalPlugins);
 

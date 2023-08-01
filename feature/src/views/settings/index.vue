@@ -4,47 +4,52 @@
       <a-menu v-model:selectedKeys="currentSelect" mode="inline">
         <a-menu-item key="userInfo">
           <template #icon>
-            <UserOutlined/>
+            <UserOutlined />
           </template>
-          账户信息
+          {{ $t('feature.settings.account.accountInfo') }}
         </a-menu-item>
         <a-menu-item key="normal">
           <template #icon>
-            <ToolOutlined/>
+            <ToolOutlined />
           </template>
-          基本设置
+          {{ $t('feature.settings.basic.title') }}
         </a-menu-item>
         <a-menu-item key="global">
           <template #icon>
-            <LaptopOutlined/>
+            <LaptopOutlined />
           </template>
-          全局快捷键
+          {{ $t('feature.settings.global.title') }}
         </a-menu-item>
         <a-menu-item key="superpanel">
           <template #icon>
-            <FileAddOutlined/>
+            <FileAddOutlined />
           </template>
-          超级面板设置
+          {{ $t('feature.settings.superPanel.title') }}
         </a-menu-item>
         <a-menu-item key="localhost">
           <template #icon>
-            <DatabaseOutlined/>
+            <DatabaseOutlined />
           </template>
-          内网部署配置
+          {{ $t('feature.settings.intranet.title') }}
         </a-menu-item>
       </a-menu>
     </div>
     <div class="settings-detail">
+      <UserInfo v-if="currentSelect[0] === 'userInfo'" />
       <div v-if="currentSelect[0] === 'normal'">
         <div class="setting-item">
-          <div class="title">快捷键</div>
+          <div class="title">
+            {{ $t('feature.settings.basic.shortcutKey') }}
+          </div>
           <div class="settings-item-li">
-            <div class="label">显示/隐藏快捷键</div>
+            <div class="label">
+              {{ $t('feature.settings.basic.showOrHiddle') }}
+            </div>
             <a-tooltip placement="top" trigger="click">
               <template #title>
                 <span>{{ tipText }}</span>
                 <template v-if="isWindows">
-                  <br/>
+                  <br />
                   <span
                     style="cursor: pointer; text-decoration: underline"
                     @click="resetDefault('Alt')"
@@ -73,7 +78,9 @@
             </a-tooltip>
           </div>
           <div class="settings-item-li">
-            <div class="label">截屏</div>
+            <div class="label">
+              {{ $t('feature.settings.basic.screenCapture') }}
+            </div>
             <a-tooltip placement="top" trigger="click">
               <template #title>
                 <span>{{ tipText }}</span>
@@ -89,52 +96,76 @@
           </div>
         </div>
         <div class="setting-item">
-          <div class="title">通用</div>
+          <div class="title">{{ $t('feature.settings.basic.common') }}</div>
           <div class="settings-item-li">
-            <div class="label">输入框自动粘贴</div>
+            <div class="label">
+              {{ $t('feature.settings.basic.autoPaste') }}
+            </div>
             <a-switch
               v-model:checked="common.autoPast"
-              checked-children="开"
-              un-checked-children="关"
+              :checked-children="$t('feature.settings.basic.on')"
+              :un-checked-children="$t('feature.settings.basic.off')"
             ></a-switch>
           </div>
           <div class="settings-item-li">
-            <div class="label">开机启动</div>
+            <div class="label">{{ $t('feature.settings.basic.autoBoot') }}</div>
             <a-switch
               v-model:checked="common.start"
-              checked-children="开"
-              un-checked-children="关"
+              :checked-children="$t('feature.settings.basic.on')"
+              :un-checked-children="$t('feature.settings.basic.off')"
             ></a-switch>
           </div>
           <div class="settings-item-li">
-            <div class="label">空格执行</div>
+            <div class="label">
+              {{ $t('feature.settings.basic.spaceExec') }}
+            </div>
             <a-switch
               v-model:checked="common.space"
-              checked-children="开"
-              un-checked-children="关"
+              :checked-children="$t('feature.settings.basic.on')"
+              :un-checked-children="$t('feature.settings.basic.off')"
             ></a-switch>
           </div>
         </div>
         <div class="setting-item">
-          <div class="title">主题</div>
+          <div class="title">{{ $t('feature.settings.basic.theme') }}</div>
           <div class="settings-item-li">
-            <div class="label">暗黑模式</div>
+            <div class="label">{{ $t('feature.settings.basic.darkMode') }}</div>
             <a-switch
               v-model:checked="common.darkMode"
-              checked-children="开"
-              un-checked-children="关"
+              :checked-children="$t('feature.settings.basic.on')"
+              :un-checked-children="$t('feature.settings.basic.off')"
             ></a-switch>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="title">{{ $t('feature.settings.basic.language') }}</div>
+          <div class="settings-item-li">
+            <div class="label">
+              {{ $t('feature.settings.basic.changeLang') }}
+            </div>
+            <a-select
+              v-model:value="state.common.lang"
+              label-in-value
+              style="width: 240px"
+              :options="options"
+              @change="changeLanguage"
+            ></a-select>
           </div>
         </div>
       </div>
       <div v-if="currentSelect[0] === 'global'">
         <a-collapse>
-          <a-collapse-panel key="1" header="说明及示例">
+          <a-collapse-panel
+            key="1"
+            :header="$t('feature.settings.global.instructions')"
+          >
             <div>
-              按下快捷键，自动搜索对应关键字，当关键字结果完全匹配，且结果唯一时，会直接指向该功能。
+              {{ $t('feature.settings.global.tips') }}
             </div>
-            <h3 style="margin-top: 10px">示例</h3>
-            <a-divider style="margin: 5px 0"/>
+            <h3 style="margin-top: 10px">
+              {{ $t('feature.settings.global.example') }}
+            </h3>
+            <a-divider style="margin: 5px 0" />
             <a-list item-layout="horizontal" :data-source="examples">
               <template #renderItem="{ item }">
                 <a-list-item>
@@ -150,11 +181,11 @@
         </a-collapse>
         <div class="feature-container">
           <div class="keywords item">
-            <div>快捷键</div>
+            <div>{{ $t('feature.settings.global.shortcutKey') }}</div>
             <template :key="index" v-for="(item, index) in global">
               <a-tooltip placement="top" trigger="click">
                 <template #title>
-                  <span>{{ tipText }}或按 F1-F12 单键</span>
+                  <span>{{ tipText }}</span>
                 </template>
                 <div
                   class="value"
@@ -170,7 +201,7 @@
             </template>
           </div>
           <div class="short-cut item">
-            <div>功能关键字</div>
+            <div>{{ $t('feature.settings.global.funtionKey') }}</div>
             <template v-for="(item, index) in global" :key="index">
               <a-input
                 :value="item.value"
@@ -183,13 +214,12 @@
           </div>
         </div>
         <div @click="addConfig" class="add-global">
-          <PlusCircleOutlined/>
-          新增全局快捷功能
+          <PlusCircleOutlined />
+          {{ $t('feature.settings.global.addShortcutKey') }}
         </div>
       </div>
-      <Localhost v-if="currentSelect[0] === 'localhost'"/>
-      <SuperPanel v-if="currentSelect[0] === 'superpanel'"/>
-      <UserInfo v-if="currentSelect[0] === 'userInfo'"/>
+      <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
+      <Localhost v-if="currentSelect[0] === 'localhost'" />
     </div>
   </div>
 </template>
@@ -205,26 +235,24 @@ import {
   UserOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
-import {ref, reactive, watch, toRefs, computed, toRaw} from 'vue';
+import { ref, reactive, watch, toRefs, computed, onMounted, toRaw } from 'vue';
 import keycodes from './keycode';
 import Localhost from './localhost.vue';
 import SuperPanel from './super-panel.vue';
 import UserInfo from './user-info';
+import { useI18n } from 'vue-i18n';
+const { locale, t } = useI18n();
 
-const {remote, ipcRenderer} = window.require('electron');
+const { remote, ipcRenderer } = window.require('electron');
 
 const examples = [
   {
-    title: '快捷键 「 Alt + W」 关键字 「 微信」',
-    desc: '按下Alt + W 直接打开本地微信应用',
+    title: t('feature.settings.global.example1'),
+    desc: t('feature.settings.global.tips1'),
   },
   {
-    title: '快捷键 「 Alt + Q」 关键字 「 取色」',
-    desc: '按下Alt + Q 直接打开屏幕取色功能',
-  },
-  {
-    title: '快捷键 「 Ctrl + Alt + Q」 关键字 「 截屏」',
-    desc: '按下 Ctrl + Alt + Q 进行截屏',
+    title: t('feature.settings.global.example2'),
+    desc: t('feature.settings.global.tips2'),
   },
 ];
 
@@ -239,12 +267,14 @@ const state = reactive({
 const isWindows = window?.rubick?.isWindows();
 const tipText = computed(() => {
   const optionKeyName = isWindows ? 'Alt' : 'Option、Command';
-  return `先按功能键（Ctrl、Shift、${optionKeyName}），再按其他普通键。`;
+  return t('feature.settings.global.addShortcutKeyTips', {
+    optionKeyName: optionKeyName,
+  });
 });
 
 const currentSelect = ref(['userInfo']);
 
-const {perf, global: defaultGlobal} = remote.getGlobal('OP_CONFIG').get();
+const { perf, global: defaultGlobal } = remote.getGlobal('OP_CONFIG').get();
 
 state.shortCut = perf.shortCut;
 state.custom = perf.custom;
@@ -292,8 +322,14 @@ const changeShortCut = (e, key) => {
     incluFuncKeys = true;
   }
   compose += '+' + keycodes[e.keyCode].toUpperCase();
-  compose = compose.substring(1)
-  if (incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93) {
+  compose = compose.substring(1);
+  if (
+    incluFuncKeys &&
+    e.keyCode !== 16 &&
+    e.keyCode !== 17 &&
+    e.keyCode !== 18 &&
+    e.keyCode !== 93
+  ) {
     state.shortCut[key] = compose;
   } else {
     // 不做处理
@@ -321,8 +357,14 @@ const changeGlobalKey = (e, index) => {
     incluFuncKeys = true;
   }
   compose += '+' + keycodes[e.keyCode].toUpperCase();
-  compose = compose.substring(1)
-  if (incluFuncKeys && e.keyCode !== 16 && e.keyCode !== 17 && e.keyCode !== 18 && e.keyCode !== 93) {
+  compose = compose.substring(1);
+  if (
+    incluFuncKeys &&
+    e.keyCode !== 16 &&
+    e.keyCode !== 17 &&
+    e.keyCode !== 18 &&
+    e.keyCode !== 93
+  ) {
     state.global[index].key = compose;
   } else {
     // 不做处理
@@ -366,7 +408,23 @@ const addConfig = () => {
   });
 };
 
-const {shortCut, common, local, global} = toRefs(state);
+const { shortCut, common, local, global } = toRefs(state);
+
+const options = ref([
+  {
+    value: 'zh-CN',
+    label: t('feature.settings.basic.cn'),
+  },
+  {
+    value: 'en-US',
+    label: t('feature.settings.basic.en'),
+  },
+]);
+
+const changeLanguage = (value) => {
+  state.common.lang = value.key;
+  locale.value = value.key;
+};
 </script>
 
 <style lang="less">
@@ -379,12 +437,12 @@ const {shortCut, common, local, global} = toRefs(state);
   background: var(--color-body-bg);
   height: calc(~'100vh - 46px');
   display: flex;
-  
+
   .ant-menu {
     background: var(--color-body-bg) !important;
     color: var(--color-text-content) !important;
   }
-  
+
   .settings-detail {
     padding: 20px;
     box-sizing: border-box;
@@ -392,20 +450,20 @@ const {shortCut, common, local, global} = toRefs(state);
     overflow: auto;
     height: 100%;
     background: var(--color-body-bg);
-    
+
     .setting-item {
       margin-bottom: 20px;
-      
+
       .ant-form-item {
         margin-bottom: 0;
       }
-      
+
       .title {
         color: var(--ant-primary-color);
         font-size: 15px;
         margin-bottom: 10px;
       }
-      
+
       .settings-item-li {
         padding-left: 20px;
         display: flex;
@@ -413,11 +471,11 @@ const {shortCut, common, local, global} = toRefs(state);
         align-items: center;
         justify-content: space-between;
         margin-bottom: 10px;
-        
+
         .label {
           color: var(--color-text-content);
         }
-        
+
         .value {
           width: 300px;
           cursor: pointer;
@@ -427,7 +485,7 @@ const {shortCut, common, local, global} = toRefs(state);
           font-size: 14px;
           height: 24px;
           font-weight: lighter;
-          
+
           .ant-input {
             text-align: center;
             color: var(--ant-primary-color);
@@ -435,7 +493,7 @@ const {shortCut, common, local, global} = toRefs(state);
             font-weight: lighter;
           }
         }
-        
+
         .ant-switch {
           &:not(.ant-switch-checked) {
             background: var(--color-list-hover);
@@ -444,23 +502,23 @@ const {shortCut, common, local, global} = toRefs(state);
       }
     }
   }
-  
+
   .feature-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 10px;
     font-size: 14px;
-    
+
     .item {
       flex: 1;
       color: var(--color-text-content);
     }
-    
+
     .short-cut {
       margin-left: 20px;
     }
-    
+
     .value {
       cursor: pointer;
       text-align: center;
@@ -472,28 +530,28 @@ const {shortCut, common, local, global} = toRefs(state);
       margin-top: 10px;
       position: relative;
       background: var(--color-input-hover);
-      
+
       .ant-input {
         color: var(--ant-primary-color);
         font-weight: lighter;
         background: none;
       }
-      
+
       .anticon {
         color: var(--color-text-desc);
       }
-      
+
       &.ant-input-affix-wrapper {
         display: flex;
       }
-      
+
       &:hover {
         .anticon {
           display: block;
           color: var(--color-text-content);
         }
       }
-      
+
       .anticon {
         position: absolute;
         display: none;
@@ -503,7 +561,7 @@ const {shortCut, common, local, global} = toRefs(state);
       }
     }
   }
-  
+
   .add-global {
     color: var(--ant-primary-color);
     margin-top: 20px;
@@ -511,21 +569,21 @@ const {shortCut, common, local, global} = toRefs(state);
     text-align: center;
     cursor: pointer;
   }
-  
+
   .ant-collapse {
     background: var(--color-input-hover);
-    
+
     .ant-collapse-content {
       background: var(--color-input-hover);
       color: var(--color-text-content);
     }
-    
+
     h3,
     .ant-collapse-header,
     .ant-list-item-meta-title {
       color: var(--color-text-primary);
     }
-    
+
     .ant-list-item-meta-description {
       color: var(--color-text-desc);
     }

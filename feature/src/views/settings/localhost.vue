@@ -1,6 +1,6 @@
 <template>
   <a-alert
-    message="把插件发布到公网 npm 如果不符合您的公司安全要求，rubick 支持内网私有源和私有插件库，如果您需要内网部署使用，可以自行配置以下规则。"
+    :message="$t('feature.settings.intranet.tips')"
     type="warning"
     style="margin-bottom: 20px"
   />
@@ -11,21 +11,33 @@
     :rules="rules"
     v-bind="layout"
   >
-    <a-form-item has-feedback label="npm 源" name="register">
+    <a-form-item
+      has-feedback
+      :label="$t('feature.settings.intranet.npmMirror')"
+      name="register"
+    >
       <a-input
         placeholder="https://registry.npm.taobao.org"
         v-model:value="formState.register"
       />
     </a-form-item>
-    <a-form-item has-feedback label="database url" name="database">
+    <a-form-item
+      has-feedback
+      :label="$t('feature.settings.intranet.dbUrl')"
+      name="database"
+    >
       <a-input
         placeholder="https://gitcode.net/rubickcenter/rubick-database/-/raw/master"
         v-model:value="formState.database"
       />
     </a-form-item>
-    <a-form-item has-feedback label="access_token" name="access_token">
+    <a-form-item
+      has-feedback
+      :label="$t('feature.settings.intranet.accessToken')"
+      name="access_token"
+    >
       <a-input
-        placeholder="内网gitlab仓库必填"
+        :placeholder="$t('feature.settings.intranet.placeholder')"
         v-model:value="formState.access_token"
       />
     </a-form-item>

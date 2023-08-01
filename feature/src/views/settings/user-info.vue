@@ -3,8 +3,8 @@
     <div class="info-container">
       <a-result
         class="user-info-result"
-        :title="userInfo.name || 'rubick 用户'"
-        sub-title="软件偏好设置完成后需重启软件，头像和昵称请前往小程序设置"
+        :title="userInfo.name || $t('feature.settings.account.tips1')"
+        :sub-title="$t('feature.settings.account.tips2')"
       >
         <template #icon>
           <a-avatar :size="64" v-if="!userInfo.avatar">
@@ -16,74 +16,123 @@
     </div>
     <div class="settings-container">
       <div class="setting-item">
-        <div class="title">主题色设置</div>
+        <div class="title">
+          {{ $t('feature.settings.account.themeColor') }}
+        </div>
         <div class="settings-item-li">
-          <div class="label">主色调</div>
+          <div class="label">
+            {{ $t('feature.settings.account.primaryColor') }}
+          </div>
           <a-input v-model:value="custom.primaryColor" class="value">
             <template #prefix>
-              <div :style="{ background: custom.primaryColor, width: '10px', height: '10px' }"></div>
+              <div
+                :style="{
+                  background: custom.primaryColor,
+                  width: '10px',
+                  height: '10px',
+                }"
+              ></div>
             </template>
           </a-input>
         </div>
         <div class="settings-item-li">
-          <div class="label">错误色</div>
+          <div class="label">
+            {{ $t('feature.settings.account.errorColor') }}
+          </div>
           <a-input v-model:value="custom.errorColor" class="value">
             <template #prefix>
-              <div :style="{ background: custom.errorColor, width: '10px', height: '10px' }"></div>
+              <div
+                :style="{
+                  background: custom.errorColor,
+                  width: '10px',
+                  height: '10px',
+                }"
+              ></div>
             </template>
           </a-input>
         </div>
         <div class="settings-item-li">
-          <div class="label">警告色</div>
+          <div class="label">
+            {{ $t('feature.settings.account.warningColor') }}
+          </div>
           <a-input v-model:value="custom.warningColor" class="value">
             <template #prefix>
-              <div :style="{ background: custom.warningColor, width: '10px', height: '10px' }"></div>
+              <div
+                :style="{
+                  background: custom.warningColor,
+                  width: '10px',
+                  height: '10px',
+                }"
+              ></div>
             </template>
           </a-input>
         </div>
         <div class="settings-item-li">
-          <div class="label">成功色</div>
+          <div class="label">
+            {{ $t('feature.settings.account.successColor') }}
+          </div>
           <a-input v-model:value="custom.successColor" class="value">
             <template #prefix>
-              <div :style="{ background: custom.successColor, width: '10px', height: '10px' }"></div>
+              <div
+                :style="{
+                  background: custom.successColor,
+                  width: '10px',
+                  height: '10px',
+                }"
+              ></div>
             </template>
           </a-input>
         </div>
         <div class="settings-item-li">
-          <div class="label">提醒色</div>
+          <div class="label">
+            {{ $t('feature.settings.account.infoColor') }}
+          </div>
           <a-input v-model:value="custom.infoColor" class="value">
             <template #prefix>
-              <div :style="{ background: custom.infoColor, width: '10px', height: '10px' }"></div>
+              <div
+                :style="{
+                  background: custom.infoColor,
+                  width: '10px',
+                  height: '10px',
+                }"
+              ></div>
             </template>
           </a-input>
         </div>
       </div>
       <div class="setting-item">
-        <div class="title">用户个性化设置</div>
+        <div class="title">
+          {{ $t('feature.settings.account.personalized') }}
+        </div>
         <div class="settings-item-li">
-          <div class="label">主搜索框欢迎语</div>
+          <div class="label">
+            {{ $t('feature.settings.account.greeting') }}
+          </div>
           <a-input v-model:value="custom.placeholder" class="value"></a-input>
         </div>
         <div class="settings-item-li">
-          <div class="label">界面 logo</div>
+          <div class="label">
+            {{ $t('feature.settings.account.logo') }}
+          </div>
           <div class="img-container">
-            <img
-              class="custom-img"
-              :src="custom.logo"
-            />
-            <a-button @click="changeLogo" size="small" type="link">点我替换</a-button>
+            <img class="custom-img" :src="custom.logo" />
+            <a-button @click="changeLogo" size="small" type="link">
+              {{ $t('feature.settings.account.replace') }}
+            </a-button>
           </div>
         </div>
       </div>
       <div class="footer-btn">
-        <a-button @click="reset" type="danger">恢复默认设置</a-button>
+        <a-button @click="reset" type="danger">
+          {{ $t('feature.settings.account.reset') }}
+        </a-button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {reactive, ref, toRefs, watch} from 'vue';
+import { reactive, ref, toRefs, watch } from 'vue';
 import { Modal } from 'ant-design-vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
@@ -137,7 +186,8 @@ const reset = () => {
     title: '确定恢复默认设置吗？',
     content: '回复后之前的设置将会被清空',
     onOk() {
-      const defaultcustom = remote.getGlobal('OP_CONFIG').getDefaultConfig().perf.custom;
+      const defaultcustom = remote.getGlobal('OP_CONFIG').getDefaultConfig()
+        .perf.custom;
       state.custom = JSON.parse(JSON.stringify(defaultcustom));
     },
   });

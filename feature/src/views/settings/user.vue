@@ -41,7 +41,7 @@ const visible = ref(false);
 const showModal = () => {
   visible.value = true;
   if (!imgCode.value && !userInfo.value) {
-    service.getScanCode({ scene }).then(res => {
+    service.getScanCode({ scene }).then((res) => {
       imgCode.value = `data:image/png;base64,${res.dataUrl}`;
     });
   }
@@ -68,7 +68,6 @@ watch([visible], () => {
     timer = null;
   }
 });
-
 </script>
 
 <style lang="less" scoped>
@@ -77,7 +76,7 @@ watch([visible], () => {
   width: 100%;
   overflow-x: hidden;
   background: var(--color-body-bg);
-  height: calc(~"100vh - 46px");
+  height: calc(~'100vh - 46px');
   :deep(.ant-result-title) {
     color: var(--color-text-primary);
   }

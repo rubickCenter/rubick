@@ -1,6 +1,10 @@
 <template>
   <div class="dev">
-    <a-alert style="margin-bottom: 40px;" message="rubick 插件系统依托于 npm 管理，本地调试需要先在本地插件当前目录执行 npm link" type="warning" />
+    <a-alert
+      style="margin-bottom: 40px"
+      :message="$t('feature.dev.tips')"
+      type="warning"
+    />
     <a-form
       ref="formRef"
       :model="formState"
@@ -8,21 +12,27 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-item label="插件名称" name="name">
+      <a-form-item :label="$t('feature.dev.pluginName')" name="name">
         <a-input v-model:value="formState.name" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button :loading="loading" type="primary" @click="onSubmit">安装</a-button>
-        <a-button @click="refresh" style="margin-left: 10px;">刷新插件</a-button>
+        <a-button :loading="loading" type="primary" @click="onSubmit">
+          {{ $t('feature.dev.install') }}
+        </a-button>
+        <a-button @click="refresh" style="margin-left: 10px">
+          {{ $t('feature.dev.refreshPlugins') }}
+        </a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { message } from "ant-design-vue";
+import { reactive, ref } from 'vue';
+import { message } from 'ant-design-vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const formRef = ref();
 const formState = reactive({
@@ -31,7 +41,7 @@ const formState = reactive({
 const rules = {
   name: {
     required: true,
-    message: "Please input name",
+    message: 'Please input name',
   },
 };
 const onSubmit = () => {
@@ -47,7 +57,7 @@ const downloadPlugin = async (pluginName) => {
     name: pluginName,
     isDev: true,
   });
-  message.success(`${pluginName}安装成功！`);
+  message.success(t('feature.dev.installSuccess', { pluginName: pluginName }));
   loading.value = false;
 };
 
@@ -56,7 +66,9 @@ const refresh = () => {
     window.market.refreshPlugin({
       name: formState.name,
     });
-    message.success(`${formState.name}刷新成功！`);
+    message.success(
+      t('feature.dev.refreshSuccess', { pluginName: formState.name })
+    );
   });
 };
 
@@ -70,7 +82,7 @@ const wrapperCol = { span: 14 };
   width: 100%;
   overflow-x: hidden;
   background: var(--color-body-bg);
-  height: calc(~"100vh - 46px");
+  height: calc(~'100vh - 46px');
   padding: 20px;
   :deep(label) {
     color: var(--color-text-content);

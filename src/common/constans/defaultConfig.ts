@@ -1,5 +1,5 @@
 export default {
-  version: 9,
+  version: 11,
   perf: {
     custom: {
       primaryColor: '#106898',
@@ -22,6 +22,7 @@ export default {
       hideOnBlur: true,
       autoPast: false,
       darkMode: false,
+      lang: 'zh-CN',
     },
     local: {
       search: true,

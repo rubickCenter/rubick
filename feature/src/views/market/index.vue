@@ -4,7 +4,7 @@
       <div class="search-container">
         <a-input-search
           v-model:value="searchValue"
-          placeholder="搜索插件"
+          :placeholder="$t('feature.market.search')"
           style="width: 100%"
           @search="onSearch"
         />
@@ -15,37 +15,37 @@
           <template #icon>
             <StarOutlined />
           </template>
-          探索
+          {{ $t('feature.market.explore') }}
         </a-menu-item>
         <a-menu-item key="worker">
           <template #icon>
             <SendOutlined style="transform: rotate(-45deg)" />
           </template>
-          效率
+          {{ $t('feature.market.efficiency') }}
         </a-menu-item>
         <a-menu-item key="tools">
           <template #icon>
             <SearchOutlined />
           </template>
-          搜索工具
+          {{ $t('feature.market.searchTool') }}
         </a-menu-item>
         <a-menu-item key="image">
           <template #icon>
             <FileImageOutlined />
           </template>
-          图像
+          {{ $t('feature.market.imageTool') }}
         </a-menu-item>
         <a-menu-item key="dev">
           <template #icon>
             <CodeOutlined />
           </template>
-          开发
+          {{ $t('feature.market.developTool') }}
         </a-menu-item>
         <a-menu-item key="system">
           <template #icon>
             <DatabaseOutlined />
           </template>
-          系统
+          {{ $t('feature.market.systemTool') }}
         </a-menu-item>
       </a-menu>
     </div>
@@ -63,15 +63,15 @@ import {
   FileImageOutlined,
   DatabaseOutlined,
   CodeOutlined,
-} from "@ant-design/icons-vue";
-import { reactive, toRefs, computed } from "vue";
-import { useStore } from "vuex";
-import Finder from "./components/finder.vue";
-import System from "./components/system.vue";
-import Worker from "./components/worker.vue";
-import Tools from "./components/tools.vue";
-import Dev from "./components/devlopment.vue";
-import Image from "./components/image.vue";
+} from '@ant-design/icons-vue';
+import { reactive, toRefs, computed } from 'vue';
+import { useStore } from 'vuex';
+import Finder from './components/finder.vue';
+import System from './components/system.vue';
+import Worker from './components/worker.vue';
+import Tools from './components/tools.vue';
+import Dev from './components/devlopment.vue';
+import Image from './components/image.vue';
 
 const Components = {
   finder: Finder,
@@ -83,8 +83,8 @@ const Components = {
 };
 
 const state = reactive({
-  searchValue: "",
-  current: ["finder"],
+  searchValue: '',
+  current: ['finder'],
 });
 
 const store = useStore();
@@ -103,7 +103,7 @@ const { searchValue, current } = toRefs(state);
   width: 100%;
   overflow: hidden;
   background: var(--color-menu-bg);
-  height: calc(~"100vh - 46px");
+  height: calc(~'100vh - 46px');
   .container {
     background: var(--color-body-bg);
     width: calc(~'100% - 200px');

@@ -10,25 +10,25 @@
           <template #icon>
             <AppstoreOutlined />
           </template>
-          插件市场
+          {{ $t('feature.market.title') }}
         </a-menu-item>
         <a-menu-item key="installed">
           <template #icon>
             <HeartOutlined />
           </template>
-          已安装
+          {{ $t('feature.installed.title') }}
         </a-menu-item>
         <a-menu-item key="settings">
           <template #icon>
             <SettingOutlined />
           </template>
-          账户与设置
+          {{ $t('feature.settings.title') }}
         </a-menu-item>
         <a-menu-item key="dev">
           <template #icon>
             <BugOutlined />
           </template>
-          开发者
+          {{ $t('feature.dev.title') }}
         </a-menu-item>
       </a-menu>
     </div>
@@ -37,18 +37,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   HeartOutlined,
   UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
-  BugOutlined
-} from "@ant-design/icons-vue";
-import { useStore } from "vuex";
+  BugOutlined,
+} from '@ant-design/icons-vue';
+import { useStore } from 'vuex';
 const router = useRouter();
-const active = ref(["market"]);
+const active = ref(['market']);
 const changeMenu = (key: any) => {
   router.push(key);
 };
@@ -59,7 +59,7 @@ window.rubick.onPluginEnter(({ code }: { code: string }) => {
 });
 
 const store = useStore();
-const init = () => store.dispatch("init");
+const init = () => store.dispatch('init');
 init();
 </script>
 <style lang="less" scoped>
