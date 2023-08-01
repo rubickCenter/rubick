@@ -41,12 +41,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   HeartOutlined,
-  UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
   BugOutlined,
 } from '@ant-design/icons-vue';
 import { useStore } from 'vuex';
+
 const router = useRouter();
 const active = ref(['market']);
 const changeMenu = (key: any) => {

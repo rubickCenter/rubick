@@ -6,6 +6,7 @@
           v-model:value="searchValue"
           :placeholder="$t('feature.market.search')"
           style="width: 100%"
+          class="search"
           @search="onSearch"
         />
       </div>
@@ -103,7 +104,14 @@ const { searchValue, current } = toRefs(state);
   width: 100%;
   overflow: hidden;
   background: var(--color-menu-bg);
-  height: calc(~'100vh - 46px');
+  height: calc(~"100vh - 46px");
+  .search {
+    :deep(.ant-btn), :deep(.ant-input), :deep(.ant-input-group-addon) {
+      color: var(--ant-primary-color) !important;
+      background: var(--color-input-hover);
+      border-color: var(--color-border-light);
+    }
+  }
   .container {
     background: var(--color-body-bg);
     width: calc(~'100% - 200px');

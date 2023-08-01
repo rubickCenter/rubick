@@ -109,6 +109,7 @@ const sort = (options) => {
     background: var(--color-body-bg);
     color: var(--color-text-content);
     border-color: var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light);
     &.active {
       background: var(--color-list-hover);
     }
