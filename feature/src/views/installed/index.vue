@@ -117,6 +117,7 @@ import { computed, ref, toRaw } from 'vue';
 import path from 'path';
 import MarkdownIt from 'markdown-it';
 import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -135,6 +136,7 @@ const localPlugins = computed(() =>
 );
 const updateLocalPlugin = () => store.dispatch('updateLocalPlugin');
 const startUnDownload = (name) => store.dispatch('startUnDownload', name);
+const errorUnDownload = (name) => store.dispatch('errorUnDownload', name);
 
 const currentSelect = ref([0]);
 
@@ -148,7 +150,7 @@ const superPanelPlugins = ref(
     _id: 'super-panel-plugins',
   }
 );
-console.log(toRaw(superPanelPlugins.value.data));
+
 const addCmdToSuperPanel = ({ cmd, code }) => {
   const plugin = {
     ...toRaw(pluginDetail.value),
@@ -218,8 +220,13 @@ const readme = computed(() => {
 
 const deletePlugin = async (plugin) => {
   startUnDownload(plugin.name);
+  const timer = setTimeout(() => {
+    errorUnDownload(plugin.name);
+    message.error('卸载超时，请重试！');
+  }, 20000);
   await window.market.deletePlugin(plugin);
   updateLocalPlugin();
+  clearTimeout(timer);
 };
 </script>
 

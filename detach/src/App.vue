@@ -184,6 +184,7 @@ html, body {
 .window-handle {
   display: flex;
   align-items: center;
+  -webkit-app-region: no-drag;
 }
 
 .window-handle > div {
