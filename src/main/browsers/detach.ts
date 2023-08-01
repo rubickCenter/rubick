@@ -17,7 +17,6 @@ export default () => {
       width: viewInfo.width,
       autoHideMenuBar: true,
       titleBarStyle: 'hidden',
-      titleBarOverlay: true,
       trafficLightPosition: { x: 12, y: 21 },
       title: pluginInfo.pluginName,
       resizable: true,
