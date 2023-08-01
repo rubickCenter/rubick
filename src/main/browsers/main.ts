@@ -1,4 +1,4 @@
-import { app, BrowserWindow, protocol } from 'electron';
+import { app, BrowserWindow, protocol, nativeTheme } from 'electron';
 import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import versonHandler from '../common/versionHandler';
@@ -19,6 +19,7 @@ export default () => {
       title: '拉比克',
       show: false,
       skipTaskbar: true,
+      backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c28' : '#fff',
       webPreferences: {
         webSecurity: false,
         enableRemoteModule: true,

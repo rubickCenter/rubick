@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'main-container': true, dark: darkMode}">
+  <div class="main-container">
     <div class="slider-bar">
       <a-menu
         v-model:selectedKeys="active"
@@ -47,12 +47,6 @@ import {
 } from '@ant-design/icons-vue';
 import { useStore } from 'vuex';
 
-const { remote } = window.require('electron');
-
-const { perf } = remote.getGlobal('OP_CONFIG').get();
-
-const darkMode = ref(perf.common.darkMode);
-
 const router = useRouter();
 const active = ref(['market']);
 const changeMenu = (key: any) => {
@@ -77,7 +71,6 @@ init();
 .main-container {
   display: flex;
   align-items: flex-start;
-  background: var(--color-body-bg);
   flex-direction: column;
 
   .slider-bar {

@@ -1,9 +1,13 @@
-import { app, BrowserWindow, protocol } from 'electron';
+import { BrowserWindow, ipcMain, nativeTheme } from 'electron';
 import path from 'path';
 export default () => {
   let win: any;
 
   const init = (pluginInfo, viewInfo, view) => {
+    ipcMain.on('detach:service', async (event, arg: { type: string }) => {
+      const data = await operation[arg.type]();
+      event.returnValue = data;
+    });
     createWindow(pluginInfo, viewInfo, view);
   };
 
@@ -20,6 +24,7 @@ export default () => {
       frame: true,
       show: false,
       enableLargerThanScreen: true,
+      backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c28' : '#fff',
       x: viewInfo.x,
       y: viewInfo.y,
       webPreferences: {
@@ -28,6 +33,7 @@ export default () => {
         backgroundThrottling: false,
         contextIsolation: false,
         webviewTag: true,
+        devTools: true,
         nodeIntegration: true,
       },
     });
@@ -69,6 +75,19 @@ export default () => {
   };
 
   const getWindow = () => win;
+
+  const operation = {
+    minimize: () => {
+      win.focus();
+      win.minimize();
+    },
+    maximize: () => {
+      win.isMaximized() ? win.unmaximize() : win.maximize();
+    },
+    close: () => {
+      win.close();
+    },
+  };
 
   return {
     init,
