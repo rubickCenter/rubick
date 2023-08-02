@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>事件 | Rubick</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    
+    <meta name="description" content="你的开源桌面插件应用">
+    
+    <link rel="preload" href="/rubick/assets/css/0.styles.a1fe2806.css" as="style"><link rel="preload" href="/rubick/assets/js/app.802a86ab.js" as="script"><link rel="preload" href="/rubick/assets/js/2.733019b2.js" as="script"><link rel="preload" href="/rubick/assets/js/8.010bfadc.js" as="script"><link rel="prefetch" href="/rubick/assets/js/10.f7f1aa99.js"><link rel="prefetch" href="/rubick/assets/js/11.861f0d8b.js"><link rel="prefetch" href="/rubick/assets/js/12.8083ac2d.js"><link rel="prefetch" href="/rubick/assets/js/3.64801815.js"><link rel="prefetch" href="/rubick/assets/js/4.fc333d27.js"><link rel="prefetch" href="/rubick/assets/js/5.bfef3080.js"><link rel="prefetch" href="/rubick/assets/js/6.2d0a63f8.js"><link rel="prefetch" href="/rubick/assets/js/7.9c9172a7.js"><link rel="prefetch" href="/rubick/assets/js/9.3b2c34da.js">
+    <link rel="stylesheet" href="/rubick/assets/css/0.styles.a1fe2806.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/rubick/" class="home-link router-link-active"><img src="/rubick/images/logo.png" alt="Rubick" class="logo"> <span class="site-name can-hide">Rubick</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/rubick/guide/" class="nav-link">
+  使用文档
+</a></div><div class="nav-item"><a href="/rubick/dev/" class="nav-link">
+  开发者
+</a></div> <a href="https://github.com/rubickCenter/rubick" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/rubick/guide/" class="nav-link">
+  使用文档
+</a></div><div class="nav-item"><a href="/rubick/dev/" class="nav-link">
+  开发者
+</a></div> <a href="https://github.com/rubickCenter/rubick" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><a href="/rubick/guide/" class="sidebar-link">使用文档</a></li><li><a href="/rubick/dev/" class="sidebar-link">插件开发</a></li><li><a href="/rubick/super/" class="sidebar-link">特殊服务</a></li><li><a href="/rubick/api/" aria-current="page" class="active sidebar-link">API</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/rubick/api/#事件" class="sidebar-link">事件</a></li><li class="sidebar-sub-header"><a href="/rubick/api/#窗口交互" class="sidebar-link">窗口交互</a></li><li class="sidebar-sub-header"><a href="/rubick/api/#系统" class="sidebar-link">系统</a></li><li class="sidebar-sub-header"><a href="/rubick/api/#本地数据库" class="sidebar-link">本地数据库</a></li></ul></li><li><a href="/rubick/run/" class="sidebar-link">贡献 rubick</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="事件"><a href="#事件" class="header-anchor">#</a> 事件</h2> <h3 id="onpluginready-callback-、onpluginenter-callback"><a href="#onpluginready-callback-、onpluginenter-callback" class="header-anchor">#</a> onPluginReady(callback)、onPluginEnter(callback)</h3> <ul><li><code>callback</code> Function</li></ul> <p><code>callback</code> 内会返回一个 <code>object</code> 对象，来描述进入当前插件的环境信息：</p> <ul><li><code>code</code> String</li></ul> <blockquote><p>plugin.json 配置的 feature.code</p></blockquote> <ul><li><code>type</code> String</li></ul> <blockquote><p>plugin.json 配置的 feature.cmd.type，可以为 &quot;text&quot;、&quot;img&quot;、 &quot;files&quot;、 &quot;regex&quot;、 &quot;over&quot;、&quot;window&quot;</p></blockquote> <ul><li>payload String | Object | Array</li></ul> <blockquote><p>feature.cmd.type 对应匹配的数据</p></blockquote> <p>当插件装载成功，rubick 将会主动调用这个方法, 所有的 <code>api</code> 都应该在 <code>onPluginReady</code> 之后进行调用。</p> <h4 id="示例"><a href="#示例" class="header-anchor">#</a> 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">onPluginReady</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> code<span class="token punctuation">,</span> type<span class="token punctuation">,</span> payload <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'插件装配完成，已准备好'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">/* 
+type 为 &quot;files&quot; 时， payload 值示例
+[
+	{
+		&quot;isFile&quot;: true,
+		&quot;isDirectory&quot;: false,
+		&quot;name&quot;: &quot;demo.js&quot;,
+		&quot;path&quot;: &quot;C:\\demo.js&quot;
+	}
+]
+
+type 为 &quot;img&quot; 时， payload 值示例
+data:image/png;base64,...
+
+type 为 &quot;text&quot;、&quot;regex&quot;、 &quot;over&quot; 时， payload 值为进入插件时的主输入框文本
+*/</span>
+</code></pre></div><h3 id="onpluginout-callback"><a href="#onpluginout-callback" class="header-anchor">#</a> onPluginOut(callback)</h3> <ul><li><code>callback</code> Function</li></ul> <p>每当插件从前台进入到后台时，rubick 将会主动调用这个方法。</p> <h2 id="窗口交互"><a href="#窗口交互" class="header-anchor">#</a> 窗口交互</h2> <h3 id="hidemainwindow"><a href="#hidemainwindow" class="header-anchor">#</a> hideMainWindow()</h3> <p>隐藏主窗口</p> <h3 id="showmainwindow"><a href="#showmainwindow" class="header-anchor">#</a> showMainWindow()</h3> <p>显示主窗口</p> <h3 id="setexpendheight-height"><a href="#setexpendheight-height" class="header-anchor">#</a> setExpendHeight(height)</h3> <p>执行该方法将会修改插件窗口的高度。</p> <ul><li><code>height</code> Integer</li> <li>返回 <code>Boolean</code></li></ul> <h4 id="示例-2"><a href="#示例-2" class="header-anchor">#</a> 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">setExpendHeight</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="setsubinput-onchange-placeholder"><a href="#setsubinput-onchange-placeholder" class="header-anchor">#</a> setSubInput(onChange, placeholder)</h3> <p>设置插件输入框监听，当进入插件后，用户搜索会触发<code>onChange</code> 函数</p> <ul><li><code>onChange</code> Function
+<ul><li><code>Object</code> <ul><li><code>text</code> String</li></ul></li></ul></li></ul> <blockquote><p>子输入框文本修改时触发</p></blockquote> <ul><li><code>placeholder</code> String (可选)</li></ul> <blockquote><p>子输入框占位符</p></blockquote> <ul><li><code>isFocus</code> Boolean (可选)</li></ul> <blockquote><p>子输入框是否获得焦点，默认 true</p></blockquote> <p><code>返回 Boolean</code></p> <h4 id="示例-3"><a href="#示例-3" class="header-anchor">#</a> 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">setSubInput</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> text <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">'搜索'</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="setsubinputvalue-value"><a href="#setsubinputvalue-value" class="header-anchor">#</a> setSubInputValue(value)</h3> <p>直接对子输入框的值进行设置。</p> <ul><li><code>value</code> String</li> <li><code>返回</code> Boolean</li></ul> <h4 id="示例-4"><a href="#示例-4" class="header-anchor">#</a> 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">setSubInputValue</span><span class="token punctuation">(</span><span class="token string">'rubick'</span><span class="token punctuation">)</span>
+</code></pre></div><h2 id="系统"><a href="#系统" class="header-anchor">#</a> 系统</h2> <h3 id="shownotification-body"><a href="#shownotification-body" class="header-anchor">#</a> showNotification(body)</h3> <p>显示系统通知</p> <ul><li><code>body</code> String</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">showNotification</span><span class="token punctuation">(</span><span class="token string">'Hi, rubick'</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="shellopenpath-fullpath"><a href="#shellopenpath-fullpath" class="header-anchor">#</a> shellOpenPath(fullPath)</h3> <p>打开给定路径的文件</p> <ul><li><code>fullPath</code> String</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">shellOpenPath</span><span class="token punctuation">(</span><span class="token string">'/path/file'</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="shellopenexternal-url"><a href="#shellopenexternal-url" class="header-anchor">#</a> shellOpenExternal(url)</h3> <p>浏览器打开URL</p> <ul><li><code>url</code> String</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span><span class="token function">shellOpenExternal</span><span class="token punctuation">(</span><span class="token string">'https://www.baidu.com'</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="getpath-name"><a href="#getpath-name" class="header-anchor">#</a> getPath(name)</h3> <p>electron 内置 getPath 能力，详见 <a href="https://www.electronjs.org/docs/latest/api/app#appgetpathname" target="_blank" rel="noopener noreferrer">electron API<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>rubick<span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token string">'cache'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="本地数据库"><a href="#本地数据库" class="header-anchor">#</a> 本地数据库</h2> <p><code>rubick db</code> 是基于开源的 <a href="https://github.com/pouchdb/pouchdb" target="_blank" rel="noopener noreferrer">pouchdb<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 封装的</p> <h3 id="rubick-db-put-doc"><a href="#rubick-db-put-doc" class="header-anchor">#</a> rubick.db.put(doc)</h3> <ul><li><code>doc</code> Object</li> <li><code>返回</code> Object</li></ul> <h4 id="示例-5"><a href="#示例-5" class="header-anchor">#</a> 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 创建请求</span>
+rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">// 返回 {id: &quot;demo&quot;, ok: true, rev: &quot;1-05c9b92e6f24287dc1f4ec79d9a34fa8&quot;}</span>
+
+<span class="token comment">// 更新请求</span>
+rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">&quot;1-05c9b92e6f24287dc1f4ec79d9a34fa8&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>_id 代表这个文档在数据库中唯一值，如果值不存在，则会创建一个新的文档，如果值已经存在，则会进行更新。你可能已经注意到，返回对象中包含一个 rev
+属性，这是代表此文档的版本，每次对文档进行更新时，都要带上最新的版本号，否则更新将失败，版本化的意义在于解决同步时数据冲突。</p> <p>另外需要注意，每次更新时都要传入完整的文档数据，无法对单个字段进行更新。</p> <h3 id="rubick-db-get-id"><a href="#rubick-db-get-id" class="header-anchor">#</a> rubick.db.get(id)</h3> <p>执行该方法将会根据文档 ID 获取数据</p> <ul><li><code>id</code> String</li> <li><code>返回</code> Object</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">&quot;demo&quot;</span><span class="token punctuation">)</span>
+<span class="token comment">// 返回 {_id: &quot;demo&quot;, _rev: &quot;3-9836c5c68af5aef618e17d615882942a&quot;, data: &quot;demo&quot;}</span>
+</code></pre></div><h3 id="rubick-db-remove-doc"><a href="#rubick-db-remove-doc" class="header-anchor">#</a> rubick.db.remove(doc)</h3> <ul><li><code>doc</code> String | Object</li> <li><code>返回</code> Object 执行该方法将会删除数据库文档，可以传入文档对象或文档 id 进行操作。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">&quot;demo&quot;</span><span class="token punctuation">)</span>
+<span class="token comment">// 返回 {id: &quot;demo&quot;, ok: true, rev: &quot;2-effe5dbc23dffc180d8411b23f3108fb&quot;}</span>
+</code></pre></div><h3 id="rubick-db-bulkdocs-docs"><a href="#rubick-db-bulkdocs-docs" class="header-anchor">#</a> rubick.db.bulkDocs(docs)</h3> <ul><li><code>docs</code> Array</li> <li><code>返回</code> Array 执行该方法将会批量更新数据库文档，传入需要更改的文档对象合并成数组进行批量更新。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">bulkDocs</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">&quot;demo1&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">&quot;1-c8817a74e292eda4cba1a45924853af6&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">&quot;demo2&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">&quot;demo&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">&quot;1-f0399b42cc6123a9cc8503632ba7b3a7&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment">/* 返回
+[{
+id: &quot;demo1&quot;, ok: true, rev: &quot;2-7857b2801bc0303d2cc0bb82e8afd796&quot;
+}, {
+id: &quot;demo2&quot;, ok: true, rev: &quot;2-7857b2801bc0303d2cc0bb82e8afd796&quot;
+}]
+*/</span>
+</code></pre></div><h3 id="rubick-db-alldocs-key"><a href="#rubick-db-alldocs-key" class="header-anchor">#</a> rubick.db.allDocs(key)</h3> <ul><li><code>key</code> String | Array</li> <li><code>返回</code> Array 执行该方法将会获取所有数据库文档，如果传入字符串，则会返回以字符串开头的文档，也可以传入指定 ID 的数组，不传入则为获取所有文档。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 获取所有文档</span>
+rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 传入字符串，则返回id以 demo 开头的文档</span>
+rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token string">&quot;demo&quot;</span><span class="token punctuation">)</span>
+<span class="token comment">/* 返回
+[{
+_id: &quot;demo/123&quot;, _rev: &quot;2-7857b2801bc0303d2cc0bb82e8afd796&quot;, data: &quot;demo&quot;
+}, {
+_id: &quot;demo/124&quot;, _rev: &quot;1-f0399b42cc6123a9cc8503632ba7b3a7&quot;, data: &quot;demo&quot;
+}, {
+_id: &quot;demo/125&quot;, _rev: &quot;1-f0399b42cc6123a9cc8503632ba7b3a7&quot;, data: &quot;demo&quot;
+}]
+*/</span>
+<span class="token comment">// 根据id数组请求</span>
+rubick<span class="token punctuation">.</span>db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+  <span class="token string">&quot;demo1&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;demo2&quot;</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token comment">/* 返回
+[{
+_id: &quot;demo1&quot;, _rev: &quot;2-7857b2801bc0303d2cc0bb82e8afd796&quot;, data: &quot;demo&quot;
+}, {
+_id: &quot;demo2&quot;, _rev: &quot;1-f0399b42cc6123a9cc8503632ba7b3a7&quot;, data: &quot;demo&quot;
+}]
+*/</span>
+</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/rubickCenter/rubick/edit/master/api/README.md" target="_blank" rel="noopener noreferrer">帮助我们改善此页面！</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/rubick/super/" class="prev">
+        特殊服务
+      </a></span> <span class="next"><a href="/rubick/run/">
+        贡献 rubick
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/rubick/assets/js/app.802a86ab.js" defer></script><script src="/rubick/assets/js/2.733019b2.js" defer></script><script src="/rubick/assets/js/8.010bfadc.js" defer></script>
+  </body>
+</html>
