@@ -32,6 +32,8 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 ## Sponsor
 我们通过有偿的方式积累高质量的常见问题、最佳实践文档，加入星球后可以和作者进行互动和答疑。我们提供技术支持、答疑解惑、定制化插件开发、二次定制化开发 rubick 等等官方服务。
 
+权益明细可以参考文档：[权益明细](https://rubickcenter.github.io/rubick/super/)
+
 <img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
 
 ## Installation package
