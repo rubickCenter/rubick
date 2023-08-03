@@ -29,6 +29,13 @@ English | [简体中文](./README.zh-CN.md)
 
 Based on electron open source toolbox, free integration of rich plug-ins, to create the ultimate desktop efficiency tool。Rubick is one of the heroes of Dota ，The core skill is the ability to use other heroes as plug-ins，Finished the walk 。Very consistent with the design concept of this tool，So named Rubick。
 
+## Sponsor
+我们通过有偿的方式积累高质量的常见问题、最佳实践文档，加入星球后可以和作者进行互动和答疑。我们提供技术支持、答疑解惑、定制化插件开发、二次定制化开发 rubick 等等官方服务。
+
+权益明细可以参考文档：[权益明细](https://rubickcenter.github.io/rubick/super/)
+
+<img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
+
 ## Installation package
 * [Rubick Mac OS](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Windows](https://github.com/rubickCenter/rubick/releases)
@@ -44,8 +51,6 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 - [x] Support MacOS
 - [x] Support Windows
 - [x] Support Linux
-
-
 
 ## Docs
 
@@ -79,12 +84,6 @@ Search for `Preferences` in `rubick`, and then turn on the `Auto Paste` function
 ### More features
 If you need more features, please come here to give us suggestions：[issues](https://github.com/rubickCenter/rubick/issues) 。
 We will add valuable ideas to the later development. At the same time, welcome to join and build together。
-
-## Sponsor
-开源不容易，如果该项目对你有用的话，可以打赏我们喝杯 coffee ☕️.
-
-<img width=200 src=https://pic1.zhimg.com/80/v2-688385687a37e962fe32daf136139feb_720w.png />
-<img width=200 src=https://pica.zhimg.com/80/v2-1ba296fd2cece45ee1094ee7c259035c_720w.png />
 
 ## 贡献
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
