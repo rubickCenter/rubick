@@ -2,7 +2,10 @@
   <div class="panel-item">
     <h3 class="title">{{ title }}</h3>
     <div class="list-item">
-      <a-list :grid="{ gutter: 16, column: 2 }" :data-source="list.filter(item => !!item)">
+      <a-list
+        :grid="{ gutter: 16, column: 2 }"
+        :data-source="list.filter((item) => !!item)"
+      >
         <template #renderItem="{ item, index }">
           <a-list-item v-if="item" @click="showDetail(item)">
             <template #actions>
@@ -70,7 +73,7 @@
                   v-show="!detail.isloading && !detail.isdownload"
                 />
               </template>
-              获取
+              {{ $t('feature.market.install') }}
             </a-button>
           </div>
         </div>
@@ -83,44 +86,46 @@
 <script setup>
 import {
   CloudDownloadOutlined,
-  ArrowLeftOutlined
-} from "@ant-design/icons-vue";
+  ArrowLeftOutlined,
+} from '@ant-design/icons-vue';
 
-import { defineProps, ref } from "vue";
-import { useStore } from "vuex";
-import { message } from "ant-design-vue";
-import MarkdownIt from "markdown-it";
-import request from "../../../assets/request/index";
+import { defineProps, ref } from 'vue';
+import { useStore } from 'vuex';
+import { message } from 'ant-design-vue';
+import MarkdownIt from 'markdown-it';
+import request from '../../../assets/request/index';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const store = useStore();
 
-const startDownload = name => store.dispatch("startDownload", name);
-const successDownload = name => store.dispatch("successDownload", name);
+const startDownload = (name) => store.dispatch('startDownload', name);
+const successDownload = (name) => store.dispatch('successDownload', name);
 
 defineProps({
   list: {
     type: [Array],
-    default: () => []
+    default: () => [],
   },
-  title: String
+  title: String,
 });
 
-const downloadPlugin = async plugin => {
+const downloadPlugin = async (plugin) => {
   startDownload(plugin.name);
   await window.market.downloadPlugin(plugin);
-  message.success(`${plugin.name}安装成功！`);
+  message.success(t('feature.dev.installSuccess', { pluginName: plugin.name }));
   successDownload(plugin.name);
 };
 
 const visible = ref(false);
 const detail = ref({});
 const markdown = new MarkdownIt();
-const content = ref("");
+const content = ref('');
 
-const showDetail = async item => {
+const showDetail = async (item) => {
   visible.value = true;
   detail.value = item;
-  let mdContent = "暂无内容";
+  let mdContent = '暂无内容';
   if (item.homePage) {
     mdContent = await request.getPluginDetail(item.homePage);
   }
@@ -153,7 +158,7 @@ const showDetail = async item => {
     }
   }
   &:after {
-    content: " ";
+    content: ' ';
     display: block;
     width: 100%;
     height: 1px;
@@ -175,7 +180,6 @@ const showDetail = async item => {
     box-shadow: none !important;
     .ant-drawer-content {
       background: var(--color-body-bg);
-
     }
     .ant-drawer-header {
       background: var(--color-body-bg);

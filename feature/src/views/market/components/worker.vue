@@ -3,18 +3,18 @@
     <PluginList
       v-if="system && !!system.length"
       @downloadSuccess="downloadSuccess"
-      title="生产效率"
+      :title="$t('feature.market.efficiency')"
       :list="system"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
-import request from "../../../assets/request/index";
-import PluginList from "./plugin-list.vue";
+import { ref, computed, onBeforeMount } from 'vue';
+import request from '../../../assets/request/index';
+import PluginList from './plugin-list.vue';
 
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 const store = useStore();
 const totalPlugins = computed(() => store.state.totalPlugins);
 

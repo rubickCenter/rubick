@@ -162,6 +162,26 @@ const showSeparate = () => {
       label: config.value.perf.common.hideOnBlur ? '钉住' : '自动隐藏',
       click: changeHideOnBlur,
     },
+    {
+      label:
+        config.value.perf.common.lang === 'zh-CN'
+          ? '切换语言'
+          : 'Change Language',
+      submenu: [
+        {
+          label: '简体中文',
+          click: () => {
+            changeLang('zh-CN');
+          },
+        },
+        {
+          label: 'English',
+          click: () => {
+            changeLang('en-US');
+          },
+        },
+      ],
+    },
   ];
   if (props.currentPlugin && props.currentPlugin.logo) {
     pluginMenu = pluginMenu.concat([
@@ -191,6 +211,13 @@ const showSeparate = () => {
   }
   let menu = Menu.buildFromTemplate(pluginMenu);
   menu.popup();
+};
+
+const changeLang = (lang) => {
+  let cfg = { ...config.value };
+  cfg.perf.common.lang = lang;
+  opConfig.set(cfg);
+  config.value = cfg;
 };
 
 const changeHideOnBlur = () => {

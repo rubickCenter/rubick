@@ -23,6 +23,7 @@ export default {
       autoPast: false,
       darkMode: false,
       guide: false,
+      lang: 'zh-CN',
     },
     local: {
       search: true,

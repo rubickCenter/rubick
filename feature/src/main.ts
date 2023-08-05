@@ -5,6 +5,7 @@ import router from './router';
 import store from './store';
 import './assets/ant-reset.less';
 import 'ant-design-vue/dist/antd.variable.min.css';
+import registerI18n from './languages/i18n';
 
 const { remote } = window.require('electron');
 
@@ -14,4 +15,4 @@ ConfigProvider.config({
   theme: perf.custom || {},
 });
 
-createApp(App).use(store).use(Antd).use(router).mount('#app');
+createApp(App).use(registerI18n).use(store).use(Antd).use(router).mount('#app');

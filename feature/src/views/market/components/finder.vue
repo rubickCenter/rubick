@@ -11,34 +11,31 @@
           <right-circle-outlined />
         </div>
       </template>
-      <div :key="index" v-for="(banner, index) in (data.banners || [])">
+      <div :key="index" v-for="(banner, index) in data.banners || []">
         <img @click="jumpTo(banner.link)" width="100%" :src="banner.src" />
       </div>
     </a-carousel>
     <PluginList
       v-if="recommend && !!recommend.length"
       @downloadSuccess="downloadSuccess"
-      title="推荐"
+      :title="$t('feature.market.finder.recommended')"
       :list="recommend"
     />
     <PluginList
       v-if="newList && !!newList.length"
-      title="最近更新"
+      :title="$t('feature.market.finder.lastUpdated')"
       :list="newList"
     />
   </div>
 </template>
 
 <script setup>
-import {
-  LeftCircleOutlined,
-  RightCircleOutlined,
-} from "@ant-design/icons-vue";
-import { ref, computed, onBeforeMount } from "vue";
-import request from "../../../assets/request/index";
-import PluginList from "./plugin-list.vue";
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { ref, computed, onBeforeMount } from 'vue';
+import request from '../../../assets/request/index';
+import PluginList from './plugin-list.vue';
 
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 const store = useStore();
 const totalPlugins = computed(() => store.state.totalPlugins);
 
@@ -75,7 +72,6 @@ const newList = computed(() => {
     return searchInfo;
   });
 });
-
 </script>
 
 <style lang="less">

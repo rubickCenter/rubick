@@ -3,8 +3,8 @@
     <div v-if="!localPlugins.length">
       <a-result
         status="404"
-        title="暂无任何插件"
-        sub-title="去插件市场选择安装合适的插件吧！"
+        :title="$t('feature.installed.tips1')"
+        :sub-title="$t('feature.installed.tips2')"
       />
     </div>
     <div class="container" v-else>
@@ -33,7 +33,9 @@
               <a-tag>{{ pluginDetail.version }}</a-tag>
             </div>
             <div class="desc">
-              开发者：{{ `${pluginDetail.author || '未知'}` }}
+              {{ $t('feature.installed.developer') }}：{{
+                `${pluginDetail.author || $t('feature.installed.unknown')}`
+              }}
             </div>
             <div class="desc">
               {{ pluginDetail.description }}
@@ -47,12 +49,12 @@
               :loading="pluginDetail.isloading"
               @click="deletePlugin(pluginDetail)"
             >
-              移除
+              {{ $t('feature.installed.remove') }}
             </a-button>
           </div>
         </div>
         <a-tabs default-active-key="1">
-          <a-tab-pane key="1" tab="功能关键字">
+          <a-tab-pane key="1" :tab="$t('feature.installed.functionKey')">
             <div class="feature-container">
               <div
                 class="desc-item"
@@ -80,7 +82,7 @@
                     <a-tooltip
                       v-if="!hasAdded(cmd)"
                       placement="topLeft"
-                      title="点击+号，固定关键词到超级面板"
+                      :title="$t('feature.installed.addToPanel')"
                     >
                       <PlusCircleOutlined
                         @click="addCmdToSuperPanel({ code: item.code, cmd })"
@@ -89,7 +91,7 @@
                     <a-tooltip
                       v-else
                       placement="topLeft"
-                      title="点击-号，从超级面板移除关键词"
+                      :title="$t('feature.installed.removeFromPanel')"
                     >
                       <MinusCircleOutlined
                         @click="removePluginToSuperPanel(cmd)"
@@ -100,7 +102,7 @@
               </div>
             </div>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="详情介绍">
+          <a-tab-pane key="2" :tab="$t('feature.installed.detailInfo')">
             <div class="detail-container" v-html="readme"></div>
           </a-tab-pane>
         </a-tabs>
