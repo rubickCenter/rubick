@@ -5,7 +5,7 @@ import electron, {
   protocol,
   BrowserWindow,
 } from 'electron';
-import { main } from './browsers';
+import { main, guide } from './browsers';
 import commonConst from '../common/utils/commonConst';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -56,6 +56,12 @@ class App {
   }
   onReady() {
     const readyFunction = () => {
+      const config = global.OP_CONFIG.get();
+      if (!config.perf.common.guide) {
+        guide().init();
+        config.perf.common.guide = true;
+        global.OP_CONFIG.set(config);
+      }
       this.createWindow();
       const mainWindow = this.windowCreator.getWindow();
       API.init(mainWindow);
