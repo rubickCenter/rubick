@@ -4,6 +4,7 @@ export default {
       market: {
         title: 'Market',
         search: 'Search Plugins',
+        searchResult: 'Search Results',
         explore: 'Explore',
         efficiency: 'Efficiency',
         searchTool: 'Search Tools',
