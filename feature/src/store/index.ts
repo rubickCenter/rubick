@@ -16,12 +16,16 @@ export default createStore({
   state: {
     totalPlugins: [],
     localPlugins: [],
+    searchValue: '',
   },
   mutations: {
     commonUpdate(state: any, payload) {
       Object.keys(payload).forEach((key) => {
         state[key] = payload[key];
       });
+    },
+    setSearchValue(state: any, payload) {
+      state.searchValue = payload;
     },
   },
   actions: {
