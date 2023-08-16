@@ -13,7 +13,11 @@ import { runner, detach } from '../browsers';
 import fs from 'fs';
 import { LocalDb, screenCapture } from '@/core';
 import plist from 'plist';
+import ks from 'node-key-sender';
+
 import { DECODE_KEY } from '@/common/constans/main';
+import getCopyFiles from '@/common/utils/getCopyFiles';
+
 import mainInstance from '../index';
 const runnerInstance = runner();
 const detachInstance = detach();
@@ -323,6 +327,20 @@ class API {
         data: img,
       });
     });
+  }
+
+  public getCopyFiles() {
+    return getCopyFiles();
+  }
+
+  public simulateKeyboardTap({ data: { key, modifier } }) {
+    let keys = [key.toLowerCase()];
+    if (modifier && Array.isArray(modifier) && modifier.length > 0) {
+      keys = modifier.concat(keys);
+      ks.sendCombination(keys);
+    } else {
+      ks.sendKeys(keys);
+    }
   }
 }
 
