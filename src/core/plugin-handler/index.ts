@@ -52,7 +52,7 @@ class AdapterHandler {
     } catch (e) {
       // ignore
     }
-    this.registry = register || 'https://registry.npm.taobao.org';
+    this.registry = register || 'https://registry.npmmirror.com/';
   }
 
   async upgrade(name: string): Promise<void> {
@@ -157,14 +157,14 @@ class AdapterHandler {
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
     return new Promise((resolve: any, reject: any) => {
-      let args: string[] = [cmd]
+      const args: string[] = [cmd]
         .concat(
           cmd !== 'uninstall' ? modules.map((m) => `${m}@latest`) : modules
         )
         .concat('--color=always')
-        .concat('--save');
-      if (cmd !== 'uninstall')
-        args = args.concat(`--registry=${this.registry}`);
+        .concat('--save')
+        .concat(`--registry=${this.registry}`);
+
       const npm = spawn('npm', args, {
         cwd: this.baseDir,
       });
