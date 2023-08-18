@@ -20,12 +20,12 @@
           </template>
           {{ $t('feature.settings.global.title') }}
         </a-menu-item>
-        <a-menu-item key="superpanel">
-          <template #icon>
-            <FileAddOutlined />
-          </template>
-          {{ $t('feature.settings.superPanel.title') }}
-        </a-menu-item>
+<!--        <a-menu-item key="superpanel">-->
+<!--          <template #icon>-->
+<!--            <FileAddOutlined />-->
+<!--          </template>-->
+<!--          {{ $t('feature.settings.superPanel.title') }}-->
+<!--        </a-menu-item>-->
         <a-menu-item key="localhost">
           <template #icon>
             <DatabaseOutlined />

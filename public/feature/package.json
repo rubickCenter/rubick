@@ -3,7 +3,7 @@
   "pluginName": "rubick 系统菜单",
   "description": "rubick 系统菜单",
   "main": "index.html",
-  "logo": "https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/acb761082f4a4b46847e7cd8b180f63c~tplv-k3u1fbpfcp-watermark.image",
+  "logo": "https://pic1.zhimg.com/80/v2-c09780808301668a82e6646cb42f0806_720w.png",
   "version": "0.0.0",
   "preload":"preload.js",
   "pluginType": "ui",

@@ -150,18 +150,12 @@ class AdapterHandler {
     }
     return adapters;
   }
-  private cleanCache() {
-    spawn('npm', ['cache', 'clean', '-f'], {
-      cwd: this.baseDir,
-    });
-  }
 
   /**
    * 运行包管理器
    * @memberof AdapterHandler
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
-    this.cleanCache();
     return new Promise((resolve: any, reject: any) => {
       let args: string[] = [cmd]
         .concat(
