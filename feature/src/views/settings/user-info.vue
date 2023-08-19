@@ -151,9 +151,9 @@ state.custom = perf.custom || {};
 
 const userInfo = ref(window.rubick.dbStorage.getItem('rubick-user-info'));
 
-service.getUserInfo({ openId: userInfo.value.openId }).then((res) => {
-  userInfo.value = res;
-});
+// service.getUserInfo({ openId: userInfo.value.openId }).then((res) => {
+//   userInfo.value = res;
+// });
 
 const setConfig = debounce(() => {
   remote.getGlobal('OP_CONFIG').set(
