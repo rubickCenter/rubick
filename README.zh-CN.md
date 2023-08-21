@@ -54,6 +54,8 @@
 
 ## 使用文档
 
+[Rubick 官网](https://rubick.vip)
+
 [Rubick Docs](https://rubickCenter.github.io/rubick/)
 
 
