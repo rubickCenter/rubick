@@ -54,6 +54,8 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 
 ## Docs
 
+[Rubick website](https://rubick.vip)
+
 [Rubick Docs](https://rubickCenter.github.io/rubick/)
 
 
