@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron';
-import commonConst from './commonConst';
 
 const useDrag = () => {
   let animationId: number;

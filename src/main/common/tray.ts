@@ -2,7 +2,6 @@ import { dialog, Menu, Tray, app, shell, BrowserWindow } from 'electron';
 import path from 'path';
 import pkg from '../../../package.json';
 import os from 'os';
-import API from '../common/api';
 import commonConst from '@/common/utils/commonConst';
 import { guide } from '../browsers';
 
@@ -20,11 +19,6 @@ function createTray(window: BrowserWindow): Promise<Tray> {
       icon = './icons/icon@2x.png';
     }
     const appIcon = new Tray(path.join(__static, icon));
-
-    const getShowAndHiddenHotKey = (): string => {
-      const config = global.OP_CONFIG.get();
-      return config.perf.shortCut.showAndHidden;
-    };
 
     const openSettings = () => {
       window.webContents.executeJavaScript(
@@ -59,8 +53,7 @@ function createTray(window: BrowserWindow): Promise<Tray> {
         },
         { type: 'separator' },
         {
-          label: '显示窗口',
-          accelerator: getShowAndHiddenHotKey(),
+          label: '显示',
           click() {
             window.show();
           },

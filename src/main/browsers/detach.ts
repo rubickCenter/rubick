@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain, nativeTheme } from 'electron';
+import localConfig from '../common/initLocalConfig';
 import path from 'path';
 export default () => {
   let win: any;
@@ -28,7 +29,6 @@ export default () => {
       y: viewInfo.y,
       webPreferences: {
         webSecurity: false,
-        enableRemoteModule: true,
         backgroundThrottling: false,
         contextIsolation: false,
         webviewTag: true,
@@ -49,8 +49,9 @@ export default () => {
       win = undefined;
     });
 
-    win.once('ready-to-show', () => {
-      const darkMode = global.OP_CONFIG.get().perf.common.darkMode;
+    win.once('ready-to-show', async () => {
+      const config = await localConfig.getConfig();
+      const darkMode = config.perf.common.darkMode;
       darkMode &&
         win.webContents.executeJavaScript(
           `document.body.classList.add("dark");window.rubick.theme="dark"`

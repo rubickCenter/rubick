@@ -2,6 +2,7 @@ import { app, BrowserWindow, protocol, nativeTheme } from 'electron';
 import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import versonHandler from '../common/versionHandler';
+import localConfig from '@/main/common/initLocalConfig';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('@electron/remote/main').initialize();
 
@@ -65,8 +66,8 @@ export default () => {
     });
 
     // 判断失焦是否隐藏
-    win.on('blur', () => {
-      const config = { ...global.OP_CONFIG.get() };
+    win.on('blur', async () => {
+      const config = await localConfig.getConfig();
       if (config.perf.common.hideOnBlur) {
         win.hide();
       }

@@ -3,12 +3,13 @@ import { clipboard, nativeImage, ipcRenderer } from 'electron';
 import { getGlobal } from '@electron/remote';
 import path from 'path';
 import pluginClickEvent from './pluginClickEvent';
+import localConfig from '../confOp';
 import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
-    const config = getGlobal('OP_CONFIG').get();
+    const config: any = localConfig.getConfig();
     // 未开启自动粘贴
     if (!config.perf.common.autoPast) return;
 

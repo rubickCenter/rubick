@@ -1,5 +1,5 @@
 export default {
-  version: 12,
+  version: 0,
   perf: {
     custom: {
       primaryColor: '#ff4ea4',

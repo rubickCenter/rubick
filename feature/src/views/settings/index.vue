@@ -231,20 +231,20 @@ import {
   DatabaseOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
-  FileAddOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
-import { ref, reactive, watch, toRefs, computed, onMounted, toRaw } from 'vue';
+import { ref, reactive, watch, toRefs, computed } from 'vue';
 import keycodes from './keycode';
 import Localhost from './localhost.vue';
 import SuperPanel from './super-panel.vue';
 import UserInfo from './user-info';
 import { useI18n } from 'vue-i18n';
+import localConfig from '@/confOp';
+
 const { locale, t } = useI18n();
 
 const { ipcRenderer } = window.require('electron');
-const remote = window.require('@electron/remote');
 
 const examples = [
   {
@@ -275,7 +275,7 @@ const tipText = computed(() => {
 
 const currentSelect = ref(['userInfo']);
 
-const { perf, global: defaultGlobal } = remote.getGlobal('OP_CONFIG').get();
+const { perf, global: defaultGlobal } = localConfig.getConfig();
 
 state.shortCut = perf.shortCut;
 state.custom = perf.custom;
@@ -284,7 +284,7 @@ state.local = perf.local;
 state.global = defaultGlobal;
 
 const setConfig = debounce(() => {
-  remote.getGlobal('OP_CONFIG').set(
+  localConfig.setConfig(
     JSON.parse(
       JSON.stringify({
         perf: {

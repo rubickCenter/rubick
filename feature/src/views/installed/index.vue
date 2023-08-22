@@ -125,7 +125,7 @@ const remote = window.require('@electron/remote');
 const fs = window.require('fs');
 const md = new MarkdownIt();
 
-const appPath = remote.app.getPath('cache');
+const appPath = remote.app.getPath('userData');
 const baseDir = path.join(appPath, './rubick-plugins');
 
 const store = useStore();
@@ -171,7 +171,6 @@ const removePluginToSuperPanel = (cmd) => {
       return item.cmd !== cmd;
     }
   );
-  console.log(toRaw(superPanelPlugins.value));
   window.rubick.db.put(toRaw(superPanelPlugins.value));
 };
 
@@ -209,7 +208,7 @@ const readme = computed(() => {
     baseDir,
     'node_modules',
     pluginDetail.value.name,
-    'readme.md'
+    'README.md'
   );
   if (fs.existsSync(readmePath)) {
     const str = fs.readFileSync(readmePath, 'utf-8');

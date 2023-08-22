@@ -57,10 +57,10 @@ import { ipcRenderer } from 'electron';
 import { LoadingOutlined, MoreOutlined } from '@ant-design/icons-vue';
 
 const remote = window.require('@electron/remote');
-const opConfig = remote.getGlobal('OP_CONFIG');
+import localConfig from '../confOp';
 const { Menu } = remote;
 
-const config = ref(opConfig.get());
+const config: any = ref(localConfig.getConfig());
 
 const props: any = defineProps({
   searchValue: {
@@ -120,7 +120,7 @@ const keydownEvent = (e, key: string) => {
       emit('choosePlugin');
       break;
     case 'space':
-      if (runPluginDisable || !opConfig.get().perf.common.space) return;
+      if (runPluginDisable || !config.value.perf.common.space) return;
       emit('choosePlugin');
       break;
     default:
@@ -217,14 +217,14 @@ const showSeparate = () => {
 const changeLang = (lang) => {
   let cfg = { ...config.value };
   cfg.perf.common.lang = lang;
-  opConfig.set(cfg);
+  localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
   config.value = cfg;
 };
 
 const changeHideOnBlur = () => {
   let cfg = { ...config.value };
   cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
-  opConfig.set(cfg);
+  localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
   config.value = cfg;
 };
 

@@ -12,9 +12,9 @@ import commonConst from '../common/utils/commonConst';
 import API from './common/api';
 import createTray from './common/tray';
 import registerHotKey from './common/registerHotKey';
+import localConfig from './common/initLocalConfig';
 
 import '../common/utils/localPlugin';
-import '../common/utils/localConfig';
 
 import registerySystemPlugin from './common/registerySystemPlugin';
 
@@ -55,12 +55,13 @@ class App {
     this.windowCreator.init();
   }
   onReady() {
-    const readyFunction = () => {
-      const config = global.OP_CONFIG.get();
+    const readyFunction = async () => {
+      await localConfig.init();
+      const config = await localConfig.getConfig();
       if (!config.perf.common.guide) {
         guide().init();
         config.perf.common.guide = true;
-        global.OP_CONFIG.set(config);
+        localConfig.setConfig(config);
       }
       this.createWindow();
       const mainWindow = this.windowCreator.getWindow();
