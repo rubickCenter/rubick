@@ -1,10 +1,7 @@
 import { createI18n } from 'vue-i18n';
 import messages from './langs';
-const { remote } = window.require('electron');
+const remote = window.require('@electron/remote');
 const { perf } = remote.getGlobal('OP_CONFIG').get();
-
-console.log(messages);
-console.log(perf);
 
 // 2. Create i18n instance with options
 const i18n = createI18n({

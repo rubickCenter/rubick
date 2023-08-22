@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue';
 import throttle from 'lodash.throttle';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
+import { getGlobal } from '@electron/remote';
 import pluginClickEvent from './pluginClickEvent';
 import useFocus from './clipboardWatch';
 
@@ -40,7 +41,7 @@ const optionsManager = ({
   });
 
   const getOptionsFromSearchValue = (value, strict = false) => {
-    const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+    const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     let options: any = [];
     // todo 先搜索 plugin
     localPlugins.forEach((plugin) => {

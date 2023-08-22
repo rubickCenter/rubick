@@ -1,7 +1,6 @@
 <template>
   <div
     id="components-layout"
-    :class="commonConst.macOS() && 'drag'"
     @mousedown="onMouseDown"
   >
     <Search
@@ -32,7 +31,7 @@
 
 <script setup lang="ts">
 import { watch, ref, nextTick, toRaw } from 'vue';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Result from './components/result.vue';
 import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
@@ -41,6 +40,7 @@ import useDrag from '../common/utils/dragWindow';
 import commonConst from '@/common/utils/commonConst';
 
 const { onMouseDown } = useDrag();
+const remote = window.require('@electron/remote');
 
 const {
   initPlugins,

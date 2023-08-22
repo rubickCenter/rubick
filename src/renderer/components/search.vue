@@ -53,9 +53,10 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { LoadingOutlined, MoreOutlined } from '@ant-design/icons-vue';
 
+const remote = window.require('@electron/remote');
 const opConfig = remote.getGlobal('OP_CONFIG');
 const { Menu } = remote;
 
@@ -261,6 +262,9 @@ window.rubick.hooks.onHide = () => {
   left: 0;
   width: 100%;
   align-items: center;
+  height: 60px;
+  display: flex;
+  align-items: center;
   .ellipse {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -284,7 +288,7 @@ window.rubick.hooks.onHide = () => {
   }
 
   .main-input {
-    height: 60px !important;
+    height: 40px !important;
     box-sizing: border-box;
     flex: 1;
     border: none;

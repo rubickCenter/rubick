@@ -12,9 +12,9 @@ import App from './App.vue';
 
 import 'ant-design-vue/dist/antd.variable.min.css';
 
-const { remote } = window.require('electron');
+const { getGlobal } = window.require('@electron/remote');
 
-const { perf } = remote.getGlobal('OP_CONFIG').get();
+const { perf } = getGlobal('OP_CONFIG').get();
 
 ConfigProvider.config({
   theme: perf.custom || {},

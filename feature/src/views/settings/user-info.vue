@@ -139,7 +139,8 @@ import debounce from 'lodash.debounce';
 
 import service from '../../assets/service';
 
-const { remote, ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require('electron');
+const remote = window.require('@electron/remote');
 
 const state = reactive({
   custom: {},

@@ -243,7 +243,8 @@ import UserInfo from './user-info';
 import { useI18n } from 'vue-i18n';
 const { locale, t } = useI18n();
 
-const { remote, ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require('electron');
+const remote = window.require('@electron/remote');
 
 const examples = [
   {

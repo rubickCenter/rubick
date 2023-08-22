@@ -1,33 +1,33 @@
-import commonConst from "./commonConst";
-import { clipboard, remote } from "electron";
-import plist from "plist";
-import fs from "fs";
-import path from "path";
-import ofs from "original-fs";
+import commonConst from './commonConst';
+import { clipboard } from 'electron';
+import plist from 'plist';
+import fs from 'fs';
+import path from 'path';
+import ofs from 'original-fs';
 
 export default function getCopyFiles(): Array<any> | null {
   let fileInfo;
   if (commonConst.macOS()) {
-    if (!clipboard.has("NSFilenamesPboardType")) return null;
-    const result = clipboard.read("NSFilenamesPboardType");
+    if (!clipboard.has('NSFilenamesPboardType')) return null;
+    const result = clipboard.read('NSFilenamesPboardType');
     if (!result) return null;
     try {
       fileInfo = plist.parse(result);
     } catch (e) {
       return null;
     }
-  } else if (process.platform === "win32") {
+  } else if (process.platform === 'win32') {
     /* eslint-disable */
-    const clipboardEx = require("electron-clipboard-ex");
+    const clipboardEx = require('electron-clipboard-ex');
     fileInfo = clipboardEx.readFilePaths();
     // todo
   } else {
     if (!commonConst.linux()) return null;
-    if (!clipboard.has("text/uri-list")) return null;
-    const result = clipboard.read("text/uri-list").match(/^file:\/\/\/.*/gm);
+    if (!clipboard.has('text/uri-list')) return null;
+    const result = clipboard.read('text/uri-list').match(/^file:\/\/\/.*/gm);
     if (!result || !result.length) return null;
     fileInfo = result.map((e) =>
-      decodeURIComponent(e).replace(/^file:\/\//, "")
+      decodeURIComponent(e).replace(/^file:\/\//, '')
     );
   }
   if (!Array.isArray(fileInfo)) return null;

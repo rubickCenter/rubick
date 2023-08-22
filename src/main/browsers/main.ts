@@ -2,11 +2,16 @@ import { app, BrowserWindow, protocol, nativeTheme } from 'electron';
 import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import versonHandler from '../common/versionHandler';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('@electron/remote/main').initialize();
+
 export default () => {
   let win: any;
 
   const init = () => {
     createWindow();
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@electron/remote/main').enable(win.webContents);
   };
 
   const createWindow = async () => {
@@ -22,7 +27,6 @@ export default () => {
       backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c28' : '#fff',
       webPreferences: {
         webSecurity: false,
-        enableRemoteModule: true,
         backgroundThrottling: false,
         contextIsolation: false,
         webviewTag: true,

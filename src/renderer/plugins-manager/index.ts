@@ -1,5 +1,6 @@
 import { reactive, toRefs, ref } from 'vue';
-import { nativeImage, remote, ipcRenderer } from 'electron';
+import { nativeImage, ipcRenderer } from 'electron';
+import { getGlobal } from '@electron/remote';
 import appSearch from '@/core/app-search';
 import { PluginHandler } from '@/core';
 import path from 'path';
@@ -112,7 +113,7 @@ const createPluginManager = (): any => {
 
   window.updatePlugin = ({ currentPlugin }: any) => {
     state.currentPlugin = currentPlugin;
-    remote.getGlobal('LOCAL_PLUGINS').updatePlugin(currentPlugin);
+    getGlobal('LOCAL_PLUGINS').updatePlugin(currentPlugin);
   };
 
   window.setCurrentPlugin = ({ currentPlugin }) => {

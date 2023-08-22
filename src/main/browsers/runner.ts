@@ -33,6 +33,8 @@ export default () => {
   const init = (plugin, window: BrowserWindow) => {
     if (view === null || view === undefined) {
       createView(plugin, window);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('@electron/remote/main').enable(view.webContents);
     }
   };
 
@@ -65,7 +67,6 @@ export default () => {
 
     view = new BrowserView({
       webPreferences: {
-        enableRemoteModule: true,
         webSecurity: false,
         nodeIntegration: true,
         contextIsolation: false,

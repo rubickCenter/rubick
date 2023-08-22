@@ -7,7 +7,7 @@ import './assets/ant-reset.less';
 import 'ant-design-vue/dist/antd.variable.min.css';
 import registerI18n from './languages/i18n';
 
-const { remote } = window.require('electron');
+const remote = window.require('@electron/remote');
 
 const { perf } = remote.getGlobal('OP_CONFIG').get();
 

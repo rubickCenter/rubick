@@ -121,7 +121,7 @@ import { message } from 'ant-design-vue';
 
 const { ipcRenderer } = window.require('electron');
 
-const { remote } = window.require('electron');
+const remote = window.require('@electron/remote');
 const fs = window.require('fs');
 const md = new MarkdownIt();
 
