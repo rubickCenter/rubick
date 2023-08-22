@@ -1,19 +1,19 @@
 <template>
   <div class="user-info">
-    <div class="info-container">
-      <a-result
-        class="user-info-result"
-        :title="userInfo.name || $t('feature.settings.account.tips1')"
-        :sub-title="$t('feature.settings.account.tips2')"
-      >
-        <template #icon>
-          <a-avatar :size="64" v-if="!userInfo.avatar">
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
-          <a-avatar :src="userInfo.avatar" :size="64" v-else />
-        </template>
-      </a-result>
-    </div>
+<!--    <div class="info-container">-->
+<!--      <a-result-->
+<!--        class="user-info-result"-->
+<!--        :title="userInfo.name || $t('feature.settings.account.tips1')"-->
+<!--        :sub-title="$t('feature.settings.account.tips2')"-->
+<!--      >-->
+<!--        <template #icon>-->
+<!--          <a-avatar :size="64" v-if="!userInfo.avatar">-->
+<!--            <template #icon><UserOutlined /></template>-->
+<!--          </a-avatar>-->
+<!--          <a-avatar :src="userInfo.avatar" :size="64" v-else />-->
+<!--        </template>-->
+<!--      </a-result>-->
+<!--    </div>-->
     <div class="settings-container">
       <div class="setting-item">
         <div class="title">
@@ -151,9 +151,9 @@ state.custom = perf.custom || {};
 
 const userInfo = ref(window.rubick.dbStorage.getItem('rubick-user-info'));
 
-service.getUserInfo({ openId: userInfo.value.openId }).then((res) => {
-  userInfo.value = res;
-});
+// service.getUserInfo({ openId: userInfo.value.openId }).then((res) => {
+//   userInfo.value = res;
+// });
 
 const setConfig = debounce(() => {
   remote.getGlobal('OP_CONFIG').set(

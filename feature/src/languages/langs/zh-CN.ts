@@ -4,6 +4,7 @@ export default {
       market: {
         title: '插件市场',
         search: '搜索插件',
+        searchResult: '搜索结果',
         explore: '探索',
         efficiency: '效率',
         searchTool: '搜索工具',

@@ -1,6 +1,6 @@
 {
   "name": "rubick",
-  "version": "2.4.1",
+  "version": "2.4.5",
   "author": "muwoo <2424880409@qq.com>",
   "private": true,
   "scripts": {
@@ -30,6 +30,7 @@
     "get-mac-apps": "^1.0.2",
     "got": "^11.8.3",
     "lodash.throttle": "^4.1.1",
+    "node-key-sender": "^1.0.11",
     "pouchdb": "^7.2.2",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

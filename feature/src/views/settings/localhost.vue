@@ -80,7 +80,7 @@ const layout = {
 
 const resetForm = () => {
   formState.value = {
-    register: 'https://registry.npm.taobao.org',
+    register: 'https://registry.npmmirror.com',
     database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
     access_token: '',
   };

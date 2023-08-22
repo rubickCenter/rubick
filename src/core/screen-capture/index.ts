@@ -5,7 +5,7 @@ import path from 'path';
 
 // 截图方法windows
 export const screenWindow = (cb) => {
-  const url = path.resolve(__static, 'PrintScr.exe');
+  const url = path.resolve(__static, 'ScreenCapture.exe');
   const screen_window = execFile(url);
   screen_window.on('exit', (code) => {
     if (code) {

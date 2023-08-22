@@ -162,8 +162,16 @@ window.rubick = {
   shellBeep: () => {
     ipcSend('shellBeep');
   },
-  
+
   getFileIcon: (path) => {
     return ipcSendSync('getFileIcon', { path });
+  },
+
+  getCopyedFiles: () => {
+    return ipcSendSync('getCopyFiles');
+  },
+
+  simulateKeyboardTap: (key, ...modifier) => {
+    ipcSend('simulateKeyboardTap', { key, modifier });
   },
 };
