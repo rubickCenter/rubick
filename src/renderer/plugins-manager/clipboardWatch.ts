@@ -1,13 +1,15 @@
 import getCopyFiles from '@/common/utils/getCopyFiles';
-import { clipboard, nativeImage, remote, ipcRenderer } from 'electron';
+import { clipboard, nativeImage, ipcRenderer } from 'electron';
+import { getGlobal } from '@electron/remote';
 import path from 'path';
 import pluginClickEvent from './pluginClickEvent';
+import localConfig from '../confOp';
 import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
-    const config = remote.getGlobal('OP_CONFIG').get();
+    const config: any = localConfig.getConfig();
     // 未开启自动粘贴
     if (!config.perf.common.autoPast) return;
 
@@ -17,7 +19,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
     if (fileList) {
       window.setSubInputValue({ value: '' });
       clipboardFile.value = fileList;
-      const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+      const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
       const options: any = [
         {
           name: '复制路径',
@@ -143,7 +145,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
         dataUrl,
       },
     ];
-    const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+    const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     const options: any = [];
     // 再正则插件
     localPlugins.forEach((plugin) => {

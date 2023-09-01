@@ -1,8 +1,8 @@
-import { remote } from "electron";
-import path from "path";
+import { app } from '@electron/remote';
+import path from 'path';
 
-const appPath = remote.app.getPath("cache");
+const appPath = app.getPath('userData');
 
-const PLUGIN_INSTALL_DIR = path.join(appPath, "./rubick-plugins");
+const PLUGIN_INSTALL_DIR = path.join(appPath, './rubick-plugins');
 
 export { PLUGIN_INSTALL_DIR };

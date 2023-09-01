@@ -9,19 +9,20 @@ import {
   Notification,
 } from 'electron';
 import screenCapture from '@/core/screen-capture';
+import localConfig from '@/main/common/initLocalConfig';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
-  const setAutoLogin = () => {
-    const config = global.OP_CONFIG.get();
+  const setAutoLogin = async () => {
+    const config = await localConfig.getConfig();
     app.setLoginItemSettings({
       openAtLogin: config.perf.common.start,
       openAsHidden: true,
     });
   };
   // 设置暗黑模式
-  const setDarkMode = () => {
-    const config = global.OP_CONFIG.get();
+  const setDarkMode = async () => {
+    const config = await localConfig.getConfig();
     const isDark = config.perf.common.darkMode;
     if (isDark) {
       nativeTheme.themeSource = 'dark';
@@ -46,10 +47,10 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     }
   };
 
-  const init = () => {
-    setAutoLogin();
-    setDarkMode();
-    const config = global.OP_CONFIG.get();
+  const init = async () => {
+    await setAutoLogin();
+    await setDarkMode();
+    const config = await localConfig.getConfig();
     globalShortcut.unregisterAll();
     // 注册偏好快捷键
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {

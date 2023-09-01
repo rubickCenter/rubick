@@ -2,6 +2,7 @@ import { BrowserView, BrowserWindow, session } from 'electron';
 import path from 'path';
 import commonConst from '../../common/utils/commonConst';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
+import localConfig from '@/main/common/initLocalConfig';
 
 const getRelativePath = (indexPath) => {
   return commonConst.windows()
@@ -33,6 +34,8 @@ export default () => {
   const init = (plugin, window: BrowserWindow) => {
     if (view === null || view === undefined) {
       createView(plugin, window);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('@electron/remote/main').enable(view.webContents);
     }
   };
 
@@ -65,7 +68,6 @@ export default () => {
 
     view = new BrowserView({
       webPreferences: {
-        enableRemoteModule: true,
         webSecurity: false,
         nodeIntegration: true,
         contextIsolation: false,
@@ -77,7 +79,7 @@ export default () => {
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
-    view.webContents.once('dom-ready', () => {
+    view.webContents.once('dom-ready', async () => {
       if (!view) return;
       const height = pluginSetting && pluginSetting.height;
       window.setSize(800, height || 660);
@@ -85,7 +87,8 @@ export default () => {
       view.setAutoResize({ width: true });
       executeHooks('PluginEnter', plugin.ext);
       executeHooks('PluginReady', plugin.ext);
-      darkMode = global.OP_CONFIG.get().perf.common.darkMode;
+      const config = await localConfig.getConfig();
+      const darkMode = config.perf.common.darkMode;
       darkMode &&
         view.webContents.executeJavaScript(
           `document.body.classList.add("dark");window.rubick.theme="dark"`

@@ -43,7 +43,6 @@ export default () => {
       height: 600,
       webPreferences: {
         webSecurity: false,
-        enableRemoteModule: true,
         backgroundThrottling: false,
         contextIsolation: false,
         webviewTag: true,

@@ -69,6 +69,7 @@ init();
 }
 
 .main-container {
+  -webkit-app-region: no-drag;
   display: flex;
   align-items: flex-start;
   background: var(--color-body-bg);
