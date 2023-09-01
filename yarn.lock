@@ -8083,7 +8083,7 @@ node-gyp-build@~4.1.0:
 
 node-key-sender@^1.0.11:
   version "1.0.11"
-  resolved "https://registry.npmmirror.com/node-key-sender/-/node-key-sender-1.0.11.tgz#93210f07163607d8daf2874f1a29567d0acdb94c"
+  resolved "https://registry.yarnpkg.com/node-key-sender/-/node-key-sender-1.0.11.tgz#93210f07163607d8daf2874f1a29567d0acdb94c"
   integrity sha512-vv2IXd8QdZBFYXaIy02uy2rK6EKj+tOTEuoTxJKS9l8zw8Cz6DeLffR8ompj7N2A3h6XK7aiy+YAcTaeOqwp2Q==
 
 node-libs-browser@^2.2.1:

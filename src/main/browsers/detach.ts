@@ -10,6 +10,8 @@ export default () => {
       event.returnValue = data;
     });
     createWindow(pluginInfo, viewInfo, view);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('@electron/remote/main').enable(win.webContents);
   };
 
   const createWindow = async (pluginInfo, viewInfo, view) => {
