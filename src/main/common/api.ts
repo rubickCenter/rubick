@@ -33,6 +33,10 @@ class API extends DBInstance {
       event.returnValue = data;
       // event.sender.send(`msg-back-${arg.type}`, data);
     });
+    // 按 ESC 退出插件
+    mainWindow.webContents.on('before-input-event', (event, input) =>
+      this.__EscapeKeyDown(event, input, mainWindow)
+    );
   }
 
   public getCurrentWindow = (window, e) => {
@@ -81,15 +85,12 @@ class API extends DBInstance {
       })})`
     );
     window.show();
-    // 按 ESC 退出插件
-    window.webContents.on('before-input-event', (event, input) =>
-      this.__EscapeKeyDown(event, input, window)
-    );
-    runnerInstance
-      .getView()
-      .webContents.on('before-input-event', (event, input) =>
+    const view = runnerInstance.getView();
+    if (!view.inited) {
+      view.webContents.on('before-input-event', (event, input) =>
         this.__EscapeKeyDown(event, input, window)
       );
+    }
   }
 
   public removePlugin(e, window) {

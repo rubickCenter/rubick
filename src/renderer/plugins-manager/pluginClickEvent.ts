@@ -15,7 +15,7 @@ export default function pluginClickEvent({ plugin, fe, cmd, ext, openPlugin }) {
   // 模板文件
   if (!plugin.main) {
     pluginDist.tplPath = commonConst.dev()
-      ? 'http://localhost:8082/#/'
+      ? 'http://localhost:8083/#/'
       : `file://${__static}/tpl/index.html`;
   }
   // 插件市场

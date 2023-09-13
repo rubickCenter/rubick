@@ -19,7 +19,7 @@ function searchKeyValues(lists, value, strict = false) {
     if (item.type === 'regex' && !strict) {
       return formatReg(item.match).test(value);
     }
-    if (item.type === 'over') {
+    if (item.type === 'over' && !strict) {
       return true;
     }
     return false;

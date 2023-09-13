@@ -52,7 +52,7 @@ export default () => {
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      win.loadURL('http://localhost:8083');
+      win.loadURL('http://localhost:8084');
     } else {
       win.loadURL(`file://${path.join(__static, './guide/index.html')}`);
     }
