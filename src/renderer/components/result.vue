@@ -1,14 +1,24 @@
 <template>
   <div
-    v-show="
-      !!options.length &&
-      (searchValue || !!clipboardFile.length) &&
-      !currentPlugin.name
-    "
+    v-show="!currentPlugin.name"
     class="options"
     ref="scrollDom"
   >
-    <a-list item-layout="horizontal" :dataSource="sort(options)">
+    <div class="history-plugins" v-if="!options.length || !(searchValue || !!clipboardFile.length)">
+      <a-row>
+        <a-col
+          @click="() => item.click()"
+          :class="currentSelect === index ? 'active history-item' : 'history-item'"
+          :span="3"
+          v-for="(item, index) in pluginHistory"
+          :key="index"
+        >
+          <a-avatar style="border-radius: 0" :src="item.icon" />
+          <div class="name ellpise">{{item.pluginName || item._name || item.name}}</div>
+        </a-col>
+      </a-row>
+    </div>
+    <a-list v-else item-layout="horizontal" :dataSource="sort(options)">
       <template #renderItem="{ item, index }">
         <a-list-item
           @click="() => item.click()"
@@ -52,6 +62,7 @@ const props = defineProps({
     default: 0,
   },
   currentPlugin: {},
+  pluginHistory: (() => [])(),
   clipboardFile: (() => [])(),
 });
 
@@ -91,15 +102,45 @@ const sort = (options) => {
 </script>
 
 <style lang="less">
+.ellpise {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+}
+
 .options {
   position: absolute;
-  top: 62px;
+  top: 60px;
   left: 0;
   width: 100%;
   z-index: 99;
-  max-height: calc(~'100vh - 64px');
+  max-height: calc(~'100vh - 60px');
   overflow: auto;
   background: var(--color-body-bg);
+  .history-plugins {
+    width: 100%;
+    border-top: 1px dashed #ddd;
+    box-sizing: border-box;
+    .history-item {
+      box-sizing: border-box;
+      height: 79px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-right: 1px dashed #ddd;
+      &.active {
+        background: var(--color-list-hover);
+      }
+    }
+    .name {
+      margin-top: 4px;
+      width: 100%;
+      text-align: center;
+    }
+  }
   .op-item {
     padding: 0 10px;
     height: 60px;

@@ -19,6 +19,7 @@
       class="main-input"
       @input="e => changeValue(e)"
       @keydown.down="e => keydownEvent(e, 'down')"
+      @keydown.tab="e => keydownEvent(e, 'down')"
       @keydown.up="e => keydownEvent(e, 'up')"
       @keydown="e => checkNeedInit(e)"
       :value="searchValue"
@@ -71,6 +72,7 @@ const props: any = defineProps({
     type: String,
     default: '',
   },
+  pluginHistory: (() => [])(),
   currentPlugin: {},
   pluginLoading: Boolean,
   clipboardFile: (() => [])(),
@@ -107,7 +109,7 @@ const keydownEvent = (e, key: string) => {
       modifiers,
     },
   });
-  const runPluginDisable = e.target.value === '' || props.currentPlugin.name;
+  const runPluginDisable = ((e.target.value === '' && !props.pluginHistory.length) || props.currentPlugin.name) ;
   switch (key) {
     case 'up':
       emit('changeCurrent', -1);

@@ -14,6 +14,12 @@
           </template>
           {{ $t('feature.settings.basic.title') }}
         </a-menu-item>
+        <a-menu-item key="localstart">
+          <template #icon>
+            <FolderOpenOutlined />
+          </template>
+          {{ $t('feature.settings.localstart.title') }}
+        </a-menu-item>
         <a-menu-item key="global">
           <template #icon>
             <LaptopOutlined />
@@ -220,6 +226,7 @@
       </div>
       <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
       <Localhost v-if="currentSelect[0] === 'localhost'" />
+      <LocalStart v-if="currentSelect[0] === 'localstart'" />
     </div>
   </div>
 </template>
@@ -232,6 +239,7 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   UserOutlined,
+  FolderOpenOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
 import { ref, reactive, watch, toRefs, computed } from 'vue';
@@ -239,6 +247,7 @@ import keycodes from './keycode';
 import Localhost from './localhost.vue';
 import SuperPanel from './super-panel.vue';
 import UserInfo from './user-info';
+import LocalStart from './local-start';
 import { useI18n } from 'vue-i18n';
 import localConfig from '@/confOp';
 

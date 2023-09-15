@@ -52,29 +52,33 @@ const optionsManager = ({
         const cmds = searchKeyValues(fe.cmds, value, strict);
         options = [
           ...options,
-          ...cmds.map((cmd) => ({
-            name: cmd.label || cmd,
-            value: 'plugin',
-            icon: plugin.logo,
-            desc: fe.explain,
-            type: plugin.pluginType,
-            zIndex: cmd.label ? 0 : 1, // 排序权重
-            click: () => {
-              pluginClickEvent({
-                plugin,
-                fe,
-                cmd,
-                ext: cmd.type
-                  ? {
-                      code: fe.code,
-                      type: cmd.type || 'text',
-                      payload: searchValue.value,
-                    }
-                  : null,
-                openPlugin,
-              });
-            },
-          })),
+          ...cmds.map((cmd) => {
+            const option = {
+              name: cmd.label || cmd,
+              value: 'plugin',
+              icon: plugin.logo,
+              desc: fe.explain,
+              type: plugin.pluginType,
+              zIndex: cmd.label ? 0 : 1, // 排序权重
+              click: () => {
+                pluginClickEvent({
+                  plugin,
+                  fe,
+                  cmd,
+                  ext: cmd.type
+                    ? {
+                        code: fe.code,
+                        type: cmd.type || 'text',
+                        payload: searchValue.value,
+                      }
+                    : null,
+                  openPlugin,
+                  option,
+                });
+              },
+            };
+            return option;
+          }),
         ];
       });
     });
@@ -106,13 +110,14 @@ const optionsManager = ({
           }
         })
         .map((plugin) => {
-          return {
+          const option = {
             ...plugin,
             zIndex: 1,
             click: () => {
-              openPlugin(plugin);
+              openPlugin(plugin, option);
             },
           };
+          return option;
         }),
     ];
     return options;

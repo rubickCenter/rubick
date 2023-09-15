@@ -33,6 +33,7 @@
     "lodash.throttle": "^4.1.1",
     "node-key-sender": "^1.0.11",
     "pouchdb": "^7.2.2",
+    "simple-plist": "0.2.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",

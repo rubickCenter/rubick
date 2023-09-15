@@ -21,6 +21,8 @@ interface Window {
   loadPlugin: (plugin: any) => void;
   updatePlugin: (plugin: any) => void;
   initRubick: () => void;
+  addLocalStartPlugin: (plugin: any) => void;
+  removeLocalStartPlugin: (plugin: any) => void;
   setCurrentPlugin: (plugin: any) => void;
   pluginLoaded: () => void;
   getMainInputInfo: () => any;

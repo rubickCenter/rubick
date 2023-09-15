@@ -319,6 +319,22 @@ class API extends DBInstance {
       ks.sendKeys(keys);
     }
   }
+
+  public addLocalStartPlugin({ data: { plugin } }, window) {
+    window.webContents.executeJavaScript(
+      `window.addLocalStartPlugin(${JSON.stringify({
+        plugin,
+      })})`
+    );
+  }
+
+  public removeLocalStartPlugin({ data: { plugin } }, window) {
+    window.webContents.executeJavaScript(
+      `window.removeLocalStartPlugin(${JSON.stringify({
+        plugin,
+      })})`
+    );
+  }
 }
 
 export default new API();

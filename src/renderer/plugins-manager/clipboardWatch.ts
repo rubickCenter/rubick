@@ -56,7 +56,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
               regImg.test(ext) &&
               fileList.length === 1
             ) {
-              options.push({
+              const option = {
                 name: cmd.label,
                 value: 'plugin',
                 icon: plugin.logo,
@@ -75,17 +75,19 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                         .toDataURL(),
                     },
                     openPlugin,
+                    option,
                   });
                   clearClipboardFile();
                 },
-              });
+              };
+              options.push(option);
             }
             // 如果是文件，且符合文件正则类型
             if (
               fileList.length > 1 ||
               (cmd.type === 'file' && new RegExp(cmd.match).test(ext))
             ) {
-              options.push({
+              const option = {
                 name: cmd,
                 value: 'plugin',
                 icon: plugin.logo,
@@ -96,6 +98,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     plugin,
                     fe,
                     cmd,
+                    option,
                     ext: {
                       code: fe.code,
                       type: cmd.type || 'text',
@@ -105,7 +108,8 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                   });
                   clearClipboardFile();
                 },
-              });
+              };
+              options.push(option);
             }
           });
         });
@@ -155,7 +159,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
       feature.forEach((fe) => {
         fe.cmds.forEach((cmd) => {
           if (cmd.type === 'img') {
-            options.push({
+            const option = {
               name: cmd.label,
               value: 'plugin',
               icon: plugin.logo,
@@ -172,10 +176,12 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     payload: dataUrl,
                   },
                   openPlugin,
+                  option,
                 });
                 clearClipboardFile();
               },
-            });
+            };
+            options.push(option);
           }
         });
       });
