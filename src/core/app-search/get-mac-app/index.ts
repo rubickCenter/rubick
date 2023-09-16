@@ -1,4 +1,5 @@
-import getApps from "./getApps";
+import getApps from './getApps';
+import app2png from './app2png';
 
 export default {
   getApps: () => {
@@ -7,4 +8,5 @@ export default {
   isInstalled: (appName) => {
     return new Promise((resolve, reject) => getApps(resolve, reject, appName));
   },
+  app2png,
 };

@@ -7,6 +7,8 @@ import {
   Avatar,
   Tag,
   ConfigProvider,
+  Row,
+  Col,
 } from 'ant-design-vue';
 import App from './App.vue';
 import localConfig from './confOp';
@@ -26,4 +28,6 @@ createApp(App)
   .use(Input)
   .use(Avatar)
   .use(Tag)
+  .use(Row)
+  .use(Col)
   .mount('#app');

@@ -1,14 +1,24 @@
 <template>
   <div
-    v-show="
-      !!options.length &&
-      (searchValue || !!clipboardFile.length) &&
-      !currentPlugin.name
-    "
+    v-show="!currentPlugin.name"
     class="options"
     ref="scrollDom"
   >
-    <a-list item-layout="horizontal" :dataSource="sort(options)">
+    <div class="history-plugins" v-if="!options.length || !(searchValue || !!clipboardFile.length)">
+      <a-row>
+        <a-col
+          @click="() => item.click()"
+          :class="currentSelect === index ? 'active history-item' : 'history-item'"
+          :span="3"
+          v-for="(item, index) in pluginHistory"
+          :key="index"
+        >
+          <a-avatar style="border-radius: 0" :src="item.icon" />
+          <div class="name ellpise">{{item.pluginName || item._name || item.name}}</div>
+        </a-col>
+      </a-row>
+    </div>
+    <a-list v-else item-layout="horizontal" :dataSource="sort(options)">
       <template #renderItem="{ item, index }">
         <a-list-item
           @click="() => item.click()"
@@ -16,7 +26,7 @@
         >
           <a-list-item-meta :description="renderDesc(item.desc)">
             <template #title>
-              <span v-html="renderTitle(item.name)"></span>
+              <span v-html="renderTitle(item.name, item.match)"></span>
             </template>
             <template #avatar>
               <a-avatar style="border-radius: 0" :src="item.icon" />
@@ -52,18 +62,15 @@ const props = defineProps({
     default: 0,
   },
   currentPlugin: {},
+  pluginHistory: (() => [])(),
   clipboardFile: (() => [])(),
 });
 
-const renderTitle = (title) => {
+const renderTitle = (title, match) => {
   if (typeof title !== 'string') return;
-  if (!props.searchValue) return title;
-  const result = title.toLowerCase().split(props.searchValue.toLowerCase());
-  if (result && result.length > 1) {
-    return `<div>${result[0]}<span style='color: var(--ant-error-color)'>${props.searchValue}</span>${result[1]}</div>`;
-  } else {
-    return `<div>${result[0]}</div>`;
-  }
+  if (!props.searchValue || !match) return title;
+  const result = title.substring(match[0], match[1] + 1);
+  return `<div>${title.substring(0, match[0])}<span style='color: var(--ant-error-color)'>${result}</span>${title.substring(match[1]+1, title.length)}</div>`;
 };
 
 const renderDesc = (desc) => {
@@ -91,15 +98,45 @@ const sort = (options) => {
 </script>
 
 <style lang="less">
+.ellpise {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+}
+
 .options {
   position: absolute;
-  top: 62px;
+  top: 60px;
   left: 0;
   width: 100%;
   z-index: 99;
-  max-height: calc(~'100vh - 64px');
+  max-height: calc(~'100vh - 60px');
   overflow: auto;
   background: var(--color-body-bg);
+  .history-plugins {
+    width: 100%;
+    border-top: 1px dashed #ddd;
+    box-sizing: border-box;
+    .history-item {
+      box-sizing: border-box;
+      height: 79px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-right: 1px dashed #ddd;
+      &.active {
+        background: var(--color-list-hover);
+      }
+    }
+    .name {
+      margin-top: 4px;
+      width: 100%;
+      text-align: center;
+    }
+  }
   .op-item {
     padding: 0 10px;
     height: 60px;

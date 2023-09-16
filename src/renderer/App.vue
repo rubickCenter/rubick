@@ -12,6 +12,7 @@
       :searchValue="searchValue"
       :placeholder="placeholder"
       :pluginLoading="pluginLoading"
+      :pluginHistory="pluginHistory"
       :clipboardFile="clipboardFile || []"
       @choosePlugin="choosePlugin"
       @focus="searchFocus"
@@ -20,6 +21,7 @@
       @readClipboardContent="readClipboardContent"
     />
     <Result
+      :pluginHistory="pluginHistory"
       :currentPlugin="currentPlugin"
       :searchValue="searchValue"
       :currentSelect="currentSelect"
@@ -37,7 +39,6 @@ import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
 import createPluginManager from './plugins-manager';
 import useDrag from '../common/utils/dragWindow';
-import commonConst from '@/common/utils/commonConst';
 
 const { onMouseDown } = useDrag();
 const remote = window.require('@electron/remote');
@@ -58,6 +59,7 @@ const {
   setSearchValue,
   clearClipboardFile,
   readClipboardContent,
+  pluginHistory,
 } = createPluginManager();
 
 initPlugins();
@@ -74,24 +76,37 @@ getPluginInfo({
   remote.getGlobal('LOCAL_PLUGINS').addPlugin(res);
 });
 
-watch([options], () => {
+watch([options, pluginHistory], () => {
   currentSelect.value = 0;
   if (currentPlugin.value.name) return;
   nextTick(() => {
     ipcRenderer.sendSync('msg-trigger', {
       type: 'setExpendHeight',
-      data: getWindowHeight(options.value),
+      data: getWindowHeight(options.value, pluginHistory.value),
     });
   });
 });
 
 const changeIndex = (index) => {
-  if (!options.value.length) return;
+  if (!options.value.length) {
+    if (!pluginHistory.value.length) return;
+    if (
+      currentSelect.value + index > pluginHistory.value.length - 1 ||
+      currentSelect.value + index < 0
+    ) {
+      currentSelect.value = 0;
+      return;
+    }
+    currentSelect.value = currentSelect.value + index;
+    return;
+  }
   if (
     currentSelect.value + index > options.value.length - 1 ||
     currentSelect.value + index < 0
-  )
+  ) {
+    currentSelect.value = 0;
     return;
+  }
   currentSelect.value = currentSelect.value + index;
 };
 
@@ -101,14 +116,20 @@ const openMenu = (ext) => {
     feature: menuPluginInfo.value.features[0],
     cmd: '插件市场',
     ext,
+    click: () => openMenu(ext),
   });
 };
 
 window.rubick.openMenu = openMenu;
 
 const choosePlugin = () => {
-  const currentChoose = options.value[currentSelect.value];
-  currentChoose.click();
+  if (options.value.length) {
+    const currentChoose = options.value[currentSelect.value];
+    currentChoose.click();
+  } else {
+    const currentChoose = pluginHistory.value[currentSelect.value];
+    currentChoose.click();
+  }
 };
 
 const clearSearchValue = () => {

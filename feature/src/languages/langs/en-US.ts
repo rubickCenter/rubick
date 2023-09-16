@@ -96,6 +96,9 @@ export default {
           accessToken: 'access token',
           placeholder: 'required for private network gitlab warehouse',
         },
+        localstart: {
+          title: 'Local Start',
+        },
       },
       dev: {
         title: 'Developer',

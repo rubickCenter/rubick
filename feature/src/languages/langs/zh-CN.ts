@@ -94,6 +94,9 @@ export default {
           accessToken: 'access token',
           placeholder: '内网gitlab仓库必填',
         },
+        localstart: {
+          title: '本地启动',
+        },
       },
       dev: {
         title: '开发者',

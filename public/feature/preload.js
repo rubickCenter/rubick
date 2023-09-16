@@ -1,4 +1,21 @@
 const remote = require('@electron/remote');
+const { ipcRenderer } = require('electron');
+
+const ipcSendSync = (type, data) => {
+  const returnValue = ipcRenderer.sendSync('msg-trigger', {
+    type,
+    data,
+  });
+  if (returnValue instanceof Error) throw returnValue;
+  return returnValue;
+};
+
+const ipcSend = (type, data) => {
+  ipcRenderer.send('msg-trigger', {
+    type,
+    data,
+  });
+};
 
 window.market = {
   getLocalPlugins() {
@@ -12,5 +29,11 @@ window.market = {
   },
   refreshPlugin(plugin) {
     return remote.getGlobal('LOCAL_PLUGINS').refreshPlugin(plugin);
+  },
+  addLocalStartPlugin(plugin) {
+    ipcSend('addLocalStartPlugin', { plugin });
+  },
+  removeLocalStartPlugin(plugin) {
+    ipcSend('removeLocalStartPlugin', { plugin });
   },
 };
