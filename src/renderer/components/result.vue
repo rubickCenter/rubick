@@ -26,7 +26,7 @@
         >
           <a-list-item-meta :description="renderDesc(item.desc)">
             <template #title>
-              <span v-html="renderTitle(item.name)"></span>
+              <span v-html="renderTitle(item.name, item.match)"></span>
             </template>
             <template #avatar>
               <a-avatar style="border-radius: 0" :src="item.icon" />
@@ -66,15 +66,11 @@ const props = defineProps({
   clipboardFile: (() => [])(),
 });
 
-const renderTitle = (title) => {
+const renderTitle = (title, match) => {
   if (typeof title !== 'string') return;
-  if (!props.searchValue) return title;
-  const result = title.toLowerCase().split(props.searchValue.toLowerCase());
-  if (result && result.length > 1) {
-    return `<div>${result[0]}<span style='color: var(--ant-error-color)'>${props.searchValue}</span>${result[1]}</div>`;
-  } else {
-    return `<div>${result[0]}</div>`;
-  }
+  if (!props.searchValue || !match) return title;
+  const result = title.substring(match[0], match[1] + 1);
+  return `<div>${title.substring(0, match[0])}<span style='color: var(--ant-error-color)'>${result}</span>${title.substring(match[1]+1, title.length)}</div>`;
 };
 
 const renderDesc = (desc) => {

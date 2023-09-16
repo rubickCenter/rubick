@@ -2,6 +2,7 @@ import { ref, watch } from 'vue';
 import throttle from 'lodash.throttle';
 import { ipcRenderer } from 'electron';
 import { getGlobal } from '@electron/remote';
+import PinyinMatch from 'pinyin-match';
 import pluginClickEvent from './pluginClickEvent';
 import useFocus from './clipboardWatch';
 
@@ -14,7 +15,7 @@ function formatReg(regStr) {
 function searchKeyValues(lists, value, strict = false) {
   return lists.filter((item) => {
     if (typeof item === 'string') {
-      return item.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+      return !!PinyinMatch.match(item, value);
     }
     if (item.type === 'regex' && !strict) {
       return formatReg(item.match).test(value);
@@ -59,6 +60,7 @@ const optionsManager = ({
               icon: plugin.logo,
               desc: fe.explain,
               type: plugin.pluginType,
+              match: PinyinMatch.match(cmd.label || cmd, value),
               zIndex: cmd.label ? 0 : 1, // 排序权重
               click: () => {
                 pluginClickEvent({
@@ -93,13 +95,16 @@ const optionsManager = ({
             descMap.set(plugin, true);
             let has = false;
             plugin.keyWords.some((keyWord) => {
+              const match = PinyinMatch.match(keyWord, value);
               if (
-                keyWord
-                  .toLocaleUpperCase()
-                  .indexOf(value.toLocaleUpperCase()) >= 0
+                // keyWord
+                //   .toLocaleUpperCase()
+                //   .indexOf(value.toLocaleUpperCase()) >= 0 ||
+                match
               ) {
                 has = keyWord;
                 plugin.name = keyWord;
+                plugin.match = match;
                 return true;
               }
               return false;

@@ -78,12 +78,12 @@ function fileDisplay(filePath) {
               keyWords.push(path.basename(appDetail.target, '.exe'));
 
               if (isZhRegex.test(appName)) {
-                const [, pinyinArr] = translate(appName);
-                const zh_firstLatter = pinyinArr.map((py) => py[0]);
-                // 拼音
-                keyWords.push(pinyinArr.join(''));
+                // const [, pinyinArr] = translate(appName);
+                // const zh_firstLatter = pinyinArr.map((py) => py[0]);
+                // // 拼音
+                // keyWords.push(pinyinArr.join(''));
                 // 缩写
-                keyWords.push(zh_firstLatter.join(''));
+                // keyWords.push(zh_firstLatter.join(''));
               } else {
                 const firstLatter = appName
                   .split(' ')

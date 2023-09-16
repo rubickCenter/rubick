@@ -99,12 +99,12 @@ export default async (nativeImage: any) => {
     };
 
     if (app._name && isZhRegex.test(app._name)) {
-      const [, pinyinArr] = translate(app._name);
-      const firstLatter = pinyinArr.map((py) => py[0]);
-      // 拼音
-      fileOptions.keyWords.push(pinyinArr.join(''));
-      // 缩写
-      fileOptions.keyWords.push(firstLatter.join(''));
+      // const [, pinyinArr] = translate(app._name);
+      // const firstLatter = pinyinArr.map((py) => py[0]);
+      // // 拼音
+      // fileOptions.keyWords.push(pinyinArr.join(''));
+      // // 缩写
+      // fileOptions.keyWords.push(firstLatter.join(''));
       // 中文
       fileOptions.keyWords.push(app._name);
     }
