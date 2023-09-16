@@ -9,6 +9,7 @@ import { execSync } from 'child_process';
 import searchManager from './search';
 import optionsManager from './options';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/renderer';
+import { message } from 'ant-design-vue';
 
 const createPluginManager = (): any => {
   const pluginInstance = new PluginHandler({
@@ -87,7 +88,11 @@ const createPluginManager = (): any => {
       });
     }
     if (plugin.pluginType === 'app') {
-      execSync(plugin.action);
+      try {
+        execSync(plugin.action);
+      } catch (e) {
+        message.error('启动应用出错，请确保启动应用存在！');
+      }
     }
     window.initRubick();
     changePluginHistory({

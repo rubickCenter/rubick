@@ -10,6 +10,7 @@ import {
 } from 'electron';
 import screenCapture from '@/core/screen-capture';
 import localConfig from '@/main/common/initLocalConfig';
+import winPosition from './getWinPosition';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -56,20 +57,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
       const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
       if (currentShow) return mainWindow.hide();
-
-      const { x, y } = screen.getCursorScreenPoint();
-      const currentDisplay = screen.getDisplayNearestPoint({ x, y });
-      const wx = parseInt(
-        String(
-          currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400
-        )
-      );
-      const wy = parseInt(
-        String(
-          currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200
-        )
-      );
-
+      const { x: wx, y: wy } = winPosition.getPosition();
       mainWindow.setAlwaysOnTop(false);
       mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       mainWindow.focus();

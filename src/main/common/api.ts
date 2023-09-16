@@ -9,8 +9,6 @@ import {
   screen,
   shell,
 } from 'electron';
-import { runner, detach } from '../browsers';
-import DBInstance from './db';
 import fs from 'fs';
 import { screenCapture } from '@/core';
 import plist from 'plist';
@@ -20,6 +18,10 @@ import { DECODE_KEY } from '@/common/constans/main';
 import getCopyFiles from '@/common/utils/getCopyFiles';
 
 import mainInstance from '../index';
+import { runner, detach } from '../browsers';
+import DBInstance from './db';
+import getWinPosition from './getWinPosition';
+
 const runnerInstance = runner();
 const detachInstance = detach();
 
@@ -65,6 +67,7 @@ class API extends DBInstance {
     const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.setBounds({ x: x - mouseX, y: y - mouseY, width, height });
+    getWinPosition.setPosition(x - mouseX, y - mouseY);
   }
 
   public loadPlugin({ data: plugin }, window) {

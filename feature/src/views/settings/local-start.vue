@@ -9,7 +9,10 @@
           </template>
           <a-list-item-meta :description="item.desc">
             <template #title>
-              <div>{{item.name}}</div>
+              <div>
+                <span :class="item.del ? 'del-title' : ''">{{item.name}}</span>
+                <span v-if="item.del" class="has-del">文件不存在</span>
+              </div>
             </template>
             <template #avatar>
               <a-avatar shape="square" :src="item.icon" />
@@ -23,19 +26,39 @@
 
 <script setup>
 import { ref } from 'vue';
+const fs = window.require('fs');
+
 const dbId = 'rubick-local-start-app';
 
 const localStartList = ref(window.rubick.dbStorage.getItem(dbId) || []);
 
+const checkFileExists = () => {
+  localStartList.value = localStartList.value.map((plugin) => {
+    if (!fs.existsSync(plugin.desc)) {
+      return {
+        ...plugin,
+        del: true,
+      };
+    }
+    return plugin;
+  });
+};
+
+checkFileExists();
+
 const dropFile = (e) => {
   const files = Array.from(e.dataTransfer.files).map((file) => {
+    const action =
+      process.platform === 'win32'
+        ? `start "dummyclient" "${file.path}"`
+        : `open ${file.path.replace(/ /g, '\\ ')}`;
     const plugin = {
       icon: window.rubick.getFileIcon(file.path),
       value: 'plugin',
       desc: file.path,
       pluginType: 'app',
       name: file.name,
-      action: `open ${file.path.replace(/ /g, '\\ ')}`,
+      action,
       keyWords: [file.name],
       names: [file.name],
     };
@@ -46,12 +69,20 @@ const dropFile = (e) => {
     ...localStartList.value,
     ...files,
   ];
-  window.rubick.dbStorage.setItem(dbId, JSON.parse(JSON.stringify(localStartList.value)));
+  window.rubick.dbStorage.setItem(
+    dbId,
+    JSON.parse(JSON.stringify(localStartList.value))
+  );
 };
 
 const remove = (item) => {
-  localStartList.value = localStartList.value.filter(app => app.desc !== item.desc);
-  window.rubick.dbStorage.setItem(dbId, JSON.parse(JSON.stringify(localStartList.value)));
+  localStartList.value = localStartList.value.filter(
+    (app) => app.desc !== item.desc
+  );
+  window.rubick.dbStorage.setItem(
+    dbId,
+    JSON.parse(JSON.stringify(localStartList.value))
+  );
   window.market.removeLocalStartPlugin(JSON.parse(JSON.stringify(item)));
 };
 
@@ -67,5 +98,14 @@ const checkDrop = (e) => {
   overflow-x: hidden;
   background: var(--color-body-bg);
   height: calc(~'100vh - 106px');
+  .del-title {
+    text-decoration-line: line-through;
+    text-decoration-color: var(--ant-error-color);
+  }
+  .has-del {
+    color: var(--ant-error-color);
+    font-size: 12px;
+    margin-left: 6px;
+  }
 }
 </style>
