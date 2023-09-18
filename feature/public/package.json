@@ -1,7 +1,7 @@
 {
   "name": "rubick-system-feature",
-  "pluginName": "rubick 系统菜单",
-  "description": "rubick 系统菜单",
+  "pluginName": "系统菜单",
+  "description": "系统菜单",
   "main": "index.html",
   "logo": "https://pic1.zhimg.com/80/v2-c09780808301668a82e6646cb42f0806_720w.png",
   "version": "0.0.0",
@@ -10,19 +10,19 @@
   "features": [
     {
       "code": "market",
-      "explain": "rubick 插件市场",
+      "explain": "插件市场",
       "cmds":[
         "插件市场"
       ]
     },{
       "code": "installed",
-      "explain": "rubick 已安装插件",
+      "explain": "已安装插件",
       "cmds":[
         "已安装插件"
       ]
     },{
       "code": "settings",
-      "explain": "rubick 偏好设置",
+      "explain": "偏好设置",
       "cmds":[
         "偏好设置"
       ]

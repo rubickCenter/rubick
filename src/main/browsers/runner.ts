@@ -2,6 +2,7 @@ import { BrowserView, BrowserWindow, session } from 'electron';
 import path from 'path';
 import commonConst from '../../common/utils/commonConst';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
+import localConfig from '@/main/common/initLocalConfig';
 
 const getRelativePath = (indexPath) => {
   return commonConst.windows()
@@ -27,12 +28,62 @@ const getPreloadPath = (plugin, pluginIndexPath) => {
   return path.resolve(getRelativePath(pluginIndexPath), `../`, preload);
 };
 
+const viewPoolManager = () => {
+  const viewPool: any = {
+    views: [],
+  };
+  const maxLen = 4;
+  return {
+    getView(pluginName) {
+      return viewPool.views.find((view) => view.pluginName === pluginName);
+    },
+    addView(pluginName, view) {
+      if (this.getView(pluginName)) return;
+      if (viewPool.views.length > maxLen) {
+        viewPool.views.shift();
+      }
+      viewPool.views.push({
+        pluginName,
+        view,
+      });
+    },
+  };
+};
+
 export default () => {
   let view;
+  const viewInstance = viewPoolManager();
+
+  const viewReadyFn = async (window, { pluginSetting, ext }) => {
+    if (!view) return;
+    const height = pluginSetting && pluginSetting.height;
+    window.setSize(800, height || 660);
+    view.setBounds({ x: 0, y: 60, width: 800, height: height || 600 });
+    view.setAutoResize({ width: true });
+    executeHooks('PluginEnter', ext);
+    executeHooks('PluginReady', ext);
+    const config = await localConfig.getConfig();
+    const darkMode = config.perf.common.darkMode;
+    darkMode &&
+      view.webContents.executeJavaScript(
+        `document.body.classList.add("dark");window.rubick.theme="dark"`
+      );
+    window.webContents.executeJavaScript(`window.pluginLoaded()`);
+  };
 
   const init = (plugin, window: BrowserWindow) => {
     if (view === null || view === undefined) {
-      createView(plugin, window);
+      if (viewInstance.getView(plugin.name) && !commonConst.dev()) {
+        view = viewInstance.getView(plugin.name).view;
+        window.setBrowserView(view);
+        view.inited = true;
+        viewReadyFn(window, plugin);
+      } else {
+        createView(plugin, window);
+        viewInstance.addView(plugin.name, view);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('@electron/remote/main').enable(view.webContents);
     }
   };
 
@@ -65,7 +116,6 @@ export default () => {
 
     view = new BrowserView({
       webPreferences: {
-        enableRemoteModule: true,
         webSecurity: false,
         nodeIntegration: true,
         contextIsolation: false,
@@ -73,25 +123,16 @@ export default () => {
         webviewTag: true,
         preload,
         session: ses,
+        defaultFontSize: 14,
+        defaultFontFamily: {
+          standard: 'system-ui',
+          serif: 'system-ui',
+        },
       },
     });
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
-    view.webContents.once('dom-ready', () => {
-      if (!view) return;
-      const height = pluginSetting && pluginSetting.height;
-      window.setSize(800, height || 660);
-      view.setBounds({ x: 0, y: 60, width: 800, height: height || 600 });
-      view.setAutoResize({ width: true });
-      executeHooks('PluginEnter', plugin.ext);
-      executeHooks('PluginReady', plugin.ext);
-      darkMode = global.OP_CONFIG.get().perf.common.darkMode;
-      darkMode &&
-        view.webContents.executeJavaScript(
-          `document.body.classList.add("dark");window.rubick.theme="dark"`
-        );
-      window.webContents.executeJavaScript(`window.pluginLoaded()`);
-    });
+    view.webContents.once('dom-ready', () => viewReadyFn(window, plugin));
     // 修复请求跨域问题
     view.webContents.session.webRequest.onBeforeSendHeaders(
       (details, callback) => {

@@ -1,13 +1,15 @@
 import getCopyFiles from '@/common/utils/getCopyFiles';
-import { clipboard, nativeImage, remote, ipcRenderer } from 'electron';
+import { clipboard, nativeImage, ipcRenderer } from 'electron';
+import { getGlobal } from '@electron/remote';
 import path from 'path';
 import pluginClickEvent from './pluginClickEvent';
+import localConfig from '../confOp';
 import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
   const searchFocus = () => {
-    const config = remote.getGlobal('OP_CONFIG').get();
+    const config: any = localConfig.getConfig();
     // 未开启自动粘贴
     if (!config.perf.common.autoPast) return;
 
@@ -17,7 +19,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
     if (fileList) {
       window.setSubInputValue({ value: '' });
       clipboardFile.value = fileList;
-      const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+      const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
       const options: any = [
         {
           name: '复制路径',
@@ -54,7 +56,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
               regImg.test(ext) &&
               fileList.length === 1
             ) {
-              options.push({
+              const option = {
                 name: cmd.label,
                 value: 'plugin',
                 icon: plugin.logo,
@@ -73,17 +75,19 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                         .toDataURL(),
                     },
                     openPlugin,
+                    option,
                   });
                   clearClipboardFile();
                 },
-              });
+              };
+              options.push(option);
             }
             // 如果是文件，且符合文件正则类型
             if (
               fileList.length > 1 ||
               (cmd.type === 'file' && new RegExp(cmd.match).test(ext))
             ) {
-              options.push({
+              const option = {
                 name: cmd,
                 value: 'plugin',
                 icon: plugin.logo,
@@ -94,6 +98,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     plugin,
                     fe,
                     cmd,
+                    option,
                     ext: {
                       code: fe.code,
                       type: cmd.type || 'text',
@@ -103,7 +108,8 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                   });
                   clearClipboardFile();
                 },
-              });
+              };
+              options.push(option);
             }
           });
         });
@@ -143,7 +149,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
         dataUrl,
       },
     ];
-    const localPlugins = remote.getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+    const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     const options: any = [];
     // 再正则插件
     localPlugins.forEach((plugin) => {
@@ -153,7 +159,7 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
       feature.forEach((fe) => {
         fe.cmds.forEach((cmd) => {
           if (cmd.type === 'img') {
-            options.push({
+            const option = {
               name: cmd.label,
               value: 'plugin',
               icon: plugin.logo,
@@ -170,10 +176,12 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
                     payload: dataUrl,
                   },
                   openPlugin,
+                  option,
                 });
                 clearClipboardFile();
               },
-            });
+            };
+            options.push(option);
           }
         });
       });

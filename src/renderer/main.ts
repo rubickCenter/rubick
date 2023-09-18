@@ -7,17 +7,18 @@ import {
   Avatar,
   Tag,
   ConfigProvider,
+  Row,
+  Col,
 } from 'ant-design-vue';
 import App from './App.vue';
+import localConfig from './confOp';
 
 import 'ant-design-vue/dist/antd.variable.min.css';
 
-const { remote } = window.require('electron');
-
-const { perf } = remote.getGlobal('OP_CONFIG').get();
+const config: any = localConfig.getConfig();
 
 ConfigProvider.config({
-  theme: perf.custom || {},
+  theme: config.perf.custom || {},
 });
 
 createApp(App)
@@ -27,4 +28,6 @@ createApp(App)
   .use(Input)
   .use(Avatar)
   .use(Tag)
+  .use(Row)
+  .use(Col)
   .mount('#app');

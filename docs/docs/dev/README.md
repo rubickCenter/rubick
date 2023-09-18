@@ -80,7 +80,7 @@ window.showNotification = function () {
   rubick.showNotification('HI, rubick')
 }
 ```
-rubick 更多支持 API 能力参考：[rubick 全局API](https://github.com/rubickCenter/rubick/blob/master/static/preload.js#L49)
+rubick 更多支持 API 能力参考：[rubick 全局API](https://github.com/rubickCenter/rubick/blob/master/public/preload.js)
 
 ### 测试写好的插件
 由于 `rubick` 插件是基于 `npm` 的管理方式，所以开发者调试插件，也是基于 `npm` 的软连接的方式进行调试。

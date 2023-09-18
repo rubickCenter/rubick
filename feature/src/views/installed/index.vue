@@ -94,7 +94,7 @@
                       :title="$t('feature.installed.removeFromPanel')"
                     >
                       <MinusCircleOutlined
-                        @click="removePluginToSuperPanel(cmd)"
+                        @click="removePluginToSuperPanel({ cmd })"
                       />
                     </a-tooltip>
                   </template>
@@ -121,11 +121,11 @@ import { message } from 'ant-design-vue';
 
 const { ipcRenderer } = window.require('electron');
 
-const { remote } = window.require('electron');
+const remote = window.require('@electron/remote');
 const fs = window.require('fs');
 const md = new MarkdownIt();
 
-const appPath = remote.app.getPath('cache');
+const appPath = remote.app.getPath('userData');
 const baseDir = path.join(appPath, './rubick-plugins');
 
 const store = useStore();
@@ -145,9 +145,9 @@ const pluginDetail = computed(() => {
 });
 
 const superPanelPlugins = ref(
-  window.rubick.db.get('super-panel-plugins') || {
+  window.rubick.db.get('super-panel-user-plugins') || {
     data: [],
-    _id: 'super-panel-plugins',
+    _id: 'super-panel-user-plugins',
   }
 );
 
@@ -165,13 +165,13 @@ const addCmdToSuperPanel = ({ cmd, code }) => {
   window.rubick.db.put(toRaw(superPanelPlugins.value));
 };
 
-const removePluginToSuperPanel = (cmd) => {
+const removePluginToSuperPanel = ({ cmd, name }) => {
   superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
     (item) => {
+      if (name) return item.name !== name;
       return item.cmd !== cmd;
     }
   );
-  console.log(toRaw(superPanelPlugins.value));
   window.rubick.db.put(toRaw(superPanelPlugins.value));
 };
 
@@ -209,7 +209,7 @@ const readme = computed(() => {
     baseDir,
     'node_modules',
     pluginDetail.value.name,
-    'readme.md'
+    'README.md'
   );
   if (fs.existsSync(readmePath)) {
     const str = fs.readFileSync(readmePath, 'utf-8');
@@ -225,9 +225,12 @@ const deletePlugin = async (plugin) => {
     message.error('卸载超时，请重试！');
   }, 20000);
   await window.market.deletePlugin(plugin);
+  removePluginToSuperPanel({ name: plugin.name });
   updateLocalPlugin();
   clearTimeout(timer);
 };
+
+
 </script>
 
 <style lang="less" scoped>

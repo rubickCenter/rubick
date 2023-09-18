@@ -1,5 +1,6 @@
 import { reactive, toRefs, ref } from 'vue';
-import { nativeImage, remote, ipcRenderer } from 'electron';
+import { nativeImage, ipcRenderer } from 'electron';
+import { getGlobal } from '@electron/remote';
 import appSearch from '@/core/app-search';
 import { PluginHandler } from '@/core';
 import path from 'path';
@@ -8,6 +9,7 @@ import { execSync } from 'child_process';
 import searchManager from './search';
 import optionsManager from './options';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/renderer';
+import { message } from 'ant-design-vue';
 
 const createPluginManager = (): any => {
   const pluginInstance = new PluginHandler({
@@ -20,12 +22,35 @@ const createPluginManager = (): any => {
     localPlugins: [],
     currentPlugin: {},
     pluginLoading: false,
+    pluginHistory: [],
   });
 
-  const appList = ref([]);
+  const appList: any = ref([]);
 
   const initPlugins = async () => {
     appList.value = await appSearch(nativeImage);
+    initLocalStartPlugin();
+  };
+
+  const initLocalStartPlugin = () => {
+    const result = ipcRenderer.sendSync('msg-trigger', {
+      type: 'dbGet',
+      data: {
+        id: 'rubick-local-start-app',
+      },
+    });
+    if (result && result.value) {
+      appList.value = [...appList.value, ...result.value];
+    }
+  };
+
+  window.removeLocalStartPlugin = ({ plugin }) => {
+    appList.value = appList.value.filter((app) => app.desc !== plugin.desc);
+  };
+
+  window.addLocalStartPlugin = ({ plugin }) => {
+    window.removeLocalStartPlugin({ plugin });
+    appList.value.push(plugin);
   };
 
   const loadPlugin = async (plugin) => {
@@ -42,7 +67,7 @@ const createPluginManager = (): any => {
     state.pluginLoading = false;
   };
 
-  const openPlugin = async (plugin) => {
+  const openPlugin = async (plugin, option) => {
     if (plugin.pluginType === 'ui' || plugin.pluginType === 'system') {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
         return;
@@ -63,8 +88,29 @@ const createPluginManager = (): any => {
       });
     }
     if (plugin.pluginType === 'app') {
-      execSync(plugin.action);
+      try {
+        execSync(plugin.action);
+      } catch (e) {
+        message.error('启动应用出错，请确保启动应用存在！');
+      }
     }
+    window.initRubick();
+    changePluginHistory({
+      ...plugin,
+      ...option,
+    });
+  };
+
+  const changePluginHistory = (plugin) => {
+    if (state.pluginHistory.length >= 8) {
+      state.pluginHistory.pop();
+    }
+    state.pluginHistory.forEach((p, index) => {
+      if (p.name === plugin.name) {
+        state.pluginHistory.splice(index, 1);
+      }
+    });
+    state.pluginHistory.unshift(plugin);
   };
 
   const { searchValue, onSearch, setSearchValue, placeholder } =
@@ -112,7 +158,7 @@ const createPluginManager = (): any => {
 
   window.updatePlugin = ({ currentPlugin }: any) => {
     state.currentPlugin = currentPlugin;
-    remote.getGlobal('LOCAL_PLUGINS').updatePlugin(currentPlugin);
+    getGlobal('LOCAL_PLUGINS').updatePlugin(currentPlugin);
   };
 
   window.setCurrentPlugin = ({ currentPlugin }) => {

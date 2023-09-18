@@ -9,9 +9,8 @@ import {
   screen,
   shell,
 } from 'electron';
-import { runner, detach } from '../browsers';
 import fs from 'fs';
-import { LocalDb, screenCapture } from '@/core';
+import { screenCapture } from '@/core';
 import plist from 'plist';
 import ks from 'node-key-sender';
 
@@ -19,16 +18,15 @@ import { DECODE_KEY } from '@/common/constans/main';
 import getCopyFiles from '@/common/utils/getCopyFiles';
 
 import mainInstance from '../index';
+import { runner, detach } from '../browsers';
+import DBInstance from './db';
+import getWinPosition from './getWinPosition';
+
 const runnerInstance = runner();
 const detachInstance = detach();
-const dbInstance = new LocalDb(app.getPath('userData'));
 
-dbInstance.init();
-
-class API {
+class API extends DBInstance {
   public currentPlugin: null | any = null;
-  private DBKEY = 'RUBICK_DB_DEFAULT';
-
   init(mainWindow: BrowserWindow) {
     // 响应 preload.js 事件
     ipcMain.on('msg-trigger', async (event, arg) => {
@@ -37,6 +35,10 @@ class API {
       event.returnValue = data;
       // event.sender.send(`msg-back-${arg.type}`, data);
     });
+    // 按 ESC 退出插件
+    mainWindow.webContents.on('before-input-event', (event, input) =>
+      this.__EscapeKeyDown(event, input, mainWindow)
+    );
   }
 
   public getCurrentWindow = (window, e) => {
@@ -65,6 +67,7 @@ class API {
     const originWindow = this.getCurrentWindow(window, e);
     if (!originWindow) return;
     originWindow.setBounds({ x: x - mouseX, y: y - mouseY, width, height });
+    getWinPosition.setPosition(x - mouseX, y - mouseY);
   }
 
   public loadPlugin({ data: plugin }, window) {
@@ -85,15 +88,12 @@ class API {
       })})`
     );
     window.show();
-    // 按 ESC 退出插件
-    window.webContents.on('before-input-event', (event, input) =>
-      this.__EscapeKeyDown(event, input, window)
-    );
-    runnerInstance
-      .getView()
-      .webContents.on('before-input-event', (event, input) =>
+    const view = runnerInstance.getView();
+    if (!view.inited) {
+      view.webContents.on('before-input-event', (event, input) =>
         this.__EscapeKeyDown(event, input, window)
       );
+    }
   }
 
   public removePlugin(e, window) {
@@ -194,26 +194,6 @@ class API {
       return true;
     }
     return false;
-  }
-
-  public dbPut({ data }) {
-    return dbInstance.put(this.DBKEY, data.data);
-  }
-
-  public dbGet({ data }) {
-    return dbInstance.get(this.DBKEY, data.id);
-  }
-
-  public dbRemove({ data }) {
-    return dbInstance.remove(this.DBKEY, data.doc);
-  }
-
-  public dbBulkDocs({ data }) {
-    return dbInstance.bulkDocs(this.DBKEY, data.docs);
-  }
-
-  public dbAllDocs({ data }) {
-    return dbInstance.allDocs(this.DBKEY, data.key);
   }
 
   public getFeatures() {
@@ -341,6 +321,22 @@ class API {
     } else {
       ks.sendKeys(keys);
     }
+  }
+
+  public addLocalStartPlugin({ data: { plugin } }, window) {
+    window.webContents.executeJavaScript(
+      `window.addLocalStartPlugin(${JSON.stringify({
+        plugin,
+      })})`
+    );
+  }
+
+  public removeLocalStartPlugin({ data: { plugin } }, window) {
+    window.webContents.executeJavaScript(
+      `window.removeLocalStartPlugin(${JSON.stringify({
+        plugin,
+      })})`
+    );
   }
 }
 

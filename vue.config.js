@@ -24,7 +24,12 @@ module.exports = {
       nodeIntegration: true,
       mainProcessFile: 'src/main/index.ts',
       mainProcessWatch: ['src/main'],
-      externals: ['pouchdb', 'extract-file-icon', 'electron-screenshots'],
+      externals: [
+        'pouchdb',
+        'extract-file-icon',
+        'electron-screenshots',
+        '@electron/remote',
+      ],
       // Use this to change the entry point of your app's render process. default src/[main|index].[js|ts]
       builderOptions: {
         productName: 'rubick2',

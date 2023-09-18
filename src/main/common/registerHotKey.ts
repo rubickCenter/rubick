@@ -9,19 +9,21 @@ import {
   Notification,
 } from 'electron';
 import screenCapture from '@/core/screen-capture';
+import localConfig from '@/main/common/initLocalConfig';
+import winPosition from './getWinPosition';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
-  const setAutoLogin = () => {
-    const config = global.OP_CONFIG.get();
+  const setAutoLogin = async () => {
+    const config = await localConfig.getConfig();
     app.setLoginItemSettings({
       openAtLogin: config.perf.common.start,
       openAsHidden: true,
     });
   };
   // 设置暗黑模式
-  const setDarkMode = () => {
-    const config = global.OP_CONFIG.get();
+  const setDarkMode = async () => {
+    const config = await localConfig.getConfig();
     const isDark = config.perf.common.darkMode;
     if (isDark) {
       nativeTheme.themeSource = 'dark';
@@ -46,29 +48,16 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     }
   };
 
-  const init = () => {
-    setAutoLogin();
-    setDarkMode();
-    const config = global.OP_CONFIG.get();
+  const init = async () => {
+    await setAutoLogin();
+    await setDarkMode();
+    const config = await localConfig.getConfig();
     globalShortcut.unregisterAll();
     // 注册偏好快捷键
     globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
       const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
       if (currentShow) return mainWindow.hide();
-
-      const { x, y } = screen.getCursorScreenPoint();
-      const currentDisplay = screen.getDisplayNearestPoint({ x, y });
-      const wx = parseInt(
-        String(
-          currentDisplay.workArea.x + currentDisplay.workArea.width / 2 - 400
-        )
-      );
-      const wy = parseInt(
-        String(
-          currentDisplay.workArea.y + currentDisplay.workArea.height / 2 - 200
-        )
-      );
-
+      const { x: wx, y: wy } = winPosition.getPosition();
       mainWindow.setAlwaysOnTop(false);
       mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
       mainWindow.focus();

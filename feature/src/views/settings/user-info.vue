@@ -122,30 +122,29 @@
           </div>
         </div>
       </div>
-      <div class="footer-btn">
-        <a-button @click="reset" type="danger">
-          {{ $t('feature.settings.account.reset') }}
-        </a-button>
-      </div>
+<!--      <div class="footer-btn">-->
+<!--        <a-button @click="reset" type="danger">-->
+<!--          {{ $t('feature.settings.account.reset') }}-->
+<!--        </a-button>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
 
 <script setup>
 import { reactive, ref, toRefs, watch } from 'vue';
-import { Modal } from 'ant-design-vue';
-import { UserOutlined } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
+import localConfig from '@/confOp';
 
 import service from '../../assets/service';
 
-const { remote, ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require('electron');
 
 const state = reactive({
   custom: {},
 });
 
-const { perf } = remote.getGlobal('OP_CONFIG').get();
+const { perf } = localConfig.getConfig();
 
 state.custom = perf.custom || {};
 
@@ -156,7 +155,7 @@ const userInfo = ref(window.rubick.dbStorage.getItem('rubick-user-info'));
 // });
 
 const setConfig = debounce(() => {
-  remote.getGlobal('OP_CONFIG').set(
+  localConfig.setConfig(
     JSON.parse(
       JSON.stringify({
         perf: {
@@ -181,17 +180,17 @@ const changeLogo = () => {
   state.custom.logo = `file://${logoPath}`;
 };
 
-const reset = () => {
-  Modal.warning({
-    title: '确定恢复默认设置吗？',
-    content: '回复后之前的设置将会被清空',
-    onOk() {
-      const defaultcustom = remote.getGlobal('OP_CONFIG').getDefaultConfig()
-        .perf.custom;
-      state.custom = JSON.parse(JSON.stringify(defaultcustom));
-    },
-  });
-};
+// const reset = () => {
+//   Modal.warning({
+//     title: '确定恢复默认设置吗？',
+//     content: '回复后之前的设置将会被清空',
+//     onOk() {
+//       const defaultcustom = remote.getGlobal('OP_CONFIG').getDefaultConfig()
+//         .perf.custom;
+//       state.custom = JSON.parse(JSON.stringify(defaultcustom));
+//     },
+//   });
+// };
 </script>
 
 <style lang="less">
