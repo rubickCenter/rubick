@@ -1,7 +1,7 @@
 import { app, BrowserWindow, protocol, nativeTheme } from 'electron';
 import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
-import versonHandler from '../common/versionHandler';
+// import versonHandler from '../common/versionHandler';
 import localConfig from '@/main/common/initLocalConfig';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('@electron/remote/main').initialize();
@@ -55,7 +55,7 @@ export default () => {
       win.webContents.executeJavaScript(
         `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onShow === "function" && window.rubick.hooks.onShow()`
       );
-      versonHandler.checkUpdate();
+      // versonHandler.checkUpdate();
       // win.webContents.openDevTools();
     });
 

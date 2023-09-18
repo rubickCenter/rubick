@@ -1,10 +1,7 @@
 import { dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import pkg from '../../../package.json';
-import API from './api';
-import commonConst from '@/common/utils/commonConst';
 import { main } from '../browsers';
-import { app } from 'electron';
 
 class VersionHandler {
   private lastestVersion: string;
