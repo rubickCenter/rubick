@@ -18,6 +18,7 @@ export default () => {
   const createWindow = async () => {
     win = new BrowserWindow({
       height: 60,
+      minHeight: 60,
       useContentSize: true,
       resizable: true,
       width: 800,
@@ -33,6 +34,7 @@ export default () => {
         webviewTag: true,
         nodeIntegration: true,
         preload: path.join(__static, 'preload.js'),
+        spellcheck: false,
       },
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {

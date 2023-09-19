@@ -17,6 +17,7 @@ export default () => {
   const createWindow = async (pluginInfo, viewInfo, view) => {
     win = new BrowserWindow({
       height: viewInfo.height,
+      minHeight: 60,
       width: viewInfo.width,
       autoHideMenuBar: true,
       titleBarStyle: 'hidden',
@@ -36,6 +37,7 @@ export default () => {
         webviewTag: true,
         devTools: true,
         nodeIntegration: true,
+        spellcheck: false,
       },
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {

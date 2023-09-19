@@ -41,6 +41,7 @@ export default () => {
       y,
       width: 800,
       height: 600,
+      minHeight: 60,
       webPreferences: {
         webSecurity: false,
         backgroundThrottling: false,
@@ -48,6 +49,7 @@ export default () => {
         webviewTag: true,
         devTools: true,
         nodeIntegration: true,
+        spellcheck: false,
       },
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
