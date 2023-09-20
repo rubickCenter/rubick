@@ -99,6 +99,9 @@ export default {
         localstart: {
           title: 'Local Start',
         },
+        database: {
+          title: 'Data Synchronization',
+        },
       },
       dev: {
         title: 'Developer',

@@ -40,7 +40,7 @@ const createPluginManager = (): any => {
       },
     });
     if (result && result.value) {
-      appList.value = [...appList.value, ...result.value];
+      appList.value.push(...result.value);
     }
   };
 
