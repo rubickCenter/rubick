@@ -1,10 +1,20 @@
-import path from "path";
-import fs from "fs";
-import PouchDB from "pouchdb";
+import path from 'path';
+import fs from 'fs';
+import PouchDB from 'pouchdb';
+import { DBError, Doc, DocRes } from './types';
+import WebDavOP from './webdav';
 
-import { DBError, Doc, DocRes } from "./types";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const replicationStream = require('pouchdb-replication-stream/dist/pouchdb.replication-stream.min.js');
+// const load = require('pouchdb-load/dist/pouchdb.load.min.js');
 
-export default class {
+PouchDB.plugin(replicationStream.plugin);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const load = require('pouchdb-load');
+PouchDB.plugin({ loadIt: load.load });
+PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
+
+export default class DB {
   readonly docMaxByteLength;
   readonly docAttachmentMaxByteLength;
   public dbpath;
@@ -15,7 +25,7 @@ export default class {
     this.docMaxByteLength = 2 * 1024 * 1024; // 2M
     this.docAttachmentMaxByteLength = 20 * 1024 * 1024; // 20M
     this.dbpath = dbPath;
-    this.defaultDbName = path.join(dbPath, "default");
+    this.defaultDbName = path.join(dbPath, 'default');
   }
 
   init(): void {
@@ -24,11 +34,11 @@ export default class {
   }
 
   getDocId(name: string, id: string): string {
-    return name + "/" + id;
+    return name + '/' + id;
   }
 
   replaceDocId(name: string, id: string): string {
-    return id.replace(name + "/", "");
+    return id.replace(name + '/', '');
   }
 
   errorInfo(name: string, message: string): DBError {
@@ -38,7 +48,7 @@ export default class {
   private checkDocSize(doc: Doc<any>) {
     if (Buffer.byteLength(JSON.stringify(doc)) > this.docMaxByteLength) {
       return this.errorInfo(
-        "exception",
+        'exception',
         `doc max size ${this.docMaxByteLength / 1024 / 1024} M`
       );
     }
@@ -78,15 +88,15 @@ export default class {
   async remove(name: string, doc: Doc<any> | string) {
     try {
       let target;
-      if ("object" == typeof doc) {
+      if ('object' == typeof doc) {
         target = doc;
-        if (!target._id || "string" !== typeof target._id) {
-          return this.errorInfo("exception", "doc _id error");
+        if (!target._id || 'string' !== typeof target._id) {
+          return this.errorInfo('exception', 'doc _id error');
         }
         target._id = this.getDocId(name, target._id);
       } else {
-        if ("string" !== typeof doc) {
-          return this.errorInfo("exception", "param error");
+        if ('string' !== typeof doc) {
+          return this.errorInfo('exception', 'param error');
         }
         target = await this.pouchDB.get(this.getDocId(name, doc));
       }
@@ -94,7 +104,7 @@ export default class {
       target._id = result.id = this.replaceDocId(name, result.id);
       return result;
     } catch (e: any) {
-      if ("object" === typeof doc) {
+      if ('object' === typeof doc) {
         doc._id = this.replaceDocId(name, doc._id);
       }
       return this.errorInfo(e.name, e.message);
@@ -107,11 +117,11 @@ export default class {
   ): Promise<DBError | Array<DocRes>> {
     let result;
     try {
-      if (!Array.isArray(docs)) return this.errorInfo("exception", "not array");
+      if (!Array.isArray(docs)) return this.errorInfo('exception', 'not array');
       if (docs.find((e) => !e._id))
-        return this.errorInfo("exception", "doc not _id field");
+        return this.errorInfo('exception', 'doc not _id field');
       if (new Set(docs.map((e) => e._id)).size !== docs.length)
-        return this.errorInfo("exception", "_id value exists as");
+        return this.errorInfo('exception', '_id value exists as');
       for (const doc of docs) {
         const err = this.checkDocSize(doc);
         if (err) return err;
@@ -144,20 +154,20 @@ export default class {
   ): Promise<DBError | Array<DocRes>> {
     const config: any = { include_docs: true };
     if (key) {
-      if ("string" == typeof key) {
+      if ('string' == typeof key) {
         config.startkey = this.getDocId(name, key);
-        config.endkey = config.startkey + "￰";
+        config.endkey = config.startkey + '￰';
       } else {
         if (!Array.isArray(key))
           return this.errorInfo(
-            "exception",
-            "param only key(string) or keys(Array[string])"
+            'exception',
+            'param only key(string) or keys(Array[string])'
           );
         config.keys = key.map((key) => this.getDocId(name, key));
       }
     } else {
-      config.startkey = this.getDocId(name, "");
-      config.endkey = config.startkey + "￰";
+      config.startkey = this.getDocId(name, '');
+      config.endkey = config.startkey + '￰';
     }
     const result: Array<any> = [];
     try {
@@ -171,5 +181,27 @@ export default class {
       //
     }
     return result;
+  }
+
+  public async dumpDb(config: {
+    url: string;
+    username: string;
+    password: string;
+  }): Promise<void> {
+    const webdavClient = new WebDavOP(config);
+    webdavClient.createWriteStream(this.pouchDB);
+  }
+
+  public async importDb(config: {
+    url: string;
+    username: string;
+    password: string;
+  }): Promise<void> {
+    const webdavClient = new WebDavOP(config);
+    await this.pouchDB.destroy();
+    const syncDb = new DB(this.dbpath);
+    syncDb.init();
+    this.pouchDB = syncDb.pouchDB;
+    await webdavClient.createReadStream(this.pouchDB);
   }
 }
