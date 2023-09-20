@@ -32,9 +32,15 @@
 <!--          </template>-->
 <!--          {{ $t('feature.settings.superPanel.title') }}-->
 <!--        </a-menu-item>-->
-        <a-menu-item key="localhost">
+        <a-menu-item key="database">
           <template #icon>
             <DatabaseOutlined />
+          </template>
+          {{ $t('feature.settings.database.title') }}
+        </a-menu-item>
+        <a-menu-item key="localhost">
+          <template #icon>
+            <SafetyOutlined />
           </template>
           {{ $t('feature.settings.intranet.title') }}
         </a-menu-item>
@@ -227,6 +233,7 @@
       <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
       <Localhost v-if="currentSelect[0] === 'localhost'" />
       <LocalStart v-if="currentSelect[0] === 'localstart'" />
+      <DataBase v-if="currentSelect[0] === 'database'" />
     </div>
   </div>
 </template>
@@ -240,6 +247,7 @@ import {
   PlusCircleOutlined,
   UserOutlined,
   FolderOpenOutlined,
+  SafetyOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
 import { ref, reactive, watch, toRefs, computed } from 'vue';
@@ -248,6 +256,7 @@ import Localhost from './localhost.vue';
 import SuperPanel from './super-panel.vue';
 import UserInfo from './user-info';
 import LocalStart from './local-start';
+import DataBase from './database';
 import { useI18n } from 'vue-i18n';
 import localConfig from '@/confOp';
 

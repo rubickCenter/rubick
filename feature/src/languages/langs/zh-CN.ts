@@ -97,6 +97,9 @@ export default {
         localstart: {
           title: '本地启动',
         },
+        database: {
+          title: '多端数据同步',
+        },
       },
       dev: {
         title: '开发者',

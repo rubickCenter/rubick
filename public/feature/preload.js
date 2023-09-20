@@ -36,4 +36,11 @@ window.market = {
   removeLocalStartPlugin(plugin) {
     ipcSend('removeLocalStartPlugin', { plugin });
   },
+  dbDump(target) {
+    ipcSend('dbDump', { target });
+  },
+
+  dbImport(target) {
+    ipcSend('dbImport', { target });
+  },
 };
