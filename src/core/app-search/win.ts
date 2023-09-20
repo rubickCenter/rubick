@@ -69,8 +69,7 @@ function fileDisplay(filePath) {
               }
               if (
                 !appDetail.target ||
-                appDetail.target.toLowerCase().indexOf('unin') >= 0 ||
-                appDetail.args
+                appDetail.target.toLowerCase().indexOf('unin') >= 0
               )
                 return;
 

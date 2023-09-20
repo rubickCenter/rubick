@@ -93,6 +93,7 @@ const emit = defineEmits([
   'focus',
   'clearSearchValue',
   'readClipboardContent',
+  'clearClipbord',
 ]);
 
 const keydownEvent = (e, key: string) => {
