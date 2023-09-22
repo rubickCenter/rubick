@@ -59,7 +59,7 @@ import { LoadingOutlined, MoreOutlined } from '@ant-design/icons-vue';
 
 const remote = window.require('@electron/remote');
 import localConfig from '../confOp';
-const { Menu } = remote;
+const { Menu, app } = remote;
 
 const config: any = ref(localConfig.getConfig());
 
@@ -232,9 +232,14 @@ const changeHideOnBlur = () => {
 
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
-  return props.clipboardFile[0].isFile
-    ? require('../assets/file.png')
-    : require('../assets/folder.png');
+  try {
+    return ipcRenderer.sendSync('msg-trigger', {
+      type: 'getFileIcon',
+      data: { path: props.clipboardFile[0].path },
+    });
+  } catch (e) {
+    return require('../assets/file.png');
+  }
 };
 
 const newWindow = () => {

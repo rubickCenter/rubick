@@ -156,6 +156,8 @@ const optionsManager = ({
     setOptionsRef,
   });
 
+  window.searchFocus = searchFocus;
+
   return {
     options: optionsRef,
     searchFocus,
