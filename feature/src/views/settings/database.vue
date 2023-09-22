@@ -73,10 +73,10 @@
   </a-modal>
   <a-modal
     v-model:visible="showSetting"
-    title="坚果云 webdav 配置"
+    title="webdav 账户配置"
     :footer="null"
   >
-    <a-alert style="margin-bottom: 20px;" type="info" show-icon>
+    <a-alert v-if="formState.suport === 'jianguo'" style="margin-bottom: 20px;" type="info" show-icon>
       <template #message>
         <div
           @click="openHelp"
@@ -94,14 +94,31 @@
       @finish="handleOk"
     >
       <a-form-item
-        label="username"
+        label="webdav 提供商"
+        name="suport"
+      >
+        <a-select v-model:value="formState.suport">
+          <a-select-option value="jianguo">坚果云</a-select-option>
+          <a-select-option value="auto">自定义</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item
+        label="服务器地址"
+        name="url"
+        v-show="formState.suport === 'auto'"
+        :rules="[{ required: true, message: '请填写服务器地址!' }]"
+      >
+        <a-input v-model:value="formState.url" />
+      </a-form-item>
+      <a-form-item
+        label="账户"
         name="username"
         :rules="[{ required: true, message: '请填写 username!' }]"
       >
         <a-input v-model:value="formState.username" />
       </a-form-item>
       <a-form-item
-        label="password"
+        label="密码"
         name="password"
         :rules="[{ required: true, message: '请填写 password!' }]"
       >
@@ -135,11 +152,18 @@ const showSetting = ref(false);
 const currentSelect = ref({ plugin: {} });
 const detail = ref({});
 
-const defaultConfig = window.rubick.dbStorage.getItem('rubick-db-jg-webdav') || {
+const defaultConfig = window.rubick.dbStorage.getItem(
+  'rubick-db-jg-webdav'
+) || {
   url: 'https://dav.jianguoyun.com/dav/',
   username: '',
   password: '',
 };
+
+if (!defaultConfig.suport) {
+  defaultConfig.suport = 'jianguo';
+}
+
 const formState = reactive(defaultConfig);
 
 const showKeys = (item) => {
@@ -148,7 +172,10 @@ const showKeys = (item) => {
 };
 
 const handleOk = () => {
-  window.rubick.dbStorage.setItem('rubick-db-jg-webdav', JSON.parse(JSON.stringify(formState)));
+  window.rubick.dbStorage.setItem(
+    'rubick-db-jg-webdav',
+    JSON.parse(JSON.stringify(formState))
+  );
   message.success('保存成功');
   showSetting.value = false;
 };
@@ -179,7 +206,7 @@ const importData = () => {
 };
 
 const openHelp = () => {
-  window.rubick.shellOpenExternal('https://help.jianguoyun.com/?p=2064')
+  window.rubick.shellOpenExternal('https://help.jianguoyun.com/?p=2064');
 };
 
 const store = useStore();
