@@ -8,13 +8,13 @@ import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
-  const searchFocus = () => {
+  const searchFocus = (files) => {
     const config: any = localConfig.getConfig();
     // 未开启自动粘贴
     if (!config.perf.common.autoPast) return;
 
     if (currentPlugin.value.name) return;
-    const fileList = getCopyFiles();
+    const fileList = files || getCopyFiles();
     // 拷贝的是文件
     if (fileList) {
       window.setSubInputValue({ value: '' });
@@ -43,78 +43,79 @@ export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
       }
 
       // 再正则插件
-      localPlugins.forEach((plugin) => {
-        const feature = plugin.features;
-        // 系统插件无 features 的情况，不需要再搜索
-        if (!feature) return;
-        feature.forEach((fe) => {
-          const ext = path.extname(fileList[0].path);
-          fe.cmds.forEach((cmd) => {
-            const regImg = /\.(png|jpg|gif|jpeg|webp)$/;
-            if (
-              cmd.type === 'img' &&
-              regImg.test(ext) &&
-              fileList.length === 1
-            ) {
-              const option = {
-                name: cmd.label,
-                value: 'plugin',
-                icon: plugin.logo,
-                desc: fe.explain,
-                type: plugin.pluginType,
-                click: () => {
-                  pluginClickEvent({
-                    plugin,
-                    fe,
-                    cmd,
-                    ext: {
-                      code: fe.code,
-                      type: cmd.type || 'text',
-                      payload: nativeImage
-                        .createFromPath(fileList[0].path)
-                        .toDataURL(),
-                    },
-                    openPlugin,
-                    option,
-                  });
-                  clearClipboardFile();
-                },
-              };
-              options.push(option);
-            }
-            // 如果是文件，且符合文件正则类型
-            if (
-              fileList.length > 1 ||
-              (cmd.type === 'file' && new RegExp(cmd.match).test(ext))
-            ) {
-              const option = {
-                name: cmd,
-                value: 'plugin',
-                icon: plugin.logo,
-                desc: fe.explain,
-                type: plugin.pluginType,
-                click: () => {
-                  pluginClickEvent({
-                    plugin,
-                    fe,
-                    cmd,
-                    option,
-                    ext: {
-                      code: fe.code,
-                      type: cmd.type || 'text',
-                      payload: fileList,
-                    },
-                    openPlugin,
-                  });
-                  clearClipboardFile();
-                },
-              };
-              options.push(option);
-            }
+      if (fileList.length === 1) {
+        localPlugins.forEach((plugin) => {
+          const feature = plugin.features;
+          // 系统插件无 features 的情况，不需要再搜索
+          if (!feature) return;
+          feature.forEach((fe) => {
+            const ext = path.extname(fileList[0].path);
+            fe.cmds.forEach((cmd) => {
+              const regImg = /\.(png|jpg|gif|jpeg|webp)$/;
+              if (
+                cmd.type === 'img' &&
+                regImg.test(ext) &&
+                fileList.length === 1
+              ) {
+                const option = {
+                  name: cmd.label,
+                  value: 'plugin',
+                  icon: plugin.logo,
+                  desc: fe.explain,
+                  type: plugin.pluginType,
+                  click: () => {
+                    pluginClickEvent({
+                      plugin,
+                      fe,
+                      cmd,
+                      ext: {
+                        code: fe.code,
+                        type: cmd.type || 'text',
+                        payload: nativeImage
+                          .createFromPath(fileList[0].path)
+                          .toDataURL(),
+                      },
+                      openPlugin,
+                      option,
+                    });
+                    clearClipboardFile();
+                  },
+                };
+                options.push(option);
+              }
+              // 如果是文件，且符合文件正则类型
+              if (
+                fileList.length > 1 ||
+                (cmd.type === 'file' && new RegExp(cmd.match).test(ext))
+              ) {
+                const option = {
+                  name: cmd,
+                  value: 'plugin',
+                  icon: plugin.logo,
+                  desc: fe.explain,
+                  type: plugin.pluginType,
+                  click: () => {
+                    pluginClickEvent({
+                      plugin,
+                      fe,
+                      cmd,
+                      option,
+                      ext: {
+                        code: fe.code,
+                        type: cmd.type || 'text',
+                        payload: fileList,
+                      },
+                      openPlugin,
+                    });
+                    clearClipboardFile();
+                  },
+                };
+                options.push(option);
+              }
+            });
           });
         });
-      });
-
+      }
       setOptionsRef(options);
       clipboard.clear();
       return;
