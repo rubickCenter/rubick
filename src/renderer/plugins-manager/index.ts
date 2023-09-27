@@ -176,6 +176,14 @@ const createPluginManager = (): any => {
     state.pluginLoading = false;
   };
 
+  window.searchFocus = (args, strict) => {
+    ipcRenderer.send('msg-trigger', {
+      type: 'removePlugin',
+    });
+    window.initRubick();
+    searchFocus(args, strict);
+  };
+
   return {
     ...toRefs(state),
     initPlugins,

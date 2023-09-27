@@ -8,10 +8,10 @@ import { ref } from 'vue';
 
 export default ({ currentPlugin, optionsRef, openPlugin, setOptionsRef }) => {
   const clipboardFile: any = ref([]);
-  const searchFocus = (files) => {
+  const searchFocus = (files, strict = true) => {
     const config: any = localConfig.getConfig();
     // 未开启自动粘贴
-    if (!config.perf.common.autoPast) return;
+    if (!config.perf.common.autoPast && strict) return;
 
     if (currentPlugin.value.name) return;
     const fileList = files || getCopyFiles();
