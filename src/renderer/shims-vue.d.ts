@@ -26,5 +26,5 @@ interface Window {
   setCurrentPlugin: (plugin: any) => void;
   pluginLoaded: () => void;
   getMainInputInfo: () => any;
-  searchFocus: (args: any) => any;
+  searchFocus: (args: any, strict?: boolean) => any;
 }

@@ -32,7 +32,9 @@ const getSearchFiles = (argv = process.argv, cwd = process.cwd()) => {
 };
 
 const putFileToRubick = (webContents, files) => {
-  webContents.executeJavaScript(`window.searchFocus(${JSON.stringify(files)})`);
+  webContents.executeJavaScript(
+    `window.searchFocus(${JSON.stringify(files)}, false)`
+  );
 };
 
 const copyFileOutsideOfElectronAsar = function (

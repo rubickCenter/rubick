@@ -15,7 +15,7 @@
       <div class="handle">
         <div class="devtool" @click="openDevTool" title="开发者工具"></div>
       </div>
-      <div class="window-handle" v-if="platform !== 'darwin'">
+      <div class="window-handle" v-if="process.platform !== 'darwin'">
         <div class="minimize" @click="minimize"></div>
         <div class="maximize" @click="maximize"></div>
         <div class="close" @click="close"></div>
@@ -30,7 +30,7 @@ import { ref } from 'vue';
 
 const { ipcRenderer } = window.require('electron');
 
-const platform = ref(window.process.platform);
+const process = window.require('process');
 const showInput = ref(false);
 
 const storeInfo = localStorage.getItem('rubick-system-detach') || '{}';
