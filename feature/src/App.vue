@@ -207,6 +207,8 @@ init();
     height: 100vh;
     :deep(.ant-menu-item) {
       padding-left: 12px !important;
+      display: flex;
+      align-items: center;
     }
     :deep(.ant-menu-item-selected),
     :deep(.ant-menu-submenu-selected) {

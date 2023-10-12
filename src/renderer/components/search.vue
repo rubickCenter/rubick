@@ -1,15 +1,5 @@
 <template>
   <div class="rubick-select">
-    <div :class="currentPlugin.cmd ? 'rubick-tag' : ''">
-      <img
-        @click="() => emit('openMenu')"
-        class="rubick-logo"
-        :src="currentPlugin.logo || config.perf.custom.logo"
-      />
-      <div class="select-tag" v-show="currentPlugin.cmd">
-        {{ currentPlugin.cmd }}
-      </div>
-    </div>
     <div
       :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'"
       v-if="!!clipboardFile.length"
@@ -19,6 +9,16 @@
       <a-tag color="#aaa" v-if="clipboardFile.length > 1">
         {{ clipboardFile.length }}
       </a-tag>
+    </div>
+    <div v-else :class="currentPlugin.cmd ? 'rubick-tag' : ''">
+      <img
+        @click="() => emit('openMenu')"
+        class="rubick-logo"
+        :src="currentPlugin.logo || config.perf.custom.logo"
+      />
+      <div class="select-tag" v-show="currentPlugin.cmd">
+        {{ currentPlugin.cmd }}
+      </div>
     </div>
     <a-input
       id="search"
