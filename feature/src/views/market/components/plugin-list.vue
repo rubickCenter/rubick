@@ -20,7 +20,7 @@
                   style="font-size: 20px; cursor: pointer"
                 />
                 <SelectOutlined
-                  v-else
+                  v-if="!item.isloading && item.isdownload"
                   @click.stop="openPlugin(item)"
                   style="font-size: 18px; cursor: pointer"
                 />

@@ -44,13 +44,11 @@
 
 ## 支持能力
 - [x] 基于 npm 包模式的插件管理，安装插件和安装 npm 包一样简单
-- [x] 支持系统插件，只要在 rubick 运行时，插件可以随时使用
-- [x] 支持全局快捷键设置
-- [x] 支持剪贴板文件搜索
-- [x] 支持搜索本地已安装 app 或 偏好设置
-- [x] 支持 MacOS
-- [x] 支持 Windows
-- [x] 支持 Linux
+- [x] 支持 webdav 多端数据同步，真正的数据安全同步
+- [x] 独一无二的系统插件模式，让插件成为 rubick 的一部分
+- [x] 支持快速启动本地 app、文件、文件夹
+- [x] 支持企业化内网部署
+- [x] 支持多语言
 
 ## 使用文档
 
@@ -59,17 +57,17 @@
 [Rubick Docs](https://rubickCenter.github.io/rubick/)
 
 
-## 目前支持能力
+## 核心功能展示
 ### 1. 搜索系统应用
 支持拼音和缩写来搜索系统安装应用：
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba363e8f60f540e6a5c365c4317c4413~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-70c105ff7fb1e955fc67ffa5a5564092_720w.gif)
 
 ### 2. UI类插件安装
 点击搜索框右侧 `rubick` 图标，进入插件市场，选择所需插件，点击下载按钮即可下载，下载完成后在已安装 tab 下可以找到安装插件。
 安装完成后，输入插件呼起命令即可使用对应插件：
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ae45c7ede1f4e3bb7d35ae845e60b64~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-5906bba20fe0a67f9e7a5a8c11341305_720w.gif)
 
 ### 3. 系统类插件安装
 系统插件安装方式和UI类一样，在插件市场选择`系统分类`，寻找适合自己的系统插件安装即可。
@@ -78,10 +76,10 @@
 系统插件安装成功后，需要重启 rubick 才能生效
 ```
 
-### 4. 输入框聚焦自动根据剪切板内容匹配插件
-在 `rubick` 内搜索`偏好设置`，然后开启`自动粘贴` 功能，即可匹配剪切板内容自动匹配适合插件进行使用。
+### 4. 基于 webdav 的多端数据同步
+在 `rubick` 内搜索`偏好设置` 进入 `账户和设置` -> `多端数据同步`；即可对 `rubick` 插件使用数据进行 `导出` 和 `导入`。
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01ef50fbfa064ba9a88bebe1531eacd4~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-ff85793741e4dff82a729d3eb3d41551_720w.png)
 
 ### 更多功能
 如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/rubickCenter/rubick/issues) 。
