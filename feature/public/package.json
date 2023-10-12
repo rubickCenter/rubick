@@ -9,7 +9,7 @@
   "pluginType": "ui",
   "features": [
     {
-      "code": "market",
+      "code": "finder",
       "explain": "插件市场",
       "cmds":[
         "插件市场"

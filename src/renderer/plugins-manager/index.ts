@@ -40,7 +40,7 @@ const createPluginManager = (): any => {
       },
     });
     if (result && result.value) {
-      appList.value = [...appList.value, ...result.value];
+      appList.value.push(...result.value);
     }
   };
 
@@ -102,15 +102,15 @@ const createPluginManager = (): any => {
   };
 
   const changePluginHistory = (plugin) => {
-    if (state.pluginHistory.length >= 8) {
-      state.pluginHistory.pop();
-    }
     state.pluginHistory.forEach((p, index) => {
       if (p.name === plugin.name) {
         state.pluginHistory.splice(index, 1);
       }
     });
     state.pluginHistory.unshift(plugin);
+    if (state.pluginHistory.length > 8) {
+      state.pluginHistory.pop();
+    }
   };
 
   const { searchValue, onSearch, setSearchValue, placeholder } =
@@ -174,6 +174,14 @@ const createPluginManager = (): any => {
 
   window.pluginLoaded = () => {
     state.pluginLoading = false;
+  };
+
+  window.searchFocus = (args, strict) => {
+    ipcRenderer.send('msg-trigger', {
+      type: 'removePlugin',
+    });
+    window.initRubick();
+    searchFocus(args, strict);
   };
 
   return {

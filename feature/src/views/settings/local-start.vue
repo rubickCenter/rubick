@@ -27,6 +27,7 @@
 <script setup>
 import { ref } from 'vue';
 const fs = window.require('fs');
+const process = window.require('process');
 
 const dbId = 'rubick-local-start-app';
 
@@ -97,7 +98,7 @@ const checkDrop = (e) => {
   width: 100%;
   overflow-x: hidden;
   background: var(--color-body-bg);
-  height: calc(~'100vh - 106px');
+  height: calc(~'100vh - 180px');
   .del-title {
     text-decoration-line: line-through;
     text-decoration-color: var(--ant-error-color);

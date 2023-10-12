@@ -9,9 +9,6 @@ module.exports = {
         '@': path.join(__dirname, './src'),
       },
     },
-    externals: {
-      'extract-file-icon': 'commonjs extract-file-icon',
-    },
   },
   pages: {
     index: {
@@ -32,7 +29,7 @@ module.exports = {
       ],
       // Use this to change the entry point of your app's render process. default src/[main|index].[js|ts]
       builderOptions: {
-        productName: 'rubick2',
+        productName: 'rubick',
         appId: 'com.muwoo.rubick',
         compression: 'maximum',
         directories: {
@@ -67,7 +64,13 @@ module.exports = {
         },
         mac: {
           icon: 'public/icons/icon.icns',
-          target: ['dmg', 'zip'],
+          target: [
+            {
+              target: 'dmg',
+              arch: ['x64', 'arm64'],
+            },
+          ],
+          artifactName: 'rubick-${version}-${arch}.dmg',
           gatekeeperAssess: false,
           entitlementsInherit: './release/entitlements.mac.plist',
           entitlements: './release/entitlements.mac.plist',
@@ -79,11 +82,19 @@ module.exports = {
         },
         win: {
           icon: 'public/icons/icon.ico',
-          target: 'nsis',
+          artifactName: 'rubick-Setup-${version}-${arch}.exe',
+          target: [
+            {
+              target: 'nsis',
+              arch: ['x64', 'ia32'],
+            },
+          ],
         },
         nsis: {
+          shortcutName: 'rubick',
           oneClick: false,
           allowToChangeInstallationDirectory: true,
+          include: 'public/installer.nsh',
         },
         linux: {
           icon: 'public/icons/',

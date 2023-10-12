@@ -15,9 +15,14 @@
                 :loading="item.isloading"
               >
                 <CloudDownloadOutlined
-                  v-show="!item.isloading && !item.isdownload"
+                  v-if="!item.isloading && !item.isdownload"
                   @click.stop="downloadPlugin(item, index)"
                   style="font-size: 20px; cursor: pointer"
+                />
+                <SelectOutlined
+                  v-if="!item.isloading && item.isdownload"
+                  @click.stop="openPlugin(item)"
+                  style="font-size: 18px; cursor: pointer"
                 />
               </a-button>
             </template>
@@ -36,68 +41,82 @@
         </template>
       </a-list>
     </div>
-  </div>
-  <a-drawer
-    width="100%"
-    placement="right"
-    :closable="false"
-    :visible="visible"
-    :get-container="false"
-    class="plugin-info"
-    :style="{ position: 'absolute' }"
-    @close="visible = false"
-  >
-    <template #title>
-      <div class="plugin-title-info">
-        <div class="back-icon" @click="visible = false">
-          <ArrowLeftOutlined />
-        </div>
-        <div class="info">
-          <img :src="detail.logo" class="plugin-icon" />
-          <div class="plugin-desc">
-            <div class="title">
-              {{ detail.pluginName }}
+    <a-drawer
+      width="77%"
+      v-if="visible"
+      placement="right"
+      :closable="false"
+      :visible="visible"
+      class="plugin-info"
+      :style="{ position: 'absolute' }"
+      @close="visible = false"
+    >
+      <template #title>
+        <div class="plugin-title-info">
+          <div class="info">
+            <img :src="detail.logo" class="plugin-icon" />
+            <div class="plugin-desc">
+              <div>
+                <div class="title">
+                  {{ detail.pluginName }}
+                </div>
+                <div class="desc">
+                  {{ detail.description }}
+                </div>
+              </div>
+              <a-button
+                v-if="!detail.isdownload"
+                @click.stop="downloadPlugin(detail)"
+                shape="round"
+                type="primary"
+                :loading="detail.isloading"
+              >
+                <template #icon>
+                  <CloudDownloadOutlined
+                    v-show="!detail.isloading && !detail.isdownload"
+                  />
+                </template>
+                {{ $t('feature.market.install') }}
+              </a-button>
             </div>
-            <div class="desc">
-              {{ detail.description }}
-            </div>
-            <a-button
-              v-if="!detail.isdownload"
-              @click.stop="downloadPlugin(detail)"
-              shape="round"
-              type="primary"
-              :loading="detail.isloading"
-            >
-              <template #icon>
-                <CloudDownloadOutlined
-                  v-show="!detail.isloading && !detail.isdownload"
-                />
-              </template>
-              {{ $t('feature.market.install') }}
-            </a-button>
           </div>
         </div>
-      </div>
-    </template>
-    <div v-html="content" class="home-page-container"></div>
-  </a-drawer>
+      </template>
+      <a-spin :spinning="!content" tip="内容加载中...">
+        <div v-if="content !== 'error'" v-html="content" class="home-page-container"></div>
+        <a-result
+          class="error-content"
+          v-else
+          sub-title="插件主页内容走丢啦！"
+        >
+          <template #icon>
+            <Vue3Lottie :animationData="notFountJson" :height="240" :width="240" />
+          </template>
+        </a-result>
+      </a-spin>
+    </a-drawer>
+  </div>
 </template>
 
 <script setup>
 import {
   CloudDownloadOutlined,
   ArrowLeftOutlined,
+  SelectOutlined
 } from '@ant-design/icons-vue';
 
 import { defineProps, ref } from 'vue';
 import { useStore } from 'vuex';
 import { message } from 'ant-design-vue';
 import MarkdownIt from 'markdown-it';
-import request from '../../../assets/request/index';
+import { useRouter } from 'vue-router';
+import request from '@/assets/request/index';
+import notFountJson from '@/assets/lottie/404.json';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const store = useStore();
+const router = useRouter();
 
 const startDownload = (name) => store.dispatch('startDownload', name);
 const successDownload = (name) => store.dispatch('successDownload', name);
@@ -113,7 +132,7 @@ defineProps({
 const downloadPlugin = async (plugin) => {
   startDownload(plugin.name);
   await window.market.downloadPlugin(plugin);
-  message.success(t('feature.dev.installSuccess', { pluginName: plugin.name }));
+  message.success(t('feature.dev.installSuccess', { pluginName: plugin.pluginName }));
   successDownload(plugin.name);
 };
 
@@ -125,11 +144,24 @@ const content = ref('');
 const showDetail = async (item) => {
   visible.value = true;
   detail.value = item;
+  content.value = '';
   let mdContent = '暂无内容';
-  if (item.homePage) {
-    mdContent = await request.getPluginDetail(item.homePage);
+  try {
+    if (item.homePage) {
+      mdContent = await request.getPluginDetail(item.homePage);
+    }
+    content.value = markdown.render(mdContent);
+  } catch (e) {
+    content.value = 'error';
   }
-  content.value = markdown.render(mdContent);
+};
+
+const openPlugin = (item) => {
+  store.commit('commonUpdate', {active: ['installed']})
+  router.push({
+    path: '/installed',
+    query: {plugin: item.name}
+  });
 };
 </script>
 
@@ -138,7 +170,7 @@ const showDetail = async (item) => {
   width: 0;
 }
 .panel-item {
-  margin: 20px 0;
+  margin-bottom: 17px;
   .download-plugin-btn {
     color: var(--ant-primary-color);
   }
@@ -170,7 +202,9 @@ const showDetail = async (item) => {
   }
 
   &:last-child {
-    border-bottom: none;
+    &:after {
+      border-bottom: none;
+    }
   }
 }
 .plugin-info {
@@ -199,23 +233,23 @@ const showDetail = async (item) => {
 .plugin-title-info {
   display: flex;
   align-items: flex-start;
-
-  .back-icon {
-    font-size: 16px;
-    margin-right: 40px;
-  }
-
+  width: 100%;
   .info {
+    width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 
     .plugin-icon {
-      width: 100px;
-      height: 100px;
+      width: 40px;
+      height: 40px;
       margin-right: 20px;
     }
 
     .plugin-desc {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .title {
         font-size: 18px;
         font-weight: bold;
@@ -225,14 +259,18 @@ const showDetail = async (item) => {
       .desc {
         font-size: 12px;
         font-weight: normal;
-        margin-top: 5px;
-        margin-bottom: 20px;
         color: var(--color-text-desc);
       }
     }
   }
 }
+.error-content {
+  &.ant-result {
+    padding: 0;
+  }
+}
 .home-page-container {
+  min-height: 200px;
   * {
     color: var(--color-text-content);
   }

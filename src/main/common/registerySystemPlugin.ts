@@ -9,17 +9,23 @@ export default () => {
   let systemPlugins = totalPlugins.filter(
     (plugin) => plugin.pluginType === 'system'
   );
-  systemPlugins = systemPlugins.map((plugin) => {
-    const pluginPath = path.resolve(
-      PLUGIN_INSTALL_DIR,
-      'node_modules',
-      plugin.name
-    );
-    return {
-      ...plugin,
-      indexPath: path.join(pluginPath, './', plugin.entry),
-    };
-  });
+  systemPlugins = systemPlugins
+    .map((plugin) => {
+      try {
+        const pluginPath = path.resolve(
+          PLUGIN_INSTALL_DIR,
+          'node_modules',
+          plugin.name
+        );
+        return {
+          ...plugin,
+          indexPath: path.join(pluginPath, './', plugin.entry),
+        };
+      } catch (e) {
+        return false;
+      }
+    })
+    .filter(Boolean);
 
   const hooks = {
     onReady: [],

@@ -1,14 +1,16 @@
 export default {
-  version: 0,
+  version: 4,
   perf: {
     custom: {
+      theme: 'SPRING',
       primaryColor: '#ff4ea4',
       errorColor: '#ed6d46',
       warningColor: '#e5a84b',
       successColor: '#c0d695',
       infoColor: '#aa8eeB',
       logo: `file://${__static}/logo.png`,
-      placeholder: '你好 rubick',
+      placeholder: '你好，Rubick！请输入插件关键词',
+      username: 'Rubick',
     },
     shortCut: {
       showAndHidden: 'Option+R',

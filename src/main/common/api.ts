@@ -26,7 +26,6 @@ const runnerInstance = runner();
 const detachInstance = detach();
 
 class API extends DBInstance {
-  public currentPlugin: null | any = null;
   init(mainWindow: BrowserWindow) {
     // 响应 preload.js 事件
     ipcMain.on('msg-trigger', async (event, arg) => {

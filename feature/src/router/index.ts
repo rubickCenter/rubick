@@ -1,40 +1,65 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import Market from '../views/market/index.vue';
-import Installed from '../views/installed/index.vue';
-import Account from '../views/account/index.vue';
-import Settings from '../views/settings/user.vue';
-import Dev from '../views/dev/index.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/market',
-    name: 'market',
-    component: Market,
+    path: '/result',
+    name: 'result',
+    component: () => import('../views/market/components/result.vue'),
+  },
+  {
+    path: '/devPlugin',
+    name: 'devPlugin',
+    component: () => import('../views/market/components/devlopment.vue'),
+  },
+  {
+    path: '/image',
+    name: 'image',
+    component: () => import('../views/market/components/image.vue'),
+  },
+  {
+    path: '/tools',
+    name: 'tools',
+    component: () => import('../views/market/components/tools.vue'),
+  },
+  {
+    path: '/worker',
+    name: 'worker',
+    component: () => import('../views/market/components/worker.vue'),
+  },
+  {
+    path: '/system',
+    name: 'system',
+    component: () => import('../views/market/components/system.vue'),
+  },
+  {
+    path: '/finder',
+    name: 'finder',
+    component: () => import('../views/market/components/finder.vue'),
   },
   {
     path: '/installed',
     name: 'installed',
-    component: Installed,
+    component: () => import('../views/installed/index.vue'),
   },
   {
     path: '/account',
     name: 'account',
-    component: Account,
+    component: () => import('../views/account/index.vue'),
   },
   {
     path: '/settings',
     name: 'settings',
-    component: Settings,
+    component: () => import('../views/settings/user.vue'),
   },
   {
     path: '/dev',
     name: 'dev',
-    component: Dev,
+    component: () => import('../views/dev/index.vue'),
   },
   {
     path: '/:catchAll(.*)',
-    name: 'market',
-    component: Market,
+    name: 'finder',
+    component: () => import('../views/market/components/finder.vue'),
   },
 ];
 

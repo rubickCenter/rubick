@@ -1,232 +1,221 @@
 <template>
   <div class="settings">
-    <div class="left-menu">
-      <a-menu v-model:selectedKeys="currentSelect" mode="inline">
+    <div class="view-title"> {{ $t('feature.settings.title') }}</div>
+    <div class="view-container">
+      <a-menu v-model:selectedKeys="currentSelect" mode="horizontal">
         <a-menu-item key="userInfo">
-          <template #icon>
-            <UserOutlined />
-          </template>
           {{ $t('feature.settings.account.accountInfo') }}
         </a-menu-item>
         <a-menu-item key="normal">
-          <template #icon>
-            <ToolOutlined />
-          </template>
           {{ $t('feature.settings.basic.title') }}
         </a-menu-item>
         <a-menu-item key="localstart">
-          <template #icon>
-            <FolderOpenOutlined />
-          </template>
           {{ $t('feature.settings.localstart.title') }}
         </a-menu-item>
         <a-menu-item key="global">
-          <template #icon>
-            <LaptopOutlined />
-          </template>
           {{ $t('feature.settings.global.title') }}
         </a-menu-item>
-<!--        <a-menu-item key="superpanel">-->
-<!--          <template #icon>-->
-<!--            <FileAddOutlined />-->
-<!--          </template>-->
-<!--          {{ $t('feature.settings.superPanel.title') }}-->
-<!--        </a-menu-item>-->
+        <!--        <a-menu-item key="superpanel">-->
+        <!--          <template #icon>-->
+        <!--            <FileAddOutlined />-->
+        <!--          </template>-->
+        <!--          {{ $t('feature.settings.superPanel.title') }}-->
+        <!--        </a-menu-item>-->
+        <a-menu-item key="database">
+          {{ $t('feature.settings.database.title') }}
+        </a-menu-item>
         <a-menu-item key="localhost">
-          <template #icon>
-            <DatabaseOutlined />
-          </template>
           {{ $t('feature.settings.intranet.title') }}
         </a-menu-item>
       </a-menu>
-    </div>
-    <div class="settings-detail">
-      <UserInfo v-if="currentSelect[0] === 'userInfo'" />
-      <div v-if="currentSelect[0] === 'normal'">
-        <div class="setting-item">
-          <div class="title">
-            {{ $t('feature.settings.basic.shortcutKey') }}
-          </div>
-          <div class="settings-item-li">
-            <div class="label">
-              {{ $t('feature.settings.basic.showOrHiddle') }}
+      <div class="settings-detail">
+        <UserInfo v-if="currentSelect[0] === 'userInfo'" />
+        <div v-if="currentSelect[0] === 'normal'">
+          <div class="setting-item">
+            <div class="title">
+              {{ $t('feature.settings.basic.shortcutKey') }}
             </div>
-            <a-tooltip placement="top" trigger="click">
-              <template #title>
-                <span>{{ tipText }}</span>
-                <template v-if="isWindows">
-                  <br />
-                  <span
-                    style="cursor: pointer; text-decoration: underline"
-                    @click="resetDefault('Alt')"
-                  >
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.showOrHiddle') }}
+              </div>
+              <a-tooltip placement="top" trigger="click">
+                <template #title>
+                  <span>{{ tipText }}</span>
+                  <template v-if="isWindows">
+                    <br />
+                    <span
+                      style="cursor: pointer; text-decoration: underline"
+                      @click="resetDefault('Alt')"
+                    >
                     Alt+Space
                   </span>
-                  <span
-                    style="
+                    <span
+                      style="
                       cursor: pointer;
                       margin-left: 8px;
                       text-decoration: underline;
                     "
-                    @click="resetDefault('Ctrl')"
-                  >
+                      @click="resetDefault('Ctrl')"
+                    >
                     Ctrl+Space
                   </span>
+                  </template>
                 </template>
-              </template>
-              <div
-                class="value"
-                tabIndex="-1"
-                @keyup="(e) => changeShortCut(e, 'showAndHidden')"
-              >
-                {{ shortCut.showAndHidden }}
+                <div
+                  class="value"
+                  tabIndex="-1"
+                  @keyup="(e) => changeShortCut(e, 'showAndHidden')"
+                >
+                  {{ shortCut.showAndHidden }}
+                </div>
+              </a-tooltip>
+            </div>
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.screenCapture') }}
               </div>
-            </a-tooltip>
-          </div>
-          <div class="settings-item-li">
-            <div class="label">
-              {{ $t('feature.settings.basic.screenCapture') }}
-            </div>
-            <a-tooltip placement="top" trigger="click">
-              <template #title>
-                <span>{{ tipText }}</span>
-              </template>
-              <div
-                class="value"
-                tabIndex="-1"
-                @keyup="(e) => changeShortCut(e, 'capture')"
-              >
-                {{ shortCut.capture }}
-              </div>
-            </a-tooltip>
-          </div>
-        </div>
-        <div class="setting-item">
-          <div class="title">{{ $t('feature.settings.basic.common') }}</div>
-          <div class="settings-item-li">
-            <div class="label">
-              {{ $t('feature.settings.basic.autoPaste') }}
-            </div>
-            <a-switch
-              v-model:checked="common.autoPast"
-              :checked-children="$t('feature.settings.basic.on')"
-              :un-checked-children="$t('feature.settings.basic.off')"
-            ></a-switch>
-          </div>
-          <div class="settings-item-li">
-            <div class="label">{{ $t('feature.settings.basic.autoBoot') }}</div>
-            <a-switch
-              v-model:checked="common.start"
-              :checked-children="$t('feature.settings.basic.on')"
-              :un-checked-children="$t('feature.settings.basic.off')"
-            ></a-switch>
-          </div>
-          <div class="settings-item-li">
-            <div class="label">
-              {{ $t('feature.settings.basic.spaceExec') }}
-            </div>
-            <a-switch
-              v-model:checked="common.space"
-              :checked-children="$t('feature.settings.basic.on')"
-              :un-checked-children="$t('feature.settings.basic.off')"
-            ></a-switch>
-          </div>
-        </div>
-        <div class="setting-item">
-          <div class="title">{{ $t('feature.settings.basic.theme') }}</div>
-          <div class="settings-item-li">
-            <div class="label">{{ $t('feature.settings.basic.darkMode') }}</div>
-            <a-switch
-              v-model:checked="common.darkMode"
-              :checked-children="$t('feature.settings.basic.on')"
-              :un-checked-children="$t('feature.settings.basic.off')"
-            ></a-switch>
-          </div>
-        </div>
-        <div class="setting-item">
-          <div class="title">{{ $t('feature.settings.basic.language') }}</div>
-          <div class="settings-item-li">
-            <div class="label">
-              {{ $t('feature.settings.basic.changeLang') }}
-            </div>
-            <a-select
-              v-model:value="state.common.lang"
-              label-in-value
-              style="width: 240px"
-              :options="options"
-              @change="changeLanguage"
-            ></a-select>
-          </div>
-        </div>
-      </div>
-      <div v-if="currentSelect[0] === 'global'">
-        <a-collapse>
-          <a-collapse-panel
-            key="1"
-            :header="$t('feature.settings.global.instructions')"
-          >
-            <div>
-              {{ $t('feature.settings.global.tips') }}
-            </div>
-            <h3 style="margin-top: 10px">
-              {{ $t('feature.settings.global.example') }}
-            </h3>
-            <a-divider style="margin: 5px 0" />
-            <a-list item-layout="horizontal" :data-source="examples">
-              <template #renderItem="{ item }">
-                <a-list-item>
-                  <a-list-item-meta :description="item.desc">
-                    <template #title>
-                      <div>{{ item.title }}</div>
-                    </template>
-                  </a-list-item-meta>
-                </a-list-item>
-              </template>
-            </a-list>
-          </a-collapse-panel>
-        </a-collapse>
-        <div class="feature-container">
-          <div class="keywords item">
-            <div>{{ $t('feature.settings.global.shortcutKey') }}</div>
-            <template :key="index" v-for="(item, index) in global">
               <a-tooltip placement="top" trigger="click">
                 <template #title>
                   <span>{{ tipText }}</span>
                 </template>
                 <div
                   class="value"
-                  tabIndex="2"
-                  @keyup="(e) => changeGlobalKey(e, index)"
+                  tabIndex="-1"
+                  @keyup="(e) => changeShortCut(e, 'capture')"
                 >
-                  {{ item.key }}
-                  <MinusCircleOutlined
-                    @click.stop="deleteGlobalKey(e, index)"
-                  />
+                  {{ shortCut.capture }}
                 </div>
               </a-tooltip>
-            </template>
+            </div>
           </div>
-          <div class="short-cut item">
-            <div>{{ $t('feature.settings.global.funtionKey') }}</div>
-            <template v-for="(item, index) in global" :key="index">
-              <a-input
-                :value="item.value"
-                class="value"
-                allowClear
-                :disabled="!item.key"
-                @change="(e) => changeGlobalValue(index, e.target.value)"
-              />
-            </template>
+          <div class="setting-item">
+            <div class="title">{{ $t('feature.settings.basic.common') }}</div>
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.autoPaste') }}
+              </div>
+              <a-switch
+                v-model:checked="common.autoPast"
+                :checked-children="$t('feature.settings.basic.on')"
+                :un-checked-children="$t('feature.settings.basic.off')"
+              ></a-switch>
+            </div>
+            <div class="settings-item-li">
+              <div class="label">{{ $t('feature.settings.basic.autoBoot') }}</div>
+              <a-switch
+                v-model:checked="common.start"
+                :checked-children="$t('feature.settings.basic.on')"
+                :un-checked-children="$t('feature.settings.basic.off')"
+              ></a-switch>
+            </div>
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.spaceExec') }}
+              </div>
+              <a-switch
+                v-model:checked="common.space"
+                :checked-children="$t('feature.settings.basic.on')"
+                :un-checked-children="$t('feature.settings.basic.off')"
+              ></a-switch>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="title">{{ $t('feature.settings.basic.theme') }}</div>
+            <div class="settings-item-li">
+              <div class="label">{{ $t('feature.settings.basic.darkMode') }}</div>
+              <a-switch
+                v-model:checked="common.darkMode"
+                :checked-children="$t('feature.settings.basic.on')"
+                :un-checked-children="$t('feature.settings.basic.off')"
+              ></a-switch>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="title">{{ $t('feature.settings.basic.language') }}</div>
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.changeLang') }}
+              </div>
+              <a-select
+                v-model:value="state.common.lang"
+                label-in-value
+                style="width: 240px"
+                :options="options"
+                @change="changeLanguage"
+              ></a-select>
+            </div>
           </div>
         </div>
-        <div @click="addConfig" class="add-global">
-          <PlusCircleOutlined />
-          {{ $t('feature.settings.global.addShortcutKey') }}
+        <div v-if="currentSelect[0] === 'global'">
+          <a-collapse>
+            <a-collapse-panel
+              key="1"
+              :header="$t('feature.settings.global.instructions')"
+            >
+              <div>
+                {{ $t('feature.settings.global.tips') }}
+              </div>
+              <h3 style="margin-top: 10px">
+                {{ $t('feature.settings.global.example') }}
+              </h3>
+              <a-divider style="margin: 5px 0" />
+              <a-list item-layout="horizontal" :data-source="examples">
+                <template #renderItem="{ item }">
+                  <a-list-item>
+                    <a-list-item-meta :description="item.desc">
+                      <template #title>
+                        <div>{{ item.title }}</div>
+                      </template>
+                    </a-list-item-meta>
+                  </a-list-item>
+                </template>
+              </a-list>
+            </a-collapse-panel>
+          </a-collapse>
+          <div class="feature-container">
+            <div class="keywords item">
+              <div>{{ $t('feature.settings.global.shortcutKey') }}</div>
+              <template :key="index" v-for="(item, index) in global">
+                <a-tooltip placement="top" trigger="click">
+                  <template #title>
+                    <span>{{ tipText }}</span>
+                  </template>
+                  <div
+                    class="value"
+                    tabIndex="2"
+                    @keyup="(e) => changeGlobalKey(e, index)"
+                  >
+                    {{ item.key }}
+                    <MinusCircleOutlined
+                      @click.stop="deleteGlobalKey(e, index)"
+                    />
+                  </div>
+                </a-tooltip>
+              </template>
+            </div>
+            <div class="short-cut item">
+              <div>{{ $t('feature.settings.global.funtionKey') }}</div>
+              <template v-for="(item, index) in global" :key="index">
+                <a-input
+                  :value="item.value"
+                  class="value"
+                  allowClear
+                  :disabled="!item.key"
+                  @change="(e) => changeGlobalValue(index, e.target.value)"
+                />
+              </template>
+            </div>
+          </div>
+          <div @click="addConfig" class="add-global">
+            <PlusCircleOutlined />
+            {{ $t('feature.settings.global.addShortcutKey') }}
+          </div>
         </div>
+        <Localhost v-if="currentSelect[0] === 'localhost'" />
+        <LocalStart v-if="currentSelect[0] === 'localstart'" />
+        <DataBase v-if="currentSelect[0] === 'database'" />
       </div>
-      <SuperPanel v-if="currentSelect[0] === 'superpanel'" />
-      <Localhost v-if="currentSelect[0] === 'localhost'" />
-      <LocalStart v-if="currentSelect[0] === 'localstart'" />
     </div>
   </div>
 </template>
@@ -240,14 +229,15 @@ import {
   PlusCircleOutlined,
   UserOutlined,
   FolderOpenOutlined,
+  SafetyOutlined,
 } from '@ant-design/icons-vue';
 import debounce from 'lodash.debounce';
 import { ref, reactive, watch, toRefs, computed } from 'vue';
 import keycodes from './keycode';
 import Localhost from './localhost.vue';
-import SuperPanel from './super-panel.vue';
 import UserInfo from './user-info';
 import LocalStart from './local-start';
+import DataBase from './database';
 import { useI18n } from 'vue-i18n';
 import localConfig from '@/confOp';
 
@@ -444,10 +434,23 @@ const changeLanguage = (value) => {
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
-  background: var(--color-body-bg);
-  height: calc(~'100vh - 46px');
-  display: flex;
-
+  background: var(--color-body-bg2);
+  height: calc(~'100vh - 34px');
+  .ant-menu-horizontal {
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  .view-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--color-text-primary);
+  }
+  .view-container {
+    border-radius: 8px;
+    background: var(--color-body-bg);
+    overflow: auto;
+    height: calc(~'100vh - 84px');
+  }
   .ant-menu {
     background: var(--color-body-bg) !important;
     color: var(--color-text-content) !important;
@@ -458,7 +461,6 @@ const changeLanguage = (value) => {
     box-sizing: border-box;
     flex: 1;
     overflow: auto;
-    height: 100%;
     background: var(--color-body-bg);
 
     .setting-item {
@@ -470,7 +472,7 @@ const changeLanguage = (value) => {
 
       .title {
         color: var(--ant-primary-color);
-        font-size: 15px;
+        font-size: 14px;
         margin-bottom: 10px;
       }
 
@@ -583,7 +585,6 @@ const changeLanguage = (value) => {
 
   .ant-collapse {
     background: var(--color-input-hover);
-
     .ant-collapse-content {
       background: var(--color-input-hover);
       color: var(--color-text-content);

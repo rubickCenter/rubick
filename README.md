@@ -27,7 +27,7 @@ English | [简体中文](./README.zh-CN.md)
 </a>
 </div>
 
-Based on electron open source toolbox, free integration of rich plug-ins, to create the ultimate desktop efficiency tool。Rubick is one of the heroes of Dota ，The core skill is the ability to use other heroes as plug-ins，Finished the walk 。Very consistent with the design concept of this tool，So named Rubick。
+An open-source toolbox based on Electron, freely integrating rich plugins to create the ultimate desktop productivity tool. Rubick is one of the heroes in Dota, whose core skill is the ability to use the skills of other heroes through plugins, and then move on. This aligns perfectly with the design philosophy of this tool, which is why it is named Rubick.
 
 ## Sponsor
 我们通过有偿的方式积累高质量的常见问题、最佳实践文档，加入星球后可以和作者进行互动和答疑。我们提供技术支持、答疑解惑、定制化插件开发、二次定制化开发 rubick 等等官方服务。
@@ -43,14 +43,12 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 
 
 ## Feature list
-- [x] Plug-in management based on npm package mode, installing plugins is as easy as installing npm packages.
-- [x] Support system plug-ins, as long as rubick is running, plug-ins can be used at any time.
-- [x] Support global shortcut key settings
-- [x] Support clipboard file search
-- [x] Support searching for locally installed apps or preferences
-- [x] Support MacOS
-- [x] Support Windows
-- [x] Support Linux
+- [x] Plugin management based on the npm package pattern, installing plugins is as simple as installing npm packages.
+- [x] Supports WebDAV for multi-device data synchronization, ensuring true data security synchronization.
+- [x] A unique system plugin mode that allows plugins to become an integral part of Rubick.
+- [x] Supports the quick launch of local apps, files, and folders.
+- [x] Supports enterprise-level intranet deployment.
+- [x] Supports multiple languages.
 
 ## Docs
 
@@ -59,18 +57,18 @@ Based on electron open source toolbox, free integration of rich plug-ins, to cre
 [Rubick Docs](https://rubickCenter.github.io/rubick/)
 
 
-## Core function
+##  Core functionality showcase.
 ### 1. Search system application
 Support pinyin and abbreviations to search system applications：
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba363e8f60f540e6a5c365c4317c4413~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-70c105ff7fb1e955fc67ffa5a5564092_720w.gif)
 
 ### 2. UI plug-in installation
 Click the `rubick` icon on the right side of the search box to enter the plug-in market, select the desired plug-in, and click the download button to download. After the download is complete, you can find the installed plug-in under the Installed tab
 
 After the installation is complete, enter the plug-in call up command to use the corresponding plug-in：
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ae45c7ede1f4e3bb7d35ae845e60b64~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-5906bba20fe0a67f9e7a5a8c11341305_720w.gif)
 
 ### 3. System plug-in installation
 The system plug-in installation method is the same as that of the UI category. In the plug-in market, select the `system category` and find the system plug-in that suits you to install it.
@@ -78,10 +76,10 @@ The system plug-in installation method is the same as that of the UI category. I
 After the system plug-in is installed successfully, rubick needs to be restarted to take effect
 ```
 
-### 4. The input box focus automatically matches the plug-in according to the clipboard content
-Search for `Preferences` in `rubick`, and then turn on the `Auto Paste` function to match the clipboard content and automatically match the plug-in for use.
+### 4. Multi-device data synchronization based on WebDAV.
+In "Rubick," search for "Preferences," go to "Account and Settings," and then select "Multi-Device Data Synchronization." You can export and import data for the use of Rubick plugins.
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/01ef50fbfa064ba9a88bebe1531eacd4~tplv-k3u1fbpfcp-watermark.image)
+![](https://pic1.zhimg.com/80/v2-ff85793741e4dff82a729d3eb3d41551_720w.png)
 
 ### More features
 If you need more features, please come here to give us suggestions：[issues](https://github.com/rubickCenter/rubick/issues) 。

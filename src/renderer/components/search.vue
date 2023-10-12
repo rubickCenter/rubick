@@ -1,51 +1,51 @@
 <template>
   <div class="rubick-select">
-    <div class="select-tag" v-show="currentPlugin.cmd">
-      {{ currentPlugin.cmd }}
-    </div>
     <div
       :class="clipboardFile[0].name ? 'clipboard-tag' : 'clipboard-img'"
       v-if="!!clipboardFile.length"
     >
-      <img :src="getIcon()" />
+      <img style="margin-right: 8px" :src="getIcon()" />
       <div class="ellipse">{{ clipboardFile[0].name }}</div>
-      <a-tag color="#aaa" v-if="clipboardFile.length > 1">{{
-        clipboardFile.length
-      }}</a-tag>
+      <a-tag color="#aaa" v-if="clipboardFile.length > 1">
+        {{ clipboardFile.length }}
+      </a-tag>
+    </div>
+    <div v-else :class="currentPlugin.cmd ? 'rubick-tag' : ''">
+      <img
+        @click="() => emit('openMenu')"
+        class="rubick-logo"
+        :src="currentPlugin.logo || config.perf.custom.logo"
+      />
+      <div class="select-tag" v-show="currentPlugin.cmd">
+        {{ currentPlugin.cmd }}
+      </div>
     </div>
     <a-input
       id="search"
       ref="mainInput"
       class="main-input"
-      @input="e => changeValue(e)"
-      @keydown.down="e => keydownEvent(e, 'down')"
-      @keydown.tab="e => keydownEvent(e, 'down')"
-      @keydown.up="e => keydownEvent(e, 'up')"
-      @keydown="e => checkNeedInit(e)"
+      @input="(e) => changeValue(e)"
+      @keydown.down="(e) => keydownEvent(e, 'down')"
+      @keydown.tab="(e) => keydownEvent(e, 'down')"
+      @keydown.up="(e) => keydownEvent(e, 'up')"
+      @keydown="(e) => checkNeedInit(e)"
       :value="searchValue"
-      :placeholder="placeholder || config.perf.custom.placeholder"
-      @keypress.enter="e => keydownEvent(e, 'enter')"
-      @keypress.space="e => keydownEvent(e, 'space')"
+      :placeholder="
+        pluginLoading
+          ? '更新检测中...'
+          : placeholder || config.perf.custom.placeholder
+      "
+      @keypress.enter="(e) => keydownEvent(e, 'enter')"
+      @keypress.space="(e) => keydownEvent(e, 'space')"
       @focus="emit('focus')"
     >
       <template #suffix>
         <div class="suffix-tool">
-          <MoreOutlined v-show="!pluginLoading" @click="showSeparate()" class="icon-more" />
-          <div
-            v-if="currentPlugin && currentPlugin.logo"
-            style="position: relative"
-          >
-            <div v-show="pluginLoading" class="update-tips">检测更新中...</div>
-            <a-spin v-show="pluginLoading" class="loading">
-              <template #indicator>
-                <LoadingOutlined style="font-size: 42px" />
-              </template>
-            </a-spin>
-            <img class="icon-tool" :src="currentPlugin.logo" />
-          </div>
-          <div @click="() => emit('openMenu')" v-else class="rubick-logo">
-            <img :src="config.perf.custom.logo" />
-          </div>
+          <MoreOutlined
+            v-show="!pluginLoading"
+            @click="showSeparate()"
+            class="icon-more"
+          />
         </div>
       </template>
     </a-input>
@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
 import { ipcRenderer } from 'electron';
-import { LoadingOutlined, MoreOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined } from '@ant-design/icons-vue';
 
 const remote = window.require('@electron/remote');
 import localConfig from '../confOp';
@@ -78,8 +78,8 @@ const props: any = defineProps({
   clipboardFile: (() => [])(),
 });
 
-const changeValue = e => {
-  if (props.currentPlugin.name === 'rubick-system-feature') return;
+const changeValue = (e) => {
+  // if (props.currentPlugin.name === 'rubick-system-feature') return;
   targetSearch({ value: e.target.value });
   emit('onSearch', e);
 };
@@ -109,7 +109,9 @@ const keydownEvent = (e, key: string) => {
       modifiers,
     },
   });
-  const runPluginDisable = ((e.target.value === '' && !props.pluginHistory.length) || props.currentPlugin.name) ;
+  const runPluginDisable =
+    (e.target.value === '' && !props.pluginHistory.length) ||
+    props.currentPlugin.name;
   switch (key) {
     case 'up':
       emit('changeCurrent', -1);
@@ -130,7 +132,7 @@ const keydownEvent = (e, key: string) => {
   }
 };
 
-const checkNeedInit = e => {
+const checkNeedInit = (e) => {
   const { ctrlKey, metaKey } = e;
 
   if (e.target.value === '' && e.keyCode === 8) {
@@ -232,9 +234,14 @@ const changeHideOnBlur = () => {
 
 const getIcon = () => {
   if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
-  return props.clipboardFile[0].isFile
-    ? require('../assets/file.png')
-    : require('../assets/folder.png');
+  try {
+    return ipcRenderer.sendSync('msg-trigger', {
+      type: 'getFileIcon',
+      data: { path: props.clipboardFile[0].path },
+    });
+  } catch (e) {
+    return require('../assets/file.png');
+  }
 };
 
 const newWindow = () => {
@@ -257,7 +264,7 @@ window.rubick.hooks.onHide = () => {
 <style lang="less">
 .rubick-select {
   display: flex;
-  padding-left: 10px;
+  padding-left: 16px;
   background: var(--color-body-bg);
   position: fixed;
   top: 0;
@@ -273,20 +280,21 @@ window.rubick.hooks.onHide = () => {
     white-space: nowrap;
     max-width: 200px;
   }
-
+  .rubick-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    height: 40px;
+    border-radius: 9px;
+    background: var(--color-list-hover);
+  }
   .select-tag {
     white-space: pre;
     user-select: none;
-    font-size: 18px;
-    border-radius: 16px;
-    height: 32px;
-    position: relative;
-    color: #fff;
-    background-color: var(--ant-primary-color);
-    display: inline-flex;
-    align-items: center;
-    margin-right: 1px;
-    padding: 0 10px;
+    font-size: 16px;
+    color: var(--color-text-primary);
+    margin-left: 8px;
   }
 
   .main-input {
@@ -297,18 +305,23 @@ window.rubick.hooks.onHide = () => {
     outline: none;
     box-shadow: none !important;
     background: var(--color-body-bg);
+    padding-left: 8px;
     .ant-select-selection,
     .ant-input,
     .ant-select-selection__rendered {
+      caret-color: var(--ant-primary-color);
       height: 100% !important;
-      font-size: 22px;
+      font-size: 16px;
       border: none !important;
       background: var(--color-body-bg);
       color: var(--color-text-primary);
     }
   }
 
-  .rubick-logo,
+  .rubick-logo {
+    width: 32px;
+    border-radius: 100%;
+  }
   .icon-tool {
     width: 40px;
     height: 40px;

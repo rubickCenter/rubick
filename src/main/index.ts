@@ -13,6 +13,11 @@ import API from './common/api';
 import createTray from './common/tray';
 import registerHotKey from './common/registerHotKey';
 import localConfig from './common/initLocalConfig';
+import {
+  getSearchFiles,
+  putFileToRubick,
+  macBeforeOpen,
+} from './common/getSearchFiles';
 
 import '../common/utils/localPlugin';
 
@@ -41,6 +46,7 @@ class App {
   beforeReady() {
     // 系统托盘
     if (commonConst.macOS()) {
+      macBeforeOpen();
       if (commonConst.production() && !app.isInApplicationsFolder()) {
         app.moveToApplicationsFolder();
       } else {
@@ -83,14 +89,20 @@ class App {
   }
 
   onRunning() {
-    app.on('second-instance', () => {
-      // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      const files = getSearchFiles(commandLine, workingDirectory);
       const win = this.windowCreator.getWindow();
+      // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+      // 如果有文件列表作为参数，说明是命令行启动
       if (win) {
         if (win.isMinimized()) {
           win.restore();
         }
         win.focus();
+        if (files.length > 0) {
+          win.show();
+          putFileToRubick(win.webContents, files);
+        }
       }
     });
     app.on('activate', () => {

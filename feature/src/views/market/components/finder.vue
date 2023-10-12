@@ -1,20 +1,17 @@
 <template>
   <div class="finder">
-    <a-carousel arrows>
-      <template #prevArrow>
-        <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
-          <left-circle-outlined />
-        </div>
-      </template>
-      <template #nextArrow>
-        <div class="custom-slick-arrow" style="right: 10px">
-          <right-circle-outlined />
-        </div>
-      </template>
-      <div :key="index" v-for="(banner, index) in data.banners || []">
-        <img @click="jumpTo(banner.link)" width="100%" :src="banner.src" />
-      </div>
-    </a-carousel>
+    <Carousel :itemsToShow="2" :transition="500">
+      <Slide :key="index" v-for="(banner, index) in data.banners || []">
+        <img class="carousel__item" @click="jumpTo(banner.link)" :src="banner.src" />
+      </Slide>
+    </Carousel>
+    <a-divider />
+    <PluginList
+      v-if="must && !!must.length"
+      @downloadSuccess="downloadSuccess"
+      :title="$t('feature.market.finder.must')"
+      :list="must"
+    />
     <PluginList
       v-if="recommend && !!recommend.length"
       @downloadSuccess="downloadSuccess"
@@ -30,8 +27,9 @@
 </template>
 
 <script setup>
-import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 import { ref, computed, onBeforeMount } from 'vue';
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide } from 'vue3-carousel';
 import request from '../../../assets/request/index';
 import PluginList from './plugin-list.vue';
 
@@ -44,6 +42,24 @@ const data = ref([]);
 onBeforeMount(async () => {
   data.value = await request.getFinderDetail();
 });
+
+const must = computed(() => {
+  const defaultData = data.value.must || [];
+  if (!defaultData.length) return [];
+  return defaultData.map((plugin) => {
+    let searchInfo = null;
+    totalPlugins.value.forEach((t) => {
+      if (t.name === plugin) {
+        searchInfo = t;
+      }
+    });
+    return searchInfo;
+  });
+});
+
+const jumpTo = (url) => {
+  window.rubick.shellOpenExternal(url);
+};
 
 const recommend = computed(() => {
   const defaultData = data.value.recommend || [];
@@ -76,47 +92,46 @@ const newList = computed(() => {
 
 <style lang="less">
 .finder {
+  position: relative;
   width: 100%;
-  height: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
   &::-webkit-scrollbar {
     width: 0;
   }
-  .ant-carousel .slick-slide {
-    text-align: center;
-    height: 235px;
-    line-height: 160px;
-    overflow: hidden;
-    border-radius: 4px;
-    img {
-      width: 100%;
-      height: 235px;
-    }
+  .ant-divider-horizontal {
+    margin: 17px 0;
   }
-  .ant-carousel .custom-slick-arrow {
-    width: 25px;
-    height: 25px;
-    font-size: 25px;
-    color: #fff;
-    background-color: rgba(31, 45, 61, 0.11);
-    opacity: 0.3;
-  }
+}
 
-  .ant-carousel .custom-slick-arrow.slick-next:focus {
-    color: #fff;
-  }
 
-  .ant-carousel .custom-slick-arrow:before {
-    display: none;
-  }
+.carousel__item {
+  cursor: pointer;
+  min-height: 180px;
+  width: 100%;
+  background-color: var(--vc-clr-primary);
+  color: var(--vc-clr-white);
+  font-size: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .ant-carousel .custom-slick-arrow:hover {
-    opacity: 0.5;
-  }
+.carousel__track {
+  margin-bottom: 0;
+}
 
-  .ant-carousel .slick-slide h3 {
-    color: #fff;
+.carousel__slide {
+  padding-right: 6px;
+  &:last-child {
+    padding-left: 6px;
   }
+}
+
+.carousel__prev,
+.carousel__next {
+  box-sizing: content-box;
+  border: 5px solid white;
 }
 </style>

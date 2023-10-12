@@ -12,15 +12,19 @@
     "@vue/cli-service": "~4.5.0",
     "ant-design-vue": "3.2.14",
     "axios": "^0.24.0",
+    "babel-plugin-import": "^1.13.8",
     "core-js": "^3.6.5",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "markdown-it": "^12.2.0",
     "nanoid": "^4.0.2",
     "vue": "3.2.45",
-    "vue-i18n": "^9.2.2",
+    "vue-i18n": "9.2.2",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vue3-carousel": "^0.3.1",
+    "vue3-lottie": "^3.1.0",
+    "vuex": "^4.0.0-0",
+    "webpack-bundle-analyzer": "^4.9.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",

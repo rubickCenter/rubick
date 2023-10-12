@@ -12,8 +12,9 @@ export default {
         developTool: 'Develop Tools',
         systemTool: 'System Tools',
         finder: {
+          must: 'Necessary',
           recommended: 'Recommended',
-          lastUpdated: 'Last Updated',
+          lastUpdated: 'Total',
         },
         install: 'Install',
       },
@@ -37,17 +38,17 @@ export default {
           tips1: 'rubick',
           tips2:
             'After the software preferences are set, please restart the software. Please go to the mini program set avatar and nickname.',
-          themeColor: 'Theme Color',
-          primaryColor: 'Primary Color',
-          errorColor: 'Error Color',
-          warningColor: 'Warning Color',
-          successColor: 'Success Color',
-          infoColor: 'Info Color',
+          themeColor: 'Theme Setting',
+          spring: 'Spring',
+          summer: 'Summer',
+          autumn: 'Autumn',
+          winter: 'Winter',
           personalized: 'Personalized',
           greeting: 'Search Box Greeting',
-          logo: 'Logo',
+          logo: 'Avatar',
           replace: 'Repalce Logo',
           reset: 'Reset Default',
+          name: 'User Name',
         },
         basic: {
           title: 'Basic',
@@ -98,6 +99,9 @@ export default {
         },
         localstart: {
           title: 'Local Start',
+        },
+        database: {
+          title: 'Data Synchronization',
         },
       },
       dev: {

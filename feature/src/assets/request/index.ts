@@ -12,6 +12,7 @@ try {
 }
 
 const instance = axios.create({
+  timeout: 4000,
   baseURL:
     baseURL || 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
 });
@@ -61,7 +62,7 @@ export default {
   },
 
   async getPluginDetail(url: string) {
-    const res = await axios.get(url);
+    const res = await instance.get(url);
     return res.data;
   },
 
