@@ -57,8 +57,8 @@ export default () => {
   const viewReadyFn = async (window, { pluginSetting, ext }) => {
     if (!view) return;
     const height = pluginSetting && pluginSetting.height;
-    window.setSize(800, height || 660);
-    view.setBounds({ x: 0, y: 60, width: 800, height: height || 600 });
+    window.setSize(800, height || 600);
+    view.setBounds({ x: 0, y: 60, width: 800, height: height || 540 });
     view.setAutoResize({ width: true });
     executeHooks('PluginEnter', ext);
     executeHooks('PluginReady', ext);

@@ -1,30 +1,33 @@
 <template>
   <div class="dev">
-    <a-alert
-      style="margin-bottom: 40px"
-      :message="$t('feature.dev.tips')"
-      type="warning"
-    />
-    <a-form
-      ref="formRef"
-      :model="formState"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-form-item :label="$t('feature.dev.pluginName')" name="name">
-        <a-input v-model:value="formState.name" />
-      </a-form-item>
-
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button :loading="loading" type="primary" @click="onSubmit">
-          {{ $t('feature.dev.install') }}
-        </a-button>
-        <a-button @click="refresh" style="margin-left: 10px">
-          {{ $t('feature.dev.refreshPlugins') }}
-        </a-button>
-      </a-form-item>
-    </a-form>
+    <div class="view-title">{{ $t('feature.dev.title') }}</div>
+    <div class="view-container">
+      <a-alert
+        style="margin-bottom: 40px"
+        :message="$t('feature.dev.tips')"
+        type="warning"
+      />
+      <a-form
+        ref="formRef"
+        :model="formState"
+        :rules="rules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-item :label="$t('feature.dev.pluginName')" name="name">
+          <a-input v-model:value="formState.name" />
+        </a-form-item>
+    
+        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button :loading="loading" type="primary" @click="onSubmit">
+            {{ $t('feature.dev.install') }}
+          </a-button>
+          <a-button @click="refresh" style="margin-left: 10px">
+            {{ $t('feature.dev.refreshPlugins') }}
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </div>
   </div>
 </template>
 
@@ -81,9 +84,21 @@ const wrapperCol = { span: 14 };
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
-  background: var(--color-body-bg);
-  height: calc(~'100vh - 46px');
-  padding: 20px;
+  height: calc(~'100vh - 34px');
+  .view-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--color-text-primary);
+  }
+  .view-container {
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--color-body-bg);
+    overflow: auto;
+    height: calc(~'100vh - 84px');
+  }
   :deep(label) {
     color: var(--color-text-content);
   }

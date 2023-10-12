@@ -42,7 +42,6 @@ const system = computed(() => {
 <style lang="less">
 .system {
   width: 100%;
-  height: 100vh;
   overflow-x: hidden;
   box-sizing: border-box;
 }

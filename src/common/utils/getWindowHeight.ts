@@ -1,7 +1,7 @@
 const WINDOW_MAX_HEIGHT = 600;
 const WINDOW_MIN_HEIGHT = 60;
 const PRE_ITEM_HEIGHT = 60;
-const HISTORY_HEIGHT = 80;
+const HISTORY_HEIGHT = 70;
 
 export default (searchList: Array<any>, historyList): number => {
   const defaultHeight = historyList.length ? HISTORY_HEIGHT : 0;

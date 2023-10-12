@@ -17,6 +17,7 @@ export default createStore({
     totalPlugins: [],
     localPlugins: [],
     searchValue: '',
+    active: ['finder'],
   },
   mutations: {
     commonUpdate(state: any, payload) {

@@ -3,7 +3,6 @@ import {
   nativeTheme,
   BrowserWindow,
   BrowserView,
-  screen,
   ipcMain,
   app,
   Notification,
@@ -21,6 +20,14 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       openAsHidden: true,
     });
   };
+
+  const setTheme = async () => {
+    mainWindow.webContents.executeJavaScript(`window.rubick.changeTheme()`);
+    mainWindow.getBrowserViews().forEach((view: BrowserView) => {
+      view.webContents.executeJavaScript(`window.rubick.changeTheme()`);
+    });
+  };
+
   // 设置暗黑模式
   const setDarkMode = async () => {
     const config = await localConfig.getConfig();
@@ -51,6 +58,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
   const init = async () => {
     await setAutoLogin();
     await setDarkMode();
+    await setTheme();
     const config = await localConfig.getConfig();
     globalShortcut.unregisterAll();
     // 注册偏好快捷键

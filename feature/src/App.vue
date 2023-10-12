@@ -1,90 +1,227 @@
 <template>
   <div class="main-container">
-    <div class="slider-bar">
+    <div class="left-menu">
       <a-menu
-        v-model:selectedKeys="active"
-        mode="horizontal"
         @select="({ key }) => changeMenu(key)"
+        :selectedKeys="active"
+        mode="vertical"
       >
-        <a-menu-item key="market">
+        <a-menu-item key="finder">
           <template #icon>
-            <AppstoreOutlined />
+            <StarOutlined style="font-size: 18px;" />
           </template>
-          {{ $t('feature.market.title') }}
+          {{ $t('feature.market.explore') }}
         </a-menu-item>
-        <a-menu-item key="installed">
+        <a-menu-item key="worker">
           <template #icon>
-            <HeartOutlined />
+            <SendOutlined style="transform: rotate(-45deg); font-size: 18px;" />
           </template>
-          {{ $t('feature.installed.title') }}
+          {{ $t('feature.market.efficiency') }}
         </a-menu-item>
-        <a-menu-item key="settings">
+        <a-menu-item key="tools">
           <template #icon>
-            <SettingOutlined />
+            <SearchOutlined style="font-size: 18px;" />
           </template>
-          {{ $t('feature.settings.title') }}
+          {{ $t('feature.market.searchTool') }}
         </a-menu-item>
-        <a-menu-item key="dev">
+        <a-menu-item key="image">
           <template #icon>
-            <BugOutlined />
+            <FileImageOutlined style="font-size: 18px;" />
           </template>
-          {{ $t('feature.dev.title') }}
+          {{ $t('feature.market.imageTool') }}
         </a-menu-item>
+        <a-menu-item key="devPlugin">
+          <template #icon>
+            <CodeOutlined style="font-size: 18px;" />
+          </template>
+          {{ $t('feature.market.developTool') }}
+        </a-menu-item>
+        <a-menu-item key="system">
+          <template #icon>
+            <DatabaseOutlined style="font-size: 18px;" />
+          </template>
+          {{ $t('feature.market.systemTool') }}
+        </a-menu-item>
+        <a-sub-menu class="user-info">
+          <template #icon>
+            <a-avatar :size="32">
+              <template #icon>
+                <img :src="perf.custom.logo" />
+              </template>
+            </a-avatar>
+          </template>
+          <template #title>{{ perf.custom.username }}</template>
+          <a-menu-item key="settings">
+            <template #icon>
+              <SettingOutlined />
+            </template>
+            {{ $t('feature.settings.title') }}
+          </a-menu-item>
+          <a-menu-item key="installed">
+            <template #icon>
+              <HeartOutlined />
+            </template>
+            {{ $t('feature.installed.title') }}
+          </a-menu-item>
+          <a-menu-item key="dev">
+            <template #icon>
+              <BugOutlined />
+            </template>
+            {{ $t('feature.dev.title') }}
+          </a-menu-item>
+        </a-sub-menu>
       </a-menu>
     </div>
-    <router-view />
+    <div :class="['finder', 'result', 'devPlugin', 'image', 'tools', 'worker', 'system'].includes(active[0]) ? 'container' : 'more'">
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import {
-  HeartOutlined,
-  AppstoreOutlined,
+  StarOutlined,
+  SendOutlined,
+  SearchOutlined,
+  FileImageOutlined,
+  DatabaseOutlined,
+  CodeOutlined,
   SettingOutlined,
+  HeartOutlined,
   BugOutlined,
 } from '@ant-design/icons-vue';
 import { useStore } from 'vuex';
+import localConfig from '@/confOp';
 
+const store = useStore();
 const router = useRouter();
-const active = ref(['market']);
+const active = computed(() => store.state.active);
+const { perf } = localConfig.getConfig();
+
 const changeMenu = (key: any) => {
+  store.commit('commonUpdate', {active: [key]})
   router.push(key);
 };
 
 window.rubick.onPluginEnter(({ code }: { code: string }) => {
   changeMenu(code);
-  active.value = [code];
+  store.commit('commonUpdate', {active: [code]})
 });
 
-const store = useStore();
+window.rubick.setSubInput((e: any) => {
+  if (
+    [
+      'finder',
+      'result',
+      'devPlugin',
+      'image',
+      'tools',
+      'worker',
+      'system',
+    ].includes(active.value[0])
+  ) {
+    if (e.text) {
+      store.commit('setSearchValue', e.text);
+      router.push('result');
+    } else {
+      store.commit('commonUpdate', {active: ['finder']})
+      router.push('finder');
+    }
+  }
+}, '搜索插件');
+
 const init = () => store.dispatch('init');
 init();
 </script>
+<style lang="less">
+.ant-menu-submenu-popup {
+  .ant-menu {
+    background: var(--color-body-bg2) !important;
+    height: 100%;
+    border-right: none;
+    .ant-menu-item, .ant-menu-submenu, .ant-menu-submenu-arrow {
+      color: var(--color-text-content);
+      &:active {
+        background: none;
+      }
+    }
+    .ant-menu-item-selected, .ant-menu-submenu-selected {
+      background-color: var(--color-list-hover);
+      color: var(--ant-primary-color);
+      .ant-menu-submenu-arrow {
+        color: var(--ant-primary-color);
+      }
+      &:after {
+        display: none;
+      }
+    }
+  }
+}
+</style>
 <style lang="less" scoped>
+@import '~@/assets/common.less';
 * {
   margin: 0;
   padding: 0;
 }
-
 .main-container {
   -webkit-app-region: no-drag;
   display: flex;
-  align-items: flex-start;
   background: var(--color-body-bg);
-  flex-direction: column;
-
-  .slider-bar {
-    width: 100%;
-    .ant-menu {
-      background: var(--color-body-bg);
+  border-top: 1px solid var(--color-border-light);
+  height: 100vh;
+  box-sizing: border-box;
+  align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-menu-bg);
+  .search {
+    :deep(.ant-btn),
+    :deep(.ant-input),
+    :deep(.ant-input-group-addon) {
+      color: var(--ant-primary-color) !important;
+      background: var(--color-input-hover);
       border-color: var(--color-border-light);
-      :deep(.ant-menu-item) {
-        &:not(.ant-menu-item-selected) {
-          color: var(--color-text-primary);
-        }
-      }
+    }
+  }
+  .container,
+  .more {
+    background: var(--color-body-bg);
+    width: calc(~'100% - 183px');
+    height: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    position: relative;
+    overflow: auto;
+  }
+  .more {
+    background: var(--color-body-bg2);
+  }
+  .left-menu {
+    padding: 24px 16px;
+    position: relative;
+    height: 100vh;
+    :deep(.ant-menu-item) {
+      padding-left: 12px !important;
+      display: flex;
+      align-items: center;
+    }
+    :deep(.ant-menu-item-selected),
+    :deep(.ant-menu-submenu-selected) {
+      background-color: var(--color-list-hover);
+      border-radius: 6px;
+      color: var(--ant-primary-color);
+    }
+    :deep(.user-info) {
+      position: absolute;
+      bottom: 32px;
+    }
+    :deep(.ant-avatar) {
+      background: transparent;
     }
   }
 }
