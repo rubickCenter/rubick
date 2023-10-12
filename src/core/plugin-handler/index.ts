@@ -169,6 +169,8 @@ class AdapterHandler {
         cwd: this.baseDir,
       });
 
+      console.log(args);
+
       let output = '';
       npm.stdout
         .on('data', (data: string) => {

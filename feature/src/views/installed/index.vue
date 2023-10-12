@@ -1,111 +1,106 @@
 <template>
   <div class="installed">
-    <div v-if="!localPlugins.length">
-      <a-result
-        status="404"
-        :title="$t('feature.installed.tips1')"
-        :sub-title="$t('feature.installed.tips2')"
-      />
-    </div>
-    <div class="container" v-else>
-      <div class="installed-list">
-        <div
-          :class="currentSelect[0] === index ? 'item active' : 'item'"
-          :key="index"
-          @click="currentSelect = [index]"
-          v-for="(plugin, index) in localPlugins"
+    <div class="view-title">{{ $t('feature.installed.title') }}</div>
+    <div class="view-container">
+      <div v-if="!localPlugins.length">
+        <a-result
+          class="error-content"
+          sub-title="哎呀，暂时还没有安装任何插件！"
         >
-          <img :src="plugin.logo" />
-          <div class="info">
-            <div class="title">
-              {{ plugin.pluginName }}
-              <span class="desc">v{{ plugin.version }}</span>
-            </div>
-            <div class="desc">{{ plugin.description }}</div>
-          </div>
-        </div>
+          <template #icon>
+            <Vue3Lottie :animationData="emptyJson" :height="240" :width="240" />
+          </template>
+          <template #extra>
+            <a-button @click="gotoFinder" key="console" type="primary">去插件市场看看吧</a-button>
+          </template>
+        </a-result>
       </div>
-      <div class="plugin-detail">
-        <div class="plugin-top">
-          <div class="left">
-            <div class="title">
-              {{ pluginDetail.pluginName }}
-              <a-tag>{{ pluginDetail.version }}</a-tag>
+      <div class="container" v-else>
+        <div class="installed-list">
+          <div
+            :class="currentSelect[0] === plugin.name ? 'item active' : 'item'"
+            :key="index"
+            @click="currentSelect = [plugin.name]"
+            v-for="(plugin, index) in localPlugins"
+          >
+            <img :src="plugin.logo" />
+            <div class="info">
+              <div class="title">
+                {{ plugin.pluginName }}
+              </div>
+              <div class="desc">{{ plugin.description }}</div>
             </div>
-            <div class="desc">
-              {{ $t('feature.installed.developer') }}：{{
-                `${pluginDetail.author || $t('feature.installed.unknown')}`
-              }}
-            </div>
-            <div class="desc">
-              {{ pluginDetail.description }}
-            </div>
-          </div>
-          <div class="right">
-            <a-button
-              type="danger"
-              size="small"
-              shape="round"
-              :loading="pluginDetail.isloading"
-              @click="deletePlugin(pluginDetail)"
-            >
-              {{ $t('feature.installed.remove') }}
-            </a-button>
           </div>
         </div>
-        <a-tabs default-active-key="1">
-          <a-tab-pane key="1" :tab="$t('feature.installed.functionKey')">
-            <div class="feature-container">
-              <div
-                class="desc-item"
-                :key="index"
-                v-for="(item, index) in pluginDetail.features"
-              >
-                <div>{{ item.explain }}</div>
-                <a-tag
-                  :key="cmd"
-                  v-for="cmd in item.cmds"
-                  :class="{ executable: !cmd.label }"
-                >
-                  <span
-                    @click="
-                      !cmd.label &&
-                        openPlugin({
-                          code: item.code,
-                          cmd,
-                        })
-                    "
-                  >
-                    {{ cmd.label || cmd }}
-                  </span>
-                  <template v-if="!cmd.label" #icon>
-                    <a-tooltip
-                      v-if="!hasAdded(cmd)"
-                      placement="topLeft"
-                      :title="$t('feature.installed.addToPanel')"
-                    >
-                      <PlusCircleOutlined
-                        @click="addCmdToSuperPanel({ code: item.code, cmd })"
-                      />
-                    </a-tooltip>
-                    <a-tooltip
-                      v-else
-                      placement="topLeft"
-                      :title="$t('feature.installed.removeFromPanel')"
-                    >
-                      <MinusCircleOutlined
-                        @click="removePluginToSuperPanel({ cmd })"
-                      />
-                    </a-tooltip>
-                  </template>
-                </a-tag>
+        <div class="plugin-detail">
+          <div class="plugin-top">
+            <div class="left">
+              <div class="title">
+                {{ pluginDetail.pluginName }}
+                <a-tag>{{ pluginDetail.version }}</a-tag>
+              </div>
+              <div class="desc">
+                {{ $t('feature.installed.developer') }}：{{
+                  `${pluginDetail.author || $t('feature.installed.unknown')}`
+                }}
+              </div>
+              <div class="desc">
+                {{ pluginDetail.description }}
               </div>
             </div>
-          </a-tab-pane>
-          <a-tab-pane key="2" :tab="$t('feature.installed.detailInfo')">
-            <div class="detail-container" v-html="readme"></div>
-          </a-tab-pane>
-        </a-tabs>
+            <div class="right">
+              <a-button
+                type="primary"
+                size="small"
+                shape="round"
+                :loading="pluginDetail.isloading"
+                @click="deletePlugin(pluginDetail)"
+              >
+                {{ $t('feature.installed.remove') }}
+              </a-button>
+            </div>
+          </div>
+          <div class="feature-container">
+            <template
+              :key="index"
+              v-for="(item, index) in pluginDetail.features"
+            >
+              <div
+                class="desc-item"
+                v-if="item.cmds.filter(cmd => !cmd.label).length > 0"
+              >
+                <div>{{ item.explain }}</div>
+                <template :key="cmd" v-for="cmd in item.cmds">
+                  <a-dropdown
+                    v-if="!cmd.label"
+                    :class="{ executable: !cmd.label }"
+                  >
+                    <template #overlay>
+                      <a-menu @click="({key}) => handleMenuClick(key, item, cmd)">
+                        <a-menu-item key="open">
+                          <CaretRightOutlined />
+                          运行
+                        </a-menu-item>
+                        <a-menu-item v-if="!hasAdded(cmd)" key="add">
+                          <PushpinOutlined />
+                          固定到超级面板
+                        </a-menu-item>
+                        <a-menu-item v-else key="remove">
+                          <PushpinFilled />
+                          从超级面板中取消固定
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
+                    <a-button size="small" class="keyword-tag">
+                      {{ cmd.label || cmd }}
+                      <DownOutlined />
+                    </a-button>
+                  </a-dropdown>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -113,22 +108,31 @@
 
 <script setup>
 import { useStore } from 'vuex';
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref, toRaw, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import path from 'path';
-import MarkdownIt from 'markdown-it';
-import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons-vue';
+import {
+  PushpinOutlined,
+  PushpinFilled,
+  CaretRightOutlined,
+  DownOutlined,
+} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+
+import emptyJson from '@/assets/lottie/empty.json';
 
 const { ipcRenderer } = window.require('electron');
 
 const remote = window.require('@electron/remote');
 const fs = window.require('fs');
-const md = new MarkdownIt();
 
 const appPath = remote.app.getPath('userData');
 const baseDir = path.join(appPath, './rubick-plugins');
 
 const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
 const localPlugins = computed(() =>
   store.state.localPlugins.filter(
     (plugin) => plugin.name !== 'rubick-system-feature'
@@ -138,10 +142,16 @@ const updateLocalPlugin = () => store.dispatch('updateLocalPlugin');
 const startUnDownload = (name) => store.dispatch('startUnDownload', name);
 const errorUnDownload = (name) => store.dispatch('errorUnDownload', name);
 
-const currentSelect = ref([0]);
+const currentSelect = ref([route.query.plugin || localPlugins?.value[0]?.name]);
+
+watch(localPlugins, () => {
+  currentSelect.value = [localPlugins?.value[0]?.name];
+});
 
 const pluginDetail = computed(() => {
-  return localPlugins.value[currentSelect.value] || {};
+  return (
+    localPlugins.value.find((v) => v.name === currentSelect.value[0]) || {}
+  );
 });
 
 const superPanelPlugins = ref(
@@ -150,6 +160,19 @@ const superPanelPlugins = ref(
     _id: 'super-panel-user-plugins',
   }
 );
+
+const handleMenuClick = (key, item, cmd) => {
+  if(key === 'open') {
+    openPlugin({
+      code: item.code,
+      cmd,
+    });
+  } else if (key === 'add') {
+    addCmdToSuperPanel({cmd, code: item.code});
+  } else {
+    removePluginToSuperPanel({cmd, name: item.name})
+  }
+};
 
 const addCmdToSuperPanel = ({ cmd, code }) => {
   const plugin = {
@@ -203,21 +226,6 @@ const openPlugin = ({ cmd, code }) => {
   );
 };
 
-const readme = computed(() => {
-  if (!pluginDetail.value.name) return '';
-  const readmePath = path.resolve(
-    baseDir,
-    'node_modules',
-    pluginDetail.value.name,
-    'README.md'
-  );
-  if (fs.existsSync(readmePath)) {
-    const str = fs.readFileSync(readmePath, 'utf-8');
-    return md.render(str);
-  }
-  return '';
-});
-
 const deletePlugin = async (plugin) => {
   startUnDownload(plugin.name);
   const timer = setTimeout(() => {
@@ -230,7 +238,10 @@ const deletePlugin = async (plugin) => {
   clearTimeout(timer);
 };
 
-
+const gotoFinder = () => {
+  router.push('/finder');
+  store.commit('commonUpdate', { active: ['finder'] });
+};
 </script>
 
 <style lang="less" scoped>
@@ -238,13 +249,28 @@ const deletePlugin = async (plugin) => {
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  background: var(--color-body-bg);
-  height: calc(~'100vh - 46px');
+  height: calc(~'100vh - 34px');
+  .view-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--color-text-primary);
+  }
+  .view-container {
+    border-radius: 8px;
+    background: var(--color-body-bg);
+    overflow: auto;
+    height: calc(~'100vh - 84px');
+  }
   :deep(.ant-result-title) {
     color: var(--color-text-primary);
   }
   :deep(.ant-result-subtitle) {
     color: var(--color-text-desc);
+  }
+  .keyword-tag {
+    font-size: 13px;
+    margin: 4px;
   }
 
   .container {
@@ -257,7 +283,7 @@ const deletePlugin = async (plugin) => {
   }
 
   .installed-list {
-    width: 40%;
+    width: 38%;
     background: var(--color-body-bg);
     height: 100%;
     padding: 10px 0;
@@ -269,17 +295,29 @@ const deletePlugin = async (plugin) => {
       display: flex;
       align-items: center;
       color: var(--color-text-content);
+      border-bottom: 1px dashed var(--color-border-light);
+      cursor: pointer;
+      &:last-child {
+        border-bottom: none;
+      }
       img {
-        width: 40px;
-        height: 40px;
-        margin-right: 20px;
+        width: 34px;
+        height: 34px;
+        margin-right: 12px;
       }
 
       .desc {
+        font-size: 12px;
         color: var(--color-text-desc);
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        text-overflow: ellipsis;
       }
 
       &.active {
+        color: var(--ant-primary-color);
         background: var(--color-list-hover);
       }
     }
@@ -288,16 +326,18 @@ const deletePlugin = async (plugin) => {
   .plugin-detail {
     padding: 20px 20px 0 20px;
     box-sizing: border-box;
-    width: 60%;
+    width: 62%;
     height: 100%;
     background: var(--color-body-bg);
     .plugin-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-
+      border-bottom: 1px solid #eee;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
       .title {
-        font-size: 20px;
+        font-size: 16px;
         display: flex;
         align-items: center;
         color: var(--color-text-primary);
@@ -314,12 +354,6 @@ const deletePlugin = async (plugin) => {
         color: var(--color-text-desc);
       }
     }
-    .ant-tabs {
-      :deep(.ant-tabs-bar) {
-        color: var(--color-text-content);
-        border-bottom: 1px solid var(--color-border-light);
-      }
-    }
 
     .detail-container,
     .feature-container {
@@ -332,7 +366,6 @@ const deletePlugin = async (plugin) => {
     }
 
     .desc-item {
-      border-bottom: 1px solid var(--color-border-light);
       padding: 10px 0;
       color: var(--color-text-content);
       .ant-tag {

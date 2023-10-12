@@ -6,7 +6,7 @@ const db = new DBInstance();
 
 const localConfig = {
   async init(): Promise<any> {
-    const localConfig = await db.dbGet({ data: { id: LOCAL_CONFIG_KEY } });
+    const localConfig: any = await db.dbGet({ data: { id: LOCAL_CONFIG_KEY } });
     if (
       !localConfig ||
       !localConfig.data ||
@@ -16,8 +16,8 @@ const localConfig = {
         _id: LOCAL_CONFIG_KEY,
         data: defaultConfig,
       };
-      if (localConfig && localConfig.data) {
-        data._rev = localConfig.data._rev;
+      if (localConfig && localConfig) {
+        data._rev = localConfig._rev;
       }
       await db.dbPut({
         data: { data },

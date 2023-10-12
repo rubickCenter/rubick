@@ -13,7 +13,7 @@
           v-for="(item, index) in pluginHistory"
           :key="index"
         >
-          <a-avatar style="border-radius: 0" :src="item.icon" />
+          <a-avatar style="width: 28px; height: 28px;" :src="item.icon" />
           <div class="name ellpise">{{item.pluginName || item._name || item.name}}</div>
         </a-col>
       </a-row>
@@ -117,21 +117,23 @@ const sort = (options) => {
   background: var(--color-body-bg);
   .history-plugins {
     width: 100%;
-    border-top: 1px dashed #ddd;
+    border-top: 1px dashed var(--color-border-light);
     box-sizing: border-box;
     .history-item {
       box-sizing: border-box;
-      height: 79px;
+      height: 69px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      border-right: 1px dashed #ddd;
+      color: var(--color-text-content);
+      border-right: 1px dashed var(--color-border-light);
       &.active {
         background: var(--color-list-hover);
       }
     }
     .name {
+      font-size: 12px;
       margin-top: 4px;
       width: 100%;
       text-align: center;
@@ -146,7 +148,7 @@ const sort = (options) => {
     background: var(--color-body-bg);
     color: var(--color-text-content);
     border-color: var(--color-border-light);
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--color-border-light) !important;
     &.active {
       background: var(--color-list-hover);
     }

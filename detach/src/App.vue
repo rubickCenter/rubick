@@ -1,5 +1,5 @@
 <template>
-  <div :class="[platform, 'detach']">
+  <div :class="[process.platform, 'detach']">
     <div class="info">
       <img :src="plugInfo.logo"/>
       <input
