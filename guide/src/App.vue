@@ -102,15 +102,15 @@ const netStep = () => {
   }
   .info {
     padding-top: 42px;
-    margin-right: 178px;
+    margin-left: 178px;
     box-sizing: border-box;
     width: 100%;
-    text-align: right;
+    text-align: left;
     position: relative;
     color: @text-color;
     .top-icon {
       position: absolute;
-      right: 0;
+      left: 0;
       top: 0;
       user-select: none;
       width: 1em;

@@ -1,6 +1,10 @@
 import { BrowserWindow, ipcMain, nativeTheme, screen } from 'electron';
 import path from 'path';
-import { WINDOW_HEIGHT, WINDOW_MIN_HEIGHT, WINDOW_WIDTH } from '@/common/constans/common';
+import {
+  GUIDE_WIDTH,
+  WINDOW_MIN_HEIGHT,
+  GUIDE_HEIGHT,
+} from '@/common/constans/common';
 
 const getWindowPos = (width, height) => {
   const screenPoint = screen.getCursorScreenPoint();
@@ -40,8 +44,8 @@ export default () => {
       enableLargerThanScreen: true,
       x,
       y,
-      width: WINDOW_WIDTH,
-      height: WINDOW_HEIGHT,
+      width: GUIDE_WIDTH,
+      height: GUIDE_HEIGHT,
       minHeight: WINDOW_MIN_HEIGHT,
       webPreferences: {
         webSecurity: false,
