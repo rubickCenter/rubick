@@ -3,6 +3,7 @@ import path from 'path';
 import commonConst from '../../common/utils/commonConst';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
 import localConfig from '@/main/common/initLocalConfig';
+import { WINDOW_COMMON_HEIGHT, WINDOW_COMMON_WEIGHT, WINDOW_HEIGHT, WINDOW_WIDTH } from '@/common/constans/common';
 
 const getRelativePath = (indexPath) => {
   return commonConst.windows()
@@ -57,7 +58,7 @@ export default () => {
   const viewReadyFn = async (window, { pluginSetting, ext }) => {
     if (!view) return;
     const height = pluginSetting && pluginSetting.height;
-    window.setSize(800, height || 600);
+    window.setSize(WINDOW_COMMON_WEIGHT, height || WINDOW_COMMON_HEIGHT);
     view.setBounds({ x: 0, y: 60, width: 800, height: height || 540 });
     view.setAutoResize({ width: true });
     executeHooks('PluginEnter', ext);
@@ -158,7 +159,7 @@ export default () => {
   const removeView = (window: BrowserWindow) => {
     if (!view) return;
     window.removeBrowserView(view);
-    window.setSize(800, 60);
+    window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     executeHooks('PluginOut', null);
     window.webContents.executeJavaScript(`window.initRubick()`);
     view = undefined;
