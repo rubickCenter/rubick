@@ -128,6 +128,7 @@ export default () => {
           standard: 'system-ui',
           serif: 'system-ui',
         },
+        spellcheck: false,
       },
     });
     window.setBrowserView(view);
