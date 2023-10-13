@@ -11,6 +11,7 @@ module.exports = {
       },
     },
   },
+  productionSourceMap: false,
   outputDir: path.join(__dirname, '../public/guide'),
   publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
 };

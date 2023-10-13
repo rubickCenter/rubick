@@ -1,13 +1,17 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  css: { // 配置css模块
-    loaderOptions: { // 向预处理器 Loader 传递配置选项
-      less: { // 配置less（其他样式解析用法一致）
+  css: {
+    // 配置css模块
+    loaderOptions: {
+      // 向预处理器 Loader 传递配置选项
+      less: {
+        // 配置less（其他样式解析用法一致）
         javascriptEnabled: true, // 设置为true
       },
     },
   },
-  outputDir: path.join(__dirname, "../public/detach"),
-  publicPath: process.env.NODE_ENV === "production" ? "" : "/",
+  productionSourceMap: false,
+  outputDir: path.join(__dirname, '../public/detach'),
+  publicPath: process.env.NODE_ENV === 'production' ? '' : '/',
 };
