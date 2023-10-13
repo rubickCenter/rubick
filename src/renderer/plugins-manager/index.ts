@@ -5,7 +5,7 @@ import appSearch from '@/core/app-search';
 import { PluginHandler } from '@/core';
 import path from 'path';
 import commonConst from '@/common/utils/commonConst';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import searchManager from './search';
 import optionsManager from './options';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/renderer';
@@ -89,7 +89,7 @@ const createPluginManager = (): any => {
     }
     if (plugin.pluginType === 'app') {
       try {
-        execSync(plugin.action);
+        exec(plugin.action);
       } catch (e) {
         message.error('启动应用出错，请确保启动应用存在！');
       }
