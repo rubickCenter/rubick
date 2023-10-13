@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain, nativeTheme } from 'electron';
 import localConfig from '../common/initLocalConfig';
 import path from 'path';
+import { WINDOW_MIN_HEIGHT } from '@/common/constans/common';
 export default () => {
   let win: any;
 
@@ -17,7 +18,7 @@ export default () => {
   const createWindow = async (pluginInfo, viewInfo, view) => {
     win = new BrowserWindow({
       height: viewInfo.height,
-      minHeight: 60,
+      minHeight: WINDOW_MIN_HEIGHT,
       width: viewInfo.width,
       autoHideMenuBar: true,
       titleBarStyle: 'hidden',
