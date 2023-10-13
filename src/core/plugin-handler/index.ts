@@ -157,13 +157,15 @@ class AdapterHandler {
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
     return new Promise((resolve: any, reject: any) => {
-      const args: string[] = [cmd]
+      let args: string[] = [cmd]
         .concat(
-          cmd !== 'uninstall' ? modules.map((m) => `${m}@latest`) : modules
+          cmd !== 'uninstall' && cmd !== 'link' ? modules.map((m) => `${m}@latest`) : modules
         )
-        .concat('--color=always')
-        .concat('--save')
-        .concat(`--registry=${this.registry}`);
+      if (cmd !== 'link') {
+        args = args.concat('--color=always')
+          .concat('--save')
+          .concat(`--registry=${this.registry}`);
+      }
 
       const npm = spawn('npm', args, {
         cwd: this.baseDir,
