@@ -3,7 +3,7 @@ import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 // import versonHandler from '../common/versionHandler';
 import localConfig from '@/main/common/initLocalConfig';
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from '@/common/constans/common';
+import { WINDOW_HEIGHT, WINDOW_MIN_HEIGHT, WINDOW_WIDTH } from '@/common/constans/common';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('@electron/remote/main').initialize();
 
@@ -19,6 +19,7 @@ export default () => {
   const createWindow = async () => {
     win = new BrowserWindow({
       height: WINDOW_HEIGHT,
+      minHeight: WINDOW_MIN_HEIGHT,
       useContentSize: true,
       resizable: true,
       width: WINDOW_WIDTH,
@@ -34,6 +35,7 @@ export default () => {
         webviewTag: true,
         nodeIntegration: true,
         preload: path.join(__static, 'preload.js'),
+        spellcheck: false,
       },
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
