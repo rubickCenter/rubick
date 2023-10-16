@@ -21,7 +21,7 @@ import {
 
 import '../common/utils/localPlugin';
 
-import registerySystemPlugin from './common/registerySystemPlugin';
+import registerSystemPlugin from './common/registerSystemPlugin';
 
 class App {
   public windowCreator: { init: () => void; getWindow: () => BrowserWindow };
@@ -36,7 +36,7 @@ class App {
     if (!gotTheLock) {
       app.quit();
     } else {
-      this.systemPlugins = registerySystemPlugin();
+      this.systemPlugins = registerSystemPlugin();
       this.beforeReady();
       this.onReady();
       this.onRunning();
