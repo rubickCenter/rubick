@@ -33,14 +33,19 @@
             <DatabaseOutlined style="font-size: 18px;"/>
           </a>
         </template>
-        <a-list-item-meta :description="`${item.keys.length} 份文档`">
+        <a-list-item-meta>
           <template #title>
-            <div>
+            <div style="color: var(--color-text-content)">
               <span>{{ item.plugin?.pluginName }}</span>
             </div>
           </template>
           <template #avatar>
             <a-avatar shape="square" :src="item.plugin?.logo"/>
+          </template>
+          <template #description>
+            <div style="color: var(--color-text-desc)">
+              <span>{{ item.keys.length }} 份文档</span>
+            </div>
           </template>
         </a-list-item-meta>
       </a-list-item>
