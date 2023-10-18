@@ -14,7 +14,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "background.js",
+  "main": "index.js",
   "optionalDependencies": {
     "electron-clipboard-ex": "^1.3.3"
   },
