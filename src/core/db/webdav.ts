@@ -11,8 +11,8 @@ type WebDavOptions = {
 };
 
 type DBInstance = {
-  loadIt: (stream: unknown) => void;
-  dump: (stream: unknown) => void;
+  loadIt: (stream: unknown, options?: any) => void;
+  dump: (stream: unknown, options?: any) => void;
 };
 
 export default class WebDav {
@@ -54,7 +54,12 @@ export default class WebDav {
       }).show();
     }
     const ws = new MemoryStream();
-    dbInstance.dump(ws);
+    dbInstance.dump(ws, {
+      filter: (doc) => {
+        // attachment 文档导出有问题，
+        return !doc._attachments;
+      },
+    });
     ws.pipe(
       this.client.createWriteStream(this.cloudPath, {}, () => {
         new Notification({

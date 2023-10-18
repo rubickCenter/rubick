@@ -204,4 +204,38 @@ export default class DB {
     this.pouchDB = syncDb.pouchDB;
     await webdavClient.createReadStream(this.pouchDB);
   }
+
+  public async postAttachment(
+    name: string,
+    docId: string,
+    attachment: Buffer | Uint8Array,
+    type: string
+  ) {
+    const buffer = Buffer.from(attachment);
+    if (buffer.byteLength > this.docAttachmentMaxByteLength)
+      return this.errorInfo(
+        'exception',
+        'attachment data up to ' +
+          this.docAttachmentMaxByteLength / 1024 / 1024 +
+          'M'
+      );
+    try {
+      const result = await this.pouchDB.put({
+        _id: this.getDocId(name, docId),
+        _attachments: { 0: { data: buffer, content_type: type } },
+      });
+      result.id = this.replaceDocId(name, result.id);
+      return result;
+    } catch (e) {
+      return this.errorInfo(e.name, e.message);
+    }
+  }
+
+  async getAttachment(name: string, docId: string, len = '0') {
+    try {
+      return await this.pouchDB.getAttachment(this.getDocId(name, docId), len);
+    } catch (e) {
+      return null;
+    }
+  }
 }

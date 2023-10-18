@@ -1,96 +1,45 @@
-import { dialog } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { dialog, shell } from 'electron';
 import pkg from '../../../package.json';
-import { main } from '../browsers';
+import { lt } from 'semver';
+import { getLatestVersion } from './getLatestVersion';
+const version = pkg.version;
+const downloadUrl = 'https://github.com/rubickCenter/rubick/releases/latest';
 
-class VersionHandler {
-  private lastestVersion: string;
-  private currentVersion: string;
-  private releaseNotes: string;
-  private isUpdate: boolean;
-
-  constructor() {
-    this.lastestVersion = '';
-    this.currentVersion = pkg.version;
-    this.releaseNotes = '';
-    this.isUpdate = false;
-    autoUpdater.autoDownload = false;
-    autoUpdater.autoInstallOnAppQuit = false;
+const checkVersion = async () => {
+  const res: string = await getLatestVersion();
+  if (res !== '') {
+    const latest = res;
+    const result = compareVersion2Update(version, latest);
+    if (result) {
+      dialog
+        .showMessageBox({
+          type: 'info',
+          title: 'Rubick 更新提示',
+          buttons: ['Yes', 'No'],
+          message: `发现新版本 v${latest}，是否更新？`,
+        })
+        .then((res) => {
+          if (res.response === 0) {
+            // if selected yes
+            shell.openExternal(downloadUrl);
+          }
+        });
+    }
+  } else {
+    return false;
   }
+};
 
-  checkForMacAndWindows() {
-    let sendUpdateMsg = false;
-    autoUpdater.removeAllListeners();
-    // update-available 会触发多次,限制只通知一次
-    autoUpdater.checkForUpdates();
-
-    autoUpdater.on('download-progress', ({ percent }) => {
-      console.log('下载进度', percent);
-      // if (percent < 50) {
-      // }
-      this.isUpdate = true;
-    });
-    autoUpdater.on('update-available', (info) => {
-      if (sendUpdateMsg) return;
-      const { version, releaseName = 'normal', releaseNotes } = info;
-      this.lastestVersion = version;
-
-      sendUpdateMsg = true;
-
-      autoUpdater.on('update-downloaded', () => {
-        console.log('下载完成');
-        this.isUpdate = false;
-        if (releaseName === 'major') {
-          autoUpdater.quitAndInstall(true, true);
-        }
-        const mainWindow = main().getWindow();
-        dialog
-          .showMessageBox(mainWindow, {
-            title: '版本更新',
-            message: `发现新版本${this.lastestVersion}，是否更新\n\n${releaseNotes}`,
-            type: 'info',
-            buttons: ['稍后提示', '立即更新'],
-          })
-          .then(({ response }) => {
-            console.log(response);
-            if (response === 1) {
-              this.update();
-            }
-          });
-      });
-
-      // 自动下载安装包
-      if (!this.isUpdate) {
-        autoUpdater.downloadUpdate();
-        console.log('download');
-      }
-    });
-    autoUpdater.on('update-not-available', (info) => {
-      if (sendUpdateMsg) return;
-      sendUpdateMsg = true;
-    });
-    autoUpdater.on('error', () => {
-      this.isUpdate = false;
-    });
+// if true -> update else return false
+const compareVersion2Update = (current: string, latest: string) => {
+  try {
+    if (latest.includes('beta')) {
+      return false;
+    }
+    return lt(current, latest);
+  } catch (e) {
+    return false;
   }
+};
 
-  checkUpdate(): void {
-    this.checkForMacAndWindows();
-  }
-
-  update() {
-    let sendUpdateMsg = false;
-
-    this.checkUpdate();
-
-    autoUpdater.on('update-downloaded', () => {
-      if (sendUpdateMsg) return;
-      sendUpdateMsg = true;
-      this.isUpdate = false;
-      autoUpdater.quitAndInstall(true, true);
-      // App.quit();
-    });
-  }
-}
-
-export default new VersionHandler();
+export default checkVersion;

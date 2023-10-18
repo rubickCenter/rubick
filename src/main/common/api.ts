@@ -14,13 +14,18 @@ import { screenCapture } from '@/core';
 import plist from 'plist';
 import ks from 'node-key-sender';
 
-import { DECODE_KEY } from '@/common/constans/main';
+import {
+  DECODE_KEY,
+  PLUGIN_INSTALL_DIR as baseDir,
+} from '@/common/constans/main';
 import getCopyFiles from '@/common/utils/getCopyFiles';
+import common from '@/common/utils/commonConst';
 
 import mainInstance from '../index';
 import { runner, detach } from '../browsers';
 import DBInstance from './db';
 import getWinPosition from './getWinPosition';
+import path from 'path';
 
 const runnerInstance = runner();
 const detachInstance = detach();
@@ -77,8 +82,29 @@ class API extends DBInstance {
   }
 
   public openPlugin({ data: plugin }, window) {
+    if (plugin.platform && !plugin.platform.includes(process.platform)) {
+      return new Notification({
+        title: `插件不支持当前 ${process.platform} 系统`,
+        body: `插件仅支持 ${plugin.platform.join(',')}`,
+        icon: plugin.logo,
+      }).show();
+    }
     window.setSize(window.getSize()[0], 60);
     this.removePlugin(null, window);
+    // 模板文件
+    if (!plugin.main) {
+      plugin.tplPath = common.dev()
+        ? 'http://localhost:8083/#/'
+        : `file://${__static}/tpl/index.html`;
+    }
+    if (!plugin.indexPath) {
+      const pluginPath = path.resolve(baseDir, 'node_modules', plugin.name);
+      plugin.indexPath = `file://${path.join(
+        pluginPath,
+        './',
+        plugin.main || ''
+      )}`;
+    }
     runnerInstance.init(plugin, window);
     this.currentPlugin = plugin;
     window.webContents.executeJavaScript(

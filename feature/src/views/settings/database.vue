@@ -22,11 +22,11 @@
     <template #renderItem="{ item }">
       <a-list-item>
         <template #actions>
-          <a v-if="!item.plugin.isdownload && !item.plugin.isloading" key="list-loadmore-edit"
+          <a v-if="!item.plugin?.isdownload && !item.plugin?.isloading" key="list-loadmore-edit"
              @click="() => downloadPlugin(item.plugin)">
             <CloudDownloadOutlined style="font-size: 18px;"/>
           </a>
-          <a v-if="item.plugin.isloading" key="list-loadmore-edit">
+          <a v-if="item.plugin?.isloading" key="list-loadmore-edit">
             <LoadingOutlined style="font-size: 18px;"/>
           </a>
           <a key="list-loadmore-edit" @click="() => showKeys(item)">
@@ -36,11 +36,11 @@
         <a-list-item-meta :description="`${item.keys.length} 份文档`">
           <template #title>
             <div>
-              <span>{{ item.plugin.pluginName }}</span>
+              <span>{{ item.plugin?.pluginName }}</span>
             </div>
           </template>
           <template #avatar>
-            <a-avatar shape="square" :src="item.plugin.logo"/>
+            <a-avatar shape="square" :src="item.plugin?.logo"/>
           </template>
         </a-list-item-meta>
       </a-list-item>

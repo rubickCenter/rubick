@@ -54,4 +54,20 @@ export default class DBInstance {
   public dbImport({ data }) {
     return dbInstance.importDb(data.target);
   }
+
+  public dbPostAttachment({ data }) {
+    const { docId, attachment, type } = data;
+    return dbInstance.postAttachment(this.DBKEY, docId, attachment, type);
+  }
+
+  public dbGetAttachment({ data }) {
+    return dbInstance.getAttachment(this.DBKEY, data.docId);
+  }
+
+  public async dbGetAttachmentType({ data }) {
+    const res: any = await this.dbGet(data.docId);
+    if (!res || !res._attachments) return null;
+    const result = res._attachments[0];
+    return result ? result.content_type : null;
+  }
 }

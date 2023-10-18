@@ -85,6 +85,10 @@ window.rubick = {
     remove: (doc) => ipcSendSync('dbRemove', { doc }),
     bulkDocs: (docs) => ipcSendSync('dbBulkDocs', { docs }),
     allDocs: (key) => ipcSendSync('dbAllDocs', { key }),
+    postAttachment: (docId, attachment, type) =>
+      ipcSendSync('dbPostAttachment', { docId, attachment, type }),
+    getAttachment: (docId) => ipcSendSync('dbGetAttachment', { docId }),
+    getAttachmentType: (docId) => ipcSendSync('dbGetAttachmentType', { docId }),
   },
   dbStorage: {
     setItem: (key, value) => {

@@ -22,6 +22,7 @@ import {
 import '../common/utils/localPlugin';
 
 import registerySystemPlugin from './common/registerySystemPlugin';
+import checkVersion from './common/versionHandler';
 
 class App {
   public windowCreator: { init: () => void; getWindow: () => BrowserWindow };
@@ -62,6 +63,7 @@ class App {
   }
   onReady() {
     const readyFunction = async () => {
+      checkVersion();
       await localConfig.init();
       const config = await localConfig.getConfig();
       if (!config.perf.common.guide) {
