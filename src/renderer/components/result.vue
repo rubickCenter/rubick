@@ -14,7 +14,7 @@
           :key="index"
         >
           <a-avatar style="width: 28px; height: 28px;" :src="item.icon" />
-          <div class="name ellpise">{{item.pluginName || item._name || item.name}}</div>
+          <div class="name ellpise">{{item.cmd || item.pluginName || item._name || item.name}}</div>
         </a-col>
       </a-row>
     </div>
