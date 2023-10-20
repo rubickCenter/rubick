@@ -512,6 +512,13 @@ const changeLanguage = (value) => {
             background: var(--color-list-hover);
           }
         }
+        .ant-select-selector {
+          background: var(--color-input-hover) !important;
+          color: var(--color-text-content);
+        }
+        .ant-input-password-icon, .ant-select-arrow {
+          color: var(--color-action-color);
+        }
       }
     }
   }

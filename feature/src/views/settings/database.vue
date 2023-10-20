@@ -6,7 +6,7 @@
         <ExportOutlined />
       </template>
     </a-button>
-    <a-button @click="importData" danger size="small" style="margin-right: 10px;">
+    <a-button @click="importData" danger size="small" style="margin-right: 10px; background-color: var(--color-input-hover)">
       导入数据
       <template #icon>
         <ImportOutlined />
@@ -33,14 +33,19 @@
             <DatabaseOutlined style="font-size: 18px;"/>
           </a>
         </template>
-        <a-list-item-meta :description="`${item.keys.length} 份文档`">
+        <a-list-item-meta>
           <template #title>
-            <div>
+            <div style="color: var(--color-text-content)">
               <span>{{ item.plugin?.pluginName }}</span>
             </div>
           </template>
           <template #avatar>
             <a-avatar shape="square" :src="item.plugin?.logo"/>
+          </template>
+          <template #description>
+            <div style="color: var(--color-text-desc)">
+              <span>{{ item.keys.length }} 份文档</span>
+            </div>
           </template>
         </a-list-item-meta>
       </a-list-item>
@@ -52,6 +57,7 @@
     :closable="false"
     :title="currentSelect.plugin.pluginName"
     placement="right"
+    class="exportDrawer"
   >
     <p
       class="key-item"
@@ -64,7 +70,12 @@
   </a-drawer>
   <a-modal
     centered
-    bodyStyle="max-height: 500px; overflow: auto"
+    :bodyStyle="{
+      maxHeight: '500px',
+      overflow: 'auto',
+      backgroundColor: 'var(--color-body-bg)',
+      color: 'var(--color-text-primary)'
+    }"
     :footer="null"
     :closable="false"
     v-model:visible="show"
@@ -75,6 +86,7 @@
     v-model:visible="showSetting"
     title="webdav 账户配置"
     :footer="null"
+    class="webdavModel"
   >
     <a-alert v-if="formState.suport === 'jianguo'" style="margin-bottom: 20px;" type="info" show-icon>
       <template #message>
@@ -255,7 +267,7 @@ const downloadPlugin = async (plugin) => {
 .export-header {
   width: 100%;
   height: 40px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light);
   text-align: right;
 }
 .key-item {
@@ -263,6 +275,46 @@ const downloadPlugin = async (plugin) => {
 
   &:hover {
     color: var(--ant-primary-color);
+  }
+}
+.exportDrawer{
+  .ant-drawer-header{
+    background-color: var(--color-body-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    .ant-drawer-title{
+      color: var(--color-text-primary);
+    }
+  }
+  .ant-drawer-body{
+    background-color: var(--color-body-bg);
+    color: var(--color-text-content)
+  }
+}
+.webdavModel{
+  .ant-modal-close-x{
+    color: var(--color-text-content);
+  }
+  .ant-modal-header{
+    background-color: var(--color-body-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    .ant-modal-title{
+      color: var(--color-text-primary);
+    }
+  }
+  .ant-form-item-label>label {
+    color: var(--color-text-content);
+  }
+  .ant-modal-body {
+    background-color: var(--color-body-bg);
+    .ant-input,
+    .ant-input-password,
+    .ant-select-selector {
+      background: var(--color-input-hover) !important;
+      color: var(--color-text-content);
+    }
+    .ant-input-password-icon, .ant-select-arrow {
+      color: var(--color-action-color);
+     }
   }
 }
 </style>

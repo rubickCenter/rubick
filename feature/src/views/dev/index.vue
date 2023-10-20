@@ -103,7 +103,7 @@ const wrapperCol = { span: 14 };
     color: var(--color-text-content);
   }
   :deep(.ant-input) {
-    background: var(--color-input-hover);
+    background: var(--color-input-hover) !important;
     color: var(--color-text-content);
   }
 }
