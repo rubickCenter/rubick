@@ -6,7 +6,7 @@
         <ExportOutlined />
       </template>
     </a-button>
-    <a-button @click="importData" danger size="small" style="margin-right: 10px;">
+    <a-button @click="importData" danger size="small" style="margin-right: 10px; background-color: var(--color-input-hover)">
       导入数据
       <template #icon>
         <ImportOutlined />
@@ -260,7 +260,7 @@ const downloadPlugin = async (plugin) => {
 .export-header {
   width: 100%;
   height: 40px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border-light);
   text-align: right;
 }
 .key-item {
