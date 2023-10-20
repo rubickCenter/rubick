@@ -57,6 +57,7 @@
     :closable="false"
     :title="currentSelect.plugin.pluginName"
     placement="right"
+    class="exportDrawer"
   >
     <p
       class="key-item"
@@ -69,7 +70,12 @@
   </a-drawer>
   <a-modal
     centered
-    bodyStyle="max-height: 500px; overflow: auto"
+    :bodyStyle="{
+      maxHeight: '500px',
+      overflow: 'auto',
+      backgroundColor: 'var(--color-body-bg)',
+      color: 'var(--color-text-primary)'
+    }"
     :footer="null"
     :closable="false"
     v-model:visible="show"
@@ -80,6 +86,7 @@
     v-model:visible="showSetting"
     title="webdav 账户配置"
     :footer="null"
+    class="webdavModel"
   >
     <a-alert v-if="formState.suport === 'jianguo'" style="margin-bottom: 20px;" type="info" show-icon>
       <template #message>
@@ -268,6 +275,37 @@ const downloadPlugin = async (plugin) => {
 
   &:hover {
     color: var(--ant-primary-color);
+  }
+}
+.exportDrawer{
+  .ant-drawer-header{
+    background-color: var(--color-body-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    .ant-drawer-title{
+      color: var(--color-text-primary);
+    }
+  }
+  .ant-drawer-body{
+    background-color: var(--color-body-bg);
+    color: var(--color-text-content)
+  }
+}
+.webdavModel{
+  .ant-modal-close-x{
+    color: var(--color-text-content);
+  }
+  .ant-modal-header{
+    background-color: var(--color-body-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    .ant-modal-title{
+      color: var(--color-text-primary);
+    }
+  }
+  .ant-form-item-label>label {
+    color: var(--color-text-content);
+  }
+  .ant-modal-body{
+    background-color: var(--color-body-bg)
   }
 }
 </style>
