@@ -222,7 +222,7 @@ class API extends DBInstance {
   }
 
   public getFeatures() {
-    return this.currentPlugin.features;
+    return this.currentPlugin?.features;
   }
 
   public setFeature({ data }, window) {
