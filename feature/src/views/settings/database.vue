@@ -304,8 +304,17 @@ const downloadPlugin = async (plugin) => {
   .ant-form-item-label>label {
     color: var(--color-text-content);
   }
-  .ant-modal-body{
-    background-color: var(--color-body-bg)
+  .ant-modal-body {
+    background-color: var(--color-body-bg);
+    .ant-input,
+    .ant-input-password,
+    .ant-select-selector {
+      background: var(--color-input-hover) !important;
+      color: var(--color-text-content);
+    }
+    .ant-input-password-icon, .ant-select-arrow {
+      color: var(--color-action-color);
+     }
   }
 }
 </style>
