@@ -175,14 +175,16 @@ export default () => {
   const getView = () => view;
 
   const executeHooks = (hook, data) => {
-    if (!view) return;
-    const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {     
-          try { 
+    setTimeout(() => {
+      if (!view) return;
+      const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {
+          try {
             window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ''});
-          } catch(e) {} 
+          } catch(e) {}
         }
       `;
-    view.webContents?.executeJavaScript(evalJs);
+      view.webContents?.executeJavaScript(evalJs);
+    }, 300);
   };
 
   return {
