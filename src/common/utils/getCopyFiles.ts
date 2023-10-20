@@ -17,10 +17,13 @@ export default function getCopyFiles(): Array<any> | null {
       return null;
     }
   } else if (process.platform === 'win32') {
-    /* eslint-disable */
-    const clipboardEx = require('electron-clipboard-ex');
-    fileInfo = clipboardEx.readFilePaths();
-    // todo
+    try {
+      /* eslint-disable */
+      const clipboardEx = require('electron-clipboard-ex');
+      fileInfo = clipboardEx.readFilePaths();
+    } catch (e) {
+      // todo
+    }
   } else {
     if (!commonConst.linux()) return null;
     if (!clipboard.has('text/uri-list')) return null;
