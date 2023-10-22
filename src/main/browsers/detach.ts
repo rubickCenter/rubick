@@ -5,18 +5,18 @@ import { WINDOW_MIN_HEIGHT } from '@/common/constans/common';
 export default () => {
   let win: any;
 
-  const init = (pluginInfo, viewInfo, view) => {
+  const init = async (pluginInfo, viewInfo, view) => {
     ipcMain.on('detach:service', async (event, arg: { type: string }) => {
       const data = await operation[arg.type]();
       event.returnValue = data;
     });
-    createWindow(pluginInfo, viewInfo, view);
+    const createWin = await createWindow(pluginInfo, viewInfo, view);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('@electron/remote/main').enable(win.webContents);
+    require('@electron/remote/main').enable(createWin.webContents);
   };
 
   const createWindow = async (pluginInfo, viewInfo, view) => {
-    win = new BrowserWindow({
+    const createWin = new BrowserWindow({
       height: viewInfo.height,
       minHeight: WINDOW_MIN_HEIGHT,
       width: viewInfo.width,
@@ -43,29 +43,32 @@ export default () => {
     });
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       // Load the url of the dev server if in development mode
-      win.loadURL('http://localhost:8082');
+      createWin.loadURL('http://localhost:8082');
     } else {
-      win.loadURL(`file://${path.join(__static, './detach/index.html')}`);
+      createWin.loadURL(`file://${path.join(__static, './detach/index.html')}`);
     }
-    win.on('close', () => {
+    createWin.on('close', () => {
       executeHooks('PluginOut', null);
     });
-    win.on('closed', () => {
+    createWin.on('closed', () => {
       win = undefined;
     });
+    createWin.on('focus', () => {
+      win = createWin;
+    });
 
-    win.once('ready-to-show', async () => {
+    createWin.once('ready-to-show', async () => {
       const config = await localConfig.getConfig();
       const darkMode = config.perf.common.darkMode;
       darkMode &&
-        win.webContents.executeJavaScript(
+        createWin.webContents.executeJavaScript(
           `document.body.classList.add("dark");window.rubick.theme="dark"`
         );
-      win.setBrowserView(view);
-      win.webContents.executeJavaScript(
+      createWin.setBrowserView(view);
+      createWin.webContents.executeJavaScript(
         `window.initDetach(${JSON.stringify(pluginInfo)})`
       );
-      win.show();
+      createWin.show();
     });
     const executeHooks = (hook, data) => {
       if (!view) return;
@@ -77,6 +80,7 @@ export default () => {
       `;
       view.webContents.executeJavaScript(evalJs);
     };
+    return createWin;
   };
 
   const getWindow = () => win;
