@@ -25,7 +25,6 @@ export const handleScreenShots = (cb) => {
 
 export default (mainWindow, cb) => {
   // 接收到截图后的执行程序
-  mainWindow.hide();
   clipboard.writeText('');
   if (platform.macOS()) {
     handleScreenShots(cb);

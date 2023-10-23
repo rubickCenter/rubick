@@ -59,7 +59,7 @@ export default () => {
     const height = pluginSetting && pluginSetting.height;
     window.setSize(800, height || 600);
     view.setBounds({ x: 0, y: 60, width: 800, height: height || 540 });
-    view.setAutoResize({ width: true });
+    view.setAutoResize({ width: true, height: true });
     executeHooks('PluginEnter', ext);
     executeHooks('PluginReady', ext);
     const config = await localConfig.getConfig();
@@ -166,7 +166,7 @@ export default () => {
   const removeView = (window: BrowserWindow) => {
     if (!view) return;
     window.removeBrowserView(view);
-    window.setSize(800, 60);
+    // window.setSize(800, 60);
     executeHooks('PluginOut', null);
     window.webContents?.executeJavaScript(`window.initRubick()`);
     view = undefined;

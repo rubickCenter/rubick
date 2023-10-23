@@ -1,5 +1,11 @@
 const { ipcRenderer, shell } = require('electron');
+const { BrowserWindow, nativeTheme, screen, app } = require('@electron/remote');
 const os = require('os');
+const path = require('path');
+
+const appPath = app.getPath('userData');
+
+const baseDir = path.join(appPath, './rubick-plugins');
 
 const ipcSendSync = (type, data) => {
   const returnValue = ipcRenderer.sendSync('msg-trigger', {
@@ -19,9 +25,9 @@ const ipcSend = (type, data) => {
 
 window.rubick = {
   hooks: {},
+  __event__: {},
   // 事件
   onPluginEnter(cb) {
-    console.log(window.rubick.hooks);
     typeof cb === 'function' && (window.rubick.hooks.onPluginEnter = cb);
   },
   onPluginReady(cb) {
@@ -177,5 +183,58 @@ window.rubick = {
 
   simulateKeyboardTap: (key, ...modifier) => {
     ipcSend('simulateKeyboardTap', { key, modifier });
+  },
+
+  getCursorScreenPoint: () => {
+    return screen.getCursorScreenPoint();
+  },
+
+  getDisplayNearestPoint: (point) => {
+    return screen.getDisplayNearestPoint(point);
+  },
+
+  outPlugin: () => {
+    return ipcSend('removePlugin');
+  },
+
+  createBrowserWindow: (url, options, callback) => {
+    const winUrl = path.resolve(baseDir, 'node_modules', options.name);
+    const winIndex = `file://${path.join(winUrl, './', url || '')}`;
+    const preloadPath = path.join(
+      winUrl,
+      './',
+      options.webPreferences.preload || ''
+    );
+    let win = new BrowserWindow({
+      useContentSize: true,
+      resizable: true,
+      title: '拉比克',
+      show: false,
+      backgroundColor: nativeTheme.shouldUseDarkColors ? '#1c1c28' : '#fff',
+      ...options,
+      webPreferences: {
+        webSecurity: false,
+        backgroundThrottling: false,
+        contextIsolation: false,
+        webviewTag: true,
+        nodeIntegration: true,
+        spellcheck: false,
+        partition: null,
+        ...(options.webPreferences || {}),
+        preload: preloadPath,
+      },
+    });
+    win.loadURL(winIndex);
+
+    win.on('closed', () => {
+      win = undefined;
+    });
+    win.once('ready-to-show', () => {
+      win.show();
+    });
+    win.webContents.on('dom-ready', () => {
+      callback && callback();
+    });
+    return win;
   },
 };

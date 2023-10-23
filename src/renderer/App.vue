@@ -76,13 +76,16 @@ getPluginInfo({
   remote.getGlobal('LOCAL_PLUGINS').addPlugin(res);
 });
 
-watch([options, pluginHistory], () => {
+watch([options, pluginHistory, currentPlugin], () => {
   currentSelect.value = 0;
   if (currentPlugin.value.name) return;
   nextTick(() => {
     ipcRenderer.sendSync('msg-trigger', {
       type: 'setExpendHeight',
-      data: getWindowHeight(options.value, pluginHistory.value),
+      data: getWindowHeight(
+        options.value,
+        pluginLoading.value ? [] : pluginHistory.value
+      ),
     });
   });
 });

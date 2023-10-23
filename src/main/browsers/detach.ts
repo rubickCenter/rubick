@@ -64,6 +64,7 @@ export default () => {
         createWin.webContents.executeJavaScript(
           `document.body.classList.add("dark");window.rubick.theme="dark"`
         );
+      view.setAutoResize({ width: true, height: true });
       createWin.setBrowserView(view);
       createWin.webContents.executeJavaScript(
         `window.initDetach(${JSON.stringify(pluginInfo)})`

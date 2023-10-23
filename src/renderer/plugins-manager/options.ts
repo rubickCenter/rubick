@@ -157,6 +157,7 @@ const optionsManager = ({
   });
 
   return {
+    setOptionsRef,
     options: optionsRef,
     searchFocus,
     clipboardFile,

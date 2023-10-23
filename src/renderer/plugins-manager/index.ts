@@ -121,6 +121,7 @@ const createPluginManager = (): any => {
   const {
     options,
     searchFocus,
+    setOptionsRef,
     clipboardFile,
     clearClipboardFile,
     readClipboardContent,
@@ -172,6 +173,7 @@ const createPluginManager = (): any => {
   window.initRubick = () => {
     state.currentPlugin = {};
     setSearchValue('');
+    setOptionsRef([]);
     window.setSubInput({ placeholder: '' });
   };
 

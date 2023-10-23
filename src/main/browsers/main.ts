@@ -3,7 +3,11 @@ import path from 'path';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 // import versonHandler from '../common/versionHandler';
 import localConfig from '@/main/common/initLocalConfig';
-import { WINDOW_HEIGHT, WINDOW_MIN_HEIGHT, WINDOW_WIDTH } from '@/common/constans/common';
+import {
+  WINDOW_HEIGHT,
+  WINDOW_MIN_HEIGHT,
+  WINDOW_WIDTH,
+} from '@/common/constans/common';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('@electron/remote/main').initialize();
 
