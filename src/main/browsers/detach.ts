@@ -1,7 +1,9 @@
-import { BrowserWindow, ipcMain, nativeTheme } from 'electron';
+import { BrowserWindow, ipcMain, nativeTheme, screen } from 'electron';
 import localConfig from '../common/initLocalConfig';
+import commonConst from '@/common/utils/commonConst';
 import path from 'path';
 import { WINDOW_MIN_HEIGHT } from '@/common/constans/common';
+import mainInstance from '@/main';
 export default () => {
   let win: any;
 
@@ -38,6 +40,7 @@ export default () => {
         webviewTag: true,
         devTools: true,
         nodeIntegration: true,
+        navigateOnDragDrop: true,
         spellcheck: false,
       },
     });
@@ -55,6 +58,7 @@ export default () => {
     });
     createWin.on('focus', () => {
       win = createWin;
+      view && win.webContents?.focus();
     });
 
     createWin.once('ready-to-show', async () => {
@@ -71,6 +75,73 @@ export default () => {
       );
       createWin.show();
     });
+
+    // 最大化设置
+    createWin.on('maximize', () => {
+      createWin.webContents.executeJavaScript('window.maximizeTrigger()');
+      const view = createWin.getBrowserView();
+      if (!view) return;
+      const display = screen.getDisplayMatching(createWin.getBounds());
+      view.setBounds({
+        x: 0,
+        y: WINDOW_MIN_HEIGHT,
+        width: display.workArea.width,
+        height: display.workArea.height - WINDOW_MIN_HEIGHT,
+      });
+    });
+    // 最小化
+    createWin.on('unmaximize', () => {
+      createWin.webContents.executeJavaScript('window.unmaximizeTrigger()');
+      const view = createWin.getBrowserView();
+      if (!view) return;
+      const bounds = createWin.getBounds();
+      const display = screen.getDisplayMatching(bounds);
+      const width =
+        (display.scaleFactor * bounds.width) % 1 == 0
+          ? bounds.width
+          : bounds.width - 2;
+      const height =
+        (display.scaleFactor * bounds.height) % 1 == 0
+          ? bounds.height
+          : bounds.height - 2;
+      view.setBounds({
+        x: 0,
+        y: WINDOW_MIN_HEIGHT,
+        width,
+        height: height - WINDOW_MIN_HEIGHT,
+      });
+    });
+
+    createWin.on('page-title-updated', (e) => {
+      e.preventDefault();
+    });
+    createWin.webContents.once('render-process-gone', () => {
+      createWin.close();
+    });
+
+    if (commonConst.macOS()) {
+      createWin.on('enter-full-screen', () => {
+        createWin.webContents.executeJavaScript(
+          'window.enterFullScreenTrigger()'
+        );
+      });
+      createWin.on('leave-full-screen', () => {
+        createWin.webContents.executeJavaScript(
+          'window.leaveFullScreenTrigger()'
+        );
+      });
+    }
+
+    view.webContents.on('before-input-event', (event, input) => {
+      if (input.type !== 'keyDown') return;
+      if (!(input.meta || input.control || input.shift || input.alt)) {
+        if (input.key === 'Escape') {
+          operation.endFullScreen();
+        }
+        return;
+      }
+    });
+
     const executeHooks = (hook, data) => {
       if (!view) return;
       const evalJs = `console.log(window.rubick);if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {
@@ -96,6 +167,9 @@ export default () => {
     },
     close: () => {
       win.close();
+    },
+    endFullScreen: () => {
+      win.isFullScreen() && win.setFullScreen(false);
     },
   };
 

@@ -86,6 +86,47 @@ Object.assign(window, {
     plugInfo.value.subInput = null;
   },
 });
+
+window.enterFullScreenTrigger = () => {
+  document.querySelector('.detach').classList.remove('darwin');
+};
+window.leaveFullScreenTrigger = () => {
+  const titleDom = document.querySelector('.detach');
+  if (!titleDom.classList.contains('darwin')) {
+    titleDom.classList.add('darwin');
+  }
+};
+
+window.maximizeTrigger = () => {
+  const btnMaximize = document.querySelector('.maximize')
+  if (!btnMaximize || btnMaximize.classList.contains('unmaximize')) return;
+  btnMaximize.classList.add('unmaximize');
+};
+
+window.unmaximizeTrigger = () => {
+  const btnMaximize = document.querySelector('.maximize');
+  if (!btnMaximize) return;
+  btnMaximize.classList.remove('unmaximize');
+};
+
+if (process.platform === 'darwin') {
+  window.onkeydown = (e) => {
+    if (e.code === 'Escape') {
+      ipcRenderer.send('detach:service', { type: 'endFullScreen' });
+      return;
+    }
+    if (e.metaKey && (e.code === 'KeyW' || e.code === 'KeyQ')) {
+      window.handle.close()
+    }
+  }
+} else {
+  window.onkeydown = (e) => {
+    if (e.ctrlKey && e.code === 'KeyW') {
+      window.handle.close()
+      return
+    }
+  }
+}
 </script>
 
 <style>

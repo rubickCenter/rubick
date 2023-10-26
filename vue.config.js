@@ -24,6 +24,7 @@ module.exports = {
       externals: [
         'pouchdb',
         'extract-file-icon',
+        'npm',
         'electron-screenshots',
         '@electron/remote',
       ],

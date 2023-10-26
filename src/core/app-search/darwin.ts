@@ -4,7 +4,6 @@ import getMacApps from './get-mac-app';
 import fs from 'fs';
 import path from 'path';
 
-import translate from './translate';
 import os from 'os';
 
 const icondir = path.join(os.tmpdir(), 'ProcessIcon');

@@ -42,7 +42,6 @@
       <template #suffix>
         <div class="suffix-tool">
           <MoreOutlined
-            v-show="!pluginLoading"
             @click="showSeparate()"
             class="icon-more"
           />

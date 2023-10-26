@@ -7,9 +7,10 @@ import path from 'path';
 import got from 'got';
 import fixPath from 'fix-path';
 
-import spawn from 'cross-spawn';
 import { ipcRenderer } from 'electron';
 import axios from 'axios';
+
+import npm from 'npm';
 
 fixPath();
 
@@ -41,7 +42,7 @@ class AdapterHandler {
     }
     this.baseDir = options.baseDir;
 
-    let register = options.registry || 'https://registry.npm.taobao.org';
+    let register = options.registry || 'https://registry.npmmirror.com/';
 
     try {
       const dbdata = ipcRenderer.sendSync('msg-trigger', {
@@ -157,44 +158,67 @@ class AdapterHandler {
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
     return new Promise((resolve: any, reject: any) => {
-      let args: string[] = [cmd].concat(
+      const module =
         cmd !== 'uninstall' && cmd !== 'link'
           ? modules.map((m) => `${m}@latest`)
-          : modules
-      );
+          : modules;
+      const config: any = {
+        prefix: this.baseDir,
+        save: true,
+        cache: path.join(this.baseDir, 'cache'),
+      };
       if (cmd !== 'link') {
-        args = args
-          .concat('--color=always')
-          .concat('--save')
-          .concat(`--registry=${this.registry}`);
+        config.registry = this.registry;
       }
+      npm.load(config, function (err) {
+        npm.commands[cmd](module, function (er, data) {
+          if (!err) {
+            console.log(data);
+            resolve({ code: -1, data });
+          } else {
+            reject({ code: -1, data: err });
+          }
+        });
 
-      const npm = spawn('npm', args, {
-        cwd: this.baseDir,
+        npm.on('log', function (message) {
+          // log installation progress
+          console.log(message);
+        });
       });
 
-      console.log(args);
+      // if (cmd !== 'link') {
+      //   args = args
+      //     .concat('--color=always')
+      //     .concat('--save')
+      //     .concat(`--registry=${this.registry}`);
+      // }
 
-      let output = '';
-      npm.stdout
-        .on('data', (data: string) => {
-          output += data; // 获取输出日志
-        })
-        .pipe(process.stdout);
-
-      npm.stderr
-        .on('data', (data: string) => {
-          output += data; // 获取报错日志
-        })
-        .pipe(process.stderr);
-
-      npm.on('close', (code: number) => {
-        if (!code) {
-          resolve({ code: 0, data: output }); // 如果没有报错就输出正常日志
-        } else {
-          reject({ code: code, data: output }); // 如果报错就输出报错日志
-        }
-      });
+      // const npm = spawn('npm', args, {
+      //   cwd: this.baseDir,
+      // });
+      //
+      // console.log(args);
+      //
+      // let output = '';
+      // npm.stdout
+      //   .on('data', (data: string) => {
+      //     output += data; // 获取输出日志
+      //   })
+      //   .pipe(process.stdout);
+      //
+      // npm.stderr
+      //   .on('data', (data: string) => {
+      //     output += data; // 获取报错日志
+      //   })
+      //   .pipe(process.stderr);
+      //
+      // npm.on('close', (code: number) => {
+      //   if (!code) {
+      //     resolve({ code: 0, data: output }); // 如果没有报错就输出正常日志
+      //   } else {
+      //     reject({ code: code, data: output }); // 如果报错就输出报错日志
+      //   }
+      // });
     });
   }
 }
