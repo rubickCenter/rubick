@@ -1,11 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import getLocalDataFile from './getLocalDataFile';
 import { PluginHandler } from '@/core';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
 import API from '@/main/common/api';
 
-const configPath = path.join(getLocalDataFile(), './rubick-local-plugin.json');
+const configPath = path.join(baseDir, './rubick-local-plugin.json');
 
 let registry;
 let pluginInstance;

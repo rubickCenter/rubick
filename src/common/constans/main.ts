@@ -3,7 +3,7 @@ import path from 'path';
 
 const appPath = app.getPath('userData');
 
-const PLUGIN_INSTALL_DIR = path.join(appPath, './rubick-plugins');
+const PLUGIN_INSTALL_DIR = path.join(appPath, './rubick-plugins-new');
 
 const DECODE_KEY = {
   Backspace: 'Backspace',
