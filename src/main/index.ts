@@ -74,11 +74,11 @@ class App {
       this.createWindow();
       const mainWindow = this.windowCreator.getWindow();
       API.init(mainWindow);
-      createTray(this.windowCreator.getWindow());
-      registerHotKey(this.windowCreator.getWindow());
+      createTray(mainWindow);
+      registerHotKey(mainWindow);
       this.systemPlugins.triggerReadyHooks(
         Object.assign(electron, {
-          mainWindow: this.windowCreator.getWindow(),
+          mainWindow,
           API,
         })
       );
