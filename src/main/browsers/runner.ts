@@ -52,6 +52,7 @@ const viewPoolManager = () => {
 
 export default () => {
   let view;
+  const views = new Set<BrowserView>();
   const viewInstance = viewPoolManager();
 
   const viewReadyFn = async (window, { pluginSetting, ext }) => {
@@ -139,6 +140,15 @@ export default () => {
         spellcheck: false,
       },
     });
+    // 防止browserView一直增加 render process 一直占着内存的问题
+    if (views.size) {
+      views.forEach((browserView: BrowserView) => {
+        window.removeBrowserView(browserView);
+        browserView.webContents.close();
+        views.delete(browserView);
+      });
+    }
+    views.add(view);
     window.setBrowserView(view);
     view.webContents.loadURL(pluginIndexPath);
     view.webContents.once('dom-ready', () => viewReadyFn(window, plugin));
