@@ -5,7 +5,7 @@ const path = require('path');
 
 const appPath = app.getPath('userData');
 
-const baseDir = path.join(appPath, './rubick-plugins');
+const baseDir = path.join(appPath, './rubick-plugins-new');
 
 const ipcSendSync = (type, data) => {
   const returnValue = ipcRenderer.sendSync('msg-trigger', {
