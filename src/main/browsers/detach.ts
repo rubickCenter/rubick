@@ -54,6 +54,7 @@ export default () => {
       executeHooks('PluginOut', null);
     });
     createWin.on('closed', () => {
+      view.webContents?.destroy();
       win = undefined;
     });
     createWin.on('focus', () => {
@@ -70,6 +71,7 @@ export default () => {
         );
       view.setAutoResize({ width: true, height: true });
       createWin.setBrowserView(view);
+      view.inDetach = true;
       createWin.webContents.executeJavaScript(
         `window.initDetach(${JSON.stringify(pluginInfo)})`
       );
