@@ -3,6 +3,11 @@ import path from 'path';
 import commonConst from '../../common/utils/commonConst';
 import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/main';
 import localConfig from '@/main/common/initLocalConfig';
+import {
+  WINDOW_HEIGHT,
+  WINDOW_PLUGIN_HEIGHT,
+  WINDOW_WIDTH,
+} from '@/common/constans/common';
 
 const getRelativePath = (indexPath) => {
   return commonConst.windows()
@@ -57,8 +62,13 @@ export default () => {
   const viewReadyFn = async (window, { pluginSetting, ext }) => {
     if (!view) return;
     const height = pluginSetting && pluginSetting.height;
-    window.setSize(800, height || 600);
-    view.setBounds({ x: 0, y: 60, width: 800, height: height || 540 });
+    window.setSize(WINDOW_WIDTH, height || WINDOW_PLUGIN_HEIGHT);
+    view.setBounds({
+      x: 0,
+      y: WINDOW_HEIGHT,
+      width: WINDOW_WIDTH,
+      height: height || WINDOW_PLUGIN_HEIGHT - WINDOW_HEIGHT,
+    });
     view.setAutoResize({ width: true, height: true });
     executeHooks('PluginEnter', ext);
     executeHooks('PluginReady', ext);

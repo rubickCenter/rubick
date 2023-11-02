@@ -78,13 +78,13 @@ getPluginInfo({
 
 watch([options, pluginHistory, currentPlugin], () => {
   currentSelect.value = 0;
-  // if (currentPlugin.value.name) return;
+  if (currentPlugin.value.name) return;
   nextTick(() => {
     ipcRenderer.sendSync('msg-trigger', {
       type: 'setExpendHeight',
       data: getWindowHeight(
         options.value,
-        (pluginLoading.value || currentPlugin.value.name) ? [] : pluginHistory.value
+        (pluginLoading.value) ? [] : pluginHistory.value
       ),
     });
   });
