@@ -108,6 +108,7 @@ const changeMenu = (key: any) => {
 };
 
 window.rubick.onPluginEnter(({ code }: { code: string }) => {
+  code = code === '已安装插件' ? 'installed' : code;
   changeMenu(code);
   store.commit('commonUpdate', {active: [code]})
 });

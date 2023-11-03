@@ -185,7 +185,8 @@ const addCmdToSuperPanel = ({ cmd, code }) => {
     },
   };
   superPanelPlugins.value.data.push(plugin);
-  window.rubick.db.put(toRaw(superPanelPlugins.value));
+  const { rev } = window.rubick.db.put(JSON.parse(JSON.stringify(superPanelPlugins.value)));
+  superPanelPlugins.value._rev = rev;
 };
 
 const removePluginToSuperPanel = ({ cmd, name }) => {
@@ -195,7 +196,8 @@ const removePluginToSuperPanel = ({ cmd, name }) => {
       return item.cmd !== cmd;
     }
   );
-  window.rubick.db.put(toRaw(superPanelPlugins.value));
+  const { rev } = window.rubick.db.put(toRaw(superPanelPlugins.value));
+  superPanelPlugins.value._rev = rev;
 };
 
 const hasAdded = (cmd) => {

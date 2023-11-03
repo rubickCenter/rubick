@@ -18,7 +18,7 @@
       "code": "installed",
       "explain": "已安装插件",
       "cmds":[
-        "已安装插件"
+        "已安装插件", "installed"
       ]
     },{
       "code": "settings",

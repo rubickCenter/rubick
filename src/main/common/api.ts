@@ -26,6 +26,7 @@ import { runner, detach } from '../browsers';
 import DBInstance from './db';
 import getWinPosition from './getWinPosition';
 import path from 'path';
+import commonConst from '@/common/utils/commonConst';
 
 const runnerInstance = runner();
 const detachInstance = detach();
@@ -97,7 +98,12 @@ class API extends DBInstance {
         ? 'http://localhost:8083/#/'
         : `file://${__static}/tpl/index.html`;
     }
-    if (!plugin.indexPath) {
+    if (plugin.name === 'rubick-system-feature') {
+      plugin.logo = plugin.logo || `file://${__static}/logo.png`;
+      plugin.indexPath = commonConst.dev()
+        ? 'http://localhost:8081/#/'
+        : `file://${__static}/feature/index.html`;
+    } else if (!plugin.indexPath) {
       const pluginPath = path.resolve(baseDir, 'node_modules', plugin.name);
       plugin.indexPath = `file://${path.join(
         pluginPath,
