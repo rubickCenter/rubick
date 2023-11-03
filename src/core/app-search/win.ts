@@ -1,11 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import translate from './translate';
 import { shell } from 'electron';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fileIcon = require('extract-file-icon');
 
 const filePath = path.resolve(
   'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs'
@@ -29,6 +25,8 @@ if (!exists) {
 
 const getico = (app) => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const fileIcon = require('extract-file-icon');
     const buffer = fileIcon(app.desc, 32);
     const iconpath = path.join(icondir, `${app.name}.png`);
 
