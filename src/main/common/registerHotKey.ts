@@ -15,10 +15,12 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
   const setAutoLogin = async () => {
     const config = await localConfig.getConfig();
-    app.setLoginItemSettings({
-      openAtLogin: config.perf.common.start,
-      openAsHidden: true,
-    });
+    if (app.getLoginItemSettings().openAtLogin !== config.perf.common.start) {
+      app.setLoginItemSettings({
+        openAtLogin: config.perf.common.start,
+        openAsHidden: true,
+      });
+    }
   };
 
   const setTheme = async () => {
@@ -85,10 +87,6 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
           }).show();
       });
     });
-
-    // globalShortcut.register(config.perf.shortCut.separate, () => {
-    //
-    // });
 
     globalShortcut.register(config.perf.shortCut.quit, () => {
       // mainWindow.webContents.send('init-rubick');

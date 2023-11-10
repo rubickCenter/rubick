@@ -4,5 +4,6 @@ import path from 'path';
 const appPath = app.getPath('userData');
 
 const PLUGIN_INSTALL_DIR = path.join(appPath, './rubick-plugins-new');
+const PLUGIN_HISTORY = 'rubick-local-start-app';
 
-export { PLUGIN_INSTALL_DIR };
+export { PLUGIN_INSTALL_DIR, PLUGIN_HISTORY };

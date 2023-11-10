@@ -33,6 +33,12 @@ import localConfig from './confOp';
 
 const config: any = localConfig.getConfig();
 
+// 暗夜模式
+if (config.perf.common.darkMode) {
+  document.body.classList.add('dark');
+  window.rubick.theme = 'dark';
+}
+
 ConfigProvider.config({
   theme: config.perf.custom || {},
 });

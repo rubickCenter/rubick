@@ -8,7 +8,10 @@ import commonConst from '@/common/utils/commonConst';
 import { exec } from 'child_process';
 import searchManager from './search';
 import optionsManager from './options';
-import { PLUGIN_INSTALL_DIR as baseDir } from '@/common/constans/renderer';
+import {
+  PLUGIN_INSTALL_DIR as baseDir,
+  PLUGIN_HISTORY,
+} from '@/common/constans/renderer';
 import { message } from 'ant-design-vue';
 
 const createPluginManager = (): any => {
@@ -28,16 +31,22 @@ const createPluginManager = (): any => {
   const appList: any = ref([]);
 
   const initPlugins = async () => {
+    initPluginHistory();
     appList.value = await appSearch(nativeImage);
     initLocalStartPlugin();
+  };
+
+  const initPluginHistory = () => {
+    const result = window.rubick.db.get(PLUGIN_HISTORY) || {};
+    if (result && result.data) {
+      state.pluginHistory = result.data;
+    }
   };
 
   const initLocalStartPlugin = () => {
     const result = ipcRenderer.sendSync('msg-trigger', {
       type: 'dbGet',
-      data: {
-        id: 'rubick-local-start-app',
-      },
+      data: { id: PLUGIN_HISTORY },
     });
     if (result && result.value) {
       appList.value.push(...result.value);
@@ -70,15 +79,12 @@ const createPluginManager = (): any => {
   const openPlugin = async (plugin, option) => {
     if (plugin.pluginType === 'ui' || plugin.pluginType === 'system') {
       if (state.currentPlugin && state.currentPlugin.name === plugin.name) {
-        ipcRenderer.sendSync('msg-trigger', {
-          type: 'showMainWindow',
-        });
+        window.rubick.showMainWindow();
         return;
       }
       await loadPlugin(plugin);
-      ipcRenderer.sendSync('msg-trigger', {
-        type: 'openPlugin',
-        data: JSON.parse(
+      window.rubick.openPlugin(
+        JSON.parse(
           JSON.stringify({
             ...plugin,
             ext: plugin.ext || {
@@ -87,8 +93,8 @@ const createPluginManager = (): any => {
               payload: null,
             },
           })
-        ),
-      });
+        )
+      );
     }
     if (plugin.pluginType === 'app') {
       try {
@@ -101,19 +107,52 @@ const createPluginManager = (): any => {
     changePluginHistory({
       ...plugin,
       ...option,
+      originName: plugin.name,
     });
   };
 
   const changePluginHistory = (plugin) => {
-    state.pluginHistory.forEach((p, index) => {
-      if (p.name === plugin.name) {
-        state.pluginHistory.splice(index, 1);
-      }
-    });
-    state.pluginHistory.unshift(plugin);
-    if (state.pluginHistory.length > 8) {
-      state.pluginHistory.pop();
+    const unpin = state.pluginHistory.filter((plugin) => !plugin.pin);
+    const pin = state.pluginHistory.filter((plugin) => plugin.pin);
+    const isPin = state.pluginHistory.find((p) => p.name === plugin.name)?.pin;
+    if (isPin) {
+      pin.forEach((p, index) => {
+        if (p.name === plugin.name) {
+          pin.splice(index, 1);
+        }
+      });
+      pin.unshift(plugin);
+    } else {
+      unpin.forEach((p, index) => {
+        if (p.name === plugin.name) {
+          unpin.splice(index, 1);
+        }
+      });
+      unpin.unshift(plugin);
     }
+    if (state.pluginHistory.length > 8) {
+      unpin.pop();
+    }
+    state.pluginHistory = [...pin, ...unpin];
+    const result = window.rubick.db.get(PLUGIN_HISTORY) || {};
+    window.rubick.db.put({
+      _id: PLUGIN_HISTORY,
+      _rev: result._rev,
+      data: JSON.parse(JSON.stringify(state.pluginHistory)),
+    });
+  };
+
+  const setPluginHistory = (plugins) => {
+    state.pluginHistory = plugins;
+    const unpin = state.pluginHistory.filter((plugin) => !plugin.pin);
+    const pin = state.pluginHistory.filter((plugin) => plugin.pin);
+    state.pluginHistory = [...pin, ...unpin];
+    const result = window.rubick.db.get(PLUGIN_HISTORY) || {};
+    window.rubick.db.put({
+      _id: PLUGIN_HISTORY,
+      _rev: result._rev,
+      data: JSON.parse(JSON.stringify(state.pluginHistory)),
+    });
   };
 
   const { searchValue, onSearch, setSearchValue, placeholder } =
@@ -206,6 +245,8 @@ const createPluginManager = (): any => {
     clipboardFile,
     clearClipboardFile,
     readClipboardContent,
+    setPluginHistory,
+    changePluginHistory,
   };
 };
 

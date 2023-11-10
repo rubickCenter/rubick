@@ -27,18 +27,22 @@
       :currentSelect="currentSelect"
       :options="options"
       :clipboardFile="clipboardFile || []"
+      @setPluginHistory="setPluginHistory"
+      @choosePlugin="choosePlugin"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick, toRaw } from 'vue';
-import { ipcRenderer } from 'electron';
+import { watch, ref, toRaw } from 'vue';
 import Result from './components/result.vue';
 import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
 import createPluginManager from './plugins-manager';
 import useDrag from '../common/utils/dragWindow';
+import { getGlobal } from '@electron/remote';
+import { PLUGIN_HISTORY } from '@/common/constans/renderer';
+import { message } from 'ant-design-vue';
 
 const { onMouseDown } = useDrag();
 const remote = window.require('@electron/remote');
@@ -60,6 +64,8 @@ const {
   clearClipboardFile,
   readClipboardContent,
   pluginHistory,
+  setPluginHistory,
+  changePluginHistory,
 } = createPluginManager();
 
 initPlugins();
@@ -76,19 +82,22 @@ getPluginInfo({
   remote.getGlobal('LOCAL_PLUGINS').addPlugin(res);
 });
 
-watch([options, pluginHistory, currentPlugin], () => {
-  currentSelect.value = 0;
-  if (currentPlugin.value.name) return;
-  nextTick(() => {
-    ipcRenderer.sendSync('msg-trigger', {
-      type: 'setExpendHeight',
-      data: getWindowHeight(
+watch(
+  [options, pluginHistory, currentPlugin],
+  () => {
+    currentSelect.value = 0;
+    if (currentPlugin.value.name) return;
+    window.rubick.setExpendHeight(
+      getWindowHeight(
         options.value,
-        (pluginLoading.value) ? [] : pluginHistory.value
-      ),
-    });
-  });
-});
+        pluginLoading.value ? [] : pluginHistory.value
+      )
+    );
+  },
+  {
+    immediate: true,
+  }
+);
 
 const changeIndex = (index) => {
   if (!options.value.length) {
@@ -125,13 +134,40 @@ const openMenu = (ext) => {
 
 window.rubick.openMenu = openMenu;
 
-const choosePlugin = () => {
+const choosePlugin = (plugin) => {
   if (options.value.length) {
     const currentChoose = options.value[currentSelect.value];
     currentChoose.click();
   } else {
-    const currentChoose = pluginHistory.value[currentSelect.value];
-    currentChoose.click();
+    const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
+    const currentChoose = plugin || pluginHistory.value[currentSelect.value];
+    let hasRemove = true;
+    localPlugins.find((plugin) => {
+      if (plugin.name === currentChoose.originName) {
+        hasRemove = false;
+        return true;
+      }
+      return false;
+    });
+    if (hasRemove) {
+      const result = window.rubick.db.get(PLUGIN_HISTORY) || {};
+      const history = result.data.filter(item => item.originName !== currentChoose.originName);
+      setPluginHistory(history);
+      return message.warning('插件已被卸载！');
+    }
+    changePluginHistory(currentChoose);
+    window.rubick.openPlugin(
+      JSON.parse(
+        JSON.stringify({
+          ...currentChoose,
+          ext: {
+            code: currentChoose.feature.code,
+            type: currentChoose.cmd.type || 'text',
+            payload: null,
+          },
+        })
+      )
+    );
   }
 };
 

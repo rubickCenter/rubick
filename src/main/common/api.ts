@@ -139,13 +139,16 @@ class API extends DBInstance {
   public hideMainWindow(arg, window) {
     window.hide();
   }
-
   public showMainWindow(arg, window) {
     window.show();
   }
 
   public showOpenDialog({ data }, window) {
     return dialog.showOpenDialogSync(window, data);
+  }
+
+  public showSaveDialog({ data }, window) {
+    return dialog.showSaveDialogSync(window, data);
   }
 
   public setExpendHeight({ data: height }, window: BrowserWindow, e) {

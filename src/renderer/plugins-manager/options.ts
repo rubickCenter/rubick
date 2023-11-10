@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue';
-import throttle from 'lodash.throttle';
+import debounce from 'lodash.debounce';
 import { ipcRenderer } from 'electron';
 import { getGlobal } from '@electron/remote';
 import PinyinMatch from 'pinyin-match';
@@ -130,7 +130,7 @@ const optionsManager = ({
 
   watch(searchValue, () => search(searchValue.value));
   // search Input operation
-  const search = throttle((value) => {
+  const search = debounce((value) => {
     if (currentPlugin.value.name) return;
     if (clipboardFile.value.length) return;
     if (!value) {
@@ -138,7 +138,7 @@ const optionsManager = ({
       return;
     }
     optionsRef.value = getOptionsFromSearchValue(value);
-  }, 500);
+  }, 100);
 
   const setOptionsRef = (options) => {
     optionsRef.value = options;

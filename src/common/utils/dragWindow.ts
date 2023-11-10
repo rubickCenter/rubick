@@ -9,7 +9,8 @@ const useDrag = () => {
   let draggable = true;
 
   const onMouseDown = (e) => {
-    // if (commonConst.macOS()) return;
+    // 右击不移动
+    if (e.button === 2) return;
     draggable = true;
     mouseX = e.clientX;
     mouseY = e.clientY;

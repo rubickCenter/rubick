@@ -49,6 +49,10 @@ window.rubick = {
   showOpenDialog(options) {
     return ipcSendSync('showOpenDialog', options);
   },
+  showSaveDialog(options) {
+    return ipcSendSync('showSaveDialog', options);
+  },
+
   setExpendHeight(height) {
     ipcSendSync('setExpendHeight', height);
   },
