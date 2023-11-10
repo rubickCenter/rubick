@@ -27,6 +27,10 @@ jobs:
 
     # create steps
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       # step1: check out repository
       - name: Check out git repository
         uses: actions/checkout@v2
