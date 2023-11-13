@@ -7,7 +7,7 @@
         :data-source="list.filter((item) => !!item)"
       >
         <template #renderItem="{ item, index }">
-          <a-list-item v-if="item" @click="showDetail(item)">
+          <a-list-item v-if="item" @click="showDetail(index)">
             <template #actions>
               <a-button
                 class="download-plugin-btn"
@@ -105,7 +105,7 @@ import {
   SelectOutlined
 } from '@ant-design/icons-vue';
 
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { message } from 'ant-design-vue';
 import MarkdownIt from 'markdown-it';
@@ -121,7 +121,7 @@ const router = useRouter();
 const startDownload = (name) => store.dispatch('startDownload', name);
 const successDownload = (name) => store.dispatch('successDownload', name);
 
-defineProps({
+const props = defineProps({
   list: {
     type: [Array],
     default: () => [],
@@ -137,13 +137,14 @@ const downloadPlugin = async (plugin) => {
 };
 
 const visible = ref(false);
-const detail = ref({});
+const showIndex = ref(0);
 const markdown = new MarkdownIt();
 const content = ref('');
 
-const showDetail = async (item) => {
+const showDetail = async (index) => {
+  const item = props.list[index];
   visible.value = true;
-  detail.value = item;
+  showIndex.value = index;
   content.value = '';
   let mdContent = '暂无内容';
   try {
@@ -155,6 +156,8 @@ const showDetail = async (item) => {
     content.value = 'error';
   }
 };
+
+const detail = computed(() => props.list[showIndex.value]);
 
 const openPlugin = (item) => {
   store.commit('commonUpdate', {active: ['installed']})
