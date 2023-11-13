@@ -118,7 +118,7 @@ const createPluginManager = (): any => {
     if (isPin) {
       pin.forEach((p, index) => {
         if (p.name === plugin.name) {
-          pin.splice(index, 1);
+          plugin = pin.splice(index, 1)[0];
         }
       });
       pin.unshift(plugin);

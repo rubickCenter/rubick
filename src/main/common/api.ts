@@ -190,6 +190,7 @@ class API extends DBInstance {
         value: data.text,
       })})`
     );
+    this.sendSubInputChangeEvent({ data });
   }
 
   public getPath({ data }) {
