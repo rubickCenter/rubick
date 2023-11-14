@@ -91,9 +91,6 @@ In "Rubick," search for "Preferences," go to "Account and Settings," and then se
 
 [Rubick Plugin CLI](https://github.com/rubickCenter/rubick-plugin-cli)
 
-## Contribute
-This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
-
 ## Sponsor
 ### 1. Join the Knowledge Planet
 We have accumulated a lot of knowledge and common issues about rubick on the Knowledge Planet. You can pay to join our knowledge community to discuss with us. We will answer at any time!
@@ -111,6 +108,9 @@ If the project is helpful to you, you can buy me a cup of coffee as a reward!
 Those who are interested in this project or want to exchange and learn can scan the QR code and add the following WeChat, with the comment rubick, to help us grow better.
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
+
+## Contribute
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/rubickCenter/rubick/blob/master/LICENSE) file for details.
