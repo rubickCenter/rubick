@@ -1,4 +1,3 @@
-const tar = require('tar');
 exports.default = async function () {
   const tar = require('tar');
   const fs = require('fs');
