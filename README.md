@@ -27,20 +27,29 @@ English | [简体中文](./README.zh-CN.md)
 </a>
 </div>
 
-An open-source toolbox based on Electron, freely integrating rich plugins to create the ultimate desktop productivity tool. Rubick is one of the heroes in Dota, whose core skill is the ability to use the skills of other heroes through plugins, and then move on. This aligns perfectly with the design philosophy of this tool, which is why it is named Rubick.
+<div align= "center">
+<img align="center" src="https://picx.zhimg.com/80/v2-f8fe09ef125dac5fdcbef3fe00f92b21_720w.png" />
+</div>
 
-## Sponsor
-我们通过有偿的方式积累高质量的常见问题、最佳实践文档，加入星球后可以和作者进行互动和答疑。我们提供技术支持、答疑解惑、定制化插件开发、二次定制化开发 rubick 等等官方服务。
+Open-source plugin-based desktop efficiency toolbox. The plugins are installed and uninstalled based on npm, which is very lightweight. The plugin data supports webdav multi-terminal synchronization, which is very secure. It supports internal network deployment and can be customized for further development, which is very flexible.
 
-权益明细可以参考文档：[权益明细](https://rubickcenter.github.io/rubick/super/)
-
-<img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
-
-## Installation package
+## Get Rubick
+Download the latest release:
 * [Rubick Mac OS](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Windows](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Linux](https://github.com/rubickCenter/rubick/releases)
 
+## Docs
+
+[Rubick website](https://rubick.vip)
+
+[Rubick Docs](https://rubickCenter.github.io/docs/)
+
+## How To Use Rubick
+After installing rubick, you can quickly launch the main program by pressing the shortcut keys Alt/Option+R. Entering keywords in the main program input box can search for corresponding apps, plugins, files...
+Select the ones you want and use them.
+
+If you don't want the function, you can click the logo on the left to enter the plugin market and find the ones you want to install.
 
 ## Feature list
 - [x] Plugin management based on the npm package pattern, installing plugins is as simple as installing npm packages.
@@ -49,13 +58,6 @@ An open-source toolbox based on Electron, freely integrating rich plugins to cre
 - [x] Supports the quick launch of local apps, files, and folders.
 - [x] Supports enterprise-level intranet deployment.
 - [x] Supports multiple languages.
-
-## Docs
-
-[Rubick website](https://rubick.vip)
-
-[Rubick Docs](https://rubickCenter.github.io/rubick/)
-
 
 ##  Core functionality showcase.
 ### 1. Search system application
@@ -81,15 +83,32 @@ In "Rubick," search for "Preferences," go to "Account and Settings," and then se
 
 ![](https://pic1.zhimg.com/80/v2-ff85793741e4dff82a729d3eb3d41551_720w.png)
 
-### More features
-If you need more features, please come here to give us suggestions：[issues](https://github.com/rubickCenter/rubick/issues) 。
-We will add valuable ideas to the later development. At the same time, welcome to join and build together。
+## Related Repositories
 
-## 贡献
+[Rubick Plugins Repositories](https://gitee.com/rubick-center)
+
+[Rubick Plugins Database](https://gitcode.net/rubickcenter/rubick-database)
+
+[Rubick Plugin CLI](https://github.com/rubickCenter/rubick-plugin-cli)
+
+## Contribute
 This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 
-## 反馈
-对本项目有兴趣或者想要交流学习的同学可以扫码加下面的微信，备注 rubick，帮助我们更好的成长：
+## Sponsor
+### 1. Join the Knowledge Planet
+We have accumulated a lot of knowledge and common issues about rubick on the Knowledge Planet. You can pay to join our knowledge community to discuss with us. We will answer at any time!
+
+<img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
+
+### 2. Buy me a cup of coffee
+If the project is helpful to you, you can buy me a cup of coffee as a reward!
+<div align= "left">
+<img width="180" src="https://picx.zhimg.com/80/v2-911d249dc454f3460451a4e1ecceeb14_720w.png">
+<img width="180" src="https://picx.zhimg.com/80/v2-3160247d6099053405e6cd2cb6afb5e5_720w.png">
+</div>
+
+## Feedback
+Those who are interested in this project or want to exchange and learn can scan the QR code and add the following WeChat, with the comment rubick, to help us grow better.
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
 

@@ -27,20 +27,28 @@
 </a>
 </div>
 
+<div align= "center">
+<img align="center" src="https://picx.zhimg.com/80/v2-f8fe09ef125dac5fdcbef3fe00f92b21_720w.png" />
+</div>
 
-基于 electron 的开源工具箱，自由集成丰富插件，打造极致的桌面端效能工具。Rubick(拉比克) 是 dota 里面的英雄之一，其核心技能是插件化使用其他英雄的技能，用完即走。非常符合本工具的设计理念，所以取名 Rubick。
+开源的插件化桌面端效率工具箱。插件是基于 npm 进行安装和卸载，非常轻便。插件数据支持 webdav 多端同步，非常安全。支持内网部署，可二次定制化开发，非常灵活。
 
-## 赞助和服务
-我们通过有偿的方式积累高质量的常见问题、最佳实践文档，加入星球后可以和作者进行互动和答疑。我们提供技术支持、答疑解惑、定制化插件开发、二次定制化开发 rubick 等等官方服务。
+## 获取 rubick
+下载最新的安装包：
 
-权益明细可以参考文档：[权益明细](https://rubickcenter.github.io/rubick/super/)
-
-<img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
-
-## 安装包
 * [Rubick Mac OS](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Windows](https://github.com/rubickCenter/rubick/releases)
 * [Rubick Linux](https://github.com/rubickCenter/rubick/releases)
+
+## 使用文档
+
+[Rubick 官网](https://rubick.vip)
+
+[Rubick Docs](https://rubickCenter.github.io/rubick/)
+
+## 如何使用 rubick
+
+安装完成 rubick 后，可以通过快捷键 Alt/Option+R  可以快速呼起主程序。主程序输入框内输入关键词可以搜索出对应的 App、插件、文件... 选择即可使用。如果没有想要的功能，可以点击左侧的 logo 进入插件市场寻找自己想要的插件进行安装。
 
 ## 支持能力
 - [x] 基于 npm 包模式的插件管理，安装插件和安装 npm 包一样简单
@@ -49,12 +57,6 @@
 - [x] 支持快速启动本地 app、文件、文件夹
 - [x] 支持企业化内网部署
 - [x] 支持多语言
-
-## 使用文档
-
-[Rubick 官网](https://rubick.vip)
-
-[Rubick Docs](https://rubickCenter.github.io/rubick/)
 
 
 ## 核心功能展示
@@ -81,17 +83,35 @@
 
 ![](https://pic1.zhimg.com/80/v2-ff85793741e4dff82a729d3eb3d41551_720w.png)
 
-### 更多功能
-如果您还需要更多功能，欢迎来这里给我们提建议：[issues](https://github.com/rubickCenter/rubick/issues) 。
-有价值的想法我们会加入到后期的开发当中。同时也欢迎一起加入共建。
+## 关联仓库
 
-## 贡献
-This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
+[Rubick 插件仓库](https://gitee.com/rubick-center)
+
+[Rubick 插件数据库](https://gitcode.net/rubickcenter/rubick-database)
+
+[Rubick Plugin CLI](https://github.com/rubickCenter/rubick-plugin-cli)
+
+## 赞助
+### 1. 加入知识星球
+我们在知识星球积累了大量的关于 rubick 的知识和常见问题，您可以付费加入我们的知识星球来一起讨论。我们将随时解答！
+
+<img width=400 src=https://picx.zhimg.com/80/v2-6deabf65175d18080439ef813102d18c_720w.png />
+
+### 2. 打赏喝杯咖啡
+如果项目对你有帮助，可以请我喝杯咖啡赞赏！
+
+<div align= "left">
+<img width="180" src="https://picx.zhimg.com/80/v2-911d249dc454f3460451a4e1ecceeb14_720w.png">
+<img width="180" src="https://picx.zhimg.com/80/v2-3160247d6099053405e6cd2cb6afb5e5_720w.png">
+</div>
 
 ## 反馈
 对本项目有兴趣或者想要交流学习的同学可以扫码加下面的微信，备注 rubick，帮助我们更好的成长：
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
+
+## 贡献
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/rubickCenter/rubick/blob/master/LICENSE) file for details.
