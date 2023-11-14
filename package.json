@@ -10,7 +10,7 @@
     "feature:dev": "cd feature & npm run serve",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
-    "release": "vue-cli-service electron:build",
+    "release": "vue-cli-service electron:build && node ./release.js",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
   },
@@ -46,6 +46,7 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
+    "@electron/asar": "^3.2.8",
     "@ts-type/package-dts": "^1.0.53",
     "@types/electron-devtools-installer": "^2.2.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
@@ -69,6 +70,7 @@
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "prettier": "^2.8.4",
+    "tar": "^6.2.0",
     "typescript": "~4.1.5",
     "vue-cli-plugin-electron-builder": "3.0.0-alpha.4",
     "worker-plugin": "^5.0.1"
