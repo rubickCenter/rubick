@@ -33,7 +33,6 @@ module.exports = {
         productName: 'rubick',
         appId: 'com.muwoo.rubick',
         compression: 'maximum',
-        afterPack: './release.js',
         afterAllArtifactBuild: () => {
           return ['./build/app.asar.tgz'];
         },
