@@ -33,6 +33,7 @@ module.exports = {
         productName: 'rubick',
         appId: 'com.muwoo.rubick',
         compression: 'maximum',
+        afterPack: './release.js',
         directories: {
           output: 'build',
         },
