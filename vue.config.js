@@ -35,7 +35,7 @@ module.exports = {
         compression: 'maximum',
         afterPack: './release.js',
         afterAllArtifactBuild: () => {
-          return ['./build/app.asar.tgz'];
+          return ['./build/app.asar.gz'];
         },
         directories: {
           output: 'build',
