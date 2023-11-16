@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
-/build
+build/*
+!build/icons
 
 
 # local env files
