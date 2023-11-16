@@ -46,6 +46,7 @@ jobs:
         run: |
           sudo apt-get install libxtst-dev libpng++-dev
           sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+          sudo snap install snapcraft --classic
       # step3: yarn
       - name: Yarn install
         run: |
