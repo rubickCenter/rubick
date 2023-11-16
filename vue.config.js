@@ -103,8 +103,6 @@ module.exports = {
         },
         linux: {
           icon: 'public/icons/',
-          publish: ['github'],
-          target: 'deb',
         },
       },
     },
