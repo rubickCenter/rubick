@@ -102,7 +102,7 @@ module.exports = {
           include: 'public/installer.nsh',
         },
         linux: {
-          icon: 'public/icons/',
+          icon: 'public/linux-icons/',
         },
       },
     },
