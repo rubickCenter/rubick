@@ -2,7 +2,7 @@ English | [简体中文](./README.zh-CN.md)
 
 
 <div align= "center">
-<img align="center" width=200 src="https://user-images.githubusercontent.com/21073039/128333805-73e086f0-5523-46a3-a096-cba80b904c46.png" />
+<img align="center" width=200 src="./public/logo.png" />
 </div>
 
 

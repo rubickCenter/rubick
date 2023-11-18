@@ -2,9 +2,8 @@
 
 
 <div align= "center">
-<img align="center" width=200 src="https://user-images.githubusercontent.com/21073039/128333805-73e086f0-5523-46a3-a096-cba80b904c46.png" />
+<img align="center" width=200 src="./public/logo.png" />
 </div>
-
 
 <div align= "center">
  <h1>Rubick</h1>
@@ -14,7 +13,7 @@
     <img alt="release" src="https://img.shields.io/github/package-json/v/rubickCenter/rubick" />
  </a>
  <a href="https://github.com/rubickCenter/rubick/actions">
-   <img alt=building src=https://img.shields.io/github/workflow/status/rubickCenter/rubick/Build>
+   <img alt=building src=https://img.shields.io/github/actions/workflow/status/rubickCenter/rubick/main.yml>
  </a>
  <a href="https://github.com/rubickCenter/rubick/blob/master/LICENSE">
     <img alt="npm" src="https://img.shields.io/github/license/rubickCenter/rubick" />

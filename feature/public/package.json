@@ -3,7 +3,7 @@
   "pluginName": "系统菜单",
   "description": "系统菜单",
   "main": "index.html",
-  "logo": "https://pic1.zhimg.com/80/v2-c09780808301668a82e6646cb42f0806_720w.png",
+  "logo": "https://pic1.zhimg.com/80/v2-29152fe716010751db835adf591421f8_720w.png",
   "version": "0.0.0",
   "preload":"preload.js",
   "pluginType": "ui",

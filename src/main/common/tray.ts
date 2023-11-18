@@ -9,7 +9,7 @@ function createTray(window: BrowserWindow): Promise<Tray> {
   return new Promise((resolve) => {
     let icon;
     if (commonConst.macOS()) {
-      icon = './icons/icon@3x.png';
+      icon = './icons/iconTemplate@2x.png';
     } else if (commonConst.windows()) {
       icon =
         parseInt(os.release()) < 10

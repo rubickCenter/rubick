@@ -102,7 +102,9 @@ module.exports = {
           include: 'public/installer.nsh',
         },
         linux: {
-          icon: 'build/icons/',
+          icon: 'public/icons/',
+          publish: ['github'],
+          target: 'deb',
         },
       },
     },
