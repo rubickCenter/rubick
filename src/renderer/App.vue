@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import { watch, ref, toRaw } from 'vue';
+import { exec } from 'child_process';
 import Result from './components/result.vue';
 import Search from './components/search.vue';
 import getWindowHeight from '../common/utils/getWindowHeight';
@@ -142,6 +143,12 @@ const choosePlugin = (plugin) => {
     const localPlugins = getGlobal('LOCAL_PLUGINS').getLocalPlugins();
     const currentChoose = plugin || pluginHistory.value[currentSelect.value];
     let hasRemove = true;
+    if (currentChoose.pluginType === 'app') {
+      hasRemove = false;
+      changePluginHistory(currentChoose);
+      exec(currentChoose.action);
+      return;
+    }
     localPlugins.find((plugin) => {
       if (plugin.name === currentChoose.originName) {
         hasRemove = false;

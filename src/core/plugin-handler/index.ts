@@ -61,7 +61,7 @@ class AdapterHandler {
     const packageJSON = JSON.parse(
       fs.readFileSync(`${this.baseDir}/package.json`, 'utf-8')
     );
-    const registryUrl = `https://registry.npm.taobao.org/${name}`;
+    const registryUrl = `${this.registry}${name}`;
 
     // 从npm源中获取依赖包的最新版本
     try {
@@ -185,40 +185,6 @@ class AdapterHandler {
           console.log(message);
         });
       });
-
-      // if (cmd !== 'link') {
-      //   args = args
-      //     .concat('--color=always')
-      //     .concat('--save')
-      //     .concat(`--registry=${this.registry}`);
-      // }
-
-      // const npm = spawn('npm', args, {
-      //   cwd: this.baseDir,
-      // });
-      //
-      // console.log(args);
-      //
-      // let output = '';
-      // npm.stdout
-      //   .on('data', (data: string) => {
-      //     output += data; // 获取输出日志
-      //   })
-      //   .pipe(process.stdout);
-      //
-      // npm.stderr
-      //   .on('data', (data: string) => {
-      //     output += data; // 获取报错日志
-      //   })
-      //   .pipe(process.stderr);
-      //
-      // npm.on('close', (code: number) => {
-      //   if (!code) {
-      //     resolve({ code: 0, data: output }); // 如果没有报错就输出正常日志
-      //   } else {
-      //     reject({ code: code, data: output }); // 如果报错就输出报错日志
-      //   }
-      // });
     });
   }
 }

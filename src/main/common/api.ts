@@ -139,6 +139,7 @@ class API extends DBInstance {
   public hideMainWindow(arg, window) {
     window.hide();
   }
+
   public showMainWindow(arg, window) {
     window.show();
   }
@@ -156,6 +157,15 @@ class API extends DBInstance {
     if (!originWindow) return;
     const targetHeight = height;
     originWindow.setSize(originWindow.getSize()[0], targetHeight);
+    const screenPoint = screen.getCursorScreenPoint();
+    const display = screen.getDisplayNearestPoint(screenPoint);
+    const position =
+      originWindow.getPosition()[1] + targetHeight > display.bounds.height
+        ? height - 60
+        : 0;
+    originWindow.webContents.executeJavaScript(
+      `window.setPosition && typeof window.setPosition === "function" && window.setPosition(${position})`
+    );
   }
 
   public setSubInput({ data }, window, e) {
@@ -326,6 +336,7 @@ class API extends DBInstance {
     shell.showItemInFolder(data.path);
     return true;
   }
+
   public async getFileIcon({ data }) {
     const nativeImage = await app.getFileIcon(data.path, { size: 'normal' });
     return nativeImage.toDataURL();

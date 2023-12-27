@@ -64,6 +64,8 @@ const theme = ref(perf.custom.theme);
 state.custom = perf.custom || {};
 
 const setConfig = debounce(() => {
+  const { perf } = localConfig.getConfig();
+
   localConfig.setConfig(
     JSON.parse(
       JSON.stringify({

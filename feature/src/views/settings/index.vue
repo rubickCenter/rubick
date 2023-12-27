@@ -283,14 +283,15 @@ state.local = perf.local;
 state.global = defaultGlobal;
 
 const setConfig = debounce(() => {
+  const { perf } = localConfig.getConfig();
   localConfig.setConfig(
     JSON.parse(
       JSON.stringify({
         perf: {
+          ...perf,
           shortCut: state.shortCut,
           common: state.common,
           local: state.local,
-          custom: state.custom,
         },
         global: state.global,
       })
