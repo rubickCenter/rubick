@@ -50,7 +50,7 @@
               </template>
             </a-avatar>
           </template>
-          <template #title>{{ perf.custom.username }}</template>
+          <template #title>{{ computedUsername }}</template>
           <a-menu-item key="settings">
             <template #icon>
               <SettingOutlined />
@@ -97,6 +97,7 @@ import {
 import { useStore } from 'vuex';
 import localConfig from '@/confOp';
 
+const MAX_USERNAME_LEN = 5;// 最大展示的用户名长度
 const store = useStore();
 const router = useRouter();
 const active = computed(() => store.state.active);
@@ -106,6 +107,15 @@ const changeMenu = (key: any) => {
   store.commit('commonUpdate', {active: [key]})
   router.push(key);
 };
+const computedUsername = computed(() => {
+  const originUsername = perf?.custom?.username;
+  if (typeof originUsername === 'string'){
+    return originUsername.length > MAX_USERNAME_LEN
+      ? `${originUsername.slice(0, MAX_USERNAME_LEN)}...`
+      : originUsername;
+  }
+  return '';
+});
 
 window.rubick.onPluginEnter(({ code }: { code: string }) => {
   code = code === '已安装插件' ? 'installed' : code;
