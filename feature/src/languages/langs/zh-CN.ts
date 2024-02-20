@@ -65,6 +65,7 @@ export default {
           changeLang: '切换语言',
           cn: '简体中文',
           en: 'English',
+          history: '关键词搜索记录',
         },
         global: {
           title: '全局快捷键',

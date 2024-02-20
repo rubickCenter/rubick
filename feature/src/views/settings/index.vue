@@ -119,6 +119,16 @@
                 :un-checked-children="$t('feature.settings.basic.off')"
               ></a-switch>
             </div>
+            <div class="settings-item-li">
+              <div class="label">
+                {{ $t('feature.settings.basic.history') }}
+              </div>
+              <a-switch
+                v-model:checked="common.history"
+                :checked-children="$t('feature.settings.basic.on')"
+                :un-checked-children="$t('feature.settings.basic.off')"
+              ></a-switch>
+            </div>
           </div>
           <div class="setting-item">
             <div class="title">{{ $t('feature.settings.basic.theme') }}</div>

@@ -67,6 +67,7 @@ export default {
           changeLang: 'Change Language',
           cn: '简体中文',
           en: 'English',
+          history: 'keywords search history',
         },
         global: {
           title: 'Global Shortcut Key',

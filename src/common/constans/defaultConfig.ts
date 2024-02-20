@@ -1,5 +1,5 @@
 export default {
-  version: 6,
+  version: 7,
   perf: {
     custom: {
       theme: 'SPRING',
@@ -25,6 +25,7 @@ export default {
       autoPast: false,
       darkMode: false,
       guide: false,
+      history: true,
       lang: 'zh-CN',
     },
     local: {

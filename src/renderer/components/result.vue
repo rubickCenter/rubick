@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!currentPlugin.name" class="options">
+  <div v-show="!currentPlugin.name && config.perf.common.history" class="options">
     <div
       class="history-plugins"
       v-if="!options.length || !(searchValue || !!clipboardFile.length)"
@@ -44,11 +44,15 @@
 </template>
 
 <script lang="ts" setup>
-import {defineEmits, defineProps, reactive, toRaw, watch} from 'vue';
+import { defineEmits, defineProps, reactive, ref, toRaw, watch } from 'vue';
+import localConfig from '../confOp';
+
 const path = window.require('path');
 const remote = window.require('@electron/remote');
 
 declare const __static: string;
+
+const config: any = ref(localConfig.getConfig());
 
 const props: any = defineProps({
   searchValue: {

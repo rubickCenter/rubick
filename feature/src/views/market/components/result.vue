@@ -31,9 +31,9 @@ const searchValue = computed(() => store.state.searchValue);
 
 const result = computed(() => {
   if (searchValue.value.trim().length > 0) {
-    const pattern = new RegExp(searchValue.value);
+    const pattern = new RegExp(searchValue.value.toLowerCase());
     return totalPlugins.value.filter((plugin) => {
-      if (plugin.pluginName.match(pattern)) {
+      if (plugin.pluginName.toLowerCase().match(pattern)) {
         return true;
       } else {
         return false;

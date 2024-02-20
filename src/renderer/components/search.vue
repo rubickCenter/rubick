@@ -96,6 +96,7 @@ const emit = defineEmits([
 ]);
 
 const keydownEvent = (e, key: string) => {
+  e.preventDefault();
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
   const modifiers: Array<string> = [];
   ctrlKey && modifiers.push('control');
