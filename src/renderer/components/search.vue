@@ -96,7 +96,7 @@ const emit = defineEmits([
 ]);
 
 const keydownEvent = (e, key: string) => {
-  e.preventDefault();
+  key !== 'space' && e.preventDefault();
   const { ctrlKey, shiftKey, altKey, metaKey } = e;
   const modifiers: Array<string> = [];
   ctrlKey && modifiers.push('control');
@@ -126,6 +126,7 @@ const keydownEvent = (e, key: string) => {
       break;
     case 'space':
       if (runPluginDisable || !config.value.perf.common.space) return;
+      e.preventDefault();
       emit('choosePlugin');
       break;
     default:
