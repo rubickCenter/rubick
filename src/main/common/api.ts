@@ -91,7 +91,7 @@ class API extends DBInstance {
       }).show();
     }
     window.setSize(window.getSize()[0], 60);
-    this.removePlugin(null, window);
+    // this.removePlugin(null, window);
     // 模板文件
     if (!plugin.main) {
       plugin.tplPath = common.dev()
@@ -128,8 +128,10 @@ class API extends DBInstance {
   }
 
   public removePlugin(e, window) {
-    this.currentPlugin = null;
     runnerInstance.removeView(window);
+    setTimeout(() => {
+      this.currentPlugin = null;
+    }, 100);
   }
 
   public openPluginDevTools() {

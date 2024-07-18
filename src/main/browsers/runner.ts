@@ -72,6 +72,8 @@ export default () => {
     view.setAutoResize({ width: true, height: true });
     executeHooks('PluginEnter', ext);
     executeHooks('PluginReady', ext);
+    console.log('enterrrr');
+    
     const config = await localConfig.getConfig();
     const darkMode = config.perf.common.darkMode;
     darkMode &&
@@ -175,31 +177,29 @@ export default () => {
 
   const removeView = (window: BrowserWindow) => {
     if (!view) return;
-    window.removeBrowserView(view);
-    if (!view.inDetach) {
-      window.setBrowserView(null);
-      view.webContents?.destroy();
-    }
-
-    // window.setSize(800, 60);
     executeHooks('PluginOut', null);
-    window.webContents?.executeJavaScript(`window.initRubick()`);
-    view = undefined;
+    setTimeout(() => {
+      window.removeBrowserView(view);
+      if (!view.inDetach) {
+        window.setBrowserView(null);
+        view.webContents?.destroy();
+      }
+      window.webContents?.executeJavaScript(`window.initRubick()`);
+      view = undefined;
+    }, 0);
   };
 
   const getView = () => view;
 
   const executeHooks = (hook, data) => {
-    setTimeout(() => {
-      if (!view) return;
-      const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {
+    if (!view) return;
+    const evalJs = `if(window.rubick && window.rubick.hooks && typeof window.rubick.hooks.on${hook} === 'function' ) {
           try {
             window.rubick.hooks.on${hook}(${data ? JSON.stringify(data) : ''});
           } catch(e) {}
         }
       `;
-      view.webContents?.executeJavaScript(evalJs);
-    }, 300);
+    view.webContents?.executeJavaScript(evalJs);
   };
 
   return {
