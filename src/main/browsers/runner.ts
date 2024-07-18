@@ -73,7 +73,7 @@ export default () => {
     executeHooks('PluginEnter', ext);
     executeHooks('PluginReady', ext);
     console.log('enterrrr');
-    
+
     const config = await localConfig.getConfig();
     const darkMode = config.perf.common.darkMode;
     darkMode &&
@@ -178,8 +178,11 @@ export default () => {
   const removeView = (window: BrowserWindow) => {
     if (!view) return;
     executeHooks('PluginOut', null);
+    console.log('PluginOut hooks');
+
     setTimeout(() => {
       window.removeBrowserView(view);
+      console.log('remove view');
       if (!view.inDetach) {
         window.setBrowserView(null);
         view.webContents?.destroy();

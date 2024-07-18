@@ -91,7 +91,7 @@ class API extends DBInstance {
       }).show();
     }
     window.setSize(window.getSize()[0], 60);
-    // this.removePlugin(null, window);
+    this.removePlugin(null, window);
     // 模板文件
     if (!plugin.main) {
       plugin.tplPath = common.dev()
@@ -129,9 +129,7 @@ class API extends DBInstance {
 
   public removePlugin(e, window) {
     runnerInstance.removeView(window);
-    setTimeout(() => {
-      this.currentPlugin = null;
-    }, 100);
+    this.currentPlugin = null;
   }
 
   public openPluginDevTools() {
@@ -213,12 +211,15 @@ class API extends DBInstance {
     if (!Notification.isSupported()) return;
     'string' != typeof body && (body = String(body));
     const plugin = this.currentPlugin;
-    if (!plugin) return;
-    const notify = new Notification({
-      title: plugin.pluginName,
+    console.log('current plugin', this.currentPlugin);
+
+    const notification = {
+      title: plugin ? plugin.pluginName : 'rubick',
       body,
-      icon: plugin.logo,
-    });
+      icon: plugin ? plugin.logo : null,
+    };
+
+    const notify = new Notification(notification);
     notify.show();
   }
 
