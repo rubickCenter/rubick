@@ -115,14 +115,13 @@ const changeIndex = (index) => {
     currentSelect.value = currentSelect.value + index;
     return;
   }
-  if (
-    currentSelect.value + index > options.value.length - 1 ||
-    currentSelect.value + index < 0
-  ) {
+  if (currentSelect.value + index > options.value.length - 1) {
     currentSelect.value = 0;
-    return;
+  } else if (currentSelect.value + index < 0) {
+    currentSelect.value = options.value.length - 1;
+  } else {
+    currentSelect.value = currentSelect.value + index;
   }
-  currentSelect.value = currentSelect.value + index;
 };
 
 const openMenu = (ext) => {
