@@ -63,7 +63,7 @@ export default () => {
         `window.rubick && window.rubick.hooks && typeof window.rubick.hooks.onShow === "function" && window.rubick.hooks.onShow()`
       );
       // versonHandler.checkUpdate();
-      win.webContents.openDevTools();
+      // win.webContents.openDevTools();
     });
 
     win.on('hide', () => {
