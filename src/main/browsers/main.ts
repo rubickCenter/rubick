@@ -25,7 +25,7 @@ export default () => {
       height: WINDOW_HEIGHT,
       minHeight: WINDOW_MIN_HEIGHT,
       useContentSize: true,
-      resizable: false,
+      resizable: true,
       width: WINDOW_WIDTH,
       frame: false,
       title: '拉比克',
