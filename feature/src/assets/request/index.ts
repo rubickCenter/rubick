@@ -14,7 +14,7 @@ try {
 const instance = axios.create({
   timeout: 4000,
   baseURL:
-    baseURL || 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
+    baseURL || 'https://gitee.com/monkeyWang/rubickdatabase/raw/master',
 });
 
 export default {
