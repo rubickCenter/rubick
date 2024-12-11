@@ -25,6 +25,8 @@
       ref="mainInput"
       class="main-input"
       @input="(e) => changeValue(e)"
+      @keydown.left="(e) => keydownEvent(e, 'left')"
+      @keydown.right="(e) => keydownEvent(e, 'right')"
       @keydown.down="(e) => keydownEvent(e, 'down')"
       @keydown.tab="(e) => keydownEvent(e, 'down')"
       @keydown.up="(e) => keydownEvent(e, 'up')"
@@ -41,10 +43,7 @@
     >
       <template #suffix>
         <div class="suffix-tool">
-          <MoreOutlined
-            @click="showSeparate()"
-            class="icon-more"
-          />
+          <MoreOutlined @click="showSeparate()" class="icon-more" />
         </div>
       </template>
     </a-input>
@@ -118,6 +117,12 @@ const keydownEvent = (e, key: string) => {
       emit('changeCurrent', -1);
       break;
     case 'down':
+      emit('changeCurrent', 1);
+      break;
+    case 'left':
+      emit('changeCurrent', -1);
+      break;
+    case 'right':
       emit('changeCurrent', 1);
       break;
     case 'enter':

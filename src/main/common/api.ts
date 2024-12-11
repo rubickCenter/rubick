@@ -128,8 +128,8 @@ class API extends DBInstance {
   }
 
   public removePlugin(e, window) {
-    this.currentPlugin = null;
     runnerInstance.removeView(window);
+    this.currentPlugin = null;
   }
 
   public openPluginDevTools() {
@@ -211,11 +211,10 @@ class API extends DBInstance {
     if (!Notification.isSupported()) return;
     'string' != typeof body && (body = String(body));
     const plugin = this.currentPlugin;
-    if (!plugin) return;
     const notify = new Notification({
-      title: plugin.pluginName,
+      title: plugin ? plugin.pluginName : null,
       body,
-      icon: plugin.logo,
+      icon: plugin ? plugin.logo : null,
     });
     notify.show();
   }

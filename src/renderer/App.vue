@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="components-layout"
-    @mousedown="onMouseDown"
-  >
+  <div id="components-layout" @mousedown="onMouseDown">
     <Search
       :currentPlugin="currentPlugin"
       @changeCurrent="changeIndex"
@@ -94,7 +91,9 @@ watch(
     window.rubick.setExpendHeight(
       getWindowHeight(
         options.value,
-        (pluginLoading.value || !config.value.perf.common.history) ? [] : pluginHistory.value
+        pluginLoading.value || !config.value.perf.common.history
+          ? []
+          : pluginHistory.value
       )
     );
   },
@@ -104,26 +103,15 @@ watch(
 );
 
 const changeIndex = (index) => {
-  if (!options.value.length) {
-    if (!pluginHistory.value.length) return;
-    if (
-      currentSelect.value + index > pluginHistory.value.length - 1 ||
-      currentSelect.value + index < 0
-    ) {
-      currentSelect.value = 0;
-      return;
-    }
-    currentSelect.value = currentSelect.value + index;
-    return;
-  }
-  if (
-    currentSelect.value + index > options.value.length - 1 ||
-    currentSelect.value + index < 0
-  ) {
+  const len = options.value.length || pluginHistory.value.length;
+  if (!len) return;
+  if (currentSelect.value + index > len - 1) {
     currentSelect.value = 0;
-    return;
+  } else if (currentSelect.value + index < 0) {
+    currentSelect.value = len - 1;
+  } else {
+    currentSelect.value = currentSelect.value + index;
   }
-  currentSelect.value = currentSelect.value + index;
 };
 
 const openMenu = (ext) => {
@@ -161,7 +149,9 @@ const choosePlugin = (plugin) => {
     });
     if (hasRemove) {
       const result = window.rubick.db.get(PLUGIN_HISTORY) || {};
-      const history = result.data.filter(item => item.originName !== currentChoose.originName);
+      const history = result.data.filter(
+        (item) => item.originName !== currentChoose.originName
+      );
       setPluginHistory(history);
       return message.warning('插件已被卸载！');
     }

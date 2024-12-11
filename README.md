@@ -109,6 +109,8 @@ Those who are interested in this project or want to exchange and learn can scan 
 
 ![image](https://user-images.githubusercontent.com/21073039/127327603-9796f246-ee4b-4950-a69d-ce3205ec9569.png)
 
+<a href="https://hellogithub.com/repository/0a3e2484b44e481e9dcf1850e45193cd" target="_blank"><img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=0a3e2484b44e481e9dcf1850e45193cd&claim_uid=vXGwjpmYNsBex0C" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 ## Contribute
 This project exists thanks to all the people who contribute. [[Contribute](https://github.com/rubickCenter/rubick/graphs/contributors)]. <a href="https://github.com/rubickCenter/rubick/graphs/contributors"><img src="https://opencollective.com/rubick/contributors.svg?width=890&button=false" /></a>
 
