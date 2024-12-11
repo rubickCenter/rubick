@@ -7,10 +7,9 @@ import path from 'path';
 import got from 'got';
 import fixPath from 'fix-path';
 
+import spawn from 'cross-spawn';
 import { ipcRenderer } from 'electron';
 import axios from 'axios';
-
-import npm from 'npm';
 
 fixPath();
 
@@ -42,7 +41,7 @@ class AdapterHandler {
     }
     this.baseDir = options.baseDir;
 
-    let register = options.registry || 'https://registry.npmmirror.com/';
+    let register = options.registry || 'https://registry.npm.taobao.org';
 
     try {
       const dbdata = ipcRenderer.sendSync('msg-trigger', {
@@ -61,7 +60,7 @@ class AdapterHandler {
     const packageJSON = JSON.parse(
       fs.readFileSync(`${this.baseDir}/package.json`, 'utf-8')
     );
-    const registryUrl = `${this.registry}${name}`;
+    const registryUrl = `https://registry.npm.taobao.org/${name}`;
 
     // 从npm源中获取依赖包的最新版本
     try {
@@ -158,32 +157,43 @@ class AdapterHandler {
    */
   private async execCommand(cmd: string, modules: string[]): Promise<string> {
     return new Promise((resolve: any, reject: any) => {
-      const module =
+      let args: string[] = [cmd].concat(
         cmd !== 'uninstall' && cmd !== 'link'
           ? modules.map((m) => `${m}@latest`)
-          : modules;
-      const config: any = {
-        prefix: this.baseDir,
-        save: true,
-        cache: path.join(this.baseDir, 'cache'),
-      };
+          : modules
+      );
       if (cmd !== 'link') {
-        config.registry = this.registry;
+        args = args
+          .concat('--color=always')
+          .concat('--save')
+          .concat(`--registry=${this.registry}`);
       }
-      npm.load(config, function (err) {
-        npm.commands[cmd](module, function (er, data) {
-          if (!err) {
-            console.log(data);
-            resolve({ code: -1, data });
-          } else {
-            reject({ code: -1, data: err });
-          }
-        });
 
-        npm.on('log', function (message) {
-          // log installation progress
-          console.log(message);
-        });
+      const npm = spawn('npm', args, {
+        cwd: this.baseDir,
+      });
+
+      console.log(args);
+
+      let output = '';
+      npm.stdout
+        .on('data', (data: string) => {
+          output += data; // 获取输出日志
+        })
+        .pipe(process.stdout);
+
+      npm.stderr
+        .on('data', (data: string) => {
+          output += data; // 获取报错日志
+        })
+        .pipe(process.stderr);
+
+      npm.on('close', (code: number) => {
+        if (!code) {
+          resolve({ code: 0, data: output }); // 如果没有报错就输出正常日志
+        } else {
+          reject({ code: code, data: output }); // 如果报错就输出报错日志
+        }
       });
     });
   }
