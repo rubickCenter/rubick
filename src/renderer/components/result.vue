@@ -1,8 +1,13 @@
 <template>
-  <div v-show="!currentPlugin.name && config.perf.common.history" class="options">
+  <div v-show="!currentPlugin.name" class="options">
     <div
       class="history-plugins"
-      v-if="!options.length || !(searchValue || !!clipboardFile.length)"
+      v-if="
+        !options.length &&
+        !searchValue &&
+        !clipboardFile.length &&
+        config.perf.common.history
+      "
     >
       <a-row>
         <a-col
