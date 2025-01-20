@@ -17,7 +17,7 @@
       name="register"
     >
       <a-input
-        placeholder="https://registry.npm.taobao.org"
+        placeholder="https://registry.npmmirror.com"
         v-model:value="formState.register"
       />
     </a-form-item>
@@ -54,7 +54,7 @@ import { message } from 'ant-design-vue';
 let _rev: any;
 
 let defaultConfig = {
-  register: 'https://registry.npm.taobao.org',
+  register: 'https://registry.npmmirror.com',
   database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
   access_token: '',
 };

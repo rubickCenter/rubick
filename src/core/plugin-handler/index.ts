@@ -41,7 +41,7 @@ class AdapterHandler {
     }
     this.baseDir = options.baseDir;
 
-    let register = options.registry || 'https://registry.npm.taobao.org';
+    let register = options.registry || 'https://registry.npmmirror.com';
 
     try {
       const dbdata = ipcRenderer.sendSync('msg-trigger', {
@@ -60,7 +60,7 @@ class AdapterHandler {
     const packageJSON = JSON.parse(
       fs.readFileSync(`${this.baseDir}/package.json`, 'utf-8')
     );
-    const registryUrl = `https://registry.npm.taobao.org/${name}`;
+    const registryUrl = `https://registry.npmmirror.com/${name}`;
 
     // 从npm源中获取依赖包的最新版本
     try {
