@@ -17,7 +17,7 @@
       name="register"
     >
       <a-input
-        placeholder="https://registry.npm.taobao.org"
+        placeholder="https://registry.npmmirror.com"
         v-model:value="formState.register"
       />
     </a-form-item>
@@ -27,7 +27,7 @@
       name="database"
     >
       <a-input
-        placeholder="https://gitcode.net/rubickcenter/rubick-database/-/raw/master"
+        placeholder="https://gitee.com/monkeyWang/rubickdatabase/raw/master"
         v-model:value="formState.database"
       />
     </a-form-item>
@@ -54,8 +54,8 @@ import { message } from 'ant-design-vue';
 let _rev: any;
 
 let defaultConfig = {
-  register: 'https://registry.npm.taobao.org',
-  database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
+  register: 'https://registry.npmmirror.com',
+  database: 'https://gitee.com/monkeyWang/rubickdatabase/raw/master',
   access_token: '',
 };
 
@@ -81,7 +81,7 @@ const layout = {
 const resetForm = () => {
   formState.value = {
     register: 'https://registry.npmmirror.com',
-    database: 'https://gitcode.net/rubickcenter/rubick-database/-/raw/master',
+    database: 'https://gitee.com/monkeyWang/rubickdatabase/raw/master',
     access_token: '',
   };
 };
