@@ -104,6 +104,13 @@ If the project is helpful to you, you can buy me a cup of coffee as a reward!
 <img width="180" src="https://picx.zhimg.com/80/v2-3160247d6099053405e6cd2cb6afb5e5_720w.png">
 </div>
 
+## 友情链接
+
+<a href="https://pro.kuaitu.cc/" target="_blank">
+<img width="100" src="https://github.com/user-attachments/assets/6127488e-466b-4e71-98ab-00fb3c76553e" />
+</a>
+
+
 ## Feedback
 Those who are interested in this project or want to exchange and learn can scan the QR code and add the following WeChat, with the comment rubick, to help us grow better.
 
