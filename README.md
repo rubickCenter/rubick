@@ -1,36 +1,22 @@
 English | [简体中文](./README.zh-CN.md)
 
-
 <div align= "center">
 <img align="center" width=200 src="./public/logo.png" />
 </div>
 
-
-<div align= "center">
- <h1>Rubick</h1>
-
- <img alt="release" src="https://img.shields.io/github/downloads/rubickCenter/rubick/total" />
- <a href="https://github.com/rubickCenter/rubick/releases">
-    <img alt="release" src="https://img.shields.io/github/package-json/v/rubickCenter/rubick" />
- </a>
- <a href="https://github.com/rubickCenter/rubick/actions">
-   <img alt=building src=https://img.shields.io/github/actions/workflow/status/rubickCenter/rubick/main.yml>
- </a>
- <a href="https://github.com/rubickCenter/rubick/blob/master/LICENSE">
-    <img alt="npm" src="https://img.shields.io/github/license/rubickCenter/rubick" />
- </a>
- <a href="https://github.com/rubickCenter/rubick/stargazers">
-    <img alt="star" src="https://img.shields.io/github/stars/rubickCenter/rubick?style=social">
-</a>
-<a href="https://gitee.com/monkeyWang/rubick">
-    <img alt="码云" src="https://img.shields.io/badge/Gitee--yellow.svg?style=social&logo=data:image/svg+xml;base64,PHN2ZyB0PSIxNTc0ODM3MTM4ODM3IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE3NzAiICAgICB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPiAgICA8cGF0aCBkPSJNODkxIDQyOC44SDQ2NS44Yy0yMC40IDAtMzcgMTYuNS0zNyAzN3Y5Mi40YzAgMjAuNCAxNi41IDM3IDM3IDM3aDI1OC45YzIwLjQgMCAzNyAxNi42IDM3IDM3djE4LjRjMCA2MS4zLTQ5LjcgMTEwLjktMTEwLjkgMTEwLjlIMjk5LjRjLTIwLjQgMC0zNy0xNi42LTM3LTM3VjM3My4yYzAtNjEuMyA0OS43LTExMC45IDExMC45LTExMC45aDUxNy42YzIwLjQgMCAzNy0xNi41IDM3LTM3bDAuMS05Mi4zYzAtMjAuNC0xNi41LTM3LTM3LTM3SDM3My4zQzIyMC4yIDk2IDk2IDIyMC4yIDk2IDM3My4zVjg5MWMwIDIwLjQgMTYuNiAzNyAzNyAzN2g1NDUuNEM4MTYuMiA5MjggOTI4IDgxNi4zIDkyOCA2NzguNFY0NjUuOGMwLTIwLjQtMTYuNi0zNy0zNy0zN3oiICAgICAgICAgIGZpbGw9IiNkODFlMDYiIHAtaWQ9IjE3NzEiPjwvcGF0aD48L3N2Zz4="/>
-</a>
+<div align="center">
+    <h1>Rubick</h1>
+    <img alt="downloads" src="https://img.shields.io/github/downloads/rubickCenter/rubick/total" />
+    <a href="https://github.com/rubickCenter/rubick/releases"><img alt="latest release" src="https://img.shields.io/github/package-json/v/rubickCenter/rubick" /></a>
+    <a href="https://github.com/rubickCenter/rubick/actions"><img alt="github action building" src="https://img.shields.io/github/actions/workflow/status/rubickCenter/rubick/main.yml" /></a>
+    <a href="https://github.com/rubickCenter/rubick/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rubickCenter/rubick" /></a>
+    <a href="https://github.com/rubickCenter/rubick/stargazers"><img alt="github stars" src="https://img.shields.io/github/stars/rubickCenter/rubick?style=social" /></a>
+    <a href="https://gitee.com/monkeyWang/rubick"><img alt="gitee mirror" src="https://img.shields.io/badge/Gitee--yellow.svg?style=social&logo=data:image/svg+xml;base64,PHN2ZyB0PSIxNTc0ODM3MTM4ODM3IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE3NzAiICAgICB3aWR0aD0iMTYiIGhlaWdodD0iMTYiPiAgICA8cGF0aCBkPSJNODkxIDQyOC44SDQ2NS44Yy0yMC40IDAtMzcgMTYuNS0zNyAzN3Y5Mi40YzAgMjAuNCAxNi41IDM3IDM3IDM3aDI1OC45YzIwLjQgMCAzNyAxNi42IDM3IDM3djE4LjRjMCA2MS4zLTQ5LjcgMTEwLjktMTEwLjkgMTEwLjlIMjk5LjRjLTIwLjQgMC0zNy0xNi42LTM3LTM3VjM3My4yYzAtNjEuMyA0OS43LTExMC45IDExMC45LTExMC45aDUxNy42YzIwLjQgMCAzNy0xNi41IDM3LTM3bDAuMS05Mi4zYzAtMjAuNC0xNi41LTM3LTM3LTM3SDM3My4zQzIyMC4yIDk2IDk2IDIyMC4yIDk2IDM3My4zVjg5MWMwIDIwLjQgMTYuNiAzNyAzNyAzN2g1NDUuNEM4MTYuMiA5MjggOTI4IDgxNi4zIDkyOCA2NzguNFY0NjUuOGMwLTIwLjQtMTYuNi0zNy0zNy0zN3oiICAgICAgICAgIGZpbGw9IiNkODFlMDYiIHAtaWQ9IjE3NzEiPjwvcGF0aD48L3N2Zz4=" /></a>
 </div>
 
 <div align= "center">
 <img align="center" src="https://picx.zhimg.com/80/v2-f8fe09ef125dac5fdcbef3fe00f92b21_720w.png" />
 </div>
-
 Open-source plugin-based desktop efficiency toolbox. The plugins are installed and uninstalled based on npm, which is very lightweight. The plugin data supports webdav multi-terminal synchronization, which is very secure. It supports internal network deployment and can be customized for further development, which is very flexible.
 
 ## Get Rubick
