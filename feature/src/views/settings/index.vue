@@ -318,55 +318,58 @@ watch(state, setConfig);
 
 const changeShortCut = (e, key) => {
   let compose = '';
-  // 添加是否包含功能键的判断
-  let incluFuncKeys = false;
   const currentTime = Date.now();
-  const isDoubleClick =
-    currentTime - lastKeyPressTime.value < DOUBLE_CLICK_THRESHOLD;
+  const isDoubleClick = currentTime - lastKeyPressTime.value < DOUBLE_CLICK_THRESHOLD;
   lastKeyPressTime.value = currentTime;
 
-  // 检查是否是修饰键的双击
-  if (e.keyCode === 17 && isDoubleClick) {
-    // Ctrl
-    state.shortCut[key] = 'Ctrl+Ctrl';
-    return;
-  }
-  if (e.keyCode === 18 && isDoubleClick) {
-    // Alt
-    state.shortCut[key] = 'Option+Option';
-    return;
-  }
-  if (e.keyCode === 16 && isDoubleClick) {
-    // Shift
-    state.shortCut[key] = 'Shift+Shift';
-    return;
-  }
-  if (e.keyCode === 93 && isDoubleClick) {
-    // Command
-    state.shortCut[key] = 'Command+Command';
+  // 处理 F1-F12 功能键
+  if (e.keyCode >= 112 && e.keyCode <= 123) {
+    state.shortCut[key] = keycodes[e.keyCode].toUpperCase();
     return;
   }
 
-  // 处理修饰键+普通键的组合
+  // 处理双击功能键的情况
+  if (isDoubleClick) {
+    if (e.keyCode === 17) { // Ctrl
+      state.shortCut[key] = 'Ctrl+Ctrl';
+      return;
+    }
+    if (e.keyCode === 18) { // Alt
+      state.shortCut[key] = 'Option+Option';
+      return;
+    }
+    if (e.keyCode === 16) { // Shift
+      state.shortCut[key] = 'Shift+Shift';
+      return;
+    }
+    if (e.keyCode === 93) { // Command
+      state.shortCut[key] = 'Command+Command';
+      return;
+    }
+  }
+
+  // 处理功能键+普通键的组合
+  let hasModifierKey = false;
+  
   if (e.ctrlKey && e.keyCode !== 17) {
     compose += '+Ctrl';
-    incluFuncKeys = true;
+    hasModifierKey = true;
   }
   if (e.shiftKey && e.keyCode !== 16) {
     compose += '+Shift';
-    incluFuncKeys = true;
+    hasModifierKey = true;
   }
   if (e.altKey && e.keyCode !== 18) {
     compose += '+Option';
-    incluFuncKeys = true;
+    hasModifierKey = true;
   }
   if (e.metaKey && e.keyCode !== 93) {
     compose += '+Command';
-    incluFuncKeys = true;
+    hasModifierKey = true;
   }
 
   // 只有当有修饰键时才添加普通键
-  if (incluFuncKeys) {
+  if (hasModifierKey) {
     compose += '+' + keycodes[e.keyCode].toUpperCase();
     compose = compose.substring(1);
     state.shortCut[key] = compose;
