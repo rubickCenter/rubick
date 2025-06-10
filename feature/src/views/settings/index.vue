@@ -274,12 +274,16 @@ const state = reactive({
   custom: {},
 });
 
+// 添加lastKeyPressTime变量来跟踪按键时间
+const lastKeyPressTime = ref(0);
+const DOUBLE_CLICK_THRESHOLD = 300; // 双击时间阈值（毫秒）
+
 const isWindows = window?.rubick?.isWindows();
 const tipText = computed(() => {
   const optionKeyName = isWindows ? 'Alt' : 'Option、Command';
   return t('feature.settings.global.addShortcutKeyTips', {
     optionKeyName: optionKeyName,
-  });
+  }) + `此外你也可以双击修饰键，如（Ctrl+Ctrl）`;
 });
 
 const currentSelect = ref(['userInfo']);
@@ -316,6 +320,34 @@ const changeShortCut = (e, key) => {
   let compose = '';
   // 添加是否包含功能键的判断
   let incluFuncKeys = false;
+  const currentTime = Date.now();
+  const isDoubleClick =
+    currentTime - lastKeyPressTime.value < DOUBLE_CLICK_THRESHOLD;
+  lastKeyPressTime.value = currentTime;
+
+  // 检查是否是修饰键的双击
+  if (e.keyCode === 17 && isDoubleClick) {
+    // Ctrl
+    state.shortCut[key] = 'Ctrl+Ctrl';
+    return;
+  }
+  if (e.keyCode === 18 && isDoubleClick) {
+    // Alt
+    state.shortCut[key] = 'Option+Option';
+    return;
+  }
+  if (e.keyCode === 16 && isDoubleClick) {
+    // Shift
+    state.shortCut[key] = 'Shift+Shift';
+    return;
+  }
+  if (e.keyCode === 93 && isDoubleClick) {
+    // Command
+    state.shortCut[key] = 'Command+Command';
+    return;
+  }
+
+  // 处理修饰键+普通键的组合
   if (e.ctrlKey && e.keyCode !== 17) {
     compose += '+Ctrl';
     incluFuncKeys = true;
@@ -332,15 +364,11 @@ const changeShortCut = (e, key) => {
     compose += '+Command';
     incluFuncKeys = true;
   }
-  compose += '+' + keycodes[e.keyCode].toUpperCase();
-  compose = compose.substring(1);
-  if (
-    incluFuncKeys &&
-    e.keyCode !== 16 &&
-    e.keyCode !== 17 &&
-    e.keyCode !== 18 &&
-    e.keyCode !== 93
-  ) {
+
+  // 只有当有修饰键时才添加普通键
+  if (incluFuncKeys) {
+    compose += '+' + keycodes[e.keyCode].toUpperCase();
+    compose = compose.substring(1);
     state.shortCut[key] = compose;
   } else {
     // 不做处理
