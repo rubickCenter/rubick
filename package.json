@@ -39,6 +39,7 @@
     "pouchdb-load": "^1.4.6",
     "pouchdb-replication-stream": "^1.2.9",
     "simple-plist": "0.2.1",
+    "uiohook-napi": "^1.5.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
