@@ -10,6 +10,7 @@ import {
 import screenCapture from '@/core/screen-capture';
 import localConfig from '@/main/common/initLocalConfig';
 import winPosition from './getWinPosition';
+import { uIOhook, UiohookKey } from 'uiohook-napi';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -80,7 +81,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       mainWindow.show();
     }
 
-    let lastModifierPress = 0;
+    let lastModifierPress = Date.now();
     if (
       config.perf.shortCut.showAndHidden == 'Ctrl+Ctrl' ||
       config.perf.shortCut.showAndHidden == 'Option+Option' ||
@@ -88,15 +89,27 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       config.perf.shortCut.showAndHidden == 'Command+Command'
     ) {
       // 双击快捷键，如 Ctrl+Ctrl
+      uIOhook.stop();
       const modifers = config.perf.shortCut.showAndHidden.split('+');
-      const key = modifers.pop();
-      globalShortcut.register(key, () => {
-        const currentTime = Date.now();
-        if (currentTime - lastModifierPress < 300) {
-          mainWindowPopUp();
+      const showAndHiddenKey = modifers.pop();
+      const key2uioKeyCode = {
+        Ctrl: UiohookKey.Ctrl,
+        Shift: UiohookKey.Shift,
+        Alt: UiohookKey.Alt,
+        Comma: UiohookKey.Comma,
+      };
+
+      uIOhook.on('keydown', (e) => {
+        if (e.keycode === key2uioKeyCode[showAndHiddenKey]) {
+          const currentTime = Date.now();
+          if (currentTime - lastModifierPress < 300) {
+            mainWindowPopUp();
+          }
+          lastModifierPress = currentTime;
         }
-        lastModifierPress = currentTime;
       });
+
+      uIOhook.start();
     } else {
       // 普通快捷键，如 Ctrl+Space
       globalShortcut.register(config.perf.shortCut.showAndHidden, () =>
