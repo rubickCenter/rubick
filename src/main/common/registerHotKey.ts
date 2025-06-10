@@ -63,8 +63,10 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     await setTheme();
     const config = await localConfig.getConfig();
     globalShortcut.unregisterAll();
+
     // 注册偏好快捷键
-    globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+    // 显示/隐藏快捷键
+    function mainWindowPopUp() {
       const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
       if (currentShow) return mainWindow.hide();
       const { x: wx, y: wy } = winPosition.getPosition();
@@ -76,8 +78,33 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       });
       mainWindow.setPosition(wx, wy);
       mainWindow.show();
-    });
+    }
 
+    let lastModifierPress = 0;
+    if (
+      config.perf.shortCut.showAndHidden == 'Ctrl+Ctrl' ||
+      config.perf.shortCut.showAndHidden == 'Option+Option' ||
+      config.perf.shortCut.showAndHidden == 'Shift+Shift' ||
+      config.perf.shortCut.showAndHidden == 'Command+Command'
+    ) {
+      // 双击快捷键，如 Ctrl+Ctrl
+      const modifers = config.perf.shortCut.showAndHidden.split('+');
+      const key = modifers.pop();
+      globalShortcut.register(key, () => {
+        const currentTime = Date.now();
+        if (currentTime - lastModifierPress < 300) {
+          mainWindowPopUp();
+        }
+        lastModifierPress = currentTime;
+      });
+    } else {
+      // 普通快捷键，如 Ctrl+Space
+      globalShortcut.register(config.perf.shortCut.showAndHidden, () =>
+        mainWindowPopUp()
+      );
+    }
+
+    // 截图快捷键
     globalShortcut.register(config.perf.shortCut.capture, () => {
       screenCapture(mainWindow, (data) => {
         data &&
