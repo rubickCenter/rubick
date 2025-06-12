@@ -58,6 +58,20 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     }
   };
 
+  function mainWindowPopUp() {
+    const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
+    if (currentShow) return mainWindow.hide();
+    const { x: wx, y: wy } = winPosition.getPosition();
+    mainWindow.setAlwaysOnTop(false);
+    mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    mainWindow.focus();
+    mainWindow.setVisibleOnAllWorkspaces(false, {
+      visibleOnFullScreen: true,
+    });
+    mainWindow.setPosition(wx, wy);
+    mainWindow.show();
+  }
+
   const init = async () => {
     await setAutoLogin();
     await setDarkMode();
@@ -67,51 +81,14 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
 
     // 注册偏好快捷键
     // 显示/隐藏快捷键
-    function mainWindowPopUp() {
-      const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
-      if (currentShow) return mainWindow.hide();
-      const { x: wx, y: wy } = winPosition.getPosition();
-      mainWindow.setAlwaysOnTop(false);
-      mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-      mainWindow.focus();
-      mainWindow.setVisibleOnAllWorkspaces(false, {
-        visibleOnFullScreen: true,
-      });
-      mainWindow.setPosition(wx, wy);
-      mainWindow.show();
-    }
-
-    let lastModifierPress = Date.now();
     if (
-      config.perf.shortCut.showAndHidden == 'Ctrl+Ctrl' ||
-      config.perf.shortCut.showAndHidden == 'Option+Option' ||
-      config.perf.shortCut.showAndHidden == 'Shift+Shift' ||
-      config.perf.shortCut.showAndHidden == 'Command+Command'
+      ['Ctrl+Ctrl', 'Option+Option', 'Shift+Shift', 'Command+Command'].includes(
+        config.perf.shortCut.showAndHidden
+      )
     ) {
-      // 双击快捷键，如 Ctrl+Ctrl
-      uIOhook.stop();
-      const modifers = config.perf.shortCut.showAndHidden.split('+');
-      const showAndHiddenKey = modifers.pop();
-      const key2uioKeyCode = {
-        Ctrl: UiohookKey.Ctrl,
-        Shift: UiohookKey.Shift,
-        Alt: UiohookKey.Alt,
-        Comma: UiohookKey.Comma,
-      };
-
-      uIOhook.on('keydown', (e) => {
-        if (e.keycode === key2uioKeyCode[showAndHiddenKey]) {
-          const currentTime = Date.now();
-          if (currentTime - lastModifierPress < 300) {
-            mainWindowPopUp();
-          }
-          lastModifierPress = currentTime;
-        }
-      });
-
-      uIOhook.start();
+      // 双击快捷键,详见 uIOhookRegister
     } else {
-      // 普通快捷键，如 Ctrl+Space
+      // 普通快捷键，如 Ctrl+Space，F8
       globalShortcut.register(config.perf.shortCut.showAndHidden, () =>
         mainWindowPopUp()
       );
@@ -141,9 +118,48 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       });
     });
   };
+
+  uIOhookRegister(mainWindowPopUp);
   init();
   ipcMain.on('re-register', () => {
     init();
   });
 };
 export default registerHotKey;
+
+function uIOhookRegister(callback: () => void) {
+  let lastModifierPress = Date.now();
+  uIOhook.on('keydown', async (uio_event) => {
+    const config = await localConfig.getConfig(); // 此处还有优化空间
+
+    if (
+      ![
+        'Ctrl+Ctrl',
+        'Option+Option',
+        'Shift+Shift',
+        'Command+Command',
+      ].includes(config.perf.shortCut.showAndHidden)
+    ) {
+      return;
+    }
+
+    // 双击快捷键，如 Ctrl+Ctrl
+    const modifers = config.perf.shortCut.showAndHidden.split('+');
+    const showAndHiddenKeyStr = modifers.pop(); // Ctrl
+    const keyStr2uioKeyCode = {
+      Ctrl: UiohookKey.Ctrl,
+      Shift: UiohookKey.Shift,
+      Option: UiohookKey.Alt,
+      Command: UiohookKey.Comma,
+    };
+
+    if (uio_event.keycode === keyStr2uioKeyCode[showAndHiddenKeyStr]) {
+      const currentTime = Date.now();
+      if (currentTime - lastModifierPress < 300) {
+        callback(); // 调用 mainWindowPopUp
+      }
+      lastModifierPress = currentTime;
+    }
+  });
+  uIOhook.start();
+}
