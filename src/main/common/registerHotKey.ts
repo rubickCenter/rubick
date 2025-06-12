@@ -58,6 +58,7 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     }
   };
 
+  // 显示主窗口
   function mainWindowPopUp() {
     const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
     if (currentShow) return mainWindow.hide();
@@ -80,18 +81,17 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     globalShortcut.unregisterAll();
 
     // 注册偏好快捷键
-    // 显示/隐藏快捷键
-    if (
-      ['Ctrl+Ctrl', 'Option+Option', 'Shift+Shift', 'Command+Command'].includes(
-        config.perf.shortCut.showAndHidden
-      )
-    ) {
-      // 双击快捷键,详见 uIOhookRegister
+    // 处理显示/隐藏快捷键的注册
+    const doublePressShortcuts = ['Ctrl+Ctrl', 'Option+Option', 'Shift+Shift', 'Command+Command'];
+    const isDoublePressShortcut = doublePressShortcuts.includes(config.perf.shortCut.showAndHidden);
+    
+    if (isDoublePressShortcut) {
+      // 双击快捷键（如 Ctrl+Ctrl）详见 uIOhookRegister 函数实现
     } else {
-      // 普通快捷键，如 Ctrl+Space，F8
-      globalShortcut.register(config.perf.shortCut.showAndHidden, () =>
-        mainWindowPopUp()
-      );
+      // 注册普通快捷键（如 Ctrl+Space、F8 等）
+      globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+        mainWindowPopUp();
+      });
     }
 
     // 截图快捷键
