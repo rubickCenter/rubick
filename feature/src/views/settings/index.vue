@@ -283,7 +283,7 @@ const tipText = computed(() => {
   const optionKeyName = isWindows ? 'Alt' : 'Option、Command';
   return t('feature.settings.global.addShortcutKeyTips', {
     optionKeyName: optionKeyName,
-  }) + `此外你也可以双击修饰键如（Ctrl+Ctrl, 双击修饰键需要重启）`;
+  }) + `此外你也可以双击修饰键如（Ctrl+Ctrl）`;
 });
 
 const currentSelect = ref(['userInfo']);
