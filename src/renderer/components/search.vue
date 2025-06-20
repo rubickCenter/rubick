@@ -51,220 +51,222 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
-import { ipcRenderer } from 'electron';
-import { MoreOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined } from "@ant-design/icons-vue";
+import { ipcRenderer } from "electron";
+import { defineEmits, defineProps, ref } from "vue";
 
-const remote = window.require('@electron/remote');
-import localConfig from '../confOp';
+const remote = window.require("@electron/remote");
+
+import localConfig from "../confOp";
+
 const { Menu } = remote;
 
 const config: any = ref(localConfig.getConfig());
 
 const props: any = defineProps({
-  searchValue: {
-    type: [String, Number],
-    default: '',
-  },
-  placeholder: {
-    type: String,
-    default: '',
-  },
-  pluginHistory: (() => [])(),
-  currentPlugin: {},
-  pluginLoading: Boolean,
-  clipboardFile: (() => [])(),
+	searchValue: {
+		type: [String, Number],
+		default: "",
+	},
+	placeholder: {
+		type: String,
+		default: "",
+	},
+	pluginHistory: (() => [])(),
+	currentPlugin: {},
+	pluginLoading: Boolean,
+	clipboardFile: (() => [])(),
 });
 
 const changeValue = (e) => {
-  // if (props.currentPlugin.name === 'rubick-system-feature') return;
-  targetSearch({ value: e.target.value });
-  emit('onSearch', e);
+	// if (props.currentPlugin.name === 'rubick-system-feature') return;
+	targetSearch({ value: e.target.value });
+	emit("onSearch", e);
 };
 
 const emit = defineEmits([
-  'onSearch',
-  'changeCurrent',
-  'openMenu',
-  'changeSelect',
-  'choosePlugin',
-  'focus',
-  'clearSearchValue',
-  'readClipboardContent',
-  'clearClipbord',
+	"onSearch",
+	"changeCurrent",
+	"openMenu",
+	"changeSelect",
+	"choosePlugin",
+	"focus",
+	"clearSearchValue",
+	"readClipboardContent",
+	"clearClipbord",
 ]);
 
 const keydownEvent = (e, key: string) => {
-  key !== 'space' && e.preventDefault();
-  const { ctrlKey, shiftKey, altKey, metaKey } = e;
-  const modifiers: Array<string> = [];
-  ctrlKey && modifiers.push('control');
-  shiftKey && modifiers.push('shift');
-  altKey && modifiers.push('alt');
-  metaKey && modifiers.push('meta');
-  ipcRenderer.send('msg-trigger', {
-    type: 'sendPluginSomeKeyDownEvent',
-    data: {
-      keyCode: e.code,
-      modifiers,
-    },
-  });
-  const runPluginDisable =
-    (e.target.value === '' && !props.pluginHistory.length) ||
-    props.currentPlugin.name;
-  switch (key) {
-    case 'up':
-      emit('changeCurrent', -1);
-      break;
-    case 'down':
-      emit('changeCurrent', 1);
-      break;
-    case 'left':
-      emit('changeCurrent', -1);
-      break;
-    case 'right':
-      emit('changeCurrent', 1);
-      break;
-    case 'enter':
-      if (runPluginDisable) return;
-      emit('choosePlugin');
-      break;
-    case 'space':
-      if (runPluginDisable || !config.value.perf.common.space) return;
-      e.preventDefault();
-      emit('choosePlugin');
-      break;
-    default:
-      break;
-  }
+	key !== "space" && e.preventDefault();
+	const { ctrlKey, shiftKey, altKey, metaKey } = e;
+	const modifiers: Array<string> = [];
+	ctrlKey && modifiers.push("control");
+	shiftKey && modifiers.push("shift");
+	altKey && modifiers.push("alt");
+	metaKey && modifiers.push("meta");
+	ipcRenderer.send("msg-trigger", {
+		type: "sendPluginSomeKeyDownEvent",
+		data: {
+			keyCode: e.code,
+			modifiers,
+		},
+	});
+	const runPluginDisable =
+		(e.target.value === "" && !props.pluginHistory.length) ||
+		props.currentPlugin.name;
+	switch (key) {
+		case "up":
+			emit("changeCurrent", -1);
+			break;
+		case "down":
+			emit("changeCurrent", 1);
+			break;
+		case "left":
+			emit("changeCurrent", -1);
+			break;
+		case "right":
+			emit("changeCurrent", 1);
+			break;
+		case "enter":
+			if (runPluginDisable) return;
+			emit("choosePlugin");
+			break;
+		case "space":
+			if (runPluginDisable || !config.value.perf.common.space) return;
+			e.preventDefault();
+			emit("choosePlugin");
+			break;
+		default:
+			break;
+	}
 };
 
 const checkNeedInit = (e) => {
-  const { ctrlKey, metaKey } = e;
+	const { ctrlKey, metaKey } = e;
 
-  if (e.target.value === '' && e.keyCode === 8) {
-    closeTag();
-  }
-  // 手动粘贴
-  if ((ctrlKey || metaKey) && e.key === 'v') {
-    emit('readClipboardContent');
-  }
+	if (e.target.value === "" && e.keyCode === 8) {
+		closeTag();
+	}
+	// 手动粘贴
+	if ((ctrlKey || metaKey) && e.key === "v") {
+		emit("readClipboardContent");
+	}
 };
 
 const targetSearch = ({ value }) => {
-  if (props.currentPlugin.name) {
-    return ipcRenderer.sendSync('msg-trigger', {
-      type: 'sendSubInputChangeEvent',
-      data: { text: value },
-    });
-  }
+	if (props.currentPlugin.name) {
+		return ipcRenderer.sendSync("msg-trigger", {
+			type: "sendSubInputChangeEvent",
+			data: { text: value },
+		});
+	}
 };
 
 const closeTag = () => {
-  emit('changeSelect', {});
-  emit('clearClipbord');
-  ipcRenderer.send('msg-trigger', {
-    type: 'removePlugin',
-  });
+	emit("changeSelect", {});
+	emit("clearClipbord");
+	ipcRenderer.send("msg-trigger", {
+		type: "removePlugin",
+	});
 };
 
 const showSeparate = () => {
-  let pluginMenu: any = [
-    {
-      label: config.value.perf.common.hideOnBlur ? '钉住' : '自动隐藏',
-      click: changeHideOnBlur,
-    },
-    {
-      label:
-        config.value.perf.common.lang === 'zh-CN'
-          ? '切换语言'
-          : 'Change Language',
-      submenu: [
-        {
-          label: '简体中文',
-          click: () => {
-            changeLang('zh-CN');
-          },
-        },
-        {
-          label: 'English',
-          click: () => {
-            changeLang('en-US');
-          },
-        },
-      ],
-    },
-  ];
-  if (props.currentPlugin && props.currentPlugin.logo) {
-    pluginMenu = pluginMenu.concat([
-      {
-        label: '开发者工具',
-        click: () => {
-          ipcRenderer.send('msg-trigger', { type: 'openPluginDevTools' });
-          // todo
-        },
-      },
-      {
-        label: '当前插件信息',
-        submenu: [
-          {
-            label: '简介',
-          },
-          {
-            label: '功能',
-          },
-        ],
-      },
-      {
-        label: '分离窗口',
-        click: newWindow,
-      },
-    ]);
-  }
-  let menu = Menu.buildFromTemplate(pluginMenu);
-  menu.popup();
+	let pluginMenu: any = [
+		{
+			label: config.value.perf.common.hideOnBlur ? "钉住" : "自动隐藏",
+			click: changeHideOnBlur,
+		},
+		{
+			label:
+				config.value.perf.common.lang === "zh-CN"
+					? "切换语言"
+					: "Change Language",
+			submenu: [
+				{
+					label: "简体中文",
+					click: () => {
+						changeLang("zh-CN");
+					},
+				},
+				{
+					label: "English",
+					click: () => {
+						changeLang("en-US");
+					},
+				},
+			],
+		},
+	];
+	if (props.currentPlugin && props.currentPlugin.logo) {
+		pluginMenu = pluginMenu.concat([
+			{
+				label: "开发者工具",
+				click: () => {
+					ipcRenderer.send("msg-trigger", { type: "openPluginDevTools" });
+					// todo
+				},
+			},
+			{
+				label: "当前插件信息",
+				submenu: [
+					{
+						label: "简介",
+					},
+					{
+						label: "功能",
+					},
+				],
+			},
+			{
+				label: "分离窗口",
+				click: newWindow,
+			},
+		]);
+	}
+	const menu = Menu.buildFromTemplate(pluginMenu);
+	menu.popup();
 };
 
 const changeLang = (lang) => {
-  let cfg = { ...config.value };
-  cfg.perf.common.lang = lang;
-  localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
-  config.value = cfg;
+	const cfg = { ...config.value };
+	cfg.perf.common.lang = lang;
+	localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
+	config.value = cfg;
 };
 
 const changeHideOnBlur = () => {
-  let cfg = { ...config.value };
-  cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
-  localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
-  config.value = cfg;
+	const cfg = { ...config.value };
+	cfg.perf.common.hideOnBlur = !cfg.perf.common.hideOnBlur;
+	localConfig.setConfig(JSON.parse(JSON.stringify(cfg)));
+	config.value = cfg;
 };
 
 const getIcon = () => {
-  if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
-  try {
-    return ipcRenderer.sendSync('msg-trigger', {
-      type: 'getFileIcon',
-      data: { path: props.clipboardFile[0].path },
-    });
-  } catch (e) {
-    return require('../assets/file.png');
-  }
+	if (props.clipboardFile[0].dataUrl) return props.clipboardFile[0].dataUrl;
+	try {
+		return ipcRenderer.sendSync("msg-trigger", {
+			type: "getFileIcon",
+			data: { path: props.clipboardFile[0].path },
+		});
+	} catch (e) {
+		return require("../assets/file.png");
+	}
 };
 
 const newWindow = () => {
-  ipcRenderer.send('msg-trigger', {
-    type: 'detachPlugin',
-  });
-  // todo
+	ipcRenderer.send("msg-trigger", {
+		type: "detachPlugin",
+	});
+	// todo
 };
 
 const mainInput = ref(null);
 window.rubick.hooks.onShow = () => {
-  (mainInput.value as unknown as HTMLDivElement).focus();
+	(mainInput.value as unknown as HTMLDivElement).focus();
 };
 
 window.rubick.hooks.onHide = () => {
-  emit('clearSearchValue');
+	emit("clearSearchValue");
 };
 </script>
 

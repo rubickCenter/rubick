@@ -1,4 +1,4 @@
-exports.default = async function () {
+exports.default = async () => {
   const fs = require('fs');
   const compressing = require('compressing');
 

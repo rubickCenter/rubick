@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
 
 module.exports = {
@@ -23,7 +22,6 @@ module.exports = {
       mainProcessWatch: ['src/main'],
       externals: [
         'pouchdb',
-        'extract-file-icon',
         'npm',
         'electron-screenshots',
         '@electron/remote',
