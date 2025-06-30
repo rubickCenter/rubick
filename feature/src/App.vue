@@ -1,11 +1,7 @@
 <template>
   <div class="main-container">
     <div class="left-menu">
-      <a-menu
-        @select="({ key }) => changeMenu(key)"
-        :selectedKeys="active"
-        mode="vertical"
-      >
+      <a-menu @select="({ key }: any) => changeMenu(key)" :selectedKeys="active" mode="vertical">
         <a-menu-item key="finder">
           <template #icon>
             <StarOutlined style="font-size: 16px" />
@@ -72,21 +68,18 @@
         </a-sub-menu>
       </a-menu>
     </div>
-    <div
-      :class="
-        [
-          'finder',
-          'result',
-          'devPlugin',
-          'image',
-          'tools',
-          'worker',
-          'system',
-        ].includes(active[0])
-          ? 'container'
-          : 'more'
-      "
-    >
+    <div :class="[
+      'finder',
+      'result',
+      'devPlugin',
+      'image',
+      'tools',
+      'worker',
+      'system',
+    ].includes(active[0])
+      ? 'container'
+      : 'more'
+      ">
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -158,21 +151,26 @@ init();
     background: var(--color-body-bg2) !important;
     height: 100%;
     border-right: none;
+
     .ant-menu-item,
     .ant-menu-submenu,
     .ant-menu-submenu-arrow {
       color: var(--color-text-content);
+
       &:active {
         background: none;
       }
     }
+
     .ant-menu-item-selected,
     .ant-menu-submenu-selected {
       background-color: var(--color-list-hover);
       color: var(--ant-primary-color);
+
       .ant-menu-submenu-arrow {
         color: var(--ant-primary-color);
       }
+
       &:after {
         display: none;
       }
@@ -182,10 +180,12 @@ init();
 </style>
 <style lang="less" scoped>
 @import '~@/assets/common.less';
+
 * {
   margin: 0;
   padding: 0;
 }
+
 .main-container {
   -webkit-app-region: no-drag;
   display: flex;
@@ -197,7 +197,9 @@ init();
   width: 100%;
   overflow: hidden;
   background: var(--color-menu-bg);
+
   .search {
+
     :deep(.ant-btn),
     :deep(.ant-input),
     :deep(.ant-input-group-addon) {
@@ -206,6 +208,7 @@ init();
       border-color: var(--color-border-light);
     }
   }
+
   .container,
   .more {
     background: var(--color-body-bg);
@@ -216,38 +219,47 @@ init();
     position: relative;
     overflow: auto;
   }
+
   .more {
     background: var(--color-body-bg2);
   }
+
   .left-menu {
     padding: 16px;
     position: relative;
     height: 100vh;
+
     :deep(.ant-menu) {
       width: 100%;
     }
+
     :deep(.ant-menu-item) {
       padding-left: 12px !important;
       display: flex;
       align-items: center;
     }
+
     :deep(.ant-menu-item-selected),
     :deep(.ant-menu-submenu-selected) {
       background-color: var(--color-list-hover);
       border-radius: 6px;
       color: var(--ant-primary-color);
     }
+
     :deep(.user-info) {
       position: absolute;
       bottom: 16px;
       width: calc(100% - 32px);
+
       .ant-menu-submenu-title {
         padding: 0 32px 0 8px;
+
         .ant-menu-title-content {
           margin-left: 8px;
         }
       }
     }
+
     :deep(.ant-avatar) {
       background: transparent;
     }
