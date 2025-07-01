@@ -19,29 +19,29 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import emptyJson from '@/assets/lottie/empty.json';
-import PluginList from './plugin-list.vue';
+import { computed } from "vue";
+import { useStore } from "vuex";
+import emptyJson from "@/assets/lottie/empty.json";
+import PluginList from "./plugin-list.vue";
 
-import { useStore } from 'vuex';
 const store = useStore();
 
 const totalPlugins = computed(() => store.state.totalPlugins);
 const searchValue = computed(() => store.state.searchValue);
 
 const result = computed(() => {
-  if (searchValue.value.trim().length > 0) {
-    const pattern = new RegExp(searchValue.value.toLowerCase());
-    return totalPlugins.value.filter((plugin) => {
-      if (plugin.pluginName.toLowerCase().match(pattern)) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  } else {
-    return totalPlugins.value;
-  }
+	if (searchValue.value.trim().length > 0) {
+		const pattern = new RegExp(searchValue.value.toLowerCase());
+		return totalPlugins.value.filter((plugin) => {
+			if (plugin.pluginName.toLowerCase().match(pattern)) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+	} else {
+		return totalPlugins.value;
+	}
 });
 </script>
 

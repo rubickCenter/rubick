@@ -100,71 +100,73 @@
 
 <script setup>
 import {
-  CloudDownloadOutlined,
-  ArrowLeftOutlined,
-  SelectOutlined
-} from '@ant-design/icons-vue';
+	ArrowLeftOutlined,
+	CloudDownloadOutlined,
+	SelectOutlined,
+} from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import MarkdownIt from "markdown-it";
+import { computed, defineProps, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import notFountJson from "@/assets/lottie/404.json";
+import request from "@/assets/request/index";
 
-import { defineProps, ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import { message } from 'ant-design-vue';
-import MarkdownIt from 'markdown-it';
-import { useRouter } from 'vue-router';
-import request from '@/assets/request/index';
-import notFountJson from '@/assets/lottie/404.json';
-import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const store = useStore();
 const router = useRouter();
 
-const startDownload = (name) => store.dispatch('startDownload', name);
-const successDownload = (name) => store.dispatch('successDownload', name);
+const startDownload = (name) => store.dispatch("startDownload", name);
+const successDownload = (name) => store.dispatch("successDownload", name);
 
 const props = defineProps({
-  list: {
-    type: [Array],
-    default: () => [],
-  },
-  title: String,
+	list: {
+		type: [Array],
+		default: () => [],
+	},
+	title: String,
 });
 
 const downloadPlugin = async (plugin) => {
-  startDownload(plugin.name);
-  await window.market.downloadPlugin(plugin);
-  message.success(t('feature.dev.installSuccess', { pluginName: plugin.pluginName }));
-  successDownload(plugin.name);
+	startDownload(plugin.name);
+	await window.market.downloadPlugin(plugin);
+	message.success(
+		t("feature.dev.installSuccess", { pluginName: plugin.pluginName }),
+	);
+	successDownload(plugin.name);
 };
 
 const visible = ref(false);
 const showIndex = ref(0);
 const markdown = new MarkdownIt();
-const content = ref('');
+const content = ref("");
 
 const showDetail = async (index) => {
-  const item = props.list[index];
-  visible.value = true;
-  showIndex.value = index;
-  content.value = '';
-  let mdContent = '暂无内容';
-  try {
-    if (item.homePage) {
-      mdContent = await request.getPluginDetail(item.homePage);
-    }
-    content.value = markdown.render(mdContent);
-  } catch (e) {
-    content.value = 'error';
-  }
+	const item = props.list[index];
+	visible.value = true;
+	showIndex.value = index;
+	content.value = "";
+	let mdContent = "暂无内容";
+	try {
+		if (item.homePage) {
+			mdContent = await request.getPluginDetail(item.homePage);
+		}
+		content.value = markdown.render(mdContent);
+	} catch (e) {
+		content.value = "error";
+	}
 };
 
 const detail = computed(() => props.list[showIndex.value]);
 
 const openPlugin = (item) => {
-  store.commit('commonUpdate', {active: ['installed']})
-  router.push({
-    path: '/installed',
-    query: {plugin: item.name}
-  });
+	store.commit("commonUpdate", { active: ["installed"] });
+	router.push({
+		path: "/installed",
+		query: { plugin: item.name },
+	});
 };
 </script>
 

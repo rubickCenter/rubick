@@ -143,18 +143,18 @@
   </a-modal>
 </template>
 <script setup>
-import { useStore } from 'vuex';
-import { computed, ref, reactive } from 'vue';
 import {
-  DatabaseOutlined,
-  CloudDownloadOutlined,
-  LoadingOutlined,
-  ExportOutlined,
-  ImportOutlined,
-  SettingOutlined,
-} from '@ant-design/icons-vue';
-import { message, Modal } from 'ant-design-vue';
-import { useI18n } from 'vue-i18n';
+	CloudDownloadOutlined,
+	DatabaseOutlined,
+	ExportOutlined,
+	ImportOutlined,
+	LoadingOutlined,
+	SettingOutlined,
+} from "@ant-design/icons-vue";
+import { Modal, message } from "ant-design-vue";
+import { computed, reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useStore } from "vuex";
 
 const { t } = useI18n();
 
@@ -165,98 +165,98 @@ const currentSelect = ref({ plugin: {} });
 const detail = ref({});
 
 const defaultConfig = window.rubick.dbStorage.getItem(
-  'rubick-db-jg-webdav'
+	"rubick-db-jg-webdav",
 ) || {
-  url: 'https://dav.jianguoyun.com/dav/',
-  username: '',
-  password: '',
+	url: "https://dav.jianguoyun.com/dav/",
+	username: "",
+	password: "",
 };
 
 if (!defaultConfig.suport) {
-  defaultConfig.suport = 'jianguo';
+	defaultConfig.suport = "jianguo";
 }
 
 const formState = reactive(defaultConfig);
 
 const showKeys = (item) => {
-  open.value = true;
-  currentSelect.value = item;
+	open.value = true;
+	currentSelect.value = item;
 };
 
 const handleOk = () => {
-  window.rubick.dbStorage.setItem(
-    'rubick-db-jg-webdav',
-    JSON.parse(JSON.stringify(formState))
-  );
-  message.success('保存成功');
-  showSetting.value = false;
+	window.rubick.dbStorage.setItem(
+		"rubick-db-jg-webdav",
+		JSON.parse(JSON.stringify(formState)),
+	);
+	message.success("保存成功");
+	showSetting.value = false;
 };
 
 const showDetail = (key) => {
-  show.value = true;
-  detail.value = window.rubick.db.get(key);
+	show.value = true;
+	detail.value = window.rubick.db.get(key);
 };
 
 const exportData = () => {
-  if (!formState.password || !formState.username) {
-    return showSetting.value = true;
-  }
-  window.market.dbDump(JSON.parse(JSON.stringify(formState)));
+	if (!formState.password || !formState.username) {
+		return (showSetting.value = true);
+	}
+	window.market.dbDump(JSON.parse(JSON.stringify(formState)));
 };
 
 const importData = () => {
-  if (!formState.password || !formState.username) {
-    return showSetting.value = true;
-  }
-  Modal.confirm({
-    title: '导入确认',
-    content: '导入坚果云数据将会覆盖本地数据，是否确认导入？',
-    onOk() {
-      window.market.dbImport(JSON.parse(JSON.stringify(formState)));
-    },
-  });
+	if (!formState.password || !formState.username) {
+		return (showSetting.value = true);
+	}
+	Modal.confirm({
+		title: "导入确认",
+		content: "导入坚果云数据将会覆盖本地数据，是否确认导入？",
+		onOk() {
+			window.market.dbImport(JSON.parse(JSON.stringify(formState)));
+		},
+	});
 };
 
 const openHelp = () => {
-  window.rubick.shellOpenExternal('https://help.jianguoyun.com/?p=2064');
+	window.rubick.shellOpenExternal("https://help.jianguoyun.com/?p=2064");
 };
 
 const store = useStore();
 
-const pluginsData = window.rubick.db.get('RUBICK_PLUGIN_INFO');
+const pluginsData = window.rubick.db.get("RUBICK_PLUGIN_INFO");
 
 const totalPlugins = computed(() => store.state.totalPlugins);
 
 const dataPlugins = computed(() => {
-  if (!pluginsData) return [];
-  return pluginsData.data.map((item) => {
-    let plugin = null;
-    if (['rubick-system-feature'].includes(item.name)) {
-      plugin = {
-        pluginName: '主程序',
-        isdownload: true,
-        logo: require('../../assets/logo.png'),
-      };
-    } else {
-      plugin = totalPlugins.value.find((p) => p.name === item.name);
-    }
-    const data = item.keys.map((key) => window.rubick.db.get(key));
-    return {
-      ...item,
-      plugin,
-      data,
-    };
-  });
+	if (!pluginsData) return [];
+	return pluginsData.data.map((item) => {
+		let plugin = null;
+		if (["rubick-system-feature"].includes(item.name)) {
+			plugin = {
+				pluginName: "主程序",
+				isdownload: true,
+				logo: require("../../assets/logo.png"),
+			};
+		} else {
+			plugin = totalPlugins.value.find((p) => p.name === item.name);
+		}
+		const data = item.keys.map((key) => window.rubick.db.get(key));
+		return {
+			...item,
+			plugin,
+			data,
+		};
+	});
 });
 
-const startDownload = (name) => store.dispatch('startDownload', name);
-const successDownload = (name) => store.dispatch('successDownload', name);
+const startDownload = (name) => store.dispatch("startDownload", name);
+const successDownload = (name) => store.dispatch("successDownload", name);
 
 const downloadPlugin = async (plugin) => {
-  startDownload(plugin.name);
-  await window.market.downloadPlugin(plugin);
-  message.success(t('feature.dev.installSuccess', { pluginName: plugin.name }));
-  successDownload(plugin.name);
+	startDownload(plugin.name);
+	await window.market.downloadPlugin(plugin);
+	message.success(t("feature.dev.installSuccess", { pluginName: plugin.name }));
+	successDownload(plugin.name);
 };
 </script>
 <style lang="less">

@@ -6,34 +6,22 @@
       </Slide>
     </Carousel>
     <a-divider />
-    <PluginList
-      v-if="must && !!must.length"
-      @downloadSuccess="downloadSuccess"
-      :title="$t('feature.market.finder.must')"
-      :list="must"
-    />
-    <PluginList
-      v-if="recommend && !!recommend.length"
-      @downloadSuccess="downloadSuccess"
-      :title="$t('feature.market.finder.recommended')"
-      :list="recommend"
-    />
-    <PluginList
-      v-if="newList && !!newList.length"
-      :title="$t('feature.market.finder.lastUpdated')"
-      :list="newList"
-    />
+    <PluginList v-if="must && !!must.length" @downloadSuccess="downloadSuccess"
+      :title="$t('feature.market.finder.must')" :list="must" />
+    <PluginList v-if="recommend && !!recommend.length" @downloadSuccess="downloadSuccess"
+      :title="$t('feature.market.finder.recommended')" :list="recommend" />
+    <PluginList v-if="newList && !!newList.length" :title="$t('feature.market.finder.lastUpdated')" :list="newList" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue';
-import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide } from 'vue3-carousel';
-import request from '../../../assets/request/index';
-import PluginList from './plugin-list.vue';
+import { computed, onBeforeMount, ref, watchEffect } from "vue";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide } from "vue3-carousel";
+import { useStore } from "vuex";
+import request from "../../../assets/request/index";
+import PluginList from "./plugin-list.vue";
 
-import { useStore } from 'vuex';
 const store = useStore();
 const totalPlugins = computed(() => store.state.totalPlugins);
 
@@ -96,9 +84,11 @@ const newList = computed(() => {
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+
   &::-webkit-scrollbar {
     width: 0;
   }
+
   .ant-divider-horizontal {
     margin: 17px 0;
   }
@@ -124,6 +114,7 @@ const newList = computed(() => {
 
 .carousel__slide {
   padding-right: 6px;
+
   &:last-child {
     padding-left: 6px;
   }

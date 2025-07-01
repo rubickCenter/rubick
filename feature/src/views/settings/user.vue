@@ -27,47 +27,47 @@
 </template>
 
 <script setup>
-import { nanoid } from 'nanoid';
-import { ref, watch } from 'vue';
-import { message } from 'ant-design-vue';
-import Index from './index';
-import service from '../../assets/service';
+import { message } from "ant-design-vue";
+import { nanoid } from "nanoid";
+import { ref, watch } from "vue";
+import service from "../../assets/service";
+import Index from "./index";
 
-const userInfo = ref(window.rubick.dbStorage.getItem('rubick-user-info'));
+const userInfo = ref(window.rubick.dbStorage.getItem("rubick-user-info"));
 
-const imgCode = ref('');
+const imgCode = ref("");
 const scene = nanoid();
 
 const visible = ref(false);
 const showModal = () => {
-  visible.value = true;
-  if (!imgCode.value && !userInfo.value) {
-    service.getScanCode({ scene }).then((res) => {
-      imgCode.value = `data:image/png;base64,${res.dataUrl}`;
-    });
-  }
+	visible.value = true;
+	if (!imgCode.value && !userInfo.value) {
+		service.getScanCode({ scene }).then((res) => {
+			imgCode.value = `data:image/png;base64,${res.dataUrl}`;
+		});
+	}
 };
 
 let timer = null;
 watch([visible], () => {
-  if (visible.value) {
-    timer = setInterval(() => {
-      service.checkLoginStatus({ scene }).then((res) => {
-        console.log(res);
-        if (res.openId) {
-          window.rubick.dbStorage.setItem('rubick-user-info', res);
-          userInfo.value = res;
-          message.success('登录成功！');
-          visible.value = false;
-          clearInterval(timer);
-          timer = null;
-        }
-      });
-    }, 2000);
-  } else {
-    clearInterval(timer);
-    timer = null;
-  }
+	if (visible.value) {
+		timer = setInterval(() => {
+			service.checkLoginStatus({ scene }).then((res) => {
+				console.log(res);
+				if (res.openId) {
+					window.rubick.dbStorage.setItem("rubick-user-info", res);
+					userInfo.value = res;
+					message.success("登录成功！");
+					visible.value = false;
+					clearInterval(timer);
+					timer = null;
+				}
+			});
+		}, 2000);
+	} else {
+		clearInterval(timer);
+		timer = null;
+	}
 });
 </script>
 

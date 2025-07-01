@@ -107,142 +107,144 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
-import { computed, ref, toRaw, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import path from 'path';
 import {
-  PushpinOutlined,
-  PushpinFilled,
-  CaretRightOutlined,
-  DownOutlined,
-} from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+	CaretRightOutlined,
+	DownOutlined,
+	PushpinFilled,
+	PushpinOutlined,
+} from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import path from "path";
+import { computed, ref, toRaw, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-import emptyJson from '@/assets/lottie/empty.json';
+import emptyJson from "@/assets/lottie/empty.json";
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require("electron");
 
-const remote = window.require('@electron/remote');
-const fs = window.require('fs');
+const remote = window.require("@electron/remote");
+const fs = window.require("fs");
 
-const appPath = remote.app.getPath('userData');
-const baseDir = path.join(appPath, './rubick-plugins');
+const appPath = remote.app.getPath("userData");
+const baseDir = path.join(appPath, "./rubick-plugins");
 
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
 
 const localPlugins = computed(() =>
-  store.state.localPlugins.filter(
-    (plugin) => plugin.name !== 'rubick-system-feature'
-  )
+	store.state.localPlugins.filter(
+		(plugin) => plugin.name !== "rubick-system-feature",
+	),
 );
-const updateLocalPlugin = () => store.dispatch('updateLocalPlugin');
-const startUnDownload = (name) => store.dispatch('startUnDownload', name);
-const errorUnDownload = (name) => store.dispatch('errorUnDownload', name);
+const updateLocalPlugin = () => store.dispatch("updateLocalPlugin");
+const startUnDownload = (name) => store.dispatch("startUnDownload", name);
+const errorUnDownload = (name) => store.dispatch("errorUnDownload", name);
 
 const currentSelect = ref([route.query.plugin || localPlugins?.value[0]?.name]);
 
 watch(localPlugins, () => {
-  currentSelect.value = [localPlugins?.value[0]?.name];
+	currentSelect.value = [localPlugins?.value[0]?.name];
 });
 
 const pluginDetail = computed(() => {
-  return (
-    localPlugins.value.find((v) => v.name === currentSelect.value[0]) || {}
-  );
+	return (
+		localPlugins.value.find((v) => v.name === currentSelect.value[0]) || {}
+	);
 });
 
 const superPanelPlugins = ref(
-  window.rubick.db.get('super-panel-user-plugins') || {
-    data: [],
-    _id: 'super-panel-user-plugins',
-  }
+	window.rubick.db.get("super-panel-user-plugins") || {
+		data: [],
+		_id: "super-panel-user-plugins",
+	},
 );
 
 const handleMenuClick = (key, item, cmd) => {
-  if(key === 'open') {
-    openPlugin({
-      code: item.code,
-      cmd,
-    });
-  } else if (key === 'add') {
-    addCmdToSuperPanel({cmd, code: item.code});
-  } else {
-    removePluginToSuperPanel({cmd, name: item.name})
-  }
+	if (key === "open") {
+		openPlugin({
+			code: item.code,
+			cmd,
+		});
+	} else if (key === "add") {
+		addCmdToSuperPanel({ cmd, code: item.code });
+	} else {
+		removePluginToSuperPanel({ cmd, name: item.name });
+	}
 };
 
 const addCmdToSuperPanel = ({ cmd, code }) => {
-  const plugin = {
-    ...toRaw(pluginDetail.value),
-    cmd,
-    ext: {
-      code,
-      type: 'text',
-      payload: null,
-    },
-  };
-  superPanelPlugins.value.data.push(plugin);
-  const { rev } = window.rubick.db.put(JSON.parse(JSON.stringify(superPanelPlugins.value)));
-  superPanelPlugins.value._rev = rev;
+	const plugin = {
+		...toRaw(pluginDetail.value),
+		cmd,
+		ext: {
+			code,
+			type: "text",
+			payload: null,
+		},
+	};
+	superPanelPlugins.value.data.push(plugin);
+	const { rev } = window.rubick.db.put(
+		JSON.parse(JSON.stringify(superPanelPlugins.value)),
+	);
+	superPanelPlugins.value._rev = rev;
 };
 
 const removePluginToSuperPanel = ({ cmd, name }) => {
-  superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
-    (item) => {
-      if (name) return item.name !== name;
-      return item.cmd !== cmd;
-    }
-  );
-  const { rev } = window.rubick.db.put(toRaw(superPanelPlugins.value));
-  superPanelPlugins.value._rev = rev;
+	superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
+		(item) => {
+			if (name) return item.name !== name;
+			return item.cmd !== cmd;
+		},
+	);
+	const { rev } = window.rubick.db.put(toRaw(superPanelPlugins.value));
+	superPanelPlugins.value._rev = rev;
 };
 
 const hasAdded = (cmd) => {
-  let added = false;
-  superPanelPlugins.value.data.some((item) => {
-    if (item.cmd === cmd) {
-      added = true;
-      return true;
-    }
-    return false;
-  });
-  return added;
+	let added = false;
+	superPanelPlugins.value.data.some((item) => {
+		if (item.cmd === cmd) {
+			added = true;
+			return true;
+		}
+		return false;
+	});
+	return added;
 };
 
 const openPlugin = ({ cmd, code }) => {
-  window.rubick.openPlugin(
-    JSON.parse(
-      JSON.stringify({
-        ...pluginDetail.value,
-        cmd,
-        ext: {
-          code,
-          type: 'text',
-          payload: null,
-        },
-      })
-    )
-  );
+	window.rubick.openPlugin(
+		JSON.parse(
+			JSON.stringify({
+				...pluginDetail.value,
+				cmd,
+				ext: {
+					code,
+					type: "text",
+					payload: null,
+				},
+			}),
+		),
+	);
 };
 
 const deletePlugin = async (plugin) => {
-  startUnDownload(plugin.name);
-  const timer = setTimeout(() => {
-    errorUnDownload(plugin.name);
-    message.error('卸载超时，请重试！');
-  }, 20000);
-  await window.market.deletePlugin(plugin);
-  removePluginToSuperPanel({ name: plugin.name });
-  updateLocalPlugin();
-  clearTimeout(timer);
+	startUnDownload(plugin.name);
+	const timer = setTimeout(() => {
+		errorUnDownload(plugin.name);
+		message.error("卸载超时，请重试！");
+	}, 20000);
+	await window.market.deletePlugin(plugin);
+	removePluginToSuperPanel({ name: plugin.name });
+	updateLocalPlugin();
+	clearTimeout(timer);
 };
 
 const gotoFinder = () => {
-  router.push('/finder');
-  store.commit('commonUpdate', { active: ['finder'] });
+	router.push("/finder");
+	store.commit("commonUpdate", { active: ["finder"] });
 };
 </script>
 

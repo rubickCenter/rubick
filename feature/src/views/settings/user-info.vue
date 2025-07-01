@@ -47,14 +47,15 @@
 </template>
 
 <script setup>
-import { reactive, toRefs, watch, ref } from 'vue';
-import debounce from 'lodash.debounce';
-import localConfig from '@/confOp';
-import * as Themes from '@/assets/constans';
-const { ipcRenderer } = window.require('electron');
+import debounce from "lodash.debounce";
+import { reactive, ref, toRefs, watch } from "vue";
+import * as Themes from "@/assets/constans";
+import localConfig from "@/confOp";
+
+const { ipcRenderer } = window.require("electron");
 
 const state = reactive({
-  custom: {},
+	custom: {},
 });
 
 const { perf } = localConfig.getConfig();
@@ -64,38 +65,38 @@ const theme = ref(perf.custom.theme);
 state.custom = perf.custom || {};
 
 const setConfig = debounce(() => {
-  const { perf } = localConfig.getConfig();
+	const { perf } = localConfig.getConfig();
 
-  localConfig.setConfig(
-    JSON.parse(
-      JSON.stringify({
-        perf: {
-          ...perf,
-          custom: state.custom,
-        },
-      })
-    )
-  );
-  ipcRenderer.send('re-register');
+	localConfig.setConfig(
+		JSON.parse(
+			JSON.stringify({
+				perf: {
+					...perf,
+					custom: state.custom,
+				},
+			}),
+		),
+	);
+	ipcRenderer.send("re-register");
 }, 500);
 
 watch(state, setConfig);
 const { custom } = toRefs(state);
 
 const changeLogo = () => {
-  const [logoPath] = window.rubick.showOpenDialog({
-    title: '请选择 logo 路径',
-    filters: [{ name: 'images', extensions: ['png'] }],
-    properties: ['openFile'],
-  });
-  state.custom.logo = `file://${logoPath}`;
+	const [logoPath] = window.rubick.showOpenDialog({
+		title: "请选择 logo 路径",
+		filters: [{ name: "images", extensions: ["png"] }],
+		properties: ["openFile"],
+	});
+	state.custom.logo = `file://${logoPath}`;
 };
 
 const changeTheme = () => {
-  state.custom = {
-    ...state.custom,
-    ...Themes[theme.value],
-  };
+	state.custom = {
+		...state.custom,
+		...Themes[theme.value],
+	};
 };
 
 // const reset = () => {

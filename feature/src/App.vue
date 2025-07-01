@@ -88,21 +88,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import {
-  StarOutlined,
-  SendOutlined,
-  SearchOutlined,
-  FileImageOutlined,
-  DatabaseOutlined,
-  CodeOutlined,
-  SettingOutlined,
-  HeartOutlined,
-  BugOutlined,
-} from '@ant-design/icons-vue';
-import { useStore } from 'vuex';
-import localConfig from '@/confOp';
+	BugOutlined,
+	CodeOutlined,
+	DatabaseOutlined,
+	FileImageOutlined,
+	HeartOutlined,
+	SearchOutlined,
+	SendOutlined,
+	SettingOutlined,
+	StarOutlined,
+} from "@ant-design/icons-vue";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import localConfig from "@/confOp";
 
 const store = useStore();
 const router = useRouter();
@@ -110,39 +110,39 @@ const active = computed(() => store.state.active);
 const { perf } = localConfig.getConfig();
 
 const changeMenu = (key: any) => {
-  store.commit('commonUpdate', { active: [key] });
-  router.push(key);
+	store.commit("commonUpdate", { active: [key] });
+	router.push(key);
 };
 
 window.rubick.onPluginEnter(({ code }: { code: string }) => {
-  code = code === '已安装插件' ? 'installed' : code;
-  changeMenu(code);
-  store.commit('commonUpdate', { active: [code] });
+	code = code === "已安装插件" ? "installed" : code;
+	changeMenu(code);
+	store.commit("commonUpdate", { active: [code] });
 });
 
 window.rubick.setSubInput((e: any) => {
-  if (
-    [
-      'finder',
-      'result',
-      'devPlugin',
-      'image',
-      'tools',
-      'worker',
-      'system',
-    ].includes(active.value[0])
-  ) {
-    if (e.text) {
-      store.commit('setSearchValue', e.text);
-      router.push('result');
-    } else {
-      store.commit('commonUpdate', { active: ['finder'] });
-      router.push('finder');
-    }
-  }
-}, '搜索插件');
+	if (
+		[
+			"finder",
+			"result",
+			"devPlugin",
+			"image",
+			"tools",
+			"worker",
+			"system",
+		].includes(active.value[0])
+	) {
+		if (e.text) {
+			store.commit("setSearchValue", e.text);
+			router.push("result");
+		} else {
+			store.commit("commonUpdate", { active: ["finder"] });
+			router.push("finder");
+		}
+	}
+}, "搜索插件");
 
-const init = () => store.dispatch('init');
+const init = () => store.dispatch("init");
 init();
 </script>
 <style lang="less">

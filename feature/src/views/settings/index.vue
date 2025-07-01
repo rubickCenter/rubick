@@ -232,57 +232,57 @@
 
 <script setup>
 import {
-  ToolOutlined,
-  LaptopOutlined,
-  DatabaseOutlined,
-  MinusCircleOutlined,
-  PlusCircleOutlined,
-  UserOutlined,
-  FolderOpenOutlined,
-  SafetyOutlined,
-} from '@ant-design/icons-vue';
-import debounce from 'lodash.debounce';
-import { ref, reactive, watch, toRefs, computed } from 'vue';
-import keycodes from './keycode';
-import Localhost from './localhost.vue';
-import UserInfo from './user-info';
-import LocalStart from './local-start';
-import DataBase from './database';
-import { useI18n } from 'vue-i18n';
-import localConfig from '@/confOp';
+	DatabaseOutlined,
+	FolderOpenOutlined,
+	LaptopOutlined,
+	MinusCircleOutlined,
+	PlusCircleOutlined,
+	SafetyOutlined,
+	ToolOutlined,
+	UserOutlined,
+} from "@ant-design/icons-vue";
+import debounce from "lodash.debounce";
+import { computed, reactive, ref, toRefs, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import localConfig from "@/confOp";
+import DataBase from "./database";
+import keycodes from "./keycode";
+import LocalStart from "./local-start";
+import Localhost from "./localhost.vue";
+import UserInfo from "./user-info";
 
 const { locale, t } = useI18n();
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require("electron");
 
 const examples = [
-  {
-    title: t('feature.settings.global.example1'),
-    desc: t('feature.settings.global.tips1'),
-  },
-  {
-    title: t('feature.settings.global.example2'),
-    desc: t('feature.settings.global.tips2'),
-  },
+	{
+		title: t("feature.settings.global.example1"),
+		desc: t("feature.settings.global.tips1"),
+	},
+	{
+		title: t("feature.settings.global.example2"),
+		desc: t("feature.settings.global.tips2"),
+	},
 ];
 
 const state = reactive({
-  shortCut: {},
-  common: {},
-  local: {},
-  global: [],
-  custom: {},
+	shortCut: {},
+	common: {},
+	local: {},
+	global: [],
+	custom: {},
 });
 
 const isWindows = window?.rubick?.isWindows();
 const tipText = computed(() => {
-  const optionKeyName = isWindows ? 'Alt' : 'Option、Command';
-  return t('feature.settings.global.addShortcutKeyTips', {
-    optionKeyName: optionKeyName,
-  });
+	const optionKeyName = isWindows ? "Alt" : "Option、Command";
+	return t("feature.settings.global.addShortcutKeyTips", {
+		optionKeyName: optionKeyName,
+	});
 });
 
-const currentSelect = ref(['userInfo']);
+const currentSelect = ref(["userInfo"]);
 
 const { perf, global: defaultGlobal } = localConfig.getConfig();
 
@@ -293,148 +293,148 @@ state.local = perf.local;
 state.global = defaultGlobal;
 
 const setConfig = debounce(() => {
-  const { perf } = localConfig.getConfig();
-  localConfig.setConfig(
-    JSON.parse(
-      JSON.stringify({
-        perf: {
-          ...perf,
-          shortCut: state.shortCut,
-          common: state.common,
-          local: state.local,
-        },
-        global: state.global,
-      })
-    )
-  );
-  ipcRenderer.send('re-register');
+	const { perf } = localConfig.getConfig();
+	localConfig.setConfig(
+		JSON.parse(
+			JSON.stringify({
+				perf: {
+					...perf,
+					shortCut: state.shortCut,
+					common: state.common,
+					local: state.local,
+				},
+				global: state.global,
+			}),
+		),
+	);
+	ipcRenderer.send("re-register");
 }, 500);
 
 watch(state, setConfig);
 
 const changeShortCut = (e, key) => {
-  let compose = '';
-  // 添加是否包含功能键的判断
-  let incluFuncKeys = false;
-  if (e.ctrlKey && e.keyCode !== 17) {
-    compose += '+Ctrl';
-    incluFuncKeys = true;
-  }
-  if (e.shiftKey && e.keyCode !== 16) {
-    compose += '+Shift';
-    incluFuncKeys = true;
-  }
-  if (e.altKey && e.keyCode !== 18) {
-    compose += '+Option';
-    incluFuncKeys = true;
-  }
-  if (e.metaKey && e.keyCode !== 93) {
-    compose += '+Command';
-    incluFuncKeys = true;
-  }
-  compose += '+' + keycodes[e.keyCode].toUpperCase();
-  compose = compose.substring(1);
-  if (
-    incluFuncKeys &&
-    e.keyCode !== 16 &&
-    e.keyCode !== 17 &&
-    e.keyCode !== 18 &&
-    e.keyCode !== 93
-  ) {
-    state.shortCut[key] = compose;
-  } else {
-    // 不做处理
-  }
+	let compose = "";
+	// 添加是否包含功能键的判断
+	let incluFuncKeys = false;
+	if (e.ctrlKey && e.keyCode !== 17) {
+		compose += "+Ctrl";
+		incluFuncKeys = true;
+	}
+	if (e.shiftKey && e.keyCode !== 16) {
+		compose += "+Shift";
+		incluFuncKeys = true;
+	}
+	if (e.altKey && e.keyCode !== 18) {
+		compose += "+Option";
+		incluFuncKeys = true;
+	}
+	if (e.metaKey && e.keyCode !== 93) {
+		compose += "+Command";
+		incluFuncKeys = true;
+	}
+	compose += "+" + keycodes[e.keyCode].toUpperCase();
+	compose = compose.substring(1);
+	if (
+		incluFuncKeys &&
+		e.keyCode !== 16 &&
+		e.keyCode !== 17 &&
+		e.keyCode !== 18 &&
+		e.keyCode !== 93
+	) {
+		state.shortCut[key] = compose;
+	} else {
+		// 不做处理
+	}
 };
 
 const changeGlobalKey = (e, index) => {
-  let compose = '';
-  // 添加是否包含功能键的判断
-  let incluFuncKeys = false;
-  if (e.ctrlKey && e.keyCode !== 17) {
-    compose += '+Ctrl';
-    incluFuncKeys = true;
-  }
-  if (e.shiftKey && e.keyCode !== 16) {
-    compose += '+Shift';
-    incluFuncKeys = true;
-  }
-  if (e.altKey && e.keyCode !== 18) {
-    compose += '+Option';
-    incluFuncKeys = true;
-  }
-  if (e.metaKey && e.keyCode !== 93) {
-    compose += '+Command';
-    incluFuncKeys = true;
-  }
-  compose += '+' + keycodes[e.keyCode].toUpperCase();
-  compose = compose.substring(1);
-  if (
-    incluFuncKeys &&
-    e.keyCode !== 16 &&
-    e.keyCode !== 17 &&
-    e.keyCode !== 18 &&
-    e.keyCode !== 93
-  ) {
-    state.global[index].key = compose;
-  } else {
-    // 不做处理
-  }
-  // f1 - f12
-  if (!incluFuncKeys && e.keyCode >= 112 && e.keyCode <= 123) {
-    compose = keycodes[e.keyCode].toUpperCase();
-    state.global[index].key = compose;
-  }
+	let compose = "";
+	// 添加是否包含功能键的判断
+	let incluFuncKeys = false;
+	if (e.ctrlKey && e.keyCode !== 17) {
+		compose += "+Ctrl";
+		incluFuncKeys = true;
+	}
+	if (e.shiftKey && e.keyCode !== 16) {
+		compose += "+Shift";
+		incluFuncKeys = true;
+	}
+	if (e.altKey && e.keyCode !== 18) {
+		compose += "+Option";
+		incluFuncKeys = true;
+	}
+	if (e.metaKey && e.keyCode !== 93) {
+		compose += "+Command";
+		incluFuncKeys = true;
+	}
+	compose += "+" + keycodes[e.keyCode].toUpperCase();
+	compose = compose.substring(1);
+	if (
+		incluFuncKeys &&
+		e.keyCode !== 16 &&
+		e.keyCode !== 17 &&
+		e.keyCode !== 18 &&
+		e.keyCode !== 93
+	) {
+		state.global[index].key = compose;
+	} else {
+		// 不做处理
+	}
+	// f1 - f12
+	if (!incluFuncKeys && e.keyCode >= 112 && e.keyCode <= 123) {
+		compose = keycodes[e.keyCode].toUpperCase();
+		state.global[index].key = compose;
+	}
 };
 
 const resetDefault = (key) => {
-  switch (key) {
-    case 'Alt':
-      state.shortCut['showAndHidden'] = 'Option+SPACE';
-      // copyValue.value = "Option+SPACE";
-      break;
-    case 'Ctrl':
-      state.shortCut['showAndHidden'] = 'Ctrl+SPACE';
-      // copyValue.value = "Ctrl+SPACE";
-      break;
-    default:
-      break;
-  }
-  setConfig();
+	switch (key) {
+		case "Alt":
+			state.shortCut["showAndHidden"] = "Option+SPACE";
+			// copyValue.value = "Option+SPACE";
+			break;
+		case "Ctrl":
+			state.shortCut["showAndHidden"] = "Ctrl+SPACE";
+			// copyValue.value = "Ctrl+SPACE";
+			break;
+		default:
+			break;
+	}
+	setConfig();
 };
 
 const changeGlobalValue = (index, value) => {
-  state.global[index].value = value;
+	state.global[index].value = value;
 };
 
 const deleteGlobalKey = (e, index) => {
-  state.global.splice(index, 1);
-  // delete state.global[index];
+	state.global.splice(index, 1);
+	// delete state.global[index];
 };
 
 const addConfig = () => {
-  state.global.push({
-    key: '',
-    value: '',
-  });
+	state.global.push({
+		key: "",
+		value: "",
+	});
 };
 
 const { shortCut, common, local, global } = toRefs(state);
 
 const options = ref([
-  {
-    value: 'zh-CN',
-    label: t('feature.settings.basic.cn'),
-  },
-  {
-    value: 'en-US',
-    label: t('feature.settings.basic.en'),
-  },
+	{
+		value: "zh-CN",
+		label: t("feature.settings.basic.cn"),
+	},
+	{
+		value: "en-US",
+		label: t("feature.settings.basic.en"),
+	},
 ]);
 
 const changeLanguage = (value) => {
-  state.common.lang = value.key;
-  locale.value = value.key;
+	state.common.lang = value.key;
+	locale.value = value.key;
 };
 </script>
 

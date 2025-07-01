@@ -42,49 +42,49 @@
   </div>
 </template>
 <script setup>
-import { useStore } from 'vuex';
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref, toRaw } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 const localPlugins = computed(() =>
-  store.state.localPlugins.filter(
-    (plugin) =>
-      plugin.name !== 'rubick-system-feature' &&
-      plugin.name !== 'rubick-system-super-panel'
-  )
+	store.state.localPlugins.filter(
+		(plugin) =>
+			plugin.name !== "rubick-system-feature" &&
+			plugin.name !== "rubick-system-super-panel",
+	),
 );
 
 const hasAdded = (plugin) => {
-  let added = false;
-  superPanelPlugins.value.data.some((item) => {
-    if (item.name === plugin.name) {
-      added = true;
-      return true;
-    }
-    return false;
-  });
-  return added;
+	let added = false;
+	superPanelPlugins.value.data.some((item) => {
+		if (item.name === plugin.name) {
+			added = true;
+			return true;
+		}
+		return false;
+	});
+	return added;
 };
 
 const superPanelPlugins = ref(
-  window.rubick.db.get('super-panel-db') || {
-    data: [],
-    _id: 'super-panel-db',
-  }
+	window.rubick.db.get("super-panel-db") || {
+		data: [],
+		_id: "super-panel-db",
+	},
 );
 
 const addPluginToSuperPanel = (plugin) => {
-  superPanelPlugins.value.data.push(toRaw(plugin));
-  window.rubick.db.put(toRaw(superPanelPlugins.value));
+	superPanelPlugins.value.data.push(toRaw(plugin));
+	window.rubick.db.put(toRaw(superPanelPlugins.value));
 };
 
 const removePluginToSuperPanel = (plugin) => {
-  superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
-    (item) => {
-      return item.name !== plugin.name;
-    }
-  );
-  window.rubick.db.put(toRaw(superPanelPlugins.value));
+	superPanelPlugins.value.data = toRaw(superPanelPlugins.value).data.filter(
+		(item) => {
+			return item.name !== plugin.name;
+		},
+	);
+	window.rubick.db.put(toRaw(superPanelPlugins.value));
 };
 </script>
 <style lang="less" scoped>

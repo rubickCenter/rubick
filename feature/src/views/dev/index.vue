@@ -32,47 +32,48 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { message } from 'ant-design-vue';
-import { useI18n } from 'vue-i18n';
+import { message } from "ant-design-vue";
+import { reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
+
 const { t } = useI18n();
 
 const formRef = ref();
 const formState = reactive({
-  name: undefined,
+	name: undefined,
 });
 const rules = {
-  name: {
-    required: true,
-    message: 'Please input name',
-  },
+	name: {
+		required: true,
+		message: "Please input name",
+	},
 };
 const onSubmit = () => {
-  formRef.value.validate().then(() => {
-    downloadPlugin(formState.name);
-  });
+	formRef.value.validate().then(() => {
+		downloadPlugin(formState.name);
+	});
 };
 
 const loading = ref(false);
 const downloadPlugin = async (pluginName) => {
-  loading.value = true;
-  await window.market.downloadPlugin({
-    name: pluginName,
-    isDev: true,
-  });
-  message.success(t('feature.dev.installSuccess', { pluginName: pluginName }));
-  loading.value = false;
+	loading.value = true;
+	await window.market.downloadPlugin({
+		name: pluginName,
+		isDev: true,
+	});
+	message.success(t("feature.dev.installSuccess", { pluginName: pluginName }));
+	loading.value = false;
 };
 
 const refresh = () => {
-  formRef.value.validate().then(() => {
-    window.market.refreshPlugin({
-      name: formState.name,
-    });
-    message.success(
-      t('feature.dev.refreshSuccess', { pluginName: formState.name })
-    );
-  });
+	formRef.value.validate().then(() => {
+		window.market.refreshPlugin({
+			name: formState.name,
+		});
+		message.success(
+			t("feature.dev.refreshSuccess", { pluginName: formState.name }),
+		);
+	});
 };
 
 const labelCol = { span: 4 };
