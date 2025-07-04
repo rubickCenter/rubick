@@ -16,6 +16,13 @@ const ipcSendSync = (type, data) => {
   return returnValue;
 };
 
+const ipcInvoke = (type, data) => {
+  return ipcRenderer.invoke('msg-trigger', {
+    type,
+    data,
+  });
+};
+
 const ipcSend = (type, data) => {
   ipcRenderer.send('msg-trigger', {
     type,
@@ -240,5 +247,13 @@ window.rubick = {
       callback && callback();
     });
     return win;
+  },
+
+  getVoltaVersion: () => {
+    return ipcInvoke('getVoltaVersion');
+  },
+
+  getGitVersion: () => {
+    return ipcInvoke('getGitVersion');
   },
 };

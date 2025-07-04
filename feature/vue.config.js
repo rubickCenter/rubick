@@ -1,7 +1,9 @@
 const path = require('path');
+const UnoCSS = require('@unocss/webpack').default
 
 module.exports = {
   css: {
+    extract: true,
     // 配置css模块
     loaderOptions: {
       // 向预处理器 Loader 传递配置选项
@@ -10,6 +12,18 @@ module.exports = {
         javascriptEnabled: true, // 设置为true
       },
     },
+  },
+  configureWebpack: {
+    plugins: [
+      UnoCSS()
+    ],
+  },
+  chainWebpack(config) {
+    config.module.rule('vue').uses.delete('cache-loader')
+    config.module.rule('tsx').uses.delete('cache-loader')
+    config.merge({
+      cache: false
+    })
   },
   productionSourceMap: false,
   outputDir: path.join(__dirname, '../public/feature'),

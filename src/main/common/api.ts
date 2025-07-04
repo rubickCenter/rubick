@@ -1,3 +1,4 @@
+import { spawn } from 'child_process';
 import { app, BrowserWindow, clipboard, dialog, ipcMain, Notification, nativeImage, screen, shell } from 'electron';
 import fs from 'fs';
 import ks from 'node-key-sender';
@@ -25,6 +26,10 @@ class API extends DBInstance {
       const data = await this[arg.type](arg, window, event);
       event.returnValue = data;
       // event.sender.send(`msg-back-${arg.type}`, data);
+    });
+    ipcMain.handle('msg-trigger', async (event, arg) => {
+      const window = arg.winId ? BrowserWindow.fromId(arg.winId) : mainWindow;
+      return await this[arg.type](arg, window, event);
     });
     // 按 ESC 退出插件
     mainWindow.webContents.on('before-input-event', (event, input) => this.__EscapeKeyDown(event, input, mainWindow));
@@ -345,6 +350,34 @@ class API extends DBInstance {
         plugin
       })})`
     );
+  }
+
+  public getVoltaVersion() {
+    const volta = spawn('volta', ['--version']);
+    return new Promise(resolve => {
+      let stdout = '';
+      volta.stdout.on('data', data => {
+        stdout += data.toString();
+      });
+      volta.on('close', () => {
+        resolve(stdout.trim());
+      });
+    });
+  }
+
+  public getGitVersion() {
+    const git = spawn('git', ['--version']);
+    return new Promise(resolve => {
+      let stdout = '';
+      git.stdout.on('data', data => {
+        stdout += data.toString();
+      });
+      git.on('close', () => {
+        const reg = /\d+.\d+.\d+/;
+        const version = stdout.trim().match(reg);
+        resolve(version?.[0] || '未安装');
+      });
+    });
   }
 }
 

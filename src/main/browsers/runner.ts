@@ -111,7 +111,7 @@ export default () => {
       pluginIndexPath = `file://${path.join(pluginPath, './', main)}`;
     }
     const preload = getPreloadPath(plugin, preloadPath || pluginIndexPath);
-
+    console.log(preload);
     const ses = session.fromPartition('<' + name + '>');
     ses.setPreloads([`${__static}/preload.js`]);
 

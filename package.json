@@ -47,7 +47,7 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.0.6",
     "@electron/asar": "^3.2.8",
     "@ts-type/package-dts": "^1.0.53",
     "@types/electron-devtools-installer": "^2.2.0",
