@@ -93,6 +93,12 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       // mainWindow.show();
     });
 
+    globalShortcut.register('CommandOrControl+W', () => {
+      if (mainWindow && !mainWindow.isDestroyed() && mainWindow.isFocused()) {
+        mainWindow.hide();
+      }
+    });
+
     // 注册自定义全局快捷键
     config.global.forEach((sc) => {
       if (!sc.key || !sc.value) return;
