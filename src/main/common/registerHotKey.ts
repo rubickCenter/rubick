@@ -10,6 +10,7 @@ import {
 import screenCapture from '@/core/screen-capture';
 import localConfig from '@/main/common/initLocalConfig';
 import winPosition from './getWinPosition';
+import { uIOhook, UiohookKey } from 'uiohook-napi';
 
 const registerHotKey = (mainWindow: BrowserWindow): void => {
   // 设置开机启动
@@ -57,27 +58,43 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
     }
   };
 
+  // 显示主窗口
+  function mainWindowPopUp() {
+    const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
+    if (currentShow) return mainWindow.hide();
+    const { x: wx, y: wy } = winPosition.getPosition();
+    mainWindow.setAlwaysOnTop(false);
+    mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    mainWindow.focus();
+    mainWindow.setVisibleOnAllWorkspaces(false, {
+      visibleOnFullScreen: true,
+    });
+    mainWindow.setPosition(wx, wy);
+    mainWindow.show();
+  }
+
   const init = async () => {
     await setAutoLogin();
     await setDarkMode();
     await setTheme();
     const config = await localConfig.getConfig();
     globalShortcut.unregisterAll();
-    // 注册偏好快捷键
-    globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
-      const currentShow = mainWindow.isVisible() && mainWindow.isFocused();
-      if (currentShow) return mainWindow.hide();
-      const { x: wx, y: wy } = winPosition.getPosition();
-      mainWindow.setAlwaysOnTop(false);
-      mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-      mainWindow.focus();
-      mainWindow.setVisibleOnAllWorkspaces(false, {
-        visibleOnFullScreen: true,
-      });
-      mainWindow.setPosition(wx, wy);
-      mainWindow.show();
-    });
 
+    // 注册偏好快捷键
+    // 处理显示/隐藏快捷键的注册
+    const doublePressShortcuts = ['Ctrl+Ctrl', 'Option+Option', 'Shift+Shift', 'Command+Command'];
+    const isDoublePressShortcut = doublePressShortcuts.includes(config.perf.shortCut.showAndHidden);
+    
+    if (isDoublePressShortcut) {
+      // 双击快捷键（如 Ctrl+Ctrl）详见 uIOhookRegister 函数实现
+    } else {
+      // 注册普通快捷键（如 Ctrl+Space、F8 等）
+      globalShortcut.register(config.perf.shortCut.showAndHidden, () => {
+        mainWindowPopUp();
+      });
+    }
+
+    // 截图快捷键
     globalShortcut.register(config.perf.shortCut.capture, () => {
       screenCapture(mainWindow, (data) => {
         data &&
@@ -107,9 +124,48 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       });
     });
   };
+
+  uIOhookRegister(mainWindowPopUp);
   init();
   ipcMain.on('re-register', () => {
     init();
   });
 };
 export default registerHotKey;
+
+function uIOhookRegister(callback: () => void) {
+  let lastModifierPress = Date.now();
+  uIOhook.on('keydown', async (uio_event) => {
+    const config = await localConfig.getConfig(); // 此处还有优化空间
+
+    if (
+      ![
+        'Ctrl+Ctrl',
+        'Option+Option',
+        'Shift+Shift',
+        'Command+Command',
+      ].includes(config.perf.shortCut.showAndHidden)
+    ) {
+      return;
+    }
+
+    // 双击快捷键，如 Ctrl+Ctrl
+    const modifers = config.perf.shortCut.showAndHidden.split('+');
+    const showAndHiddenKeyStr = modifers.pop(); // Ctrl
+    const keyStr2uioKeyCode = {
+      Ctrl: UiohookKey.Ctrl,
+      Shift: UiohookKey.Shift,
+      Option: UiohookKey.Alt,
+      Command: UiohookKey.Comma,
+    };
+
+    if (uio_event.keycode === keyStr2uioKeyCode[showAndHiddenKeyStr]) {
+      const currentTime = Date.now();
+      if (currentTime - lastModifierPress < 300) {
+        callback(); // 调用 mainWindowPopUp
+      }
+      lastModifierPress = currentTime;
+    }
+  });
+  uIOhook.start();
+}
