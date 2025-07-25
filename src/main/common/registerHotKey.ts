@@ -110,9 +110,14 @@ const registerHotKey = (mainWindow: BrowserWindow): void => {
       // mainWindow.show();
     });
 
-    globalShortcut.register('CommandOrControl+W', () => {
-      if (mainWindow && !mainWindow.isDestroyed() && mainWindow.isFocused()) {
-        mainWindow.hide();
+    // 添加局部快捷键监听
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+      if (input.key.toLowerCase() === 'w'
+        && (input.control || input.meta) && !input.alt && !input.shift) {
+        event.preventDefault();
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.hide();
+        }
       }
     });
 
