@@ -36,7 +36,14 @@ class AdapterHandler {
       fs.mkdirsSync(options.baseDir);
       fs.writeFileSync(
         `${options.baseDir}/package.json`,
-        '{"dependencies":{}}'
+        // '{"dependencies":{}}'
+        // fix 插件安装时node版本问题
+        JSON.stringify({
+          dependencies: {},
+          volta: {
+            node: '16.19.1',
+          },
+        })
       );
     }
     this.baseDir = options.baseDir;
