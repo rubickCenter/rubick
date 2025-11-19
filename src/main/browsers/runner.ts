@@ -82,7 +82,7 @@ export default () => {
   };
 
   const init = (plugin, window: BrowserWindow) => {
-    if (view === null || view === undefined) {
+    if (view === null || view === undefined || view.inDetach) {
       createView(plugin, window);
       // if (viewInstance.getView(plugin.name) && !commonConst.dev()) {
       //   view = viewInstance.getView(plugin.name).view;
@@ -176,14 +176,29 @@ export default () => {
   const removeView = (window: BrowserWindow) => {
     if (!view) return;
     executeHooks('PluginOut', null);
+    // 先记住这次要移除的视图，防止后面异步代码里全局引用被换掉
+    const snapshotView = view;
     setTimeout(() => {
-      window.removeBrowserView(view);
-      if (!view.inDetach) {
-        window.setBrowserView(null);
-        view.webContents?.destroy();
+      // 获取当前视图，判断是否已经换成了新视图
+      const currentView = window.getBrowserView?.();
+      window.removeBrowserView(snapshotView);
+
+      // 主窗口的插件视图仍然挂着旧实例时，需要还原主窗口 UI
+      if (!snapshotView.inDetach) {
+        // 如果窗口还挂着旧视图，说明还没换掉，需要把主窗口恢复到初始状态
+        if (currentView === snapshotView) {
+          window.setBrowserView(null);
+          if (view === snapshotView) {
+            window.webContents?.executeJavaScript(`window.initRubick()`);
+            view = undefined;
+          }
+        }
+        snapshotView.webContents?.destroy();
       }
-      window.webContents?.executeJavaScript(`window.initRubick()`);
-      view = undefined;
+      // 分离窗口只需释放全局引用，视图由分离窗口继续管理
+      else if (view === snapshotView) {
+        view = undefined;
+      }
     }, 0);
   };
 
