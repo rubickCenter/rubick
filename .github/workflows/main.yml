@@ -52,7 +52,7 @@ jobs:
         run: |
           yarn
           yarn global add xvfb-maybe
-          yarn global add @vue/cli@4.5.11
+          yarn global add @vue/cli@4.5.0
       - name: Build feature
         run: |
           cd ./feature
