@@ -28,9 +28,6 @@ import getWinPosition from './getWinPosition';
 import path from 'path';
 import commonConst from '@/common/utils/commonConst';
 
-const logCopyFile = (...messages: unknown[]) =>
-  console.log('[copyFile]', ...messages);
-
 const DROPFILES_HEADER_SIZE = 20;
 
 type ClipboardExModule = typeof import('electron-clipboard-ex');
@@ -43,24 +40,14 @@ const ensureClipboardEx = (): ClipboardExModule | null => {
   try {
     // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
     clipboardExModule = require('electron-clipboard-ex');
-    logCopyFile('Loaded electron-clipboard-ex successfully');
   } catch (error) {
-    logCopyFile('Failed to load electron-clipboard-ex', error);
     clipboardExModule = null;
   }
   return clipboardExModule;
 };
 
-const buildWindowsFileListPayload = (files: string[]): Buffer => {
-  return Buffer.from(`${files.join('\0')}\0\0`, 'utf16le');
-};
-
-const parseWindowsFileListPayload = (payload: Buffer): string[] => {
-  if (!payload?.length) return [];
-  const trimmed = payload.toString('utf16le').replace(/\0+$/, '');
-  if (!trimmed) return [];
-  return trimmed.split('\0').filter(Boolean);
-};
+const buildWindowsFileListPayload = (files: string[]): Buffer =>
+  Buffer.from(`${files.join('\0')}\0\0`, 'utf16le');
 
 const buildWindowsFileDropBuffer = (files: string[]): Buffer => {
   const payload = buildWindowsFileListPayload(files);
@@ -81,18 +68,6 @@ const buildWindowsFileDropBuffer = (files: string[]): Buffer => {
   return result;
 };
 
-const parseWindowsDropBuffer = (buffer: Buffer): string[] => {
-  if (!buffer?.length || buffer.length < DROPFILES_HEADER_SIZE) {
-    return [];
-  }
-  const offset = buffer.readUInt32LE(0);
-  if (!offset || offset >= buffer.length) {
-    return [];
-  }
-  const payload = buffer.subarray(offset);
-  return parseWindowsFileListPayload(payload);
-};
-
 const buildDropEffectBuffer = (effect: 'copy' | 'move' | 'link' = 'copy') => {
   const effectMap = {
     copy: 1,
@@ -104,41 +79,61 @@ const buildDropEffectBuffer = (effect: 'copy' | 'move' | 'link' = 'copy') => {
   return buffer;
 };
 
-const logAvailableFormats = (type: 'clipboard' | 'selection') => {
+const sanitizeInputFiles = (input: unknown): string[] => {
+  const candidates = Array.isArray(input)
+    ? input
+    : typeof input === 'string'
+    ? [input]
+    : [];
+  return candidates
+    .map((filePath) =>
+      typeof filePath === 'string' ? filePath.trim() : ''
+    )
+    .filter((filePath) => {
+      if (!filePath) return false;
+      try {
+        return fs.existsSync(filePath);
+      } catch {
+        return false;
+      }
+    });
+};
+
+const writeMacClipboardFiles = (files: string[]): boolean => {
   try {
-    logCopyFile(`availableFormats(${type})`, clipboard.availableFormats(type));
-  } catch (error) {
-    logCopyFile(`availableFormats(${type}) read failed`, error);
+    clipboard.writeBuffer(
+      'NSFilenamesPboardType',
+      Buffer.from(plist.build(files))
+    );
+    return true;
+  } catch {
+    return false;
   }
 };
 
-const debugWindowsClipboard = (phase = 'afterWrite') => {
-  logCopyFile('---- clipboard debug phase ----', phase);
-  logAvailableFormats('clipboard');
-  logAvailableFormats('selection');
+const writeWindowsClipboardFiles = (files: string[]): boolean => {
   try {
-    const drop = clipboard.readBuffer('CF_HDROP');
-    logCopyFile('CF_HDROP length', drop.length);
-    logCopyFile('CF_HDROP parsed', parseWindowsDropBuffer(drop));
-  } catch (error) {
-    logCopyFile('read CF_HDROP failed', error);
+    clipboard.writeBuffer('CF_HDROP', buildWindowsFileDropBuffer(files));
+    clipboard.writeBuffer('FileNameW', buildWindowsFileListPayload(files));
+    clipboard.writeBuffer('Preferred DropEffect', buildDropEffectBuffer('copy'));
+    return clipboard.readBuffer('CF_HDROP').length > 0;
+  } catch {
+    return false;
   }
+};
+
+const writeWithClipboardEx = (files: string[]): boolean => {
+  const clipboardEx = ensureClipboardEx();
+  if (!clipboardEx) return false;
   try {
-    const fileNameW = clipboard.readBuffer('FileNameW');
-    logCopyFile('FileNameW length', fileNameW.length);
-    logCopyFile('FileNameW parsed', parseWindowsFileListPayload(fileNameW));
-  } catch (error) {
-    logCopyFile('read FileNameW failed', error);
-  }
-  try {
-    const dropEffect = clipboard.readBuffer('Preferred DropEffect');
-    logCopyFile('DropEffect length', dropEffect.length);
-    logCopyFile(
-      'DropEffect value',
-      dropEffect.length ? dropEffect.readUInt32LE(0) : undefined
-    );
-  } catch (error) {
-    logCopyFile('read Preferred DropEffect failed', error);
+    clipboardEx.writeFilePaths(files);
+    if (typeof clipboardEx.readFilePaths === 'function') {
+      const result = clipboardEx.readFilePaths();
+      return Array.isArray(result) && result.length === files.length;
+    }
+    return true;
+  } catch {
+    return false;
   }
 };
 
@@ -344,111 +339,25 @@ class API extends DBInstance {
   }
 
   public copyFile({ data }) {
-    const input = data?.file;
-    logCopyFile('Input received', { input, platform: process.platform });
-    const candidateFiles = Array.isArray(input)
-      ? input
-      : typeof input === 'string'
-      ? [input]
-      : [];
-    logCopyFile('Candidate files', candidateFiles);
-
-    const targetFiles = candidateFiles
-      .map((filePath) =>
-        typeof filePath === 'string' ? filePath.trim() : ''
-      )
-      .filter((filePath) => {
-        if (!filePath) return false;
-        try {
-          return fs.existsSync(filePath);
-        } catch {
-          return false;
-        }
-      });
-
+    const targetFiles = sanitizeInputFiles(data?.file);
     if (!targetFiles.length) {
-      logCopyFile('No valid files detected, abort copy');
       return false;
     }
 
     if (process.platform === 'darwin') {
-      try {
-        clipboard.writeBuffer(
-          'NSFilenamesPboardType',
-          Buffer.from(plist.build(targetFiles))
-        );
-        logCopyFile('macOS clipboard write succeeded', targetFiles);
-      } catch (error) {
-        logCopyFile('macOS clipboard write failed', error);
-        return false;
-      }
-      return true;
+      return writeMacClipboardFiles(targetFiles);
     }
 
     if (process.platform === 'win32') {
-      const normalizedFiles = targetFiles.map((filePath) => {
-        const normalized = path.normalize(filePath);
-        logCopyFile('Normalized path', { original: filePath, normalized });
-        return normalized;
-      });
-
-      const clipboardExInstance = ensureClipboardEx();
-      if (clipboardExInstance) {
-        try {
-          const writeResult = clipboardExInstance.writeFilePaths(normalizedFiles);
-          logCopyFile('clipboard-ex write result', writeResult);
-          const readBack = clipboardExInstance.readFilePaths();
-          logCopyFile('clipboard-ex readback', readBack);
-          if (writeResult.length === normalizedFiles.length) {
-            logCopyFile('clipboard-ex copied all files, skipping Electron fallback');
-            return true;
-          }
-          logCopyFile(
-            'clipboard-ex copied fewer files than requested, continue with Electron fallback'
-          );
-        } catch (error) {
-          logCopyFile('clipboard-ex write failed, continue with Electron fallback', error);
-        }
-      } else {
-        logCopyFile('clipboard-ex not available, continue with Electron fallback');
+      const normalizedFiles = targetFiles.map((filePath) =>
+        path.normalize(filePath)
+      );
+      if (writeWithClipboardEx(normalizedFiles)) {
+        return true;
       }
-
-      try {
-        clipboard.writeBuffer(
-          'CF_HDROP',
-          buildWindowsFileDropBuffer(normalizedFiles)
-        );
-        clipboard.writeBuffer(
-          'FileNameW',
-          buildWindowsFileListPayload(normalizedFiles)
-        );
-        clipboard.writeBuffer(
-          'Preferred DropEffect',
-          buildDropEffectBuffer('copy')
-        );
-        logCopyFile('Electron clipboard write finished', normalizedFiles);
-      } catch (error) {
-        logCopyFile('Electron clipboard write failed', error);
-      }
-
-      debugWindowsClipboard('afterElectronWrite');
-
-      let dropBufferLength = 0;
-      try {
-        dropBufferLength = clipboard.readBuffer('CF_HDROP').length;
-      } catch (error) {
-        logCopyFile('Failed to read CF_HDROP after Electron write', error);
-        return false;
-      }
-      if (!dropBufferLength) {
-        logCopyFile('CF_HDROP buffer is empty after Electron write, copy failed');
-        return false;
-      }
-      logCopyFile('CF_HDROP buffer detected after Electron write, copy succeeded');
-      return true;
+      return writeWindowsClipboardFiles(normalizedFiles);
     }
 
-    logCopyFile('Current platform is not supported yet');
     return false;
   }
 
