@@ -27,6 +27,30 @@ import DBInstance from './db';
 import getWinPosition from './getWinPosition';
 import path from 'path';
 import commonConst from '@/common/utils/commonConst';
+import { copyFilesToWindowsClipboard } from './windowsClipboard';
+
+/**
+ *  sanitize input files 剪贴板文件合法性校验
+ * @param input
+ * @returns
+ */
+const sanitizeInputFiles = (input: unknown): string[] => {
+  const candidates = Array.isArray(input)
+    ? input
+    : typeof input === 'string'
+    ? [input]
+    : [];
+  return candidates
+    .map((filePath) => (typeof filePath === 'string' ? filePath.trim() : ''))
+    .filter((filePath) => {
+      if (!filePath) return false;
+      try {
+        return fs.existsSync(filePath);
+      } catch {
+        return false;
+      }
+    });
+};
 
 const runnerInstance = runner();
 const detachInstance = detach();
@@ -230,13 +254,28 @@ class API extends DBInstance {
   }
 
   public copyFile({ data }) {
-    if (data.file && fs.existsSync(data.file)) {
-      clipboard.writeBuffer(
-        'NSFilenamesPboardType',
-        Buffer.from(plist.build([data.file]))
-      );
-      return true;
+    const targetFiles = sanitizeInputFiles(data?.file);
+
+    if (!targetFiles.length) {
+      return false;
     }
+
+    if (process.platform === 'darwin') {
+      try {
+        clipboard.writeBuffer(
+          'NSFilenamesPboardType',
+          Buffer.from(plist.build(targetFiles))
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    if (process.platform === 'win32') {
+      return copyFilesToWindowsClipboard(targetFiles);
+    }
+
     return false;
   }
 
