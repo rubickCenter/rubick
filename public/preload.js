@@ -39,6 +39,12 @@ window.rubick = {
   openPlugin(plugin) {
     ipcSendSync('loadPlugin', plugin);
   },
+  onShow(cb) {
+    typeof cb === 'function' && (window.rubick.hooks.onShow = cb);
+  },
+  onHide(cb) {
+    typeof cb === 'function' && (window.rubick.hooks.onHide = cb);
+  },
   // 窗口交互
   hideMainWindow() {
     ipcSendSync('hideMainWindow');
