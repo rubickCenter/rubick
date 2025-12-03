@@ -68,6 +68,20 @@ class API extends DBInstance {
     mainWindow.webContents.on('before-input-event', (event, input) =>
       this.__EscapeKeyDown(event, input, mainWindow)
     );
+    // 设置主窗口的 show/hide 事件监听
+    this.setupMainWindowHooks(mainWindow);
+  }
+
+  private setupMainWindowHooks(mainWindow: BrowserWindow) {
+    mainWindow.on('show', () => {
+      // 触发插件的 onShow hook
+      runnerInstance.executeHooks('Show', null);
+    });
+
+    mainWindow.on('hide', () => {
+      // 触发插件的 onHide hook
+      runnerInstance.executeHooks('Hide', null);
+    });
   }
 
   public getCurrentWindow = (window, e) => {
