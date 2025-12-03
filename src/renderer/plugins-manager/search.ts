@@ -1,4 +1,5 @@
 import { reactive, toRefs } from 'vue';
+import { ipcRenderer } from 'electron';
 
 const searchManager = () => {
   const state = reactive({
@@ -14,6 +15,10 @@ const searchManager = () => {
 
   const setSearchValue = (value: string) => {
     state.searchValue = value;
+    ipcRenderer.sendSync('msg-trigger', {
+      type: 'sendSubInputChangeEvent',
+      data: { text: value },
+    });
   };
 
   window.setSubInput = ({ placeholder }: { placeholder: string }) => {
