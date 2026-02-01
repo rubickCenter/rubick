@@ -92,7 +92,7 @@ function fileDisplay(filePath) {
               const icon = path.join(
                 os.tmpdir(),
                 'ProcessIcon',
-                `${encodeURIComponent(appName)}.png`
+                `${appName}.png`
               );
 
               const appInfo = {
