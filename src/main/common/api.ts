@@ -394,6 +394,25 @@ class API extends DBInstance {
     return nativeImage.toDataURL();
   }
 
+  public rebuildAppIcon({ data }) {
+    const iconPath = typeof data?.iconPath === 'string' ? data.iconPath : '';
+    const sourcePath = typeof data?.sourcePath === 'string' ? data.sourcePath : '';
+    if (!iconPath || !sourcePath) return false;
+
+    try {
+      if (fs.existsSync(iconPath)) return true;
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const fileIcon = require('extract-file-icon');
+      const buffer = fileIcon(sourcePath, 32);
+      if (!buffer || !buffer.length) return false;
+      fs.mkdirSync(path.dirname(iconPath), { recursive: true });
+      fs.writeFileSync(iconPath, buffer);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public shellBeep() {
     shell.beep();
     return true;
