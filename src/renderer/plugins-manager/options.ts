@@ -3,6 +3,7 @@ import debounce from 'lodash.debounce';
 import { ipcRenderer } from 'electron';
 import { getGlobal } from '@electron/remote';
 import PinyinMatch from 'pinyin-match';
+import commonConst from '@/common/utils/commonConst';
 import pluginClickEvent from './pluginClickEvent';
 import useFocus from './clipboardWatch';
 
@@ -34,6 +35,8 @@ const optionsManager = ({
   currentPlugin,
 }) => {
   const optionsRef = ref([]);
+  const fs = window.require('fs');
+  const iconRetryFailed = new Set<string>();
 
   // 全局快捷键
   ipcRenderer.on('global-short-key', (e, msg) => {
@@ -98,6 +101,63 @@ const optionsManager = ({
     // todo 再搜索 app
     const appPlugins = appList.value || [];
     const descMap = new Map();
+
+    const ensureAppIcon = (plugin) => {
+      if (!commonConst.windows()) return plugin.icon;
+      if (plugin.pluginType !== 'app') return plugin.icon;
+      if (!plugin.icon || typeof plugin.icon !== 'string') return plugin.icon;
+      if (plugin.icon.startsWith('data:image')) return plugin.icon;
+      try {
+        if (fs.existsSync(plugin.icon)) return plugin.icon;
+      } catch {
+        return plugin.icon;
+      }
+
+      if (iconRetryFailed.has(plugin.icon)) return plugin.icon;
+
+      const sourcePath =
+        typeof plugin.iconSource === 'string' && plugin.iconSource
+          ? plugin.iconSource
+          : plugin.desc;
+      if (typeof sourcePath !== 'string' || !sourcePath) {
+        iconRetryFailed.add(plugin.icon);
+        return plugin.icon;
+      }
+
+      try {
+        const rebuilt = ipcRenderer.sendSync('msg-trigger', {
+          type: 'rebuildAppIcon',
+          data: {
+            iconPath: plugin.icon,
+            sourcePath,
+          },
+        });
+        if (rebuilt && fs.existsSync(plugin.icon)) {
+          return plugin.icon;
+        }
+      } catch {
+        // ignore and continue fallback
+      }
+
+      try {
+        if (fs.existsSync(sourcePath)) {
+          const dataUrl = ipcRenderer.sendSync('msg-trigger', {
+            type: 'getFileIcon',
+            data: { path: sourcePath },
+          });
+          if (typeof dataUrl === 'string' && dataUrl.startsWith('data:image')) {
+            plugin.icon = dataUrl;
+            return plugin.icon;
+          }
+        }
+      } catch {
+        // ignore
+      }
+
+      iconRetryFailed.add(plugin.icon);
+      return plugin.icon;
+    };
+
     options = [
       ...options,
       ...appPlugins
@@ -126,6 +186,7 @@ const optionsManager = ({
           }
         })
         .map((plugin) => {
+          plugin.icon = ensureAppIcon(plugin);
           const option = {
             ...plugin,
             zIndex: 0,
