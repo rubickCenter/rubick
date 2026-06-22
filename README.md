@@ -31,6 +31,8 @@ Download the latest release:
 
 [Rubick Docs](https://rubickCenter.github.io/docs/)
 
+[Linux arm64 build notes](./docs/linux-arm64-build.md)
+
 ## How To Use Rubick
 After installing rubick, you can quickly launch the main program by pressing the shortcut keys Alt/Option+R. Entering keywords in the main program input box can search for corresponding apps, plugins, files...
 Select the ones you want and use them.
